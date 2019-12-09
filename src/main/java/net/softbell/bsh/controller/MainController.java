@@ -11,9 +11,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.softbell.bsh.BellsmarthomeApplication;
 import net.softbell.bsh.db.model.NodeInfo;
 import net.softbell.bsh.db.repository.NodeInfoRepo;
+import net.softbell.bsh.libs.BellLog;
 import net.softbell.bsh.model.card.CardDashboard;
 import net.softbell.bsh.model.card.CardItem;
 import net.softbell.bsh.model.navbar.NavBar;
@@ -77,10 +80,10 @@ public class MainController {
 	@RequestMapping({"/", "/main"})
 	public String main(Model model)
 	{
-//		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+//		logger.info(BellLog.getLogHead() + "update Conn");
 		setNavBar(model);
 		setDashBoard(model);
-//		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+//		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -94,10 +97,10 @@ public class MainController {
 	{
 		nir.save(NodeInfo.builder().chipId(1).nodeName("builder").registerTime(new Date()).modeState((byte)2).build());
 		
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		return "bs_layout";
 	}
@@ -106,7 +109,7 @@ public class MainController {
 	public String load(Model model)
 	{
 		// Log
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		
 		// Field
 		List<NodeInfo> niList = (List<NodeInfo>) nir.findAll();
@@ -127,7 +130,7 @@ public class MainController {
 		model.addAttribute("cards", cards);
 		
 		// Log
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		return "bs_layout";
 	}
@@ -135,11 +138,11 @@ public class MainController {
 	@RequestMapping({"/led_on"})
 	public String led_on(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#1#1");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -148,11 +151,11 @@ public class MainController {
 	@RequestMapping({"/led_off"})
 	public String led_off(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#1#0");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -161,11 +164,11 @@ public class MainController {
 	@RequestMapping({"/off"})
 	public String off(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#2#0");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -174,11 +177,11 @@ public class MainController {
 	@RequestMapping({"/red"})
 	public String red(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#2#R");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -187,11 +190,11 @@ public class MainController {
 	@RequestMapping({"/green"})
 	public String green(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#2#G");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -200,11 +203,11 @@ public class MainController {
 	@RequestMapping({"/blue"})
 	public String blue(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#2#B");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -213,11 +216,11 @@ public class MainController {
 	@RequestMapping({"/white"})
 	public String white(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Conn");
+		logger.info(BellLog.getLogHead() + "update Conn");
 		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#2#W");
 		setNavBar(model);
 		setDashBoard(model);
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "update Complate");
+		logger.info(BellLog.getLogHead() + "update Complate");
 		
 		
 		return "bs_layout";
@@ -237,7 +240,7 @@ public class MainController {
 	public String broadcast(Model model)
 	{
 		BellsmarthomeApplication.nettyServer.broadcast("IoT Center Test MSG ");
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "Broadcast Complete");
+		logger.info(BellLog.getLogHead() + "Broadcast Complete");
 		
 		return "hello";
 	}
@@ -245,7 +248,7 @@ public class MainController {
 	@RequestMapping({"/user/test"})
 	public String test(Model model)
 	{
-		logger.info("[" + Thread.currentThread().getStackTrace()[1].getMethodName() + "] " + "user/test call!!");
+		logger.info(BellLog.getLogHead() + "user/test call!!");
 		
 		
 		return "home";
@@ -259,6 +262,8 @@ public class MainController {
         return "test";
 	}
 	
+	@Setter
+	@Getter
 	private class Test
 	{
 		private String userId;
@@ -270,31 +275,6 @@ public class MainController {
 	        super();
 	        this.userId = userId;
 	        this.name = name;
-	        this.authType = authType;
-	    }
-	    
-	    public String getUserId() {
-	        return userId;
-	    }
-	    public void setUserId(String userId) {
-	        this.userId = userId;
-	    }
-	    public String getUserPwd() {
-	        return userPwd;
-	    }
-	    public void setUserPwd(String userPwd) {
-	        this.userPwd = userPwd;
-	    }
-	    public String getName() {
-	        return name;
-	    }
-	    public void setName(String name) {
-	        this.name = name;
-	    }
-	    public String getAuthType() {
-	        return authType;
-	    }
-	    public void setAuthType(String authType) {
 	        this.authType = authType;
 	    }
 	    

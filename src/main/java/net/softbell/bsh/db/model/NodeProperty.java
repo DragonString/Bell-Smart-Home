@@ -1,17 +1,25 @@
 package net.softbell.bsh.db.model;
 
 import java.io.Serializable;
-import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.softbell.bsh.db.model.NodeInfo.NodeInfoBuilder;
-
-import java.util.Date;
-import java.util.List;
 
 
 @Builder
