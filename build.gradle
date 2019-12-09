@@ -1,9 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.1.7.RELEASE'
+	id 'org.springframework.boot' version '2.1.9.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
 }
-
-apply plugin: 'io.spring.dependency-management'
 
 group = 'net.softbell'
 version = '0.0.1-SNAPSHOT'
@@ -24,18 +23,45 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'mysql:mysql-connector-java'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	// DB
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc' // JDBC
+	runtimeOnly 'mysql:mysql-connector-java' // MySQL Connector
+    compile("com.h2database:h2")
+	compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.11.4.Final' // JPA Search Engine
+	
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security' // Security
+	testImplementation 'org.springframework.security:spring-security-test' // Security Test
+	
+	// View
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Thymeleaf
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' // Thymeleaf Layout
+	
+	// Server
+	implementation 'org.springframework.boot:spring-boot-starter-web' // Web (tomcat)
+	implementation 'org.springframework.boot:spring-boot-starter-webflux' // What's this?
+	
+	// Websocket
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+	
+	// Library
+	compileOnly 'org.projectlombok:lombok' // Lombok
+	annotationProcessor 'org.projectlombok:lombok' // Lombok
+	developmentOnly 'org.springframework.boot:spring-boot-devtools' // Devtools
+	testImplementation 'org.springframework.boot:spring-boot-starter-test' // Test
+	testImplementation 'io.projectreactor:reactor-test' // Reactor
+}
+
+test {
+    testLogging {
+        // test jvm의 standard out and standard error을 console에 출력한다.
+        showStandardStreams = true // standard out, standard error 를 로깅
+        showCauses = true // showException가 true여야만 활성화, 테스트 수행 시 exception이 발생 했을 때 causes 정보 출력
+        showExceptions = true // 테스트 수행 시 exception이 발생 했을 때 exception정보를 로깅한다. 보통 "Failed" 이벤트 발생 시 수행
+        showStackTraces = true // 테스트 수행 시 exception이 발생 했을 때 showStackTraces정보 출력
+        exceptionFormat = 'full' // showStackTrace가 true 여야만 활성화, 로깅하려는 test exception 포맷
+        //displayGranularity = 2 // 로그로 기록되는 이벤트의 표시 단위. 0-2
+        events 'FAILED', 'PASSED', 'SKIPPED', 'STANDARD_ERROR', 'STANDARD_OUT', 'STARTED' // 로깅될 이벤트
+    }
 }
