@@ -1,0 +1,28 @@
+<!-- Navigation Bar -->
+<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+	<a th:class="navbar-brand" th:text="${nav_brand}" href="#"></a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<!-- Align Nav Bar -->
+		<ul th:each="num : ${#numbers.sequence(0, 1)}" th:class="|${num == 0 ? 'nav navbar-nav mr-auto' : 'nav navbar-nav ml-auto'}|">
+			<!-- Dropdown 여부 -->
+			<li th:each="nav : ${navbar[num]}" th:class="|nav-item |" th:classappend="|${#strings.equalsIgnoreCase(nav.navType, 'dropdown') ? 'dropdown' : ''}|">
+				<!-- Type 분기 -->
+				<a th:if="${#strings.equalsIgnoreCase(nav.navType, 'link')}" th:text="${nav.navName}" th:href="${nav.navURI}" th:class="|nav-link|"></a>
+				<a th:if="${#strings.equalsIgnoreCase(nav.navType, 'disabled')}" th:text="${nav.navName}" th:href="|#|" th:class="|nav-link disabled|" tabindex="-1" aria-disabled="true"></a>
+				<a th:if="${#strings.equalsIgnoreCase(nav.navType, 'dropdown')}" th:text="${nav.navName}" th:href="${nav.navURI}" th:class="|nav-link dropdown-toggle|" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+				<div th:if="${nav.navItems != null}" th:class="|dropdown-menu|" aria-labelledby="navbarDropdown">
+					<!-- Dropdown Items -->
+					<tr th:each="dnav : ${nav.navItems}">
+						<a th:if="${#strings.equalsIgnoreCase(dnav.navType, 'link')}" th:text="${dnav.navName}" th:href="${dnav.navURI}" th:class="|dropdown-item|"></a>
+						<div th:if="${#strings.equalsIgnoreCase(dnav.navType, 'divider')}" th:class="|dropdown-divider|"></div>
+						<a th:if="${#strings.equalsIgnoreCase(dnav.navType, 'disabled')}" th:text="${dnav.navName}" th:href="|#|" th:class="|dropdown-item disabled|" tabindex="-1" aria-disabled="true"></a>
+					</tr>
+				</div>
+			</li>
+		</ul>
+	</div>
+</nav>

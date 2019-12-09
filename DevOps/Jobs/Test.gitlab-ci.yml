@@ -1,0 +1,20 @@
+test:
+  stage: test
+  image: gliderlabs/herokuish:latest
+  script:
+    - echo 'Bell Soft Network DevOps Test Stage'
+    - export DATABASE_URL="jdbc:h2:mem:testdb"
+    - cp -R . /tmp/app
+    - /bin/herokuish buildpack test
+  only:
+    - branches
+    - tags
+  only:
+    refs:
+      - master
+      - backend
+      - frontend
+  except:
+    variables:
+      - $TEST_DISABLED
+  retry: 2

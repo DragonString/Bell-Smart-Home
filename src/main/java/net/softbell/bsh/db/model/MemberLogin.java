@@ -1,0 +1,42 @@
+package net.softbell.bsh.db.model;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import net.softbell.bsh.db.model.NodeInfo.NodeInfoBuilder;
+
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name="member_login")
+@NamedQuery(name="MemberLogin.findAll", query="SELECT m FROM MemberLogin m")
+public class MemberLogin implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@EmbeddedId
+	private MemberLoginPK id;
+
+	@Column(name="login_ip", nullable=false, length=18)
+	private String loginIp;
+
+	@Column(name="login_statue", nullable=false)
+	private short loginStatue;
+
+	//bi-directional many-to-one association to MemberInfo
+	@ManyToOne
+	@JoinColumn(name="member_id", nullable=false, insertable=false, updatable=false)
+	private MemberInfo memberInfo;
+
+}

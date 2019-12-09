@@ -1,0 +1,16 @@
+<div class="card border-primary">
+	<div th:text="${card.cardTopic}" class="card-header text-primary"></div>
+	<div class="card-body">
+		<div class="card-text">
+			<tr th:each="cardItem : ${card.cardItems}">
+				<div th:class="|row text-${#strings.toLowerCase(cardItem.cardType)}|">
+					<div th:text="${cardItem.cardKey}" class="col text-right">Bell's Room:</div>
+					<div th:text="${cardItem.cardValue}" class="col-5 text-left">Detect</div>
+				</div>
+			</tr>
+		</div>
+	</div>
+	<div class="card-footer">
+		<small th:text="${card.cardLast}" class="text-muted">Last updated 1 mins ago</small>
+	</div>
+</div>
