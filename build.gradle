@@ -27,7 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc' // JDBC
 	runtimeOnly 'mysql:mysql-connector-java' // MySQL Connector
-    compile("com.h2database:h2")
+    compile("com.h2database:h2") // H2
 	compile group: 'org.hibernate', name: 'hibernate-search-orm', version: '5.11.4.Final' // JPA Search Engine
 	
 	// Security
@@ -43,7 +43,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux' // What's this?
 	
 	// Websocket
-    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.springframework.boot:spring-boot-starter-websocket") // Websocket
 	
 	// Library
 	compileOnly 'org.projectlombok:lombok' // Lombok

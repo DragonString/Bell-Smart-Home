@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import net.softbell.bsh.center.NettyServer;
+import net.softbell.bsh.service.NettyServer;
 
 @SpringBootApplication
 public class BellsmarthomeApplication {

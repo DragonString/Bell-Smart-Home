@@ -32,8 +32,7 @@ code_quality:
   only:
     refs:
       - master
-      - backend
-      - frontend
+      - dev_main
   except:
     variables:
       - $CODE_QUALITY_DISABLED
