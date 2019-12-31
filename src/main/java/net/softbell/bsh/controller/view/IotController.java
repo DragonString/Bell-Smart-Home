@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.softbell.bsh.BellsmarthomeApplication;
 import net.softbell.bsh.domain.entity.NodeInfo;
 import net.softbell.bsh.domain.repository.NodeInfoRepo;
 import net.softbell.bsh.dto.card.CardDashboard;
 import net.softbell.bsh.dto.card.CardItem;
 import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.service.IotService;
 
 @Controller
 @RequestMapping("/iot/")
@@ -28,11 +28,13 @@ public class IotController {
 	
 	@Autowired
 	NodeInfoRepo nir;
+	@Autowired
+	IotService iotService;
 
 	@GetMapping("broadcast")
 	public String procBroadcast(Model model)
 	{
-		BellsmarthomeApplication.nettyServer.broadcast("IoT Center Test MSG ");
+		iotService.test();
 		G_Logger.info(BellLog.getLogHead() + "Broadcast Complete");
 		
 		return "hello";
@@ -82,62 +84,16 @@ public class IotController {
 	public String procLEDs(@RequestParam("mode")String strMode,
 			@RequestParam("value")String strValue)
 	{
-		// Log
-		G_Logger.info(BellLog.getLogHead() + "LED Update Process Start");
-		
 		// Field
-		boolean isSuccess = false;
+		boolean isSuccess;
 		
 		// Process
-		if (strMode.equalsIgnoreCase("circuit"))
-			isSuccess = procLED_Circuit(strValue);
-		else if (strMode.equalsIgnoreCase("bar"))
-			isSuccess = procLED_Bar(strValue);
-		
-		G_Logger.info(BellLog.getLogHead() + "LED Update Process Finish");
+		isSuccess = iotService.procLEDs(strMode, strValue);
 		
 		// Finish
 		if (isSuccess)
 			return "redirect:/";
 		else
 			return "redirect:/error";
-	}
-	
-	private boolean procLED_Circuit(String strValue)
-	{
-		if (strValue.equalsIgnoreCase("on"))
-			BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#1#1");
-		else if (strValue.equalsIgnoreCase("off"))
-			BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#1#0");
-		else
-			return false;
-		
-		return true;
-	}
-	
-	private boolean procLED_Bar(String strValue)
-	{
-		// Field
-		String strMode;
-		
-		// Init
-		if (strValue.equalsIgnoreCase("off"))
-			strMode = "0";
-		else if (strValue.equalsIgnoreCase("red"))
-			strMode = "R";
-		else if (strValue.equalsIgnoreCase("green"))
-			strMode = "G";
-		else if (strValue.equalsIgnoreCase("blue"))
-			strMode = "B";
-		else if (strValue.equalsIgnoreCase("white"))
-			strMode = "W";
-		else
-			return false;
-		
-		// Process
-		BellsmarthomeApplication.nettyServer.broadcast("NODE#SET#VALUE#ITEM#2#" + strMode);
-		
-		// Finish
-		return true;
 	}
 }

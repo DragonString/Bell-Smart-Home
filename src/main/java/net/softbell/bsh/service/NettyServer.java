@@ -26,6 +26,7 @@ import net.softbell.bsh.handler.ServiceHandler;
 @Component
 @PropertySource(value = "classpath:/application.properties")
 public class NettyServer {
+	// Global Field
     @Value("${tcp.port}")
     private int tcpPort; // The Tcp port.
  
