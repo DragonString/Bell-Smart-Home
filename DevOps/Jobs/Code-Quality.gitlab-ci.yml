@@ -17,7 +17,9 @@ code_quality:
       fi
     - docker run
         --env SOURCE_CODE="$PWD"
-        --volume "$PWD":/code
+        --volume "$PWD/src/main/java":/code/src/main/java
+        --volume "$PWD/src/main/resources/templates":/code/src/main/resources/templates
+        --volume "$PWD/src/test/java":/code/src/test/java
         --volume /var/run/docker.sock:/var/run/docker.sock
         "registry.gitlab.com/gitlab-org/security-products/codequality:12-0-stable" /code
   artifacts:
@@ -34,7 +36,6 @@ code_quality:
     refs:
       - master
       - dev_main
-      - review_main
   except:
     variables:
       - $CODE_QUALITY_DISABLED
