@@ -15,13 +15,21 @@ code_quality:
           export DOCKER_HOST='tcp://localhost:2375'
         fi
       fi
+    - echo 'User code copy start'
+    - mkdir -p code/src/main/resources
+    - cp -R src/main/java code/src/main
+    - cp -R src/main/resources/templates code/src/main/resources
+    - mkdir -p code/src/test
+    - cp -R src/test/java code/src/test
+    - echo 'User code copy end'
     - docker run
         --env SOURCE_CODE="$PWD"
-        --volume "$PWD/src/main/java":/code/src/main/java
-        --volume "$PWD/src/main/resources/templates":/code/src/main/resources/templates
-        --volume "$PWD/src/test/java":/code/src/test/java
+        --volume "$PWD":/code
         --volume /var/run/docker.sock:/var/run/docker.sock
         "registry.gitlab.com/gitlab-org/security-products/codequality:12-0-stable" /code
+    - echo 'User code remove start'
+    - rm -rf code
+    - echo 'User code remove end'
   artifacts:
     paths: [gl-code-quality-report.json]
     reports:
