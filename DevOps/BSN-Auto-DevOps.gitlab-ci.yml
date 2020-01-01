@@ -59,7 +59,7 @@ variables:
 stages:
   - build
   - test
-  - deploy  # dummy stage to follow the template guidelines
+#  - deploy  # dummy stage to follow the template guidelines
   - review
   - dast
   - staging
@@ -76,7 +76,8 @@ include:
   - local: /DevOps/Jobs/Build.gitlab-ci.yml
   - local: /DevOps/Jobs/Test.gitlab-ci.yml
   - local: /DevOps/Jobs/Code-Quality.gitlab-ci.yml
-  - template: Jobs/Deploy.gitlab-ci.yml
+#  - template: Jobs/Deploy.gitlab-ci.yml
+  - local: /DevOps/Jobs/Deploy.gitlab-ci.yml
   - local: /DevOps/Jobs/DAST-Default-Branch-Deploy.gitlab-ci.yml
   - local: /DevOps/Jobs/Browser-Performance-Testing.gitlab-ci.yml
   - local: /DevOps/Security/DAST.gitlab-ci.yml
