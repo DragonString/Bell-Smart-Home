@@ -21,21 +21,19 @@ review:
     paths: [environment_url.txt]
   only:
     refs:
-      - branches
-      - tags
+      - review_main
     kubernetes: active
   except:
-    refs:
-      - master
     variables:
       - $REVIEW_DISABLED
 
 stop_review:
   extends: .auto-deploy
-  stage: review
+  stage: cleanup
   variables:
     GIT_STRATEGY: none
   script:
+    - echo 'Bell Soft Network DevOps Cleanup Stage'
     - auto-deploy initialize_tiller
     - auto-deploy delete
   environment:
@@ -45,12 +43,9 @@ stop_review:
   allow_failure: true
   only:
     refs:
-      - branches
-      - tags
+      - review_main
     kubernetes: active
   except:
-    refs:
-      - master
     variables:
       - $REVIEW_DISABLED
 
@@ -64,6 +59,7 @@ staging:
   extends: .auto-deploy
   stage: staging
   script:
+    - echo 'Bell Soft Network DevOps Staging Stage'
     - auto-deploy check_kube_domain
     - auto-deploy download_chart
     - auto-deploy ensure_namespace
@@ -88,6 +84,7 @@ canary:
   extends: .auto-deploy
   stage: canary
   script:
+    - echo 'Bell Soft Network DevOps Canary Stage'
     - auto-deploy check_kube_domain
     - auto-deploy download_chart
     - auto-deploy ensure_namespace

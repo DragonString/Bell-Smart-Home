@@ -33,6 +33,7 @@ performance:
   only:
     refs:
       - master
+      - review_main
 #      - branches
 #      - tags
     kubernetes: active

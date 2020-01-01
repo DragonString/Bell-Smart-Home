@@ -21,6 +21,7 @@ code_quality:
         --volume /var/run/docker.sock:/var/run/docker.sock
         "registry.gitlab.com/gitlab-org/security-products/codequality:12-0-stable" /code
   artifacts:
+    paths: [gl-code-quality-report.json]
     reports:
       codequality: gl-code-quality-report.json
     expire_in: 1 week
@@ -33,6 +34,7 @@ code_quality:
     refs:
       - master
       - dev_main
+      - review_main
   except:
     variables:
       - $CODE_QUALITY_DISABLED

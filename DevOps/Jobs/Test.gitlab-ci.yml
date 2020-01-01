@@ -13,6 +13,7 @@ test:
     refs:
       - master
       - dev_main
+      - review_main
   except:
     variables:
       - $TEST_DISABLED
