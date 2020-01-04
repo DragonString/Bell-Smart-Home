@@ -3,8 +3,11 @@ package net.softbell.bsh.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import net.softbell.bsh.domain.repository.NodeInfoRepo;
+import net.softbell.bsh.dto.iot.BSHPv1DTO;
 import net.softbell.bsh.libs.BellLog;
 
 @Service
@@ -13,73 +16,73 @@ public class IotService {
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	NettyServer nettyServer;
+	private SimpMessagingTemplate template;
+	@Autowired
+	private NodeInfoRepo nodeInfoRepo;
 	
-	public void test()
-	{
-		nettyServer.broadcast("IoT Center Test MSG ");
-	}
 	
-	public void broadcast(String strData)
-	{
-		nettyServer.broadcast(strData);
-	}
-	
-	public boolean procLEDs(String strMode, String strValue)
+	public void sendMessage(BSHPv1DTO message)
 	{
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "LED Update Process Start");
+		G_Logger.info(BellLog.getLogHead() + message.getTarget() + "로 메시지 전송");
 		
+		// Process
+		template.convertAndSend("/api/stomp/queue/iot/v1/node/" + message.getTarget(), message);
+	}
+	
+	public boolean procMessage(BSHPv1DTO message)
+	{
 		// Field
 		boolean isSuccess = false;
 		
 		// Process
-		if (strMode.equalsIgnoreCase("circuit"))
-			isSuccess = procLED_Circuit(strValue);
-		else if (strMode.equalsIgnoreCase("bar"))
-			isSuccess = procLED_Bar(strValue);
+		if (message.getTarget().equals("SERVER"))
+			if (message.getCmd().equals("GET"))
+				isSuccess = procMessageGet(message);
+			else if (message.getCmd().equals("SET"))
+				isSuccess = procMessageSet(message);
 		
-		G_Logger.info(BellLog.getLogHead() + "LED Update Process Finish");
+		// Exception
+		if (!isSuccess)
+		{
+			G_Logger.error(BellLog.getLogHead() + "처리되지 않은 메시지: " + message.toString());
+			sendMessage(BSHPv1DTO.builder().sender("SERVER").target(message.getSender()).cmd("INFO").type("HANDLE").obj("ERROR").build());
+		}
 		
-		// Finish
+		// Return
 		return isSuccess;
 	}
 	
-	private boolean procLED_Circuit(String strValue)
+	private boolean procMessageGet(BSHPv1DTO message)
 	{
-		if (strValue.equalsIgnoreCase("on"))
-			nettyServer.broadcast("NODE#SET#VALUE#ITEM#1#1");
-		else if (strValue.equalsIgnoreCase("off"))
-			nettyServer.broadcast("NODE#SET#VALUE#ITEM#1#0");
-		else
-			return false;
 		
-		return true;
+		return false;
 	}
 	
-	private boolean procLED_Bar(String strValue)
+	private boolean procMessageSet(BSHPv1DTO message)
 	{
-		// Field
-		String strMode;
+		if (message.getType().equals("INFO"))
+			if (message.getObj().equals("CHIPID"))
+			{
+				
+			}
+			else if (message.getObj().equals("ITEMS"))
+			{
+				
+			}
+			else if (message.getObj().equals("ITEM"))
+			{
+				
+			}
+			else if (message.getObj().equals("MODE"))
+			{
+				
+			}
+		else if (message.getType().equals("ITEM"))
+			;
+		else if (message.getType().equals("MODE"))
+			;
 		
-		// Init
-		if (strValue.equalsIgnoreCase("off"))
-			strMode = "0";
-		else if (strValue.equalsIgnoreCase("red"))
-			strMode = "R";
-		else if (strValue.equalsIgnoreCase("green"))
-			strMode = "G";
-		else if (strValue.equalsIgnoreCase("blue"))
-			strMode = "B";
-		else if (strValue.equalsIgnoreCase("white"))
-			strMode = "W";
-		else
-			return false;
-		
-		// Process
-		nettyServer.broadcast("NODE#SET#VALUE#ITEM#2#" + strMode);
-		
-		// Finish
-		return true;
+		return false;
 	}
 }

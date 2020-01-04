@@ -15,7 +15,7 @@ import net.softbell.bsh.libs.BellLog;
 
 @Controller
 @RequestMapping("/test/")
-public class TestController {
+public class TestView {
 	// Global Field
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -28,6 +28,14 @@ public class TestController {
         //return "bs_test";
         return "NavBar_Example";
     }
+	
+	@GetMapping("chat")
+	public String chat(Model model)
+	{
+		G_Logger.info(BellLog.getLogHead() + "chat call!!");
+		
+		return "test/room";
+	}
 	
 	@GetMapping("user")
 	public String test(Model model)

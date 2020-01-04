@@ -1,0 +1,45 @@
+<!-- 메인 카테고리 및 검색바 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" th:href="@{/}">BSH</a>
+	<div class="ml-auto">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBar" aria-controls="navBar" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
+	
+	<div class="collapse navbar-collapse" id="navBar">
+		<!-- 좌측 메인메뉴바 -->
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/dashboard}">Dash Board</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/monitor}">Monitor</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/control}">Control</a>
+			</li>
+		</ul>
+
+		<!-- 우측 회원바 -->
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+					<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+						<a class="dropdown-item" th:href="@{/admin}">Admin</a>
+						<div class="dropdown-divider"></div>
+					</th:block>
+					<th:block sec:authorize="hasRole('ROLE_MEMBER')">
+						<a class="dropdown-item" th:href="@{/setting}">Setting</a>
+						<div class="dropdown-divider"></div>
+					</th:block>
+					<a sec:authorize="isAnonymous()" class="dropdown-item" th:href="@{/login}">Login</a>
+					<a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/user/info}">My Info</a>
+					<a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/logout}">Logout</a>
+				</div>
+			</li>
+		</Ul>
+	</div>
+</nav>
+<hr class="bg-white">

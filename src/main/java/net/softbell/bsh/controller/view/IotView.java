@@ -17,12 +17,13 @@ import net.softbell.bsh.domain.entity.NodeInfo;
 import net.softbell.bsh.domain.repository.NodeInfoRepo;
 import net.softbell.bsh.dto.card.CardDashboard;
 import net.softbell.bsh.dto.card.CardItem;
+import net.softbell.bsh.dto.iot.BSHPv1DTO;
 import net.softbell.bsh.libs.BellLog;
 import net.softbell.bsh.service.IotService;
 
 @Controller
 @RequestMapping("/iot/")
-public class IotController {
+public class IotView {
 	// Global Field
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -31,15 +32,6 @@ public class IotController {
 	@Autowired
 	IotService iotService;
 
-	@GetMapping("broadcast")
-	public String procBroadcast(Model model)
-	{
-		iotService.test();
-		G_Logger.info(BellLog.getLogHead() + "Broadcast Complete");
-		
-		return "hello";
-	}
-	
 	@GetMapping("save")
 	public String procSave()
 	{
@@ -85,15 +77,15 @@ public class IotController {
 			@RequestParam("value")String strValue)
 	{
 		// Field
-		boolean isSuccess;
+		BSHPv1DTO msg;
+		
+		// Init
+		msg = BSHPv1DTO.builder().sender("SERVER").target("1").cmd("SET").type("ITEM").obj("1").value("ON").build();
 		
 		// Process
-		isSuccess = iotService.procLEDs(strMode, strValue);
+		iotService.sendMessage(msg);
 		
 		// Finish
-		if (isSuccess)
-			return "redirect:/";
-		else
-			return "redirect:/error";
+		return "redirect:/";
 	}
 }

@@ -38,8 +38,8 @@ public class MemberInfo implements Serializable {
 	@Column(name="member_id", unique=true, nullable=false)
 	private int memberId;
 
-	@Column(nullable=false, length=18)
-	private String id;
+	@Column(name="user_id", nullable=false, length=18)
+	private String userId;
 
 	@Column(name="is_admin")
 	private byte isAdmin;
@@ -47,12 +47,15 @@ public class MemberInfo implements Serializable {
 	@Column(name="is_ban")
 	private short isBan;
 
-	@Column(nullable=false, length=20)
+	@Column(nullable=false, length=64)
 	private String password;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="register_time", nullable=false)
 	private Date registerTime;
+
+	@Column(nullable=false, length=10)
+	private String username;
 
 	//bi-directional many-to-one association to MemberAuth
 	@OneToMany(mappedBy="memberInfo")

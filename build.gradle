@@ -37,6 +37,7 @@ dependencies {
 	// View
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf' // Thymeleaf
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect' // Thymeleaf Layout
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5' // Thymeleaf Spring Sequrity 5
 	
 	// Server
 	implementation 'org.springframework.boot:spring-boot-starter-web' // Web (tomcat)

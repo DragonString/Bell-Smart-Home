@@ -15,7 +15,7 @@ import net.softbell.bsh.dto.card.CardItem;
 
 @Controller
 @RequestMapping("/")
-public class MainController {
+public class IndexView {
 	// Global Field
 	@SuppressWarnings("unused")
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
