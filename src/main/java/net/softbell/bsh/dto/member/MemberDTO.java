@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.softbell.bsh.domain.entity.MemberInfo;
+import net.softbell.bsh.domain.entity.Member;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -21,7 +21,7 @@ import net.softbell.bsh.domain.entity.MemberInfo;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberInfoDTO {
+public class MemberDTO {
     private int id;
     private String userId;
     private String password;
@@ -32,7 +32,7 @@ public class MemberInfoDTO {
     //private LocalDateTime modifiedDate;
     private int year, month, day;
 
-    public MemberInfo toEntity(){
+    public Member toEntity(){
     	// Field
     	Calendar calendar = Calendar.getInstance();
     	
@@ -49,17 +49,17 @@ public class MemberInfoDTO {
         	isAdmin = "N";*/
         
         // Return
-        return MemberInfo.builder()
+        return Member.builder()
                 .userId(userId)
-                .password(password)
-                .registerTime(new Date())
+                .passwd(password)
+                .registerDate(new Date())
                 .isBan(isBan)
                 .isAdmin(isAdmin)
                 .username(username)
                 .build();
     }
 
-    public MemberInfoDTO(String userId, String password, String username) {
+    public MemberDTO(String userId, String password, String username) {
         this.userId = userId;
         this.password = password;
         this.username = username;

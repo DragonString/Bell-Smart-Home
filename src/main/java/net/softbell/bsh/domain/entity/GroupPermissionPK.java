@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 그룹 권한 주 키
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,14 +23,13 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @Embeddable
-public class MemberLoginPK implements Serializable {
+public class GroupPermissionPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="update_time", unique=true, nullable=false)
-	private java.util.Date updateTime;
+	@Column(name="node_group_id", insertable=false, updatable=false, unique=true, nullable=false)
+	private int nodeGroupId;
 
-	@Column(name="member_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int memberId;
+	@Column(name="member_group_id", insertable=false, updatable=false, unique=true, nullable=false)
+	private int memberGroupId;
 }

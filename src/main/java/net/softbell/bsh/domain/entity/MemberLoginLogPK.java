@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 회원 로그인 로그 주 키
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,15 +23,13 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @Embeddable
-public class NodeConnectionPK implements Serializable {
+public class MemberLoginLogPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="update_time", unique=true, nullable=false)
-	private java.util.Date updateTime;
+	@Column(name="member_id", insertable=false, updatable=false, unique=true, nullable=false)
+	private int memberId;
 
-	@Column(name="node_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int nodeId;
-
+	@Column(name="log_id", unique=true, nullable=false)
+	private String logId;
 }

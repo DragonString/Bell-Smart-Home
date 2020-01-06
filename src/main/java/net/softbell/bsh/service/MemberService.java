@@ -19,10 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.MemberRole;
-import net.softbell.bsh.domain.entity.MemberInfo;
-import net.softbell.bsh.domain.repository.MemberInfoRepo;
+import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.repository.MemberLoginRepo;
-import net.softbell.bsh.dto.member.MemberInfoDTO;
+import net.softbell.bsh.domain.repository.MemberRepo;
+import net.softbell.bsh.dto.member.MemberDTO;
 import net.softbell.bsh.libs.BellLog;
 
 /**
@@ -36,18 +36,18 @@ public class MemberService implements UserDetailsService {
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private MemberInfoRepo memberRepo;
+	private MemberRepo memberRepo;
 	@Autowired
 	private MemberLoginRepo memberLoginLogRepo;
 
 	@Transactional
-	public int joinUser(MemberInfoDTO memberDto) {
+	public int joinUser(MemberDTO memberDto) {
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "회원가입 요청 (" + memberDto.getUserId() + " - " + memberDto.getUsername() + ")");
 		
 		// Field
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-		MemberInfo member;
+		Member member;
 
 		// Init
 		member = getMember(memberDto.getUserId());
@@ -66,10 +66,10 @@ public class MemberService implements UserDetailsService {
 		return memberRepo.save(memberDto.toEntity()).getMemberId();
 	}
 
-	public MemberInfo getMember(String userId)
+	public Member getMember(String userId)
 	{
 		// Field
-		Optional<MemberInfo> optMember = memberRepo.findByUserId(userId);
+		Optional<Member> optMember = memberRepo.findByUserId(userId);
 
 		// Check
 		if (!optMember.isPresent())
@@ -77,10 +77,10 @@ public class MemberService implements UserDetailsService {
 		return optMember.get();
 	}
 	
-	public MemberInfo getMember(long id)
+	public Member getMember(long id)
 	{
 		// Field
-		Optional<MemberInfo> optMember = memberRepo.findById(id);
+		Optional<Member> optMember = memberRepo.findById(id);
 
 		// Check
 		if (!optMember.isPresent())
@@ -90,7 +90,7 @@ public class MemberService implements UserDetailsService {
 	
 	/*public boolean isAdmin(String userId)
 	{
-		MemberInfo member = getMember(userId);
+		Member member = getMember(userId);
 		
 		if (member != null && member.getIsAdmin().equalsIgnoreCase("Y") || member.getIsAdmin().equalsIgnoreCase("1"))
 			return true;
@@ -99,7 +99,7 @@ public class MemberService implements UserDetailsService {
 	
 	public boolean isSuperAdmin(String userId)
 	{
-		MemberInfo member = getMember(userId);
+		Member member = getMember(userId);
 		
 		if (member != null && member.getIsAdmin().equalsIgnoreCase("1"))
 			return true;
@@ -108,7 +108,7 @@ public class MemberService implements UserDetailsService {
 	
 	public boolean isBan(String userId)
 	{
-		MemberInfo member = getMember(userId);
+		Member member = getMember(userId);
 		
 		if (member == null || member.getIsBan().equalsIgnoreCase("Y"))
 			return true;
@@ -123,7 +123,7 @@ public class MemberService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		// Field
-		MemberInfo member;
+		Member member;
 		
 		// Init
 		member = getMember(userId);
@@ -150,7 +150,7 @@ public class MemberService implements UserDetailsService {
 	public boolean procLogin(String userId, String loginIp, boolean isLogin)
 	{
 		// Field
-		MemberInfo member;
+		Member member;
 		MemberLoginLog memberLoginLog;
 		
 		// Init
@@ -181,7 +181,7 @@ public class MemberService implements UserDetailsService {
 	@Transactional
 	public boolean checkDelete(String userId) {
 		// Field
-		MemberInfo member;
+		Member member;
 
 		// Init
 		member = getMember(userId);
@@ -200,7 +200,7 @@ public class MemberService implements UserDetailsService {
 		G_Logger.info(BellLog.getLogHead() + "회원 탈퇴 요청 (" + memberDto.getUserId() + ")");
 		
 		// Field
-		MemberInfo member;
+		Member member;
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// Init
@@ -222,10 +222,10 @@ public class MemberService implements UserDetailsService {
 		G_Logger.info(BellLog.getLogHead() + "회원 탈퇴 요청 (" + listMemberId.size() + ")");
 		
 		// Field
-		MemberInfo member;
+		Member member;
 		boolean isError = false;
 		boolean isSuperAdmin = isSuperAdmin(principal.getName());
-		MemberInfo memberMySelf = getMember(principal.getName());
+		Member memberMySelf = getMember(principal.getName());
 
 		// Init
 		for (int value : listMemberId)
@@ -251,7 +251,7 @@ public class MemberService implements UserDetailsService {
 	public MemberDTO getInfo(Principal principal) {
 		// Field
 		MemberDTO memberDTO;
-		MemberInfo member;
+		Member member;
 
 		// Init
 		member = getMember(principal.getName());
@@ -270,12 +270,12 @@ public class MemberService implements UserDetailsService {
 	}
 
 	@Transactional
-	public MemberInfo modifyInfo(Principal principal, String strCurPassword, String strModPassword) {
+	public Member modifyInfo(Principal principal, String strCurPassword, String strModPassword) {
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "회원정보 수정 요청 (" + principal.getName() + ")");
 		
 		// Field
-		MemberInfo member;
+		Member member;
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		// Init
@@ -301,7 +301,7 @@ public class MemberService implements UserDetailsService {
 
 	public List<MemberDTO> getMemberList(int intPage, int intCount) {
 		// Field
-		Page<MemberInfo> pageMember;
+		Page<Member> pageMember;
 		Pageable curPage;
 		List<MemberDTO> listMemberDTO;
 
@@ -311,7 +311,7 @@ public class MemberService implements UserDetailsService {
 		listMemberDTO = new ArrayList<MemberDTO>();
 
 		// Process
-		for (MemberInfo member : pageMember) {
+		for (Member member : pageMember) {
 			listMemberDTO.add(MemberDTO.builder().id(member.getMemberId()).userId(member.getUserId())
 					.username(member.getUsername()).birthday(member.getBirthday()).regDate(member.getRegdate())
 					.isBan(member.getIsBan()).isAdmin(member.getIsAdmin()).build());
@@ -343,12 +343,12 @@ public class MemberService implements UserDetailsService {
 		// Field
 		int intSuccess = listMemberId.size();
 		boolean isSuperAdmin = isSuperAdmin(principal.getName());
-		MemberInfo memberMySelf = getMember(principal.getName());
+		Member memberMySelf = getMember(principal.getName());
 
 		// Process
 		for (int intMemberId : listMemberId) {
 			// Field
-			MemberInfo member;
+			Member member;
 
 			// Init
 			member = getMember(intMemberId);
@@ -387,12 +387,12 @@ public class MemberService implements UserDetailsService {
 		
 		// Field
 		int intSuccess = listMemberId.size();
-		MemberInfo memberMySelf = getMember(principal.getName());
+		Member memberMySelf = getMember(principal.getName());
 
 		// Process
 		for (int intMemberId : listMemberId) {
 			// Field
-			MemberInfo member;
+			Member member;
 
 			// Init
 			member = getMember(intMemberId);
@@ -422,7 +422,7 @@ public class MemberService implements UserDetailsService {
 	public List<MemberLoginLogDTO> getLoginLog(Principal principal, int intPage, int intCount)
 	{
 		// Field
-		MemberInfo member;
+		Member member;
 		List<MemberLoginLogDTO> listMemberLoginLog;
 		Page<MemberLoginLog> pageMemberLoginLog;
 		Pageable curPage;
@@ -449,7 +449,7 @@ public class MemberService implements UserDetailsService {
 	
 	public int getLoginLogMaxPage(Principal principal, int intCount) {
 		// Field
-		MemberInfo member;
+		Member member;
 		long longCount;
 		int intMaxPage;
 		

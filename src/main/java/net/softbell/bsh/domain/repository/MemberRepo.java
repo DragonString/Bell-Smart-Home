@@ -5,10 +5,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import net.softbell.bsh.domain.entity.MemberInfo;
+import net.softbell.bsh.domain.entity.Member;
 
 @Repository
-public interface MemberInfoRepo extends JpaRepository<MemberInfo, Long>
+public interface MemberRepo extends JpaRepository<Member, Long>
 {
-	Optional<MemberInfo> findByUserId(String userId);
+	Optional<Member> findByUserId(String userId);
 }

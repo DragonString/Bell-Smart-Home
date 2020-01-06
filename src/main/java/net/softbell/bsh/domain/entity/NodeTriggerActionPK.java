@@ -12,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 노드 트리거 액션 주 키
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,20 +23,13 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @Embeddable
-public class NodeReservPK implements Serializable {
+public class NodeTriggerActionPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="reserv_id", unique=true, nullable=false)
-	private int reservId;
+	@Column(name="trigger_id", insertable=false, updatable=false, unique=true, nullable=false)
+	private int triggerId;
 
-	@Column(name="node_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int nodeId;
-
-	@Column(name="type_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int typeId;
-
-	@Column(name="item_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int itemId;
-
+	@Column(name="trigger_action_id", unique=true, nullable=false)
+	private byte triggerActionId;
 }

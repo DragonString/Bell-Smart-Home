@@ -12,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 노드 그룹 아이템 주 키
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,17 +23,13 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @Embeddable
-public class NodePropertyPK implements Serializable {
+public class NodeGroupItemPK implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
+	@Column(name="node_group_id", insertable=false, updatable=false, unique=true, nullable=false)
+	private int nodeGroupId;
+
 	@Column(name="node_id", insertable=false, updatable=false, unique=true, nullable=false)
 	private int nodeId;
-
-	@Column(name="type_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int typeId;
-
-	@Column(name="item_id", unique=true, nullable=false)
-	private int itemId;
-
 }
