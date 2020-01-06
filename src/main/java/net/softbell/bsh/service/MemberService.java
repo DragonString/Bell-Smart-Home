@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.MemberRole;
 import net.softbell.bsh.domain.entity.Member;
-import net.softbell.bsh.domain.repository.MemberLoginRepo;
+import net.softbell.bsh.domain.repository.MemberLoginLogRepo;
 import net.softbell.bsh.domain.repository.MemberRepo;
 import net.softbell.bsh.dto.member.MemberDTO;
 import net.softbell.bsh.libs.BellLog;
@@ -38,7 +38,7 @@ public class MemberService implements UserDetailsService {
 	@Autowired
 	private MemberRepo memberRepo;
 	@Autowired
-	private MemberLoginRepo memberLoginLogRepo;
+	private MemberLoginLogRepo memberLoginLogRepo;
 
 	@Transactional
 	public int joinUser(MemberDTO memberDto) {
@@ -77,7 +77,7 @@ public class MemberService implements UserDetailsService {
 		return optMember.get();
 	}
 	
-	public Member getMember(long id)
+	public Member getMember(int id)
 	{
 		// Field
 		Optional<Member> optMember = memberRepo.findById(id);
@@ -132,7 +132,7 @@ public class MemberService implements UserDetailsService {
 
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
-		if (member.getIsBan() == 1)
+		/*if (member.getIsBan() == 1) // TODO 현재 엔티티에 맞게 수정해야됨
 			authorities.add(new SimpleGrantedAuthority(MemberRole.BAN.getValue()));
 		if (member.getIsAdmin() == 1)
 			authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
@@ -140,10 +140,10 @@ public class MemberService implements UserDetailsService {
 		{
 			authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
 			authorities.add(new SimpleGrantedAuthority(MemberRole.SUPERADMIN.getValue()));
-		}
+		}*/
 		authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
 
-		return new User(member.getUserId(), member.getPassword(), authorities);
+		return new User(member.getUserId(), member.getPasswd(), authorities);
 	}
 	
 	/*@Transactional

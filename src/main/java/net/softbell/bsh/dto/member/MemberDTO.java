@@ -53,8 +53,8 @@ public class MemberDTO {
                 .userId(userId)
                 .passwd(password)
                 .registerDate(new Date())
-                .isBan(isBan)
-                .isAdmin(isAdmin)
+//                .isBan(isBan)
+//                .isAdmin(isAdmin)
                 .username(username)
                 .build();
     }

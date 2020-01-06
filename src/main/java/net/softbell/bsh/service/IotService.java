@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import net.softbell.bsh.domain.repository.NodeInfoRepo;
+import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.dto.iot.BSHPv1DTO;
 import net.softbell.bsh.libs.BellLog;
 
@@ -18,7 +18,7 @@ public class IotService {
 	@Autowired
 	private SimpMessagingTemplate template;
 	@Autowired
-	private NodeInfoRepo nodeInfoRepo;
+	private NodeRepo nodeRepo;
 	
 	
 	public void sendMessage(BSHPv1DTO message)
