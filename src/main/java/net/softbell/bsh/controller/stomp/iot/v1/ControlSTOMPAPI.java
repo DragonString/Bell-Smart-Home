@@ -16,10 +16,10 @@ import net.softbell.bsh.service.IotService;
  * STOMP Controller
  * @author Bell
  * STOMP publish: /api/stomp/pub
- * STOMP subscribe: /api/stomp/sub
+ * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
 @RestController
-public class ControlStompAPI
+public class ControlSTOMPAPI
 {
 	// Global Field
 	@Autowired

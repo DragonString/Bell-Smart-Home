@@ -25,15 +25,18 @@ public class IotService {
 	{
 		// Log
 		G_Logger.info(BellLog.getLogHead() + message.getTarget() + "로 메시지 전송");
-		
+		String temp = message.getTarget();
+//		message.setTarget("3213");
 		// Process
-		template.convertAndSend("/api/stomp/queue/iot/v1/node/" + message.getTarget(), message);
+		template.convertAndSend("/api/stomp/queue/iot/v1/node/" + temp, message);
 	}
 	
 	public boolean procMessage(BSHPv1DTO message)
 	{
 		// Field
 		boolean isSuccess = false;
+		
+		System.out.println(message.toString());
 		
 		// Process
 		if (message.getTarget().equals("SERVER"))
@@ -48,6 +51,8 @@ public class IotService {
 			G_Logger.error(BellLog.getLogHead() + "처리되지 않은 메시지: " + message.toString());
 			sendMessage(BSHPv1DTO.builder().sender("SERVER").target(message.getSender()).cmd("INFO").type("HANDLE").obj("ERROR").build());
 		}
+		else
+			G_Logger.info(BellLog.getLogHead() + "처리된 메시지: " + message.toString());
 		
 		// Return
 		return isSuccess;

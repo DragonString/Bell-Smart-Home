@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			        // 403 예외처리 핸들링
 					.exceptionHandling().accessDeniedPage("/denied")
 				;
-    	http.csrf().disable(); // API 개발중 임시 해제 ////////////////////// TODO
+//    	http.csrf().disable(); // API 개발중 임시 해제 ////////////////////// TODO
     	
     	// Dev Mode
     	if (isDevMode())
