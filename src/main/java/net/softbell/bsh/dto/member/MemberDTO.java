@@ -1,6 +1,5 @@
 package net.softbell.bsh.dto.member;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -22,46 +21,37 @@ import net.softbell.bsh.domain.entity.Member;
 @AllArgsConstructor
 @Builder
 public class MemberDTO {
-    private int id;
-    private String userId;
-    private String password;
-    private Date regDate;
-    private short isBan;
-    private byte isAdmin;
-    private String username;
-    //private LocalDateTime modifiedDate;
-    private int year, month, day;
+    private long memberId;
+    private byte ban;
+	private Date banDate;
+	private Date changePasswdDate;
+	private String emailAddress;
+	private String emailHost;
+	private String emailId;
+	private Date lastLogin;
+	private byte loginFailcount;
+	private String nickname;
+	private String passwd;
+	private byte permission;
+	private Date registerDate;
+	private String userId;
+	private String username;
 
     public Member toEntity(){
-    	// Field
-    	Calendar calendar = Calendar.getInstance();
-    	
-    	// Init
-    	calendar.clear(); // Sets hours/minutes/seconds/milliseconds to zero
-    	calendar.set(year, month - 1, day);
-    	
     	// Default
-    	/*if (birthday == null)
-    		birthday = calendar.getTime();
-        /*if (isBan == null)
-        	isBan = "N";
-        if (isAdmin == null)
-        	isAdmin = "N";*/
-        
-        // Return
+    	if (emailAddress == null || emailAddress.isEmpty())
+    		emailAddress = emailHost + "@" + emailId;
+    	
+    	// Generate
         return Member.builder()
                 .userId(userId)
-                .passwd(password)
-                .registerDate(new Date())
-//                .isBan(isBan)
-//                .isAdmin(isAdmin)
+        		.emailAddress(emailAddress)
+                .passwd(passwd)
+        		.emailHost(emailHost)
+        		.emailId(emailId)
                 .username(username)
+        		.nickname(nickname)
+                .registerDate(new Date())
                 .build();
-    }
-
-    public MemberDTO(String userId, String password, String username) {
-        this.userId = userId;
-        this.password = password;
-        this.username = username;
     }
 }

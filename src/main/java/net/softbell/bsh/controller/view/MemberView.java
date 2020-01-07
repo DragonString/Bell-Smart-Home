@@ -16,7 +16,7 @@ import net.softbell.bsh.service.MemberService;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 회원 컨트롤러
+ * @Description : 회원 뷰 컨트롤러
  */
 @Controller
 @AllArgsConstructor
@@ -60,12 +60,12 @@ public class MemberView {//extends ControllerFilter {
 
     // 회원가입 처리
     @PostMapping("/signup")
-    public String execSignup(MemberDTO memberDto) {
+    public String execSignup(MemberDTO memberDTO) {
     	// Field
     	long intResult;
     	
     	// Init
-    	intResult = memberService.joinUser(memberDto);
+    	intResult = memberService.joinUser(memberDTO);
     	
     	// Check
         if (intResult == -1)

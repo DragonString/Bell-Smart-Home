@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
+import net.softbell.bsh.dto.bshp.BaseV1DTO;
 import net.softbell.bsh.dto.card.CardDashboard;
 import net.softbell.bsh.dto.card.CardItem;
-import net.softbell.bsh.dto.iot.BSHPv1DTO;
 import net.softbell.bsh.libs.BellLog;
 import net.softbell.bsh.service.IotService;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : IoT 뷰 컨트롤러
+ */
 @Controller
 @RequestMapping("/iot/")
 public class IotView {
@@ -79,10 +83,10 @@ public class IotView {
 			@RequestParam("value")String strValue)
 	{
 		// Field
-		BSHPv1DTO msg;
+		BaseV1DTO msg;
 		
 		// Init
-		msg = BSHPv1DTO.builder().sender("SERVER").target("1").cmd("SET").type("ITEM").obj("1").value("ON").build();
+		msg = BaseV1DTO.builder().sender("SERVER").target("1").cmd("SET").type("ITEM").obj("1").value("ON").build();
 		
 		// Process
 		iotService.sendMessage(msg);

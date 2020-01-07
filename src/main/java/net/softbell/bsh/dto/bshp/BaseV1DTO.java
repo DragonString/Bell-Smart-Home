@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.iot;
+package net.softbell.bsh.dto.bshp;
 
 import javax.validation.constraints.Null;
 
@@ -11,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : Bell Smart Home Protocol v1 DTO
+ */
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -18,7 +22,7 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class BSHPv1DTO {
+public class BaseV1DTO {
 	@NonNull
 	private String sender;
 	@NonNull
@@ -31,6 +35,4 @@ public class BSHPv1DTO {
 	private String obj;
 	@Null
 	private Object value;
-	@Null
-	private Object values;
 }

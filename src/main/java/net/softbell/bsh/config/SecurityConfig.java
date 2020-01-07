@@ -17,6 +17,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.service.MemberService;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 보안 설정
+ */
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor

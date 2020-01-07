@@ -30,7 +30,10 @@ function connect()
 	stompClient.connect({}, function(frame) {
 		setConnected(true);
 		console.log('Connected: ' + frame);
-		stompClient.subscribe('/api/stomp/queue/iot/v1/node/1', function(message) {
+		stompClient.subscribe('/api/stomp/topic/iot/v1/node', function(message) {
+			procMessage(JSON.parse(message.body));
+		});
+		stompClient.subscribe('/api/stomp/topic/iot/v1/node/uid/1', function(message) {
 			procMessage(JSON.parse(message.body));
 		});
 	});
@@ -54,7 +57,7 @@ function sendMessage(cmd, name, content)
 		'content' : content
 	}));*/
 	
-	stompClient.send("/api/stomp/pub/iot/v1/node/1", {}, JSON.stringify({
+	stompClient.send("/api/stomp/pub/iot/v1/node/uid/1/GET/INFO/TOKEN", {}, JSON.stringify({
 		'sender' : '1',
 		'target' : 'SERVER',
 		'cmd' : 'test',

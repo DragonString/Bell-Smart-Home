@@ -39,7 +39,7 @@ public class MemberService implements UserDetailsService {
 	private MemberRepo memberRepo;
 	@Autowired
 	private MemberLoginLogRepo memberLoginLogRepo;
-
+	
 	@Transactional
 	public long joinUser(MemberDTO memberDto) {
 		// Log
@@ -61,7 +61,7 @@ public class MemberService implements UserDetailsService {
 			return -1;*/
 
 		// Process
-		memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword())); // 비밀번호 암호화
+		memberDto.setPasswd(passwordEncoder.encode(memberDto.getPasswd())); // 비밀번호 암호화
 
 		return memberRepo.save(memberDto.toEntity()).getMemberId();
 	}
@@ -77,7 +77,7 @@ public class MemberService implements UserDetailsService {
 		return optMember.get();
 	}
 	
-	public Member getMember(int id)
+	public Member getMember(long id)
 	{
 		// Field
 		Optional<Member> optMember = memberRepo.findById(id);
@@ -124,24 +124,30 @@ public class MemberService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		// Field
 		Member member;
+		byte permission;
 		
 		// Init
 		member = getMember(userId);
 		if (member == null)
 			return null;
+		permission = member.getPermission();
+		
 
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
-		/*if (member.getIsBan() == 1) // TODO 현재 엔티티에 맞게 수정해야됨
-			authorities.add(new SimpleGrantedAuthority(MemberRole.BAN.getValue()));
-		if (member.getIsAdmin() == 1)
-			authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-		if (member.getIsAdmin() == 2)
+		if (permission == 0)
+			authorities.add(new SimpleGrantedAuthority(MemberRole.WAIT.getValue()));
+		else
 		{
-			authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-			authorities.add(new SimpleGrantedAuthority(MemberRole.SUPERADMIN.getValue()));
-		}*/
-		authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
+			if (permission == 2)
+				authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
+			else if (permission == 3)
+			{
+				authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
+				authorities.add(new SimpleGrantedAuthority(MemberRole.SUPERADMIN.getValue()));
+			}
+			authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
+		}
 
 		return new User(member.getUserId(), member.getPasswd(), authorities);
 	}

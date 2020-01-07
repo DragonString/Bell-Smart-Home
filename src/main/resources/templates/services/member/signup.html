@@ -15,27 +15,42 @@
 		    			<td><h1 class="align-middle text-center text-white">Bell Smart Home</h1></td>
 		    		</tr>
 		    		<tr>
-		    			<td><h5 class="align-middle text-center text-danger">유지보수 모드 활성화</h1></td>
+		    			<td><h5 class="align-middle text-center text-danger">유지보수 모드 활성화</h5></td>
 		    		</tr>
 		    		<tr><td>
 						<input class="form-control initfocus" type="text" name="username" placeholder="이름">
-						<div class="invalid-feedback"><spring:message code="member.valid.username"/></div>
-						<div class="valid-feedback"><spring:message code="member.valid.good"/></div>
+						<div class="invalid-feedback">이름 제대로 입력</div>
+						<div class="valid-feedback">굿잡!</div>
+					</td></tr>
+					<tr><td>
+						<input class="form-control" type="text" name="nickname" placeholder="닉네임">
+						<div class="invalid-feedback">닉네임 제대로 입력</div>
+						<div class="valid-feedback">굿잡!</div>
 					</td></tr>
 					<tr><td>
 						<input class="form-control" type="text" name="userId" placeholder="아이디">
-						<div class="invalid-feedback"><spring:message code="member.valid.userId"/></div>
-						<div class="valid-feedback"><spring:message code="member.valid.good"/></div>
+						<div class="invalid-feedback">아이디 제대로 입력</div>
+						<div class="valid-feedback">굿잡!</div>
 					</td></tr>
 					<tr><td>
-						<input class="form-control pass-ori" type="password" name="password" placeholder="비밀번호">
-						<div class="invalid-feedback"><spring:message code="member.valid.password"/></div>
-						<div class="valid-feedback"><spring:message code="member.valid.good"/></div>
+						<input class="form-control pass-ori" type="password" name="passwd" placeholder="비밀번호">
+						<div class="invalid-feedback">비밀번호 제대로 입력</div>
+						<div class="valid-feedback">굿잡!</div>
 					</td></tr>
 					<tr><td>
 						<input class="form-control pass-valid" type="password" placeholder="비밀번호 확인">
-						<div class="invalid-feedback"><spring:message code="member.valid.passwordRetry"/></div>
-						<div class="valid-feedback"><spring:message code="member.valid.good"/></div>
+						<div class="invalid-feedback">비밀번호 확인 제대로 입력</div>
+						<div class="valid-feedback">굿잡!</div>
+					</td></tr>
+					<tr><td>
+						<input class="form-control" type="text" name="emailId" placeholder="이메일">
+						<div class="invalid-feedback">이메일 제대로 입력</div>
+						<div class="valid-feedback">굿잡!</div>
+					</td></tr>
+					<tr><td>
+						<input class="form-control" type="text" name="emailHost" placeholder="이메일 호스트 (softbell.net)">
+						<div class="invalid-feedback">이메일 호스트 제대로 입력</div>
+						<div class="valid-feedback">굿잡!</div>
 					</td></tr>
 					<tr>
 						<td>

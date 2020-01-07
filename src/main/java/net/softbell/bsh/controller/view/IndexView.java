@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import net.softbell.bsh.dto.card.CardDashboard;
 import net.softbell.bsh.dto.card.CardItem;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 인덱스 뷰 컨트롤러
+ */
 @Controller
 @RequestMapping("/")
 public class IndexView {

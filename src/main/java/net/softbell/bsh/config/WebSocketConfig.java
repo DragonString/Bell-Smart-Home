@@ -6,6 +6,10 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 웹 소켓 설정
+ */
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
@@ -13,10 +17,31 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.enableSimpleBroker("/api/stomp/topic", "/api/stomp/queue", "/api/stomp/pub");
 		registry.setApplicationDestinationPrefixes("/api/stomp/topic", "/api/stomp/queue", "/api/stomp/pub");
+		//registry.setUserDestinationPrefix("");
+//		registry.setApplicationDestinationPrefixes("/");
 	}
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+		registry.addEndpoint("/ws")
+				.setAllowedOrigins("*")
+				.withSockJS();
+				/*.setHandshakeHandler(new DefaultHandshakeHandler() {
+					 
+				      public boolean beforeHandshake(
+				        ServerHttpRequest request, 
+				        ServerHttpResponse response, 
+				        WebSocketHandler wsHandler,
+				        Map attributes) throws Exception {
+				  
+				            if (request instanceof ServletServerHttpRequest) {
+				                ServletServerHttpRequest servletRequest
+				                 = (ServletServerHttpRequest) request;
+				                HttpSession session = servletRequest
+				                  .getServletRequest().getSession();
+				                attributes.put("sessionId", session.getId());
+				            }
+				                return true;
+				        }});*/
 	}
 }

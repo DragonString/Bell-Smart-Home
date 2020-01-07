@@ -7,8 +7,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : API 테스트용 DTO
+ */
 @Getter
 @Setter
+@Deprecated
 public class APITestDTO {
 	private String strName;
 	private Integer intAge;

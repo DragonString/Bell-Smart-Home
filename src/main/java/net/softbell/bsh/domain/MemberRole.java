@@ -13,6 +13,7 @@ public enum MemberRole {
     SUPERADMIN("ROLE_SUPERADMIN"),
     ADMIN("ROLE_ADMIN"),
     MEMBER("ROLE_MEMBER"),
+    WAIT("ROLE_WAIT"),
     BAN("ROLE_BAN");
 
     private String value;

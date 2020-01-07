@@ -8,13 +8,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.softbell.bsh.dto.iot.BSHPv1DTO;
+import net.softbell.bsh.dto.bshp.BaseV1DTO;
 import net.softbell.bsh.dto.test.APITestDTO;
 import net.softbell.bsh.service.IotService;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 테스트 REST API 컨트롤러
+ */
 @RestController
 @RequestMapping("/api/rest/v1/test")
-public class TestRestAPI
+public class TestREST
 {
 	@Autowired
 	private IotService iotService;
@@ -37,7 +41,7 @@ public class TestRestAPI
 			@RequestParam(value = "obj", required = false, defaultValue = "ITEMS")String strObj)
 	{
 		// Field
-		BSHPv1DTO message = new BSHPv1DTO("SERVER", strTarget, strCmd, strType, strObj);
+		BaseV1DTO message = new BaseV1DTO("SERVER", strTarget, strCmd, strType, strObj);
 		
 		// Process
 		iotService.sendMessage(message);
@@ -52,7 +56,7 @@ public class TestRestAPI
 			@RequestParam(value = "value", required = false, defaultValue = "1")int intValue)
 	{
 		// Field
-		BSHPv1DTO message = new BSHPv1DTO("SERVER", strTarget, "SET", "VALUE", "ITEM");
+		BaseV1DTO message = new BaseV1DTO("SERVER", strTarget, "SET", "VALUE", "ITEM");
 		Test2 test = new Test2(intId, intValue);
 		message.setValue(test);
 		
@@ -67,7 +71,7 @@ public class TestRestAPI
 	@AllArgsConstructor
 	class Test2
 	{
-		private int id;
-		private int value;
+		private int pinId;
+		private int pinStatus;
 	}
 }

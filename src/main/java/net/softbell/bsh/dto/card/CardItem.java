@@ -6,6 +6,10 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 카드 아이템 DTO
+ */
 @Getter
 @Builder
 @RequiredArgsConstructor

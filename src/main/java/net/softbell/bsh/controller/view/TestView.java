@@ -13,6 +13,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.softbell.bsh.libs.BellLog;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 테스트 페이지 뷰 컨트롤러
+ */
 @Controller
 @RequestMapping("/test/")
 public class TestView {
