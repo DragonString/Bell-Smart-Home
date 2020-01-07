@@ -12,7 +12,7 @@ import net.softbell.bsh.domain.entity.Member;
  * @Description : 회원 리포지토리 인터페이스
  */
 @Repository
-public interface MemberRepo extends JpaRepository<Member, Integer>
+public interface MemberRepo extends JpaRepository<Member, Long>
 {
 	Optional<Member> findByUserId(String userId);
 }

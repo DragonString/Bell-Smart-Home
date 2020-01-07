@@ -10,7 +10,7 @@ import net.softbell.bsh.domain.entity.NodeGroup;
  * @Description : 노드 그룹 리포지토리 인터페이스
  */
 @Repository
-public interface NodeGroupRepo extends JpaRepository<NodeGroup, Integer>
+public interface NodeGroupRepo extends JpaRepository<NodeGroup, Long>
 {
 	
 }

@@ -10,7 +10,7 @@ import net.softbell.bsh.domain.entity.NodeTrigger;
  * @Description : 노드 트리거 리포지토리 인터페이스
  */
 @Repository
-public interface NodeTriggerRepo extends JpaRepository<NodeTrigger, Integer>
+public interface NodeTriggerRepo extends JpaRepository<NodeTrigger, Long>
 {
 	
 }

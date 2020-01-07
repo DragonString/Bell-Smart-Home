@@ -10,7 +10,7 @@ import net.softbell.bsh.domain.entity.NodeAction;
  * @Description : 노드 액션 리포지토리 인터페이스
  */
 @Repository
-public interface NodeActionRepo extends JpaRepository<NodeAction, Integer>
+public interface NodeActionRepo extends JpaRepository<NodeAction, Long>
 {
 	
 }

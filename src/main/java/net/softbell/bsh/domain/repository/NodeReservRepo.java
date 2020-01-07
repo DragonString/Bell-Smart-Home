@@ -10,7 +10,7 @@ import net.softbell.bsh.domain.entity.NodeReserv;
  * @Description : 노드 예약 리포지토리 인터페이스
  */
 @Repository
-public interface NodeReservRepo extends JpaRepository<NodeReserv, Integer>
+public interface NodeReservRepo extends JpaRepository<NodeReserv, Long>
 {
 	
 }

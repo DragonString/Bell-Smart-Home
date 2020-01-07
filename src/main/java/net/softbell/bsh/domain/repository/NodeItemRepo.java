@@ -10,7 +10,7 @@ import net.softbell.bsh.domain.entity.NodeItem;
  * @Description : 노드 아이템 리포지토리 인터페이스
  */
 @Repository
-public interface NodeItemRepo extends JpaRepository<NodeItem, Integer>
+public interface NodeItemRepo extends JpaRepository<NodeItem, Long>
 {
 	
 }
