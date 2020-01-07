@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,8 +33,10 @@ import lombok.Setter;
 @Entity
 @Table(name="node_item")
 @NamedQuery(name="NodeItem.findAll", query="SELECT n FROM NodeItem n")
-public class NodeItem
+public class NodeItem implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="item_id", unique=true, nullable=false)
@@ -70,42 +73,48 @@ public class NodeItem
 	@OneToMany(mappedBy="nodeItem")
 	private List<NodeTriggerItem> nodeTriggerItems;
 
-	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem) {
+	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
+	{
 		getNodeActionItems().add(nodeActionItem);
 		nodeActionItem.setNodeItem(this);
 
 		return nodeActionItem;
 	}
 
-	public NodeActionItem removeNodeActionItem(NodeActionItem nodeActionItem) {
+	public NodeActionItem removeNodeActionItem(NodeActionItem nodeActionItem)
+	{
 		getNodeActionItems().remove(nodeActionItem);
 		nodeActionItem.setNodeItem(null);
 
 		return nodeActionItem;
 	}
 
-	public NodeItemHistory addNodeItemHistory(NodeItemHistory nodeItemHistory) {
+	public NodeItemHistory addNodeItemHistory(NodeItemHistory nodeItemHistory)
+	{
 		getNodeItemHistories().add(nodeItemHistory);
 		nodeItemHistory.setNodeItem(this);
 
 		return nodeItemHistory;
 	}
 
-	public NodeItemHistory removeNodeItemHistory(NodeItemHistory nodeItemHistory) {
+	public NodeItemHistory removeNodeItemHistory(NodeItemHistory nodeItemHistory)
+	{
 		getNodeItemHistories().remove(nodeItemHistory);
 		nodeItemHistory.setNodeItem(null);
 
 		return nodeItemHistory;
 	}
 
-	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem) {
+	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
+	{
 		getNodeTriggerItems().add(nodeTriggerItem);
 		nodeTriggerItem.setNodeItem(this);
 
 		return nodeTriggerItem;
 	}
 
-	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem) {
+	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
+	{
 		getNodeTriggerItems().remove(nodeTriggerItem);
 		nodeTriggerItem.setNodeItem(null);
 

@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -31,8 +32,10 @@ import lombok.Setter;
 @Entity
 @Table(name="node_group_item")
 @NamedQuery(name="NodeGroupItem.findAll", query="SELECT n FROM NodeGroupItem n")
-public class NodeGroupItem
+public class NodeGroupItem implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@EmbeddedId
 	private NodeGroupItemPK id;
 

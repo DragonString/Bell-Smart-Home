@@ -23,8 +23,8 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @Embeddable
-public class GroupPermissionPK implements Serializable {
-	//default serial version id, required for serializable classes.
+public class GroupPermissionPK implements Serializable
+{
 	private static final long serialVersionUID = 1L;
 
 	@Column(name="node_group_id", insertable=false, updatable=false, unique=true, nullable=false)

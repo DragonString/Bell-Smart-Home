@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -33,8 +34,10 @@ import lombok.Setter;
 @Entity
 @Table(name="member")
 @NamedQuery(name="Member.findAll", query="SELECT m FROM Member m")
-public class Member
+public class Member implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="member_id", unique=true, nullable=false)
@@ -101,70 +104,80 @@ public class Member
 	@OneToMany(mappedBy="member")
 	private List<NodeTrigger> nodeTriggers;
 
-	public MemberGroupItem addMemberGroupItem(MemberGroupItem memberGroupItem) {
+	public MemberGroupItem addMemberGroupItem(MemberGroupItem memberGroupItem)
+	{
 		getMemberGroupItems().add(memberGroupItem);
 		memberGroupItem.setMember(this);
 
 		return memberGroupItem;
 	}
 
-	public MemberGroupItem removeMemberGroupItem(MemberGroupItem memberGroupItem) {
+	public MemberGroupItem removeMemberGroupItem(MemberGroupItem memberGroupItem)
+	{
 		getMemberGroupItems().remove(memberGroupItem);
 		memberGroupItem.setMember(null);
 
 		return memberGroupItem;
 	}
 
-	public MemberLoginLog addMemberLoginLog(MemberLoginLog memberLoginLog) {
+	public MemberLoginLog addMemberLoginLog(MemberLoginLog memberLoginLog)
+	{
 		getMemberLoginLogs().add(memberLoginLog);
 		memberLoginLog.setMember(this);
 
 		return memberLoginLog;
 	}
 
-	public MemberLoginLog removeMemberLoginLog(MemberLoginLog memberLoginLog) {
+	public MemberLoginLog removeMemberLoginLog(MemberLoginLog memberLoginLog)
+	{
 		getMemberLoginLogs().remove(memberLoginLog);
 		memberLoginLog.setMember(null);
 
 		return memberLoginLog;
 	}
 
-	public NodeAction addNodeAction(NodeAction nodeAction) {
+	public NodeAction addNodeAction(NodeAction nodeAction)
+	{
 		getNodeActions().add(nodeAction);
 		nodeAction.setMember(this);
 
 		return nodeAction;
 	}
 
-	public NodeAction removeNodeAction(NodeAction nodeAction) {
+	public NodeAction removeNodeAction(NodeAction nodeAction)
+	{
 		getNodeActions().remove(nodeAction);
 		nodeAction.setMember(null);
 
 		return nodeAction;
 	}
 
-	public NodeReserv addNodeReserv(NodeReserv nodeReserv) {
+	public NodeReserv addNodeReserv(NodeReserv nodeReserv)
+	{
 		getNodeReservs().add(nodeReserv);
 		nodeReserv.setMember(this);
 
 		return nodeReserv;
 	}
 
-	public NodeReserv removeNodeReserv(NodeReserv nodeReserv) {
+	public NodeReserv removeNodeReserv(NodeReserv nodeReserv)
+	{
 		getNodeReservs().remove(nodeReserv);
 		nodeReserv.setMember(null);
 
 		return nodeReserv;
 	}
 
-	public NodeTrigger addNodeTrigger(NodeTrigger nodeTrigger) {
+	public NodeTrigger addNodeTrigger(NodeTrigger nodeTrigger)
+	{
 		getNodeTriggers().add(nodeTrigger);
 		nodeTrigger.setMember(this);
 
 		return nodeTrigger;
 	}
 
-	public NodeTrigger removeNodeTrigger(NodeTrigger nodeTrigger) {
+	public NodeTrigger removeNodeTrigger(NodeTrigger nodeTrigger)
+	{
 		getNodeTriggers().remove(nodeTrigger);
 		nodeTrigger.setMember(null);
 

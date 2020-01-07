@@ -1,5 +1,7 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -27,8 +29,10 @@ import lombok.Setter;
 @Entity
 @Table(name="node_trigger_item")
 @NamedQuery(name="NodeTriggerItem.findAll", query="SELECT n FROM NodeTriggerItem n")
-public class NodeTriggerItem
+public class NodeTriggerItem implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@EmbeddedId
 	private NodeTriggerItemPK id;
 

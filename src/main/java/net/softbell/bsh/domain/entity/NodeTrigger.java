@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +36,10 @@ import lombok.Setter;
 @Entity
 @Table(name="node_trigger")
 @NamedQuery(name="NodeTrigger.findAll", query="SELECT n FROM NodeTrigger n")
-public class NodeTrigger
+public class NodeTrigger implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_id", unique=true, nullable=false)
@@ -68,28 +71,32 @@ public class NodeTrigger
 	@OneToMany(mappedBy="nodeTrigger")
 	private List<NodeTriggerItem> nodeTriggerItems;
 
-	public NodeTriggerAction addNodeTriggerAction(NodeTriggerAction nodeTriggerAction) {
+	public NodeTriggerAction addNodeTriggerAction(NodeTriggerAction nodeTriggerAction)
+	{
 		getNodeTriggerActions().add(nodeTriggerAction);
 		nodeTriggerAction.setNodeTrigger(this);
 
 		return nodeTriggerAction;
 	}
 
-	public NodeTriggerAction removeNodeTriggerAction(NodeTriggerAction nodeTriggerAction) {
+	public NodeTriggerAction removeNodeTriggerAction(NodeTriggerAction nodeTriggerAction)
+	{
 		getNodeTriggerActions().remove(nodeTriggerAction);
 		nodeTriggerAction.setNodeTrigger(null);
 
 		return nodeTriggerAction;
 	}
 
-	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem) {
+	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
+	{
 		getNodeTriggerItems().add(nodeTriggerItem);
 		nodeTriggerItem.setNodeTrigger(this);
 
 		return nodeTriggerItem;
 	}
 
-	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem) {
+	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
+	{
 		getNodeTriggerItems().remove(nodeTriggerItem);
 		nodeTriggerItem.setNodeTrigger(null);
 

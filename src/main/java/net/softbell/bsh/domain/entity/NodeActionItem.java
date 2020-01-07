@@ -1,5 +1,7 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
@@ -27,13 +29,15 @@ import lombok.Setter;
 @Entity
 @Table(name="node_action_item")
 @NamedQuery(name="NodeActionItem.findAll", query="SELECT n FROM NodeActionItem n")
-public class NodeActionItem
+public class NodeActionItem implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@EmbeddedId
 	private NodeActionItemPK id;
 
 	@Column(name="pin_status", nullable=false)
-	private byte pinStatus;
+	private short pinStatus;
 
 	@ManyToOne
 	@JoinColumn(name="item_id", nullable=false, insertable=false, updatable=false)

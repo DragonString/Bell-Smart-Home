@@ -23,10 +23,10 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @Embeddable
-public class NodeTriggerActionPK implements Serializable {
-	//default serial version id, required for serializable classes.
+public class NodeTriggerActionPK implements Serializable
+{
 	private static final long serialVersionUID = 1L;
-
+	
 	@Column(name="trigger_id", insertable=false, updatable=false, unique=true, nullable=false)
 	private int triggerId;
 

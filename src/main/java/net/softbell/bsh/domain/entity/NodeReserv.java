@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,8 +33,10 @@ import lombok.Setter;
 @Entity
 @Table(name="node_reserv")
 @NamedQuery(name="NodeReserv.findAll", query="SELECT n FROM NodeReserv n")
-public class NodeReserv
+public class NodeReserv implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="reserv_id", unique=true, nullable=false)
@@ -55,14 +58,16 @@ public class NodeReserv
 	@JoinColumn(name="member_id", nullable=false)
 	private Member member;
 
-	public NodeReservAction addNodeReservAction(NodeReservAction nodeReservAction) {
+	public NodeReservAction addNodeReservAction(NodeReservAction nodeReservAction)
+	{
 		getNodeReservActions().add(nodeReservAction);
 		nodeReservAction.setNodeReserv(this);
 
 		return nodeReservAction;
 	}
 
-	public NodeReservAction removeNodeReservAction(NodeReservAction nodeReservAction) {
+	public NodeReservAction removeNodeReservAction(NodeReservAction nodeReservAction)
+	{
 		getNodeReservActions().remove(nodeReservAction);
 		nodeReservAction.setNodeReserv(null);
 

@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -30,8 +31,10 @@ import lombok.Setter;
 @Entity
 @Table(name="member_group")
 @NamedQuery(name="MemberGroup.findAll", query="SELECT m FROM MemberGroup m")
-public class MemberGroup
+public class MemberGroup implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="member_group_id", unique=true, nullable=false)
@@ -52,28 +55,32 @@ public class MemberGroup
 	@OneToMany(mappedBy="memberGroup")
 	private List<MemberGroupItem> memberGroupItems;
 
-	public GroupPermission addGroupPermission(GroupPermission groupPermission) {
+	public GroupPermission addGroupPermission(GroupPermission groupPermission)
+	{
 		getGroupPermissions().add(groupPermission);
 		groupPermission.setMemberGroup(this);
 
 		return groupPermission;
 	}
 
-	public GroupPermission removeGroupPermission(GroupPermission groupPermission) {
+	public GroupPermission removeGroupPermission(GroupPermission groupPermission)
+	{
 		getGroupPermissions().remove(groupPermission);
 		groupPermission.setMemberGroup(null);
 
 		return groupPermission;
 	}
 
-	public MemberGroupItem addMemberGroupItem(MemberGroupItem memberGroupItem) {
+	public MemberGroupItem addMemberGroupItem(MemberGroupItem memberGroupItem)
+	{
 		getMemberGroupItems().add(memberGroupItem);
 		memberGroupItem.setMemberGroup(this);
 
 		return memberGroupItem;
 	}
 
-	public MemberGroupItem removeMemberGroupItem(MemberGroupItem memberGroupItem) {
+	public MemberGroupItem removeMemberGroupItem(MemberGroupItem memberGroupItem)
+	{
 		getMemberGroupItems().remove(memberGroupItem);
 		memberGroupItem.setMemberGroup(null);
 

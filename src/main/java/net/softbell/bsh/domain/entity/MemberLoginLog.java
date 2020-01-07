@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -31,8 +32,10 @@ import lombok.Setter;
 @Entity
 @Table(name="member_login_log")
 @NamedQuery(name="MemberLoginLog.findAll", query="SELECT m FROM MemberLoginLog m")
-public class MemberLoginLog
+public class MemberLoginLog implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@EmbeddedId
 	private MemberLoginLogPK id;
 

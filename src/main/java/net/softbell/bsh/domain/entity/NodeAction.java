@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -32,8 +33,10 @@ import lombok.Setter;
 @Entity
 @Table(name="node_action")
 @NamedQuery(name="NodeAction.findAll", query="SELECT n FROM NodeAction n")
-public class NodeAction
+public class NodeAction implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="action_id", unique=true, nullable=false)
@@ -61,56 +64,64 @@ public class NodeAction
 	@OneToMany(mappedBy="nodeActionRestore")
 	private List<NodeTriggerAction> nodeTriggerActionsRestore;
 
-	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem) {
+	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
+	{
 		getNodeActionItems().add(nodeActionItem);
 		nodeActionItem.setNodeAction(this);
 
 		return nodeActionItem;
 	}
 
-	public NodeActionItem removeNodeActionItem(NodeActionItem nodeActionItem) {
+	public NodeActionItem removeNodeActionItem(NodeActionItem nodeActionItem)
+	{
 		getNodeActionItems().remove(nodeActionItem);
 		nodeActionItem.setNodeAction(null);
 
 		return nodeActionItem;
 	}
 
-	public NodeReservAction addNodeReservAction(NodeReservAction nodeReservAction) {
+	public NodeReservAction addNodeReservAction(NodeReservAction nodeReservAction)
+	{
 		getNodeReservActions().add(nodeReservAction);
 		nodeReservAction.setNodeAction(this);
 
 		return nodeReservAction;
 	}
 
-	public NodeReservAction removeNodeReservAction(NodeReservAction nodeReservAction) {
+	public NodeReservAction removeNodeReservAction(NodeReservAction nodeReservAction)
+	{
 		getNodeReservActions().remove(nodeReservAction);
 		nodeReservAction.setNodeAction(null);
 
 		return nodeReservAction;
 	}
 
-	public NodeTriggerAction addNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur) {
+	public NodeTriggerAction addNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur)
+	{
 		getNodeTriggerActionsOccur().add(nodeTriggerActionsOccur);
 		nodeTriggerActionsOccur.setNodeActionOccur(this);
 
 		return nodeTriggerActionsOccur;
 	}
 
-	public NodeTriggerAction removeNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur) {
+	public NodeTriggerAction removeNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur)
+	{
 		getNodeTriggerActionsOccur().remove(nodeTriggerActionsOccur);
 		nodeTriggerActionsOccur.setNodeActionOccur(null);
 
 		return nodeTriggerActionsOccur;
 	}
 
-	public NodeTriggerAction addNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore) {
+	public NodeTriggerAction addNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore)
+	{
 		getNodeTriggerActionsRestore().add(nodeTriggerActionsRestore);
 		nodeTriggerActionsRestore.setNodeActionRestore(this);
 
 		return nodeTriggerActionsRestore;
 	}
 
-	public NodeTriggerAction removeNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore) {
+	public NodeTriggerAction removeNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore)
+	{
 		getNodeTriggerActionsRestore().remove(nodeTriggerActionsRestore);
 		nodeTriggerActionsRestore.setNodeActionRestore(null);
 

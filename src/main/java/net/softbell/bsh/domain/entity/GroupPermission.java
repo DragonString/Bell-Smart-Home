@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -31,8 +32,10 @@ import lombok.Setter;
 @Entity
 @Table(name="group_permission")
 @NamedQuery(name="GroupPermission.findAll", query="SELECT g FROM GroupPermission g")
-public class GroupPermission
+public class GroupPermission implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@EmbeddedId
 	private GroupPermissionPK id;
 

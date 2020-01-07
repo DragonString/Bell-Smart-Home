@@ -1,5 +1,6 @@
 package net.softbell.bsh.domain.entity;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -30,8 +31,10 @@ import lombok.Setter;
 @Entity
 @Table(name="node_group")
 @NamedQuery(name="NodeGroup.findAll", query="SELECT n FROM NodeGroup n")
-public class NodeGroup
+public class NodeGroup implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="node_group_id", unique=true, nullable=false)
@@ -52,28 +55,32 @@ public class NodeGroup
 	@OneToMany(mappedBy="nodeGroup")
 	private List<NodeGroupItem> nodeGroupItems;
 
-	public GroupPermission addGroupPermission(GroupPermission groupPermission) {
+	public GroupPermission addGroupPermission(GroupPermission groupPermission)
+	{
 		getGroupPermissions().add(groupPermission);
 		groupPermission.setNodeGroup(this);
 
 		return groupPermission;
 	}
 
-	public GroupPermission removeGroupPermission(GroupPermission groupPermission) {
+	public GroupPermission removeGroupPermission(GroupPermission groupPermission)
+	{
 		getGroupPermissions().remove(groupPermission);
 		groupPermission.setNodeGroup(null);
 
 		return groupPermission;
 	}
 
-	public NodeGroupItem addNodeGroupItem(NodeGroupItem nodeGroupItem) {
+	public NodeGroupItem addNodeGroupItem(NodeGroupItem nodeGroupItem)
+	{
 		getNodeGroupItems().add(nodeGroupItem);
 		nodeGroupItem.setNodeGroup(this);
 
 		return nodeGroupItem;
 	}
 
-	public NodeGroupItem removeNodeGroupItem(NodeGroupItem nodeGroupItem) {
+	public NodeGroupItem removeNodeGroupItem(NodeGroupItem nodeGroupItem)
+	{
 		getNodeGroupItems().remove(nodeGroupItem);
 		nodeGroupItem.setNodeGroup(null);
 
