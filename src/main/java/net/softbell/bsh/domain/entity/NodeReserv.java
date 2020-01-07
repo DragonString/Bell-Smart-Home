@@ -40,7 +40,7 @@ public class NodeReserv implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="reserv_id", unique=true, nullable=false)
-	private int reservId;
+	private long reservId;
 
 	@Column(nullable=false, length=50)
 	private String description;

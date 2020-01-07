@@ -41,7 +41,7 @@ public class Member implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="member_id", unique=true, nullable=false)
-	private int memberId;
+	private long memberId;
 
 	@Column(nullable=false)
 	private byte ban;

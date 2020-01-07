@@ -28,7 +28,7 @@ public class MemberLoginLogPK implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="member_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int memberId;
+	private long memberId;
 
 	@Column(name="log_id", unique=true, nullable=false)
 	private String logId;

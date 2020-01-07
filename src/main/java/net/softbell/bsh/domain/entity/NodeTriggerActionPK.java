@@ -28,7 +28,7 @@ public class NodeTriggerActionPK implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="trigger_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int triggerId;
+	private long triggerId;
 
 	@Column(name="trigger_action_id", unique=true, nullable=false)
 	private byte triggerActionId;

@@ -28,8 +28,8 @@ public class NodeGroupItemPK implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="node_group_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int nodeGroupId;
+	private long nodeGroupId;
 
 	@Column(name="node_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int nodeId;
+	private long nodeId;
 }

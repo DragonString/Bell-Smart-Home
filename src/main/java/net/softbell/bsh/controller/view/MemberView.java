@@ -62,7 +62,7 @@ public class MemberView {//extends ControllerFilter {
     @PostMapping("/signup")
     public String execSignup(MemberDTO memberDto) {
     	// Field
-    	int intResult;
+    	long intResult;
     	
     	// Init
     	intResult = memberService.joinUser(memberDto);

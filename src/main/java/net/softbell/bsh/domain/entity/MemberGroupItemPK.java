@@ -28,8 +28,8 @@ public class MemberGroupItemPK implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="member_group_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int memberGroupId;
+	private long memberGroupId;
 
 	@Column(name="member_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int memberId;
+	private long memberId;
 }

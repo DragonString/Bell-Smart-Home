@@ -41,7 +41,7 @@ public class MemberService implements UserDetailsService {
 	private MemberLoginLogRepo memberLoginLogRepo;
 
 	@Transactional
-	public int joinUser(MemberDTO memberDto) {
+	public long joinUser(MemberDTO memberDto) {
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "회원가입 요청 (" + memberDto.getUserId() + " - " + memberDto.getUsername() + ")");
 		

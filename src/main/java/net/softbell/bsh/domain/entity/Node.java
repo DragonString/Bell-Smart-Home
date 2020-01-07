@@ -41,7 +41,7 @@ public class Node implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="node_id", unique=true, nullable=false)
-	private int nodeId;
+	private long nodeId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="approval_date")

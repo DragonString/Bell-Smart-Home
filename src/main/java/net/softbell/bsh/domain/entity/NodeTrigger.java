@@ -43,7 +43,7 @@ public class NodeTrigger implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_id", unique=true, nullable=false)
-	private int triggerId;
+	private long triggerId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="change_date")

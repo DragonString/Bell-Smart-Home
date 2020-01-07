@@ -28,7 +28,7 @@ public class NodeConnectionLogPK implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="node_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int nodeId;
+	private long nodeId;
 
 	@Column(name="log_id", unique=true, nullable=false)
 	private String logId;

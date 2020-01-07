@@ -38,7 +38,7 @@ public class MemberGroup implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="member_group_id", unique=true, nullable=false)
-	private int memberGroupId;
+	private long memberGroupId;
 
 	@Column(name="enable_status", nullable=false)
 	private byte enableStatus;

@@ -28,8 +28,8 @@ public class NodeActionItemPK implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="item_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int itemId;
+	private long itemId;
 
 	@Column(name="action_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int actionId;
+	private long actionId;
 }

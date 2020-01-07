@@ -38,7 +38,7 @@ public class NodeGroup implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="node_group_id", unique=true, nullable=false)
-	private int nodeGroupId;
+	private long nodeGroupId;
 
 	@Column(name="enable_status", nullable=false)
 	private byte enableStatus;

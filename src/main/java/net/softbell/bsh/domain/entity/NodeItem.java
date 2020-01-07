@@ -40,7 +40,7 @@ public class NodeItem implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="item_id", unique=true, nullable=false)
-	private int itemId;
+	private long itemId;
 
 	@Column(nullable=false, length=50)
 	private String alias;

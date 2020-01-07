@@ -28,7 +28,7 @@ public class NodeReservActionPK implements Serializable
 	private static final long serialVersionUID = 1L;
 	
 	@Column(name="reserv_id", insertable=false, updatable=false, unique=true, nullable=false)
-	private int reservId;
+	private long reservId;
 
 	@Column(name="reserv_action_id", unique=true, nullable=false)
 	private byte reservActionId;

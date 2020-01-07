@@ -40,7 +40,7 @@ public class NodeAction implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="action_id", unique=true, nullable=false)
-	private int actionId;
+	private long actionId;
 
 	@Column(nullable=false, length=50)
 	private String description;
