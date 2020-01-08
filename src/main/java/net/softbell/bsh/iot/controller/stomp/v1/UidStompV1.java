@@ -15,7 +15,7 @@ import net.softbell.bsh.iot.service.v1.IotUIDServiceV1;
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
 @RestController
-public class UIDSTOMPV1
+public class UidStompV1
 {
 	// Global Field
 	@Autowired

@@ -19,7 +19,7 @@ import net.softbell.bsh.iot.service.v1.IotTokenServiceV1;
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
 @RestController
-public class TokenSTOMPV1
+public class TokenStompV1
 {
 	// Global Field
 	@Autowired

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
 @RestController
-public class ErrorSTOMPV1
+public class ErrorStompV1
 {
 	@MessageExceptionHandler
     @SendToUser("/iot/v1/node")

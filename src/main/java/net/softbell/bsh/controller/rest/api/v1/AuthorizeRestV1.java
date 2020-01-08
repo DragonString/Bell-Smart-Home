@@ -22,11 +22,11 @@ import net.softbell.bsh.service.MemberService;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 인증관련 REST API 컨트롤러
+ * @Description : 인증관련 REST API 컨트롤러 V1
  */
 @RestController
 @RequestMapping("/api/rest/v1/authorize")
-public class AuthorizeREST
+public class AuthorizeRestV1
 {
 	@Autowired AuthenticationManager authenticationManager;
     @Autowired MemberService userService;

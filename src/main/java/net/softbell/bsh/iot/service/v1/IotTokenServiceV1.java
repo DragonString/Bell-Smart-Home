@@ -1,5 +1,7 @@
 package net.softbell.bsh.iot.service.v1;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
+import net.softbell.bsh.domain.entity.NodeItemHistory;
+import net.softbell.bsh.domain.entity.NodeItemHistoryPK;
+import net.softbell.bsh.domain.repository.NodeItemHistoryRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.iot.component.v1.IotComponentV1;
@@ -32,6 +37,8 @@ public class IotTokenServiceV1
 	private NodeRepo nodeRepo;
 	@Autowired
 	private NodeItemRepo nodeItemRepo;
+	@Autowired
+	private NodeItemHistoryRepo nodeItemHistoryRepo;
 
 	
 	private boolean isNormalTokenNode(Node node)
@@ -122,7 +129,35 @@ public class IotTokenServiceV1
 	
 	public boolean setItemValue(String token, ItemValueV1DTO itemValue)
 	{
+		// Field
+		Node node;
+		NodeItem nodeItem;
+		NodeItemHistory nodeItemHistory;
 		
+		// Init
+		node = nodeRepo.findByToken(token); // TODO 이것도 token, uid로 한번에 검색되게
+		
+		// Exception
+		if (!isNormalTokenNode(node))
+			return false;
+		
+		nodeItem = nodeItemRepo.findByNodeAndPinId(node, itemValue.getPinId());
+		
+		if (nodeItem == null)
+			return false;
+		
+		// Process
+		nodeItemHistory = NodeItemHistory.builder()
+										.id(NodeItemHistoryPK.builder().itemId(nodeItem.getItemId()).build())
+										.nodeItem(nodeItem)
+										.pinStatus(itemValue.getPinStatus())
+										.receiveDate(new Date())
+										.build();
+		
+		// DB - Save
+		nodeItemHistoryRepo.save(nodeItemHistory);
+		
+		// Return
 		return true;
 	}
 }

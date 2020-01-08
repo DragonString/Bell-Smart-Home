@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,10 +28,11 @@ import lombok.Setter;
 public class NodeItemHistoryPK implements Serializable
 {
 	private static final long serialVersionUID = 1L;
+
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="log_id", unique=true)
+	private Long logId;
 	
 	@Column(name="item_id", insertable=false, updatable=false, unique=true, nullable=false)
 	private long itemId;
-
-	@Column(name="log_id", unique=true, nullable=false)
-	private String logId;
 }
