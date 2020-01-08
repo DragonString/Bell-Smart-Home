@@ -69,12 +69,12 @@ public class MemberService implements UserDetailsService {
 	public Member getMember(String userId)
 	{
 		// Field
-		Optional<Member> optMember = memberRepo.findByUserId(userId);
+		Member member = memberRepo.findByUserId(userId);
 
 		// Check
-		if (!optMember.isPresent())
+		if (member == null)
 			return null;
-		return optMember.get();
+		return member;
 	}
 	
 	public Member getMember(long id)

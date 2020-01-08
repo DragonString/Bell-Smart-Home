@@ -12,5 +12,6 @@ import net.softbell.bsh.domain.entity.Node;
 @Repository
 public interface NodeRepo extends JpaRepository<Node, Long>
 {
-	
+	Node findByUid(String uid);
+	Node findByToken(String token);
 }

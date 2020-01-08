@@ -5,7 +5,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
 import net.softbell.bsh.iot.service.v1.IotUIDServiceV1;
 
 /**
@@ -19,12 +19,18 @@ public class UIDSTOMPV1
 {
 	// Global Field
 	@Autowired
-	private IotUIDServiceV1 iotUIDService;
+	private IotUIDServiceV1 iotUIDServiceV1;
 	
+	
+	@MessageMapping("/iot/v1/node/uid/{uid}/SET/INFO/NODE")
+	public void NodeHandlerNewNode(@DestinationVariable("uid") String uid, NodeInfoV1DTO nodeInfo)
+	{
+		iotUIDServiceV1.setNewNodeInfo(uid, nodeInfo);
+	}
 	
 	@MessageMapping("/iot/v1/node/uid/{uid}/GET/INFO/TOKEN")
-	public BaseV1DTO NodeHandlerRegister(@DestinationVariable("uid") String uid)
+	public void NodeHandlerRegister(@DestinationVariable("uid") String uid)
 	{
-		return iotUIDService.generateToken(uid);
+		iotUIDServiceV1.generateToken(uid);
 	}
 }

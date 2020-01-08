@@ -23,36 +23,31 @@ public class TokenSTOMPV1
 {
 	// Global Field
 	@Autowired
-	private IotTokenServiceV1 iotTokenService;
+	private IotTokenServiceV1 iotTokenServiceV1;
 	
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/NODE")
 	public void NodeHandlerSetInfoNode(@DestinationVariable("token") String token, NodeInfoV1DTO nodeInfo)
 	{
-		iotTokenService.setNodeInfo(token, nodeInfo);
+		iotTokenServiceV1.setNodeInfo(token, nodeInfo);
 	}
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/ITEMS")
 	public void NodeHandlerSetInfoItems(@DestinationVariable("token") String token, List<ItemInfoV1DTO> listItemInfo)
 	{
-		System.out.println(token + " 핸들러 접근 2");
-		for (ItemInfoV1DTO value : listItemInfo)
-			System.out.println(value.getPinName());
-//		iotService.procMessage(message);
+		for (ItemInfoV1DTO itemInfo : listItemInfo)
+			iotTokenServiceV1.setItemInfo(token, itemInfo);
 	}
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/ITEM")
 	public void NodeHandlerSetInfoItem(@DestinationVariable("token") String token, ItemInfoV1DTO itemInfo)
 	{
-		System.out.println(token + " 핸들러 접근 3");
-		System.out.println(itemInfo.getPinName());
-//		iotService.procMessage(message);
+		iotTokenServiceV1.setItemInfo(token, itemInfo);
 	}
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/VALUE/ITEM")
 	public void NodeHandlerSetValueItem(@DestinationVariable("token") String token, ItemValueV1DTO itemValue)
 	{
-		System.out.println(token + " 핸들러 접근 4");
-//		iotService.procMessage(message);
+		iotTokenServiceV1.setItemValue(token, itemValue);
 	}
 }

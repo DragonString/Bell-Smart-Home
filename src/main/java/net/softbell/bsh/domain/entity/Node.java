@@ -60,7 +60,7 @@ public class Node implements Serializable
 	@Column(name="register_date", nullable=false)
 	private Date registerDate;
 
-	@Column(nullable=false, length=64)
+	@Column(length=64)
 	private String token;
 
 	@Column(nullable=false, length=50)

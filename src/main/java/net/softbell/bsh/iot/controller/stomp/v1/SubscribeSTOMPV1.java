@@ -19,24 +19,24 @@ public class SubscribeSTOMPV1
 {
 	// Global Field
 	@Autowired
-	private IotSubscribeServiceV1 iotSubscribeService;
+	private IotSubscribeServiceV1 iotSubscribeServiceV1;
 	
 	
 	@SubscribeMapping("/iot/v1/node")
 	public BaseV1DTO NodeTopicSubscribeHandler()
 	{
-		return iotSubscribeService.procTopicSubscribe();
+		return iotSubscribeServiceV1.procTopicSubscribe();
 	}
 	
 	@SubscribeMapping("/iot/v1/node/uid/{uid}")
 	public BaseV1DTO NodeUIDSubscribeHandler(@DestinationVariable("uid") String uid)
 	{
-		return iotSubscribeService.procUIDSubscribe(uid);
+		return iotSubscribeServiceV1.procUIDSubscribe(uid);
 	}
 	
 	@SubscribeMapping("/iot/v1/node/token/{token}")
 	public BaseV1DTO NodeTokenSubscribeHandler(@DestinationVariable("token") String token)
 	{
-		return iotSubscribeService.procTokenSubscribe(token);
+		return iotSubscribeServiceV1.procTokenSubscribe(token);
 	}
 }
