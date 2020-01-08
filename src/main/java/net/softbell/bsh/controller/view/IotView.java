@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.dto.bshp.BaseV1DTO;
 import net.softbell.bsh.dto.card.CardDashboard;
 import net.softbell.bsh.dto.card.CardItem;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
+import net.softbell.bsh.iot.service.v1.IotTokenServiceV1;
 import net.softbell.bsh.libs.BellLog;
-import net.softbell.bsh.service.IotService;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -33,7 +33,7 @@ public class IotView {
 	@Autowired
 	NodeRepo nodeRepo;
 	@Autowired
-	IotService iotService;
+	IotTokenServiceV1 iotService;
 
 	@Deprecated
 	@GetMapping("save")
@@ -89,7 +89,7 @@ public class IotView {
 		msg = BaseV1DTO.builder().sender("SERVER").target("1").cmd("SET").type("ITEM").obj("1").value("ON").build();
 		
 		// Process
-		iotService.sendMessage(msg);
+//		iotService.sendMessage(msg);
 		
 		// Finish
 		return "redirect:/";

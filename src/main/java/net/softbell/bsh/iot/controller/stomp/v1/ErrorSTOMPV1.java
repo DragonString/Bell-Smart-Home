@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.stomp.iot.v1;
+package net.softbell.bsh.iot.controller.stomp.v1;
 
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
 @RestController
-public class ErrorSTOMP
+public class ErrorSTOMPV1
 {
 	@MessageExceptionHandler
     @SendToUser("/iot/v1/node")

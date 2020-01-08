@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.bshp;
+package net.softbell.bsh.iot.dto.bshp.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

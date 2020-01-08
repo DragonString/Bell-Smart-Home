@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.softbell.bsh.dto.bshp.BaseV1DTO;
 import net.softbell.bsh.dto.test.APITestDTO;
-import net.softbell.bsh.service.IotService;
+import net.softbell.bsh.iot.component.v1.IotComponentV1;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -20,8 +20,8 @@ import net.softbell.bsh.service.IotService;
 @RequestMapping("/api/rest/v1/test")
 public class TestREST
 {
-	@Autowired
-	private IotService iotService;
+	@Autowired()
+	private IotComponentV1 iotComponent;
 	
 	@GetMapping("/")
 	public APITestDTO procTest(@RequestParam(value = "strName", required = false, defaultValue = "이름")String strName,
@@ -35,7 +35,7 @@ public class TestREST
 	}
 	
 	@GetMapping("/send")
-	public String procSend(@RequestParam(value = "target", required = false, defaultValue = "6352244")String strTarget,
+	public String procSend(@RequestParam(value = "target", required = false, defaultValue = "TOKEN_VALUE")String strTarget,
 			@RequestParam(value = "cmd", required = false, defaultValue = "GET")String strCmd,
 			@RequestParam(value = "type", required = false, defaultValue = "INFO")String strType,
 			@RequestParam(value = "obj", required = false, defaultValue = "ITEMS")String strObj)
@@ -44,14 +44,14 @@ public class TestREST
 		BaseV1DTO message = new BaseV1DTO("SERVER", strTarget, strCmd, strType, strObj);
 		
 		// Process
-		iotService.sendMessage(message);
+		iotComponent.sendDataToken(message);
 		
 		// Finish
 		return "Success";
 	}
 	
 	@GetMapping("/sendSet")
-	public String procSendSet(@RequestParam(value = "target", required = false, defaultValue = "6352244")String strTarget,
+	public String procSendSet(@RequestParam(value = "target", required = false, defaultValue = "TOKEN_VALUE")String strTarget,
 			@RequestParam(value = "id", required = false, defaultValue = "2")int intId,
 			@RequestParam(value = "value", required = false, defaultValue = "1")int intValue)
 	{
@@ -61,7 +61,7 @@ public class TestREST
 		message.setValue(test);
 		
 		// Process
-		iotService.sendMessage(message);
+		iotComponent.sendDataToken(message);
 		
 		// Finish
 		return "Success";

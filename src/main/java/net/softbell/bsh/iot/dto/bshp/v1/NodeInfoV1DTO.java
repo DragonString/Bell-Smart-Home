@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.bshp;
+package net.softbell.bsh.iot.dto.bshp.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +16,6 @@ import lombok.Setter;
 public class NodeInfoV1DTO
 {
 	private String uid;
-	private String token;
 	private byte controlMode;
 	private String nodeName;
 }
