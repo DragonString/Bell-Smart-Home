@@ -9,7 +9,8 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum MemberRole {
+public enum MemberRole
+{
     SUPERADMIN("ROLE_SUPERADMIN"),
     ADMIN("ROLE_ADMIN"),
     MEMBER("ROLE_MEMBER"),

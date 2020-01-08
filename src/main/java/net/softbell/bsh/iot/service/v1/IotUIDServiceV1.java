@@ -49,7 +49,9 @@ public class IotUIDServiceV1
 		node = Node.builder().uid(nodeInfo.getUid())
 							.controlMode(nodeInfo.getControlMode())
 							.nodeName(nodeInfo.getNodeName())
+							.alias(nodeInfo.getNodeName())
 							.registerDate(new Date())
+							.enableStatus((byte) 1) // ############## TODO 개발중 인증패스
 							.build();
 		
 		// DB - Save

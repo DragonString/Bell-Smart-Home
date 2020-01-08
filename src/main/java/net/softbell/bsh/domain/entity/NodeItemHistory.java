@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -36,8 +38,10 @@ public class NodeItemHistory implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId
-	private NodeItemHistoryPK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="item_history_id", unique=true, nullable=false)
+	private long itemHistoryId;
 
 	@Column(name="pin_status", nullable=false)
 	private short pinStatus;
@@ -47,6 +51,6 @@ public class NodeItemHistory implements Serializable
 	private Date receiveDate;
 
 	@ManyToOne
-	@JoinColumn(name="item_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="item_id", nullable=false)
 	private NodeItem nodeItem;
 }

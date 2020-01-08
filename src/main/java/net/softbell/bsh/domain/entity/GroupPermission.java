@@ -4,14 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,14 +33,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="group_permission")
+@Table(name="group_permission",
+	uniqueConstraints={
+		@UniqueConstraint(columnNames={"node_group_id", "member_group_id"})
+	})
 @NamedQuery(name="GroupPermission.findAll", query="SELECT g FROM GroupPermission g")
 public class GroupPermission implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId
-	private GroupPermissionPK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="group_permission_id", unique=true, nullable=false)
+	private long groupPermissionId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="assign_date", nullable=false)

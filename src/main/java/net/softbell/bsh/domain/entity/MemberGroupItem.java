@@ -4,14 +4,17 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,14 +33,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="member_group_item")
+@Table(name="member_group_item",
+	uniqueConstraints={
+		@UniqueConstraint(columnNames={"member_group_id", "member_id"})
+	})
 @NamedQuery(name="MemberGroupItem.findAll", query="SELECT m FROM MemberGroupItem m")
 public class MemberGroupItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId
-	private MemberGroupItemPK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="group_item_id", unique=true, nullable=false)
+	private long groupItemId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="assign_date", nullable=false)

@@ -3,12 +3,15 @@ package net.softbell.bsh.domain.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,14 +30,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="node_trigger_item")
+@Table(name="node_trigger_item",
+	uniqueConstraints={
+		@UniqueConstraint(columnNames={"item_id", "trigger_id"})
+	})
 @NamedQuery(name="NodeTriggerItem.findAll", query="SELECT n FROM NodeTriggerItem n")
 public class NodeTriggerItem implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId
-	private NodeTriggerItemPK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="trigger_item_id", unique=true, nullable=false)
+	private long triggerItemId;
 
 	@Column(nullable=false, length=50)
 	private String alias;

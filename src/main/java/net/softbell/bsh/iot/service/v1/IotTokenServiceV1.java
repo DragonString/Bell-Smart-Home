@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
-import net.softbell.bsh.domain.entity.NodeItemHistoryPK;
 import net.softbell.bsh.domain.repository.NodeItemHistoryRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.domain.repository.NodeRepo;
@@ -148,7 +147,6 @@ public class IotTokenServiceV1
 		
 		// Process
 		nodeItemHistory = NodeItemHistory.builder()
-										.id(NodeItemHistoryPK.builder().itemId(nodeItem.getItemId()).build())
 										.nodeItem(nodeItem)
 										.pinStatus(itemValue.getPinStatus())
 										.receiveDate(new Date())

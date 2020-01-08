@@ -67,8 +67,8 @@ public class Member implements Serializable
 	@Column(name="last_login")
 	private Date lastLogin;
 
-	@Column(name="login_failcount", nullable=false)
-	private byte loginFailcount;
+	@Column(name="login_fail_count", nullable=false)
+	private byte loginFailCount;
 
 	@Column(nullable=false, length=40)
 	private String nickname;

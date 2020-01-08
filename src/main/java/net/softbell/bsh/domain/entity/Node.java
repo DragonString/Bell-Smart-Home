@@ -55,6 +55,9 @@ public class Node implements Serializable
 
 	@Column(name="node_name", nullable=false, length=50)
 	private String nodeName;
+	
+	@Column(name="alias", nullable=false, length=50)
+	private String alias;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="register_date", nullable=false)

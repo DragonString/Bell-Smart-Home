@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -18,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.AuthStatusRule;
 
 
 /**
@@ -36,8 +39,10 @@ public class NodeConnectionLog implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	@EmbeddedId
-	private NodeConnectionLogPK id;
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="log_id", unique=true, nullable=false)
+	private long logId;
 
 	@Column(nullable=false, length=15)
 	private String ipv4;
@@ -47,7 +52,7 @@ public class NodeConnectionLog implements Serializable
 	private Date requestDate;
 
 	@Column(nullable=false)
-	private byte status;
+	private AuthStatusRule status;
 
 	@ManyToOne
 	@JoinColumn(name="node_id", nullable=false, insertable=false, updatable=false)
