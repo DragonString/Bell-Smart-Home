@@ -1,0 +1,56 @@
+<!--
+ * Author : Bell(bell@softbell.net)
+ * Description : 전체 채팅방 뷰
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/defaultLayout}">
+	<head>
+		<title>채팅 테스트</title>
+	</head>
+	<body>
+	    <th:block layout:fragment="content">
+			<div class="row">
+				<div class="col-md-12">
+					<table id="conversation" class="table table-striped table-hover text-white">
+						<colgroup>
+							<col width="10%" />
+							<col width="10%" />
+							<col width="10%" />
+							<col />
+						</colgroup>
+						<tbody id="chatlog"></tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<form class="form">
+						<div class="row">
+							<div class="col">
+								<input type="text" id="msg" class="form-control" placeholder="메시지">
+							</div>
+							<div class="col-2">
+								<button id="send" class="btn btn-outline-primary w-100" type="submit">전송</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<div class="d-none"><!-- 다국어 리소스 값 (JS) -->
+			<div id="chat_alert">경고</div>
+			<div id="chat_chat">채팅</div>
+			<div id="chat_join">입장</div>
+			<div id="chat_exit">퇴장</div>
+		</div>
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/js/sockjs-client/sockjs.min.js"></script>
+			<script src="/rss/js/stomp-websocket/stomp.min.js"></script>
+			<script src="/rss/js/page/chat.js"></script>
+		</th:block>
+	</body>
+</html>

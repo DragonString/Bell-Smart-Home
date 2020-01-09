@@ -8,19 +8,17 @@
 	    <th:block th:replace="layout/common/Heads"></th:block>
 	</head>
 	<body class="bg-dark">
-		<!-- Navigation Bar -->
-		<th:block th:replace="layout/common/NavBar"></th:block>
-		
-		
-	    <div class="container-fluid">
+	    <div class="container">
+			<!-- Navigation Bar -->
+			<th:block th:replace="layout/common/NavBar2"></th:block>
 	    	<div class="row"><br /></div>
 	    	
 	    	<!-- page content body 구성 -->
 	    	<div class="row">
-	    		<div class="col-md-2">
-	    			<th:block th:replace="layout/common/MainMenu"></th:block>
-	    			<br />
-	    		</div>
+<!-- 	    		<div class="col-md-2"> -->
+<!-- 	    			<th:block th:replace="layout/common/MainMenu"></th:block> -->
+<!-- 	    			<br /> -->
+<!-- 	    		</div> -->
 	    		<div class="col-md">
 	    			<th:block layout:fragment="content"></th:block>
 	    		</div>
@@ -36,6 +34,6 @@
 	    <!-- 공통 javascript -->
 	    <th:block th:replace="layout/common/Scripts"></th:block>
 	    <!-- page content javascript -->
-	    <th:block layout:fragment="pageCustomScript"></th:block>
+	    <th:block layout:fragment="pageScript"></th:block>
 	</body>
 </html>

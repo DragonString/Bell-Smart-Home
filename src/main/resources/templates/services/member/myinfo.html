@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/defaultLayout}">
+	<head>
+	    <title>내정보</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+		    <h1>내정보 확인 페이지입니다.</h1>
+		    <hr>
+		    <span sec:authentication="name"></span>님 환영합니다~
+	    </th:block>
+	</body>
+</html>

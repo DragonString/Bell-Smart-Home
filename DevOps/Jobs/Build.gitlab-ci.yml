@@ -22,7 +22,7 @@ build:
   only:
     refs:
       - master
-      - backend
-      - frontend
+      - dev_main
+      - review_main
   retry: 2
       
