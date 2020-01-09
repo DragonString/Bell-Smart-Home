@@ -19,6 +19,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.PinModeRule;
+import net.softbell.bsh.domain.PinTypeRule;
 
 
 /**
@@ -52,13 +54,13 @@ public class NodeItem implements Serializable
 	private byte pinId;
 
 	@Column(name="pin_mode", nullable=false)
-	private byte pinMode;
+	private PinModeRule pinMode;
 
 	@Column(name="pin_name", nullable=false, length=50)
 	private String pinName;
 
 	@Column(name="pin_type", nullable=false)
-	private byte pinType;
+	private PinTypeRule pinType;
 
 	@OneToMany(mappedBy="nodeItem")
 	private List<NodeActionItem> nodeActionItems;

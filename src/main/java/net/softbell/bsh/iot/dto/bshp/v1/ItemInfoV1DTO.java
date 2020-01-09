@@ -17,7 +17,7 @@ public class ItemInfoV1DTO
 {
 	private Byte controlMode;
 	private Byte pinId;
-	private Byte pinMode;
-	private Byte pinType;
+	private Integer pinMode;
+	private Integer pinType;
 	private String pinName;
 }

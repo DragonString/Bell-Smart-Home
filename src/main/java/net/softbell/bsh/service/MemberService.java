@@ -124,7 +124,7 @@ public class MemberService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		// Field
 		Member member;
-		byte permission;
+		MemberRole permission;
 		
 		// Init
 		member = getMember(userId);
@@ -135,13 +135,13 @@ public class MemberService implements UserDetailsService {
 
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
-		if (permission == 0)
+		if (permission == MemberRole.WAIT)
 			authorities.add(new SimpleGrantedAuthority(MemberRole.WAIT.getValue()));
 		else
 		{
-			if (permission == 2)
+			if (permission == MemberRole.ADMIN)
 				authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-			else if (permission == 3)
+			else if (permission == MemberRole.SUPERADMIN)
 			{
 				authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
 				authorities.add(new SimpleGrantedAuthority(MemberRole.SUPERADMIN.getValue()));

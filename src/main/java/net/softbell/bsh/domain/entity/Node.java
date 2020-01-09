@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.EnableStatusRule;
 
 
 /**
@@ -51,7 +52,7 @@ public class Node implements Serializable
 	private byte controlMode;
 
 	@Column(name="enable_status", nullable=false)
-	private byte enableStatus;
+	private EnableStatusRule enableStatus;
 
 	@Column(name="node_name", nullable=false, length=50)
 	private String nodeName;

@@ -5,22 +5,22 @@ import lombok.Getter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 인증 상태 자료형
+ * @Description : IoT 핀 타입 자료형 (pinMode가 INPUT일때만 사용)
  */
 @AllArgsConstructor
 @Getter
-public enum AuthStatusRule
+public enum PinTypeRule
 {
-	SUCCESS("SUCCESS", 0), // 정상 인증
-    FAIL("FAIL", 1), // 인증 실패
-    ERROR("ERROR", -1); // 에러
+	DIGITAL("DIGITAL", 0), // digitalRead
+    ANALOG("ANALOG", 1), // analogRead
+    DISABLE("DISABLE", -1); // OUTPUT 모드일경우
 
 	private String value;
     private Integer code;
     
-    public static AuthStatusRule ofLegacyCode(Integer legacyCode)
+    public static PinTypeRule ofLegacyCode(Integer legacyCode)
     {
-    	for (AuthStatusRule authStatusRule : values())
+    	for (PinTypeRule authStatusRule : values())
             if (authStatusRule.getCode() == legacyCode)
                 return authStatusRule;
     	

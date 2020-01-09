@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.iot.component.v1.IotComponentV1;
@@ -51,7 +52,7 @@ public class IotUIDServiceV1
 							.nodeName(nodeInfo.getNodeName())
 							.alias(nodeInfo.getNodeName())
 							.registerDate(new Date())
-							.enableStatus((byte) 1) // ############## TODO 개발중 인증패스
+							.enableStatus(EnableStatusRule.ENABLE) // ############## TODO 개발중 인증패스
 							.build();
 		
 		// DB - Save

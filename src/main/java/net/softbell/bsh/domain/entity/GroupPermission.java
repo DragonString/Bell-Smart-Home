@@ -21,6 +21,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.GroupRole;
 
 
 /**
@@ -52,7 +53,7 @@ public class GroupPermission implements Serializable
 	private Date assignDate;
 
 	@Column(name="group_permission", nullable=false)
-	private byte groupPermission;
+	private GroupRole groupPermission;
 
 	@ManyToOne
 	@JoinColumn(name="node_group_id", nullable=false, insertable=false, updatable=false)

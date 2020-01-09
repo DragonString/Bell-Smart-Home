@@ -10,6 +10,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
@@ -85,9 +86,18 @@ public class IotComponentV1
 		return token;
 	}
 	
+	/**
+	 * 노드가 승인상태인지 검증
+	 * @param node: 노드 엔티티
+	 * @return true: 승인, false: 미승인 혹은 제한
+	 */
 	public boolean isApprovalNode(Node node)
 	{
-		if (node.getEnableStatus() < 1)
+		// Field
+		EnableStatusRule enableStatus = node.getEnableStatus();
+		
+		// Process
+		if (enableStatus == EnableStatusRule.WAIT || enableStatus == EnableStatusRule.REJECT)
 			return false;
 		return true;
 	}

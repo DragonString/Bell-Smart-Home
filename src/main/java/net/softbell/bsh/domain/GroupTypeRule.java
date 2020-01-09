@@ -5,22 +5,21 @@ import lombok.Getter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 인증 상태 자료형
+ * @Description : 그룹 타입 자료형
  */
 @AllArgsConstructor
 @Getter
-public enum AuthStatusRule
+public enum GroupTypeRule
 {
-	SUCCESS("SUCCESS", 0), // 정상 인증
-    FAIL("FAIL", 1), // 인증 실패
-    ERROR("ERROR", -1); // 에러
+	DEFAULT("DEFAULT", 0), // 자동 생성
+    USER("USER", 1); // 유저가 생성
 
 	private String value;
     private Integer code;
     
-    public static AuthStatusRule ofLegacyCode(Integer legacyCode)
+    public static GroupTypeRule ofLegacyCode(Integer legacyCode)
     {
-    	for (AuthStatusRule authStatusRule : values())
+    	for (GroupTypeRule authStatusRule : values())
             if (authStatusRule.getCode() == legacyCode)
                 return authStatusRule;
     	

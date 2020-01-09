@@ -20,6 +20,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.BanRule;
+import net.softbell.bsh.domain.MemberRole;
 
 
 /**
@@ -44,7 +46,7 @@ public class Member implements Serializable
 	private long memberId;
 
 	@Column(nullable=false)
-	private byte ban;
+	private BanRule ban;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="ban_date")
@@ -68,7 +70,7 @@ public class Member implements Serializable
 	private Date lastLogin;
 
 	@Column(name="login_fail_count", nullable=false)
-	private byte loginFailCount;
+	private int loginFailCount;
 
 	@Column(nullable=false, length=40)
 	private String nickname;
@@ -77,7 +79,7 @@ public class Member implements Serializable
 	private String passwd;
 
 	@Column(nullable=false)
-	private byte permission;
+	private MemberRole permission;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="register_date", nullable=false)

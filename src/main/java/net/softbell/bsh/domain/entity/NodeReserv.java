@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.EnableStatusRule;
 
 
 /**
@@ -46,7 +47,7 @@ public class NodeReserv implements Serializable
 	private String description;
 
 	@Column(name="enable_status", nullable=false)
-	private byte enableStatus;
+	private EnableStatusRule enableStatus;
 
 	@Column(nullable=false, length=100)
 	private String expression;

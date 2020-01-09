@@ -5,22 +5,23 @@ import lombok.Getter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 인증 상태 자료형
+ * @Description : 활성화 상태 자료형
  */
 @AllArgsConstructor
 @Getter
-public enum AuthStatusRule
+public enum EnableStatusRule
 {
-	SUCCESS("SUCCESS", 0), // 정상 인증
-    FAIL("FAIL", 1), // 인증 실패
-    ERROR("ERROR", -1); // 에러
+	WAIT("WAIT", 0), // 인증 대기
+	DISABLE("DISABLE", 1), // 비활성화
+	ENABLE("ENABLE", 2), // 활성화
+    REJECT("REJECT", -1); // 접근 제한
 
 	private String value;
     private Integer code;
     
-    public static AuthStatusRule ofLegacyCode(Integer legacyCode)
+    public static EnableStatusRule ofLegacyCode(Integer legacyCode)
     {
-    	for (AuthStatusRule authStatusRule : values())
+    	for (EnableStatusRule authStatusRule : values())
             if (authStatusRule.getCode() == legacyCode)
                 return authStatusRule;
     	

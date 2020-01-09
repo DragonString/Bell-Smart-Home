@@ -9,18 +9,18 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum AuthStatusRule
+public enum BanRule
 {
-	SUCCESS("SUCCESS", 0), // 정상 인증
-    FAIL("FAIL", 1), // 인증 실패
-    ERROR("ERROR", -1); // 에러
+	NORMAL("NORMAL", 0),
+    PERMANENT("PERMANENT", -1),
+    TEMP("TEMP", 1);
 
 	private String value;
     private Integer code;
     
-    public static AuthStatusRule ofLegacyCode(Integer legacyCode)
+    public static BanRule ofLegacyCode(Integer legacyCode)
     {
-    	for (AuthStatusRule authStatusRule : values())
+    	for (BanRule authStatusRule : values())
             if (authStatusRule.getCode() == legacyCode)
                 return authStatusRule;
     	

@@ -17,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.EnableStatusRule;
+import net.softbell.bsh.domain.GroupTypeRule;
 
 
 /**
@@ -41,13 +43,13 @@ public class MemberGroup implements Serializable
 	private long memberGroupId;
 
 	@Column(name="enable_status", nullable=false)
-	private byte enableStatus;
+	private EnableStatusRule enableStatus;
 
 	@Column(nullable=false, length=50)
 	private String name;
 
 	@Column(nullable=false)
-	private byte type;
+	private GroupTypeRule type;
 
 	@OneToMany(mappedBy="memberGroup")
 	private List<GroupPermission> groupPermissions;

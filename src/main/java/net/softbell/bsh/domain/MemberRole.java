@@ -11,11 +11,21 @@ import lombok.Getter;
 @Getter
 public enum MemberRole
 {
-    SUPERADMIN("ROLE_SUPERADMIN"),
-    ADMIN("ROLE_ADMIN"),
-    MEMBER("ROLE_MEMBER"),
-    WAIT("ROLE_WAIT"),
-    BAN("ROLE_BAN");
+    SUPERADMIN("ROLE_SUPERADMIN", 100), // 최고 관리자
+    ADMIN("ROLE_ADMIN", 10), // 관리자
+    MEMBER("ROLE_MEMBER", 1), // 일반 회원
+    WAIT("ROLE_WAIT", 0), // 승인 대기
+    BAN("ROLE_BAN", -1); // 차단
 
     private String value;
+    private Integer code;
+    
+    public static MemberRole ofLegacyCode(Integer legacyCode)
+    {
+    	for (MemberRole authStatusRule : values())
+            if (authStatusRule.getCode() == legacyCode)
+                return authStatusRule;
+    	
+    	return null;
+    }
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.softbell.bsh.domain.PinModeRule;
+import net.softbell.bsh.domain.PinTypeRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
@@ -97,9 +99,9 @@ public class IotTokenServiceV1
 			{
 				nodeItem.setControlMode(itemInfo.getControlMode());
 				nodeItem.setPinId(itemInfo.getPinId());
-				nodeItem.setPinMode(itemInfo.getPinMode());
+				nodeItem.setPinMode(PinModeRule.ofLegacyCode(itemInfo.getPinMode()));
 				nodeItem.setPinName(itemInfo.getPinName());
-				nodeItem.setPinType(itemInfo.getPinType());
+				nodeItem.setPinType(PinTypeRule.ofLegacyCode(itemInfo.getPinType()));
 				
 				nodeItemRepo.save(nodeItem);
 				G_Logger.info(BellLog.getLogHead() + "Node Item Save (" + node.getUid() + "-" + nodeItem.getPinName() + ")");
@@ -112,9 +114,9 @@ public class IotTokenServiceV1
 							.node(node)
 							.controlMode(itemInfo.getControlMode())
 							.pinId(itemInfo.getPinId())
-							.pinMode(itemInfo.getPinMode())
+							.pinMode(PinModeRule.ofLegacyCode(itemInfo.getPinMode()))
 							.pinName(itemInfo.getPinName())
-							.pinType(itemInfo.getPinType())
+							.pinType(PinTypeRule.ofLegacyCode(itemInfo.getPinType()))
 							.alias(itemInfo.getPinName())
 							.build();
 		nodeItemRepo.save(nodeItem);

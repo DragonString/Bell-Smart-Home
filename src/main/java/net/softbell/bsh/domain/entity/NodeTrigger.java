@@ -22,6 +22,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.EnableStatusRule;
+import net.softbell.bsh.domain.TriggerLastStatusRule;
 
 
 /**
@@ -53,13 +55,13 @@ public class NodeTrigger implements Serializable
 	private String description;
 
 	@Column(name="enable_status", nullable=false)
-	private byte enableStatus;
+	private EnableStatusRule enableStatus;
 
 	@Column(nullable=false, length=100)
 	private String expression;
 
-	@Column(nullable=false)
-	private byte status;
+	@Column(name="last_status", nullable=false)
+	private TriggerLastStatusRule lastStatus;
 
 	@ManyToOne
 	@JoinColumn(name="member_id", nullable=false)
