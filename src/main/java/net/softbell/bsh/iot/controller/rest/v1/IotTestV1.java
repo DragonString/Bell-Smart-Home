@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.softbell.bsh.iot.component.v1.IotComponentV1;
+import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 
 /**
@@ -20,7 +20,7 @@ import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 public class IotTestV1
 {
 	@Autowired
-	private IotComponentV1 iotComponent;
+	private IotChannelCompV1 iotComponent;
 	
 	@GetMapping("/send")
 	public String procSend(@RequestParam(value = "target", required = false, defaultValue = "TOKEN_VALUE")String strTarget,

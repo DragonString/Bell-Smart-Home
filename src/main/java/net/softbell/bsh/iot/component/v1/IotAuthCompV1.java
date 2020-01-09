@@ -6,55 +6,29 @@ import java.util.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 import net.softbell.bsh.libs.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : IoT 기반 컴포넌트 v1
+ * @Description : IoT 인증 컴포넌트 v1
  */
 @Component
-public class IotComponentV1
+public class IotAuthCompV1
 {
 	// Global Field
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
-	private final String G_UID_URL = "/api/stomp/queue/iot/v1/node/uid/";
-	private final String G_TOKEN_URL = "/api/stomp/queue/iot/v1/node/token/";
 	private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
 	private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 	
 	@Autowired
-	private SimpMessagingTemplate template;
-	@Autowired
 	private NodeRepo nodeRepo;
 	
-	
-	// ## IOT COMMUNICATION CHANNEL START ##
-	public void sendDataUID(BaseV1DTO data)
-	{
-		// Log
-		G_Logger.info(BellLog.getLogHead() + "IoT 메시지 전송 (UID: " + data.getTarget() + ")");
-		
-		// Process
-		template.convertAndSend(G_UID_URL + data.getTarget(), data);
-	}
-	
-	public void sendDataToken(BaseV1DTO data)
-	{
-		// Log
-		G_Logger.info(BellLog.getLogHead() + "IoT 메시지 전송 (Token: " + data.getTarget() + ")");
-		
-		// Process
-		template.convertAndSend(G_TOKEN_URL + data.getTarget(), data);
-	}
-	// ## IOT COMMUNICATION CHANNEL END ##
 	
 	@Transactional
 	public String generateToken(String uid)
@@ -84,6 +58,14 @@ public class IotComponentV1
 		
 		// Return
 		return token;
+	}
+	
+	public boolean isTokenAvailable(String token)
+	{
+		if (nodeRepo.findByToken(token) == null)
+			return false;
+		
+		return true;
 	}
 	
 	/**

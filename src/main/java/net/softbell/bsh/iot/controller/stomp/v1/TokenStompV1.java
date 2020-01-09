@@ -36,7 +36,10 @@ public class TokenStompV1
 	public void NodeHandlerSetInfoItems(@DestinationVariable("token") String token, List<ItemInfoV1DTO> listItemInfo)
 	{
 		for (ItemInfoV1DTO itemInfo : listItemInfo)
+		{
 			iotTokenServiceV1.setItemInfo(token, itemInfo);
+			iotTokenServiceV1.reqItemValue(token, itemInfo.getPinId());
+		}
 	}
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/ITEM")

@@ -11,7 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.iot.component.v1.IotComponentV1;
+import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
+import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
 import net.softbell.bsh.libs.BellLog;
@@ -27,7 +28,9 @@ public class IotUIDServiceV1
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private IotComponentV1 iotComponentV1;
+	private IotChannelCompV1 iotChannelCompV1;
+	@Autowired
+	private IotAuthCompV1 iotAuthCompV1;
 	@Autowired
 	private NodeRepo nodeRepo;
 
@@ -66,7 +69,7 @@ public class IotUIDServiceV1
 									.obj("NODE")
 									.value("SUCCESS")
 									.build();
-		iotComponentV1.sendDataUID(message); // Send
+		iotChannelCompV1.sendDataUID(message); // Send
 		
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "New Node Info Save (" + nodeInfo.getUid() + ")");
@@ -94,7 +97,7 @@ public class IotUIDServiceV1
 										.build();
 		else
 		{
-			token = iotComponentV1.generateToken(uid);
+			token = iotAuthCompV1.generateToken(uid);
 			
 			message = BaseV1DTO.builder().sender("SERVER").target(uid)
 										.cmd("SET")
@@ -105,7 +108,7 @@ public class IotUIDServiceV1
 		}
 		
 		// Send
-		iotComponentV1.sendDataUID(message);
+		iotChannelCompV1.sendDataUID(message);
 		
 		// Return
 		return true;

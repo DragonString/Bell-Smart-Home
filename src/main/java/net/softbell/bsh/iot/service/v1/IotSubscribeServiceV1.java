@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.iot.component.v1.IotComponentV1;
+import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 import net.softbell.bsh.libs.BellLog;
 
@@ -25,7 +25,7 @@ public class IotSubscribeServiceV1
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private IotComponentV1 iotComponentV1;
+	private IotChannelCompV1 iotChannelCompV1;
 	@Autowired
 	private NodeRepo nodeRepo;
 
@@ -92,7 +92,7 @@ public class IotSubscribeServiceV1
 		
 		// Process
 		for (BaseV1DTO message : listMsg)
-			iotComponentV1.sendDataToken(message);
+			iotChannelCompV1.sendDataToken(message);
 
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "Node Token Channel Subscribe (" + token + ")");
