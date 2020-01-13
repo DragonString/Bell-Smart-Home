@@ -79,8 +79,7 @@ public class MemberView {//extends ControllerFilter {
     public String dispLogin(Model model, Principal principal, HttpServletRequest request, HttpServletResponse response) {
     	// Init
     	//FilterModelPrincipal(model, principal);
-    	request.setAttribute("TEST", "TESTVAL");
-    	response.addHeader("TESTRES", "TESTVAL");
+    	System.out.println("--------------- 에러 포인트가 어디부터일까");
     	
     	// Return
         return G_BASE_PATH + "/login";

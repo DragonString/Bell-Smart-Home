@@ -33,7 +33,7 @@ function connect()
 		stompClient.subscribe('/api/stomp/topic/iot/v1/node', function(message) {
 			procMessage(JSON.parse(message.body));
 		});
-		stompClient.subscribe('/api/stomp/topic/iot/v1/node/uid/1', function(message) {
+		stompClient.subscribe('/api/stomp/queue/iot/v1/node/uid/1', function(message) {
 			procMessage(JSON.parse(message.body));
 		});
 	});

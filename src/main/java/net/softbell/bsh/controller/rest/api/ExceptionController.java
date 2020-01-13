@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.rest.api.v1;
+package net.softbell.bsh.controller.rest.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +9,7 @@ import net.softbell.bsh.dto.response.CommonResult;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/rest/v1")
+@RequestMapping("/api/rest/exception")
 public class ExceptionController {
 
     @GetMapping("/entrypoint")

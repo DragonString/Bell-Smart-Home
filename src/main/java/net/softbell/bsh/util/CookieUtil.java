@@ -22,7 +22,7 @@ public class CookieUtil
 	
 	public static void create(HttpServletResponse httpServletResponse, String name, String value, Boolean secure, Integer maxAge)
 	{
-        create(httpServletResponse, name, value, secure, maxAge);
+        create(httpServletResponse, name, value, secure, maxAge, null);
     }
 
     public static void clear(HttpServletResponse httpServletResponse, String name)

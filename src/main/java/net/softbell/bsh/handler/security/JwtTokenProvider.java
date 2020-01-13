@@ -36,6 +36,7 @@ public class JwtTokenProvider
     @PostConstruct
     protected void init()
     {
+        System.out.println(secretKey + " JWT INIT -------------------======@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 

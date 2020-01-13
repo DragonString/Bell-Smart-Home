@@ -56,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers("/rss/**", "/files/**", "/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**", "/favicon.ico");
 		//web.ignoring().antMatchers("/**"); ///////////////// 임시 보안 전체 해제
+        web.ignoring().antMatchers("/ws/**", "/api/stomp/**"); // 웹소켓 임시 보안 해제
 	}
 	
 	@Override
@@ -67,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
     		.authorizeRequests() // 페이지 권한 설정
 				.antMatchers("/admin/**").hasRole("ADMIN")
-				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup").permitAll()
+				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup", "/api/rest/exception/**").permitAll()
 				.anyRequest().hasRole("MEMBER")
 		.and()
 			.csrf() // CSRF 설정
@@ -75,6 +76,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and()
 			.formLogin() // 폼 로그인 설정
 				.loginPage("/login")
+				.usernameParameter("userid")
+				.passwordParameter("password")
 				.successHandler(successHandler())
 				.failureHandler(failHandler())
 				.permitAll()
@@ -86,8 +89,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.deleteCookies("X-AUTH-TOKEN")
 		.and()
             .exceptionHandling() // 예외 핸들링
-            	.accessDeniedHandler(CustomAccessDeniedHandler.builder().G_API_URI("/api/rest/v1/accessdenied").G_VIEW_URI("/denied").build())
-            	.authenticationEntryPoint(CustomAuthenticationEntryPoint.builder().G_API_URI("/api/rest/v1/entrypoint").G_VIEW_URI("/login").build())
+            	.accessDeniedHandler(CustomAccessDeniedHandler.builder().G_API_URI("/api/rest/exception/denied").G_VIEW_URI("/denied").build())
+            	.authenticationEntryPoint(CustomAuthenticationEntryPoint.builder().G_API_URI("/api/rest/exception/entrypoint").G_VIEW_URI("/login").build())
         .and()
             .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // JWT Token 필터
 		;
