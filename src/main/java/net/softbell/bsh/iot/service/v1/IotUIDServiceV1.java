@@ -15,7 +15,7 @@ import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)

@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)

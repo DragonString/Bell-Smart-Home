@@ -18,12 +18,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.MemberRole;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.repository.MemberLoginLogRepo;
 import net.softbell.bsh.domain.repository.MemberRepo;
 import net.softbell.bsh.dto.member.MemberDTO;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -31,10 +32,9 @@ import net.softbell.bsh.libs.BellLog;
  */
 @Service
 @AllArgsConstructor
+@Slf4j
 public class MemberService implements UserDetailsService {
 	// Global Field
-	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
-	
 	@Autowired
 	private MemberRepo memberRepo;
 	@Autowired
@@ -43,7 +43,7 @@ public class MemberService implements UserDetailsService {
 	@Transactional
 	public long joinUser(MemberDTO memberDto) {
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "회원가입 요청 (" + memberDto.getUserId() + " - " + memberDto.getUsername() + ")");
+		log.info(BellLog.getLogHead() + "회원가입 요청 (" + memberDto.getUserId() + " - " + memberDto.getUsername() + ")");
 		
 		// Field
 		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -121,35 +121,9 @@ public class MemberService implements UserDetailsService {
 //	}
 	
 	@Override
-	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
-		// Field
-		Member member;
-		MemberRole permission;
-		
-		// Init
-		member = getMember(userId);
-		if (member == null)
-			return null;
-		permission = member.getPermission();
-		
-
-		List<GrantedAuthority> authorities = new ArrayList<>();
-
-		if (permission == MemberRole.WAIT)
-			authorities.add(new SimpleGrantedAuthority(MemberRole.WAIT.getValue()));
-		else
-		{
-			if (permission == MemberRole.ADMIN)
-				authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-			else if (permission == MemberRole.SUPERADMIN)
-			{
-				authorities.add(new SimpleGrantedAuthority(MemberRole.ADMIN.getValue()));
-				authorities.add(new SimpleGrantedAuthority(MemberRole.SUPERADMIN.getValue()));
-			}
-			authorities.add(new SimpleGrantedAuthority(MemberRole.MEMBER.getValue()));
-		}
-
-		return new User(member.getUserId(), member.getPasswd(), authorities);
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException
+	{
+		return getMember(userId);
 	}
 	
 	/*@Transactional

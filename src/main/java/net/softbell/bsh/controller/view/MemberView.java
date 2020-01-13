@@ -79,6 +79,8 @@ public class MemberView {//extends ControllerFilter {
     public String dispLogin(Model model, Principal principal, HttpServletRequest request, HttpServletResponse response) {
     	// Init
     	//FilterModelPrincipal(model, principal);
+    	request.setAttribute("TEST", "TESTVAL");
+    	response.addHeader("TESTRES", "TESTVAL");
     	
     	// Return
         return G_BASE_PATH + "/login";

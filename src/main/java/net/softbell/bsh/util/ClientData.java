@@ -1,4 +1,4 @@
-package net.softbell.bsh.libs;
+package net.softbell.bsh.util;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -10,11 +10,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import lombok.AllArgsConstructor;
+import net.softbell.bsh.handler.LoginFailureHandler;
+import net.softbell.bsh.handler.LoginSuccessHandler;
+import net.softbell.bsh.handler.security.CustomAccessDeniedHandler;
+import net.softbell.bsh.handler.security.CustomAuthenticationEntryPoint;
+import net.softbell.bsh.handler.security.JwtAuthenticationFilter;
+import net.softbell.bsh.handler.security.JwtTokenProvider;
 import net.softbell.bsh.service.MemberService;
 
 /**
@@ -27,6 +37,7 @@ import net.softbell.bsh.service.MemberService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private MemberService memberService;
 	private final Environment env;
+	private final JwtTokenProvider jwtTokenProvider;
     
     private boolean isDevMode() {
         String profile = env.getActiveProfiles().length > 0? env.getActiveProfiles()[0] : "dev";
@@ -42,7 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception
 	{
         // static 디렉터리의 하위 파일 목록은 인증 무시 ( = 항상통과 )
-        web.ignoring().antMatchers("/rss/**", "/files/**");
+        web.ignoring().antMatchers("/rss/**", "/files/**", "/v2/api-docs", "/swagger-resources/**",
+                "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**", "/favicon.ico");
 		//web.ignoring().antMatchers("/**"); ///////////////// 임시 보안 전체 해제
 	}
 	
@@ -50,34 +62,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception
 	{
 		// Common
-    	http.authorizeRequests()
-			        // 페이지 권한 설정
-					.antMatchers("/admin/**").hasRole("ADMIN")
-					//.antMatchers("/member/**").hasRole("MEMBER")
-					//.antMatchers("/wss/**").hasRole("MEMBER")
-					.antMatchers("/**").permitAll()
-				.and() // 로그인 설정
-					.formLogin()
-					.loginPage("/login")
-					//.successHandler(successHandler())
-					//.failureHandler(failHandler())
-					.permitAll()
-				.and() // 로그아웃 설정
-					.logout()
-					.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-					.logoutSuccessUrl("/")
-					.invalidateHttpSession(true)
-				.and()
-			        // 403 예외처리 핸들링
-					.exceptionHandling().accessDeniedPage("/denied")
-				;
-//    	http.csrf().disable(); // API 개발중 임시 해제 ////////////////////// TODO
+		http.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and()
+    		.authorizeRequests() // 페이지 권한 설정
+				.antMatchers("/admin/**").hasRole("ADMIN")
+				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup").permitAll()
+				.anyRequest().hasRole("MEMBER")
+		.and()
+			.csrf() // CSRF 설정
+				.ignoringAntMatchers("/api/**")
+		.and()
+			.formLogin() // 폼 로그인 설정
+				.loginPage("/login")
+				.successHandler(successHandler())
+				.failureHandler(failHandler())
+				.permitAll()
+		.and()
+			.logout() // 로그아웃 설정
+				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/login")
+				.invalidateHttpSession(true)
+				.deleteCookies("X-AUTH-TOKEN")
+		.and()
+            .exceptionHandling() // 예외 핸들링
+            	.accessDeniedHandler(CustomAccessDeniedHandler.builder().G_API_URI("/api/rest/v1/accessdenied").G_VIEW_URI("/denied").build())
+            	.authenticationEntryPoint(CustomAuthenticationEntryPoint.builder().G_API_URI("/api/rest/v1/entrypoint").G_VIEW_URI("/login").build())
+        .and()
+            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class); // JWT Token 필터
+		;
     	
     	// Dev Mode
     	if (isDevMode())
     	{
 	    	http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
-	    	http.csrf().disable();
+	    	//http.csrf().disable();
 	    	http.headers().frameOptions().disable();
     	}
 	}
@@ -102,7 +121,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 	}
 	
-	/*@Bean
+	@Bean
     public AuthenticationSuccessHandler successHandler() {
     	return new LoginSuccessHandler("/");
     }
@@ -110,5 +129,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationFailureHandler failHandler() {
     	return new LoginFailureHandler("/login?error");
-    }*/
+    }
 }

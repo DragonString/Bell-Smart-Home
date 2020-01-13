@@ -23,7 +23,7 @@ import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
 import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1DTO;
 import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1DTO;
 import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)

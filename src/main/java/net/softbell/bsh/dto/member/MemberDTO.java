@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import net.softbell.bsh.domain.BanRule;
+import net.softbell.bsh.domain.MemberRole;
 import net.softbell.bsh.domain.entity.Member;
 
 /**
@@ -22,17 +24,17 @@ import net.softbell.bsh.domain.entity.Member;
 @Builder
 public class MemberDTO {
     private long memberId;
-    private byte ban;
+    private int ban;
 	private Date banDate;
 	private Date changePasswdDate;
 	private String emailAddress;
 	private String emailHost;
 	private String emailId;
 	private Date lastLogin;
-	private byte loginFailcount;
+	private int loginFailcount;
 	private String nickname;
 	private String passwd;
-	private byte permission;
+	private int permission;
 	private Date registerDate;
 	private String userId;
 	private String username;
@@ -46,12 +48,14 @@ public class MemberDTO {
         return Member.builder()
                 .userId(userId)
         		.emailAddress(emailAddress)
-                .passwd(passwd)
+                .password(passwd)
         		.emailHost(emailHost)
         		.emailId(emailId)
-                .username(username)
+                .name(username)
         		.nickname(nickname)
                 .registerDate(new Date())
+                .ban(BanRule.ofLegacyCode(ban))
+                .permission(MemberRole.ofLegacyCode(permission))
                 .build();
     }
 }
