@@ -52,23 +52,32 @@ function sendData(path, params, ajax, method)
 }
 
 /**
- * AJAX로 데이터 전송 (기존 form이 있어야됨)
+ * AJAX로 데이터 전송 (JSON)
  * @param path 전송할 URL
- * @param name form 이름 (id값으로 지정시: #test, class값으로 지정시: .test)
+ * @param json JSON 데이터
  * @param method GET or POST
  */
-function sendAJAX (path, name, method)
+function sendAJAX(path, json, method)
 {
 	method = method || "post";
-	
+    
     $.ajax({
-        url:path,
-        type:method,
-        data:$(name).serialize(),
-        success:function(){
-            alert("worked");
-        }
-    });
+		url: path,
+		type: method,
+		data: json,
+			beforeSend : function(xhr)
+			{
+				xhr.setRequestHeader("X-AUTH-TOKEN", getCookie("X-AUTH-TOKEN"));
+			},
+			success: function(data, textStatus, jqXHR)
+			{
+				//data - response from server
+			},
+			error: function (jqXHR, textStatus, errorThrown)
+			{
+				alert(errorThrown + " " + textStatus);
+			}
+		});
 }
 
 /**
@@ -115,3 +124,29 @@ function setInputValid(objInput, isNormal)
 		objInput.classList.add('is-invalid');
 	}
 }
+
+function setCookie(cname, cvalue, exdays)
+{
+	var d = new Date();
+	d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	var expires = "expires="+d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname)
+{
+	var name = cname + "=";
+	var decodedCookie = decodeURIComponent(document.cookie);
+	var ca = decodedCookie.split(';');
+	for(var i = 0; i <ca.length; i++)
+	{
+		var c = ca[i];
+		while (c.charAt(0) == ' ')
+			c = c.substring(1);
+		if (c.indexOf(name) == 0)
+			return c.substring(name.length, c.length);
+	}
+	return "";
+}
+
+function deleteCookie(name) { setCookie(name, '', -1); }

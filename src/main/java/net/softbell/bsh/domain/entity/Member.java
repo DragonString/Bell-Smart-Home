@@ -1,6 +1,8 @@
 package net.softbell.bsh.domain.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +16,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,7 +44,7 @@ import net.softbell.bsh.domain.MemberRole;
 @Entity
 @Table(name="member")
 @NamedQuery(name="Member.findAll", query="SELECT m FROM Member m")
-public class Member implements Serializable
+public class Member implements Serializable, UserDetails 
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -76,7 +84,7 @@ public class Member implements Serializable
 	private String nickname;
 
 	@Column(nullable=false, length=64)
-	private String passwd;
+	private String password;
 
 	@Column(nullable=false)
 	private MemberRole permission;
@@ -89,7 +97,7 @@ public class Member implements Serializable
 	private String userId;
 
 	@Column(nullable=false, length=10)
-	private String username;
+	private String name;
 
 	@OneToMany(mappedBy="member")
 	private List<MemberGroupItem> memberGroupItems;
@@ -184,5 +192,53 @@ public class Member implements Serializable
 		nodeTrigger.setMember(null);
 
 		return nodeTrigger;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities()
+	{
+		// Field
+		List<GrantedAuthority> listAuth = new ArrayList<GrantedAuthority>();
+		
+		// Load
+		listAuth.add(new SimpleGrantedAuthority(permission.getValue()));
+		
+		// Return
+		return listAuth;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public boolean isAccountNonExpired()
+	{
+		return true;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public boolean isAccountNonLocked()
+	{
+		return true;
+	}
+
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	@Override
+	public boolean isCredentialsNonExpired()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		if (this.ban == BanRule.NORMAL)
+			return true;
+		return false;
+	}
+
+	@Override
+	public String getUsername()
+	{
+		return getUserId();
 	}
 }

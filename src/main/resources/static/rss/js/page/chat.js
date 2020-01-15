@@ -33,7 +33,7 @@ function connect()
 		stompClient.subscribe('/api/stomp/topic/iot/v1/node', function(message) {
 			procMessage(JSON.parse(message.body));
 		});
-		stompClient.subscribe('/api/stomp/topic/iot/v1/node/uid/1', function(message) {
+		stompClient.subscribe('/api/stomp/queue/iot/v1/node/uid/1', function(message) {
 			procMessage(JSON.parse(message.body));
 		});
 	});
@@ -60,6 +60,15 @@ function sendMessage(cmd, name, content)
 	stompClient.send("/api/stomp/pub/iot/v1/node/uid/1/GET/INFO/TOKEN", {}, JSON.stringify({
 		'sender' : '1',
 		'target' : 'SERVER',
+		'cmd' : 'test',
+		'type' : 'test2',
+		'obj' : 'test3',
+		'value' : 'test4',
+		'values' : 'test5'
+	}));
+	stompClient.send("/api/stomp/queue/iot/v1/node/token/ejvdOQCAGePyjGYbnl_MGfjNLC2usXUO", {}, JSON.stringify({
+		'sender' : 'SERVER',
+		'target' : 'ejvdOQCAGePyjGYbnl_MGfjNLC2usXUO',
 		'cmd' : 'test',
 		'type' : 'test2',
 		'obj' : 'test3',

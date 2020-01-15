@@ -7,7 +7,7 @@ import net.softbell.bsh.domain.EnableStatusRule;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 활성화 상태 타입 자료형 DB 컨버터
+ * @Description : 트리거 마지막 상태 타입 자료형 DB 컨버터
  */
 @Converter(autoApply = true)
 public class TriggerLastStatusRuleConverter implements AttributeConverter<EnableStatusRule, Integer>

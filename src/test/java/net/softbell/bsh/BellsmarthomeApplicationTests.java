@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)

@@ -55,6 +55,6 @@ public class MemberLoginLog implements Serializable
 	private AuthStatusRule status;
 
 	@ManyToOne
-	@JoinColumn(name="member_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="member_id", nullable=false)
 	private Member member;
 }

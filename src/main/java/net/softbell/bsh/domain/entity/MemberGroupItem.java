@@ -52,10 +52,10 @@ public class MemberGroupItem implements Serializable
 	private Date assignDate;
 
 	@ManyToOne
-	@JoinColumn(name="member_group_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="member_group_id", nullable=false)
 	private MemberGroup memberGroup;
 
 	@ManyToOne
-	@JoinColumn(name="member_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="member_id", nullable=false)
 	private Member member;
 }

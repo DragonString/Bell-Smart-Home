@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.iot.component.v1.IotComponentV1;
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -25,18 +25,18 @@ public class IotSubscribeServiceV1
 	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	private IotComponentV1 iotComponentV1;
+	private IotChannelCompV1 iotChannelCompV1;
 	@Autowired
 	private NodeRepo nodeRepo;
 
 	
-	public BaseV1DTO procTopicSubscribe()
+	public BaseV1Dto procTopicSubscribe()
 	{
 		// Field
-		BaseV1DTO data;
+		BaseV1Dto data;
 		
 		// Init
-		data = BaseV1DTO.builder().sender("SERVER")
+		data = BaseV1Dto.builder().sender("SERVER")
 									.target("NODE")
 									.cmd("INFO")
 									.type("CONNECTION")
@@ -51,13 +51,13 @@ public class IotSubscribeServiceV1
 		return data;
 	}
 	
-	public BaseV1DTO procUIDSubscribe(String uid)
+	public BaseV1Dto procUIDSubscribe(String uid)
 	{
 		// Field
-		BaseV1DTO data;
+		BaseV1Dto data;
 		
 		// Init
-		data = BaseV1DTO.builder().sender("SERVER")
+		data = BaseV1Dto.builder().sender("SERVER")
 									.target(uid)
 									.cmd("INFO")
 									.type("CONNECTION")
@@ -72,27 +72,27 @@ public class IotSubscribeServiceV1
 		return data;
 	}
 	
-	public BaseV1DTO procTokenSubscribe(String token)
+	public BaseV1Dto procTokenSubscribe(String token)
 	{
 		// Field
 		Node node;
-		List<BaseV1DTO> listMsg;
-		BaseV1DTO msgInfo;
+		List<BaseV1Dto> listMsg;
+		BaseV1Dto msgInfo;
 		
 		// Init
 		node = nodeRepo.findByToken(token);
-		listMsg = new ArrayList<BaseV1DTO>();
-		listMsg.add(BaseV1DTO.builder().sender("SERVER").target(token).cmd("GET").type("INFO").obj("NODE").build());
-		listMsg.add(BaseV1DTO.builder().sender("SERVER").target(token).cmd("GET").type("INFO").obj("ITEMS").build());
-		msgInfo = BaseV1DTO.builder().sender("SERVER").target(token).cmd("INFO").type("CONNECTION").obj("TOKEN").value("SUCCESS").build();
+		listMsg = new ArrayList<BaseV1Dto>();
+		listMsg.add(BaseV1Dto.builder().sender("SERVER").target(token).cmd("GET").type("INFO").obj("NODE").build());
+		listMsg.add(BaseV1Dto.builder().sender("SERVER").target(token).cmd("GET").type("INFO").obj("ITEMS").build());
+		msgInfo = BaseV1Dto.builder().sender("SERVER").target(token).cmd("INFO").type("CONNECTION").obj("TOKEN").value("SUCCESS").build();
 		
 		// Exception
 		if (node == null)
 			msgInfo.setValue("REJECT");
 		
 		// Process
-		for (BaseV1DTO message : listMsg)
-			iotComponentV1.sendDataToken(message);
+		for (BaseV1Dto message : listMsg)
+			iotChannelCompV1.sendDataToken(message);
 
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "Node Token Channel Subscribe (" + token + ")");

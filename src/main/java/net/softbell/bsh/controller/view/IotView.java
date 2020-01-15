@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.dto.card.CardDashboard;
-import net.softbell.bsh.dto.card.CardItem;
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
+import net.softbell.bsh.dto.card.CardDashboardDto;
+import net.softbell.bsh.dto.card.CardItemDto;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
 import net.softbell.bsh.iot.service.v1.IotTokenServiceV1;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -56,17 +56,17 @@ public class IotView {
 		
 		// Field
 		List<Node> niList = (List<Node>) nodeRepo.findAll();
-		List<CardDashboard> cards = new ArrayList<CardDashboard>();
-		List<CardItem> card_items = new ArrayList<CardItem>();
+		List<CardDashboardDto> cards = new ArrayList<CardDashboardDto>();
+		List<CardItemDto> card_items = new ArrayList<CardItemDto>();
 		
 		// Init
 		
 		// Process
 		for (Node value : niList)
-			card_items.add(new CardItem(Long.toString(value.getNodeId()), value.getNodeName()));
+			card_items.add(new CardItemDto(Long.toString(value.getNodeId()), value.getNodeName()));
 		
 		// Post-Process
-		cards.add(new CardDashboard("Topic ", "Last update mins ago", card_items));
+		cards.add(new CardDashboardDto("Topic ", "Last update mins ago", card_items));
 		
 		// Finish
 		model.addAttribute("cards", cards);
@@ -83,10 +83,10 @@ public class IotView {
 			@RequestParam("value")String strValue)
 	{
 		// Field
-		BaseV1DTO msg;
+		BaseV1Dto msg;
 		
 		// Init
-		msg = BaseV1DTO.builder().sender("SERVER").target("1").cmd("SET").type("ITEM").obj("1").value("ON").build();
+		msg = BaseV1Dto.builder().sender("SERVER").target("1").cmd("SET").type("ITEM").obj("1").value("ON").build();
 		
 		// Process
 //		iotService.sendMessage(msg);

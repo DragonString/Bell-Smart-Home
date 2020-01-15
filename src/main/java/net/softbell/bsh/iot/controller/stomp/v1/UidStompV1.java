@@ -5,7 +5,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto;
 import net.softbell.bsh.iot.service.v1.IotUIDServiceV1;
 
 /**
@@ -23,7 +23,7 @@ public class UidStompV1
 	
 	
 	@MessageMapping("/iot/v1/node/uid/{uid}/SET/INFO/NODE")
-	public void NodeHandlerNewNode(@DestinationVariable("uid") String uid, NodeInfoV1DTO nodeInfo)
+	public void NodeHandlerNewNode(@DestinationVariable("uid") String uid, NodeInfoV1Dto nodeInfo)
 	{
 		iotUIDServiceV1.setNewNodeInfo(uid, nodeInfo);
 	}

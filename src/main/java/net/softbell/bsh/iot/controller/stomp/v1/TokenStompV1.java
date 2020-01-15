@@ -7,9 +7,9 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto;
 import net.softbell.bsh.iot.service.v1.IotTokenServiceV1;
 
 /**
@@ -27,26 +27,29 @@ public class TokenStompV1
 	
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/NODE")
-	public void NodeHandlerSetInfoNode(@DestinationVariable("token") String token, NodeInfoV1DTO nodeInfo)
+	public void NodeHandlerSetInfoNode(@DestinationVariable("token") String token, NodeInfoV1Dto nodeInfo)
 	{
 		iotTokenServiceV1.setNodeInfo(token, nodeInfo);
 	}
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/ITEMS")
-	public void NodeHandlerSetInfoItems(@DestinationVariable("token") String token, List<ItemInfoV1DTO> listItemInfo)
+	public void NodeHandlerSetInfoItems(@DestinationVariable("token") String token, List<ItemInfoV1Dto> listItemInfo)
 	{
-		for (ItemInfoV1DTO itemInfo : listItemInfo)
+		for (ItemInfoV1Dto itemInfo : listItemInfo)
+		{
 			iotTokenServiceV1.setItemInfo(token, itemInfo);
+			iotTokenServiceV1.reqItemValue(token, itemInfo.getPinId());
+		}
 	}
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/ITEM")
-	public void NodeHandlerSetInfoItem(@DestinationVariable("token") String token, ItemInfoV1DTO itemInfo)
+	public void NodeHandlerSetInfoItem(@DestinationVariable("token") String token, ItemInfoV1Dto itemInfo)
 	{
 		iotTokenServiceV1.setItemInfo(token, itemInfo);
 	}
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/VALUE/ITEM")
-	public void NodeHandlerSetValueItem(@DestinationVariable("token") String token, ItemValueV1DTO itemValue)
+	public void NodeHandlerSetValueItem(@DestinationVariable("token") String token, ItemValueV1Dto itemValue)
 	{
 		iotTokenServiceV1.setItemValue(token, itemValue);
 	}

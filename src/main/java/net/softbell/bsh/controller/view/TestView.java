@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)

@@ -1,8 +1,11 @@
 package net.softbell.bsh.domain.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
 
 /**
@@ -12,5 +15,6 @@ import net.softbell.bsh.domain.entity.MemberLoginLog;
 @Repository
 public interface MemberLoginLogRepo extends JpaRepository<MemberLoginLog, Long>
 {
-	
+	Page<MemberLoginLog> findByMember(Member member, Pageable pageable);
+	long countByMember(Member member);
 }

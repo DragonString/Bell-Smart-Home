@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.softbell.bsh.iot.component.v1.IotComponentV1;
+import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -16,7 +16,7 @@ import net.softbell.bsh.iot.component.v1.IotComponentV1;
 public class IotRestV1
 {
 	@Autowired
-	private IotComponentV1 iotComponent;
+	private IotAuthCompV1 iotAuthComp;
 	
 	@GetMapping("/send")
 	public String procSend()

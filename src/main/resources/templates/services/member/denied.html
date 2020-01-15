@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>접근 거부</title>
-</head>
-<body>
-    <h1>접근 불가 페이지입니다.</h1>
-    <hr>
-</body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/defaultLayout}">
+	<head>
+	    <title>접근 거부</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<h1 class="text-center">접근 제한</h1>
+			<hr class="bg-white">
+			<div sec:authorize="isAuthenticated()">
+				<p>계정ID: <span sec:authentication="principal.username"></span></p>
+				<p>권한: <span sec:authentication="principal.authorities"></span></p>
+			</div>
+			<div sec:authorize="!isAuthenticated()">
+				<p>로그인 필요</p>
+			</div>
+		</th:block>
+	</body>
 </html>

@@ -1,8 +1,12 @@
 package net.softbell.bsh.domain.repository;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
 
 /**
@@ -12,5 +16,5 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
 @Repository
 public interface NodeItemHistoryRepo extends JpaRepository<NodeItemHistory, Long>
 {
-	
+	List<NodeItemHistory> findByNodeItem(NodeItem nodeItem, Pageable page);
 }

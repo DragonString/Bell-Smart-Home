@@ -9,9 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
-import net.softbell.bsh.dto.member.MemberDTO;
+import net.softbell.bsh.domain.entity.Member;
+import net.softbell.bsh.dto.request.MemberDto;
 import net.softbell.bsh.service.MemberService;
 
 /**
@@ -24,7 +26,8 @@ import net.softbell.bsh.service.MemberService;
 public class MemberView {//extends ControllerFilter {
 	// Global Field
 	private final String G_BASE_PATH = "services/member";
-    private MemberService memberService;
+	private final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";
+    private final MemberService memberService;
 
     // 메인 페이지
     @GetMapping("/member")
@@ -32,11 +35,11 @@ public class MemberView {//extends ControllerFilter {
         return G_BASE_PATH + "/index";
     }
 
-    // 내 정보 페이지
-    @GetMapping("/user/info")
-    public String dispMyInfo() {
-        return G_BASE_PATH + "/myinfo";
-    }
+//    // 내 정보 페이지
+//    @GetMapping("/user/info")
+//    public String dispMyInfo() {
+//        return G_BASE_PATH + "/myinfo";
+//    }
 
     // 어드민 페이지
     @GetMapping("/admin")
@@ -60,7 +63,7 @@ public class MemberView {//extends ControllerFilter {
 
     // 회원가입 처리
     @PostMapping("/signup")
-    public String execSignup(MemberDTO memberDTO) {
+    public String execSignup(MemberDto memberDTO) {
     	// Field
     	long intResult;
     	
@@ -80,6 +83,10 @@ public class MemberView {//extends ControllerFilter {
     	// Init
     	//FilterModelPrincipal(model, principal);
     	
+    	// Auth Check
+		if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
+			return "redirect:/";
+    	
     	// Return
         return G_BASE_PATH + "/login";
     }
@@ -94,20 +101,23 @@ public class MemberView {//extends ControllerFilter {
         return G_BASE_PATH + "/denied";
     }
 
-    /*// 내 정보 페이지
+    // 내 정보 페이지
     @GetMapping("/member/info")
     public String dispMyInfo(Model model, Principal principal) {
 		// Auth Check
 		if (memberService.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
 			return G_LOGOUT_REDIRECT_URL;
 		
+		// Field
+		Member member;
+		
     	// Init
-    	FilterModelPrincipal(model, principal);
+		member = memberService.getMember(principal.getName());
 		
     	// Process
-    	model.addAttribute("memberInfo", memberService.getInfo(principal));
-    	if (memberService.checkDelete(principal.getName()))
-    			model.addAttribute("checkDelete", "1");
+    	model.addAttribute("memberInfo", member);
+//    	if (memberService.checkDelete(principal.getName()))
+//    			model.addAttribute("checkDelete", "1");
     	
     	// Return
         return G_BASE_PATH + "/myinfo";
@@ -115,26 +125,27 @@ public class MemberView {//extends ControllerFilter {
     
     // 내 정보 수정 페이지
     @GetMapping("/member/modify")
-    public String dispMyInfoModify(Model model, Principal principal) {
+    public String dispMyInfoModify(Model model, Principal principal)
+    {
 		// Auth Check
 		if (memberService.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
 			return G_LOGOUT_REDIRECT_URL;
 		
     	// Init
-    	FilterModelPrincipal(model, principal);
 		
     	// Process
-    	model.addAttribute("memberInfo", memberService.getInfo(principal));
+    	model.addAttribute("memberInfo", memberService.getMember(principal.getName()));
    	
     	// Return
         return G_BASE_PATH + "/modify";
     }
     
     // 내 정보 수정 처리
-    @RequestMapping(value = "/member/modify", method = RequestMethod.POST)
+    @PostMapping("/member/modify")
     public String procMyInfoModify(Model model, Principal principal,
-    		@RequestParam(value = "curPassword") String strCurPassword,
-    		@RequestParam(value = "modPassword") String strModPassword) {
+						    		@RequestParam("curPassword") String strCurPassword,
+						    		@RequestParam("modPassword") String strModPassword)
+    {
 		// Auth Check
 		if (memberService.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
 			return G_LOGOUT_REDIRECT_URL;
@@ -143,7 +154,6 @@ public class MemberView {//extends ControllerFilter {
     	Member member;
 		
     	// Init
-    	FilterModelPrincipal(model, principal);
     	member = memberService.modifyInfo(principal, strCurPassword, strModPassword);
     	
     	// Process
@@ -153,7 +163,7 @@ public class MemberView {//extends ControllerFilter {
     	// Return
         return G_LOGOUT_REDIRECT_URL;
     }
-
+/*
     // 회원탈퇴 처리
     @PostMapping("/member/delete")
     public String execDelete(MemberInfoDTO memberDto) {
@@ -173,7 +183,7 @@ public class MemberView {//extends ControllerFilter {
 
         return "redirect:/admin/member";
     }
-
+*/
     // 로그인 로그 페이지
     @GetMapping("/member/log")
     public String dispLoginLog(Model model, Principal principal,
@@ -185,7 +195,6 @@ public class MemberView {//extends ControllerFilter {
 			return G_LOGOUT_REDIRECT_URL;
 		
     	// Init
-    	FilterModelPrincipal(model, principal);
     	
     	// Exception
     	if (intPage < 1)
@@ -202,7 +211,7 @@ public class MemberView {//extends ControllerFilter {
     	// Return
         return G_BASE_PATH + "/log";
     }
-
+/*
     // 어드민 회원 관리 페이지
     @GetMapping("/admin/member")
     public String dispMemberList(Model model, Principal principal,

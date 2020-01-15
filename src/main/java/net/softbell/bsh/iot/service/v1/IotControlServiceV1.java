@@ -1,33 +1,53 @@
 package net.softbell.bsh.iot.service.v1;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
 
-import net.softbell.bsh.domain.entity.Node;
+import org.springframework.stereotype.Service;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
-import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.iot.component.v1.IotComponentV1;
-import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
-import net.softbell.bsh.libs.BellLog;
+import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto;
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node Action 서비스
  */
+@Slf4j
+@AllArgsConstructor
 @Service
 public class IotControlServiceV1
 {
 	// Global Field
-	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
+	private final IotMessageServiceV1 iotMessageService;
+	private final IotChannelCompV1 iotChannelCompV1;
+	private final NodeItemRepo nodeItemRepo;
 	
-	@Autowired
-	private IotComponentV1 iotComponentV1;
-	
-	
+	public boolean setItemValue(long itemId, short itemValue)
+	{
+		// Field
+		Optional<NodeItem> optNodeItem;
+		BaseV1Dto baseMessage;
+		ItemValueV1Dto itemValueData;
+		
+		// Init
+		optNodeItem = nodeItemRepo.findById(itemId);
+		
+		// Exception
+		if (!optNodeItem.isPresent())
+			return false;
+		
+		// Process
+		itemValueData = ItemValueV1Dto.builder().pinId(optNodeItem.get().getPinId()).pinStatus(itemValue).build();
+		baseMessage = iotMessageService.getBaseMessage(optNodeItem.get().getNode().getToken(), "SET", "VALUE", "ITEM", itemValueData);
+		
+		// Send
+		iotChannelCompV1.sendDataToken(baseMessage);
+		
+		// Return
+		return true;
+	}
 }
