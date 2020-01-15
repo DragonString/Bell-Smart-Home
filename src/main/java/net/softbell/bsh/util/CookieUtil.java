@@ -15,12 +15,14 @@ public class CookieUtil
 	public static void create(HttpServletResponse httpServletResponse, String name, String value, Boolean httpOnly, Boolean secure, Integer maxAge, String domain)
 	{
         Cookie cookie = new Cookie(name, value);
+        
         cookie.setSecure(secure);
         cookie.setHttpOnly(httpOnly);
         cookie.setMaxAge(maxAge);
         if (domain != null)
         	cookie.setDomain(domain);
         cookie.setPath("/");
+        
         httpServletResponse.addCookie(cookie);
     }
 	

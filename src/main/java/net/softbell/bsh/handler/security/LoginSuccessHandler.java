@@ -21,9 +21,9 @@ import net.softbell.bsh.util.ClientData;
 public class LoginSuccessHandler implements AuthenticationSuccessHandler
 {
 	@Autowired
-	MemberService memberService;
+	private MemberService memberService;
 	@Autowired
-    JwtTokenProvider jwtTokenProvider;
+    private JwtTokenProvider jwtTokenProvider;
 	
 	private String defaultUrl;
 

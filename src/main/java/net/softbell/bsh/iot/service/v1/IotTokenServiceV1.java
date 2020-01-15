@@ -2,12 +2,11 @@ package net.softbell.bsh.iot.service.v1;
 
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.PinModeRule;
 import net.softbell.bsh.domain.PinTypeRule;
 import net.softbell.bsh.domain.entity.Node;
@@ -16,7 +15,6 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
 import net.softbell.bsh.domain.repository.NodeItemHistoryRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.dto.response.ResultDto;
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
@@ -29,23 +27,18 @@ import net.softbell.bsh.util.BellLog;
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Token 서비스
  */
+@Slf4j
+@AllArgsConstructor
 @Service
 public class IotTokenServiceV1
 {
 	// Global Field
-	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
+	private final IotChannelCompV1 iotChannelCompV1;
+	private final IotAuthCompV1 iotAuthCompV1;
 	
-	@Autowired
-	private IotChannelCompV1 iotChannelCompV1;
-	@Autowired
-	private IotAuthCompV1 iotAuthCompV1;
-	
-	@Autowired
-	private NodeRepo nodeRepo;
-	@Autowired
-	private NodeItemRepo nodeItemRepo;
-	@Autowired
-	private NodeItemHistoryRepo nodeItemHistoryRepo;
+	private final NodeRepo nodeRepo;
+	private final NodeItemRepo nodeItemRepo;
+	private final NodeItemHistoryRepo nodeItemHistoryRepo;
 
 	
 	private Node getNormalTokenNode(String token)
@@ -105,7 +98,7 @@ public class IotTokenServiceV1
 		nodeRepo.save(node);
 		
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "Node Info Save (" + node.getUid() + ")");
+		log.info(BellLog.getLogHead() + "Node Info Save (" + node.getUid() + ")");
 		
 		// Return
 		return true;
@@ -135,7 +128,7 @@ public class IotTokenServiceV1
 				nodeItem.setPinType(PinTypeRule.ofLegacyCode(itemInfo.getPinType()));
 				
 				nodeItemRepo.save(nodeItem);
-				G_Logger.info(BellLog.getLogHead() + "Node Item Save (" + node.getUid() + "-" + nodeItem.getPinName() + ")");
+				log.info(BellLog.getLogHead() + "Node Item Save (" + node.getUid() + "-" + nodeItem.getPinName() + ")");
 				
 				return true;
 			}
@@ -153,7 +146,7 @@ public class IotTokenServiceV1
 		nodeItemRepo.save(nodeItem);
 
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "Node New Item Save (" + node.getUid() + "-" + nodeItem.getPinName() + ")");
+		log.info(BellLog.getLogHead() + "Node New Item Save (" + node.getUid() + "-" + nodeItem.getPinName() + ")");
 		
 		// Return
 		return true;

@@ -34,13 +34,15 @@ import net.softbell.bsh.util.BellLog;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class MemberService implements UserDetailsService {
+public class MemberService implements UserDetailsService
+{
 	// Global Field
 	private final MemberRepo memberRepo;
 	private final MemberLoginLogRepo memberLoginLogRepo;
 	
 	@Transactional
-	public long joinUser(MemberDto memberDto) {
+	public long joinUser(MemberDto memberDto)
+	{
 		// Log
 		log.info(BellLog.getLogHead() + "회원가입 요청 (" + memberDto.getUserId() + " - " + memberDto.getUsername() + ")");
 		
@@ -238,7 +240,8 @@ public class MemberService implements UserDetailsService {
 	}
 */
 	@Transactional
-	public Member modifyInfo(Principal principal, String strCurPassword, String strModPassword) {
+	public Member modifyInfo(Principal principal, String strCurPassword, String strModPassword)
+	{
 		// Log
 		log.info(BellLog.getLogHead() + "회원정보 수정 요청 (" + principal.getName() + ")");
 		
@@ -411,7 +414,8 @@ public class MemberService implements UserDetailsService {
 		return pageMemberLoginLog;
 	}
 	
-	public long getLoginLogMaxPage(Principal principal, int intCount) {
+	public long getLoginLogMaxPage(Principal principal, int intCount)
+	{
 		// Field
 		Member member;
 		long longCount;

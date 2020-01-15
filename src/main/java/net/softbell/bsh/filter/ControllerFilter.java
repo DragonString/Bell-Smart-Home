@@ -9,7 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @Author : Bell(bell@softbell.net)
  * @Description : 컨트롤러가 동작하기 전 필터 클래스
  */
-public class ControllerFilter {
+public class ControllerFilter
+{
 	// Static Global Field
 	public static final String G_SERVICE_ERROR_REDIRECT_URL = "redirect:/error/service";
 	public static final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";

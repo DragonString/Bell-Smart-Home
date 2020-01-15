@@ -21,6 +21,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import net.softbell.bsh.config.CustomConfig;
 import net.softbell.bsh.util.CookieUtil;
 
 /**
@@ -31,7 +32,7 @@ import net.softbell.bsh.util.CookieUtil;
 @Component
 public class JwtTokenProvider
 {
-    @Value("${spring.jwt.secret}")
+    @Value("${bsh.security.jwt.secret.key}")
     private String secretKey;
     private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
     private final UserDetailsService userDetailsService;
@@ -44,7 +45,7 @@ public class JwtTokenProvider
     
     public void setCookieAuth(HttpServletResponse response, Authentication authentication)
     {
-    	CookieUtil.create(response, "X-AUTH-TOKEN", createToken(authentication), false, false, 60 * 60);
+    	CookieUtil.create(response, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication), false, false, 60 * 60);
     }
 
     // Jwt 토큰 생성
@@ -102,9 +103,9 @@ public class JwtTokenProvider
     	
     	// Load
     	if (isApiMode(request)) // API 및 웹소켓 경로면 헤더에서 인증정보 로드 (CSRF 미사용)
-    		token = request.getHeader("X-AUTH-TOKEN");
+    		token = request.getHeader(CustomConfig.SECURITY_HEADER_NAME);
     	else // 일반 유저 경로면 쿠키에서 인증정보 로드 (CSRF 사용)
-    		token = CookieUtil.getValue(request, "X-AUTH-TOKEN");
+    		token = CookieUtil.getValue(request, CustomConfig.SECURITY_COOKIE_NAME);
     	
     	// Return
         return token;

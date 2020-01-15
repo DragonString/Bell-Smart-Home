@@ -23,7 +23,8 @@ import net.softbell.bsh.service.MemberService;
 @Controller
 @AllArgsConstructor
 //@RequestMapping("/member")
-public class MemberView {//extends ControllerFilter {
+public class MemberView //extends ControllerFilter
+{
 	// Global Field
 	private final String G_BASE_PATH = "services/member";
 	private final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";
@@ -43,13 +44,15 @@ public class MemberView {//extends ControllerFilter {
 
     // 어드민 페이지
     @GetMapping("/admin")
-    public String dispAdmin() {
+    public String dispAdmin()
+    {
         return G_BASE_PATH + "/admin";
     }
     
     // 회원가입 페이지
     @GetMapping("/signup")
-    public String dispSignup(Model model, Principal principal) {
+    public String dispSignup(Model model, Principal principal)
+    {
     	// Init
     	//FilterModelPrincipal(model, principal);
 
@@ -63,7 +66,8 @@ public class MemberView {//extends ControllerFilter {
 
     // 회원가입 처리
     @PostMapping("/signup")
-    public String execSignup(MemberDto memberDTO) {
+    public String execSignup(MemberDto memberDTO)
+    {
     	// Field
     	long intResult;
     	
@@ -79,7 +83,8 @@ public class MemberView {//extends ControllerFilter {
 
     // 로그인 페이지
     @GetMapping("/login")
-    public String dispLogin(Model model, Principal principal, HttpServletRequest request, HttpServletResponse response) {
+    public String dispLogin(Model model, Principal principal, HttpServletRequest request, HttpServletResponse response)
+    {
     	// Init
     	//FilterModelPrincipal(model, principal);
     	
@@ -93,7 +98,8 @@ public class MemberView {//extends ControllerFilter {
 
     // 접근 거부 페이지
     @GetMapping("/denied")
-    public String dispDenied(Model model, Principal principal) {
+    public String dispDenied(Model model, Principal principal)
+    {
     	// Init
     	//FilterModelPrincipal(model, principal);
     	
@@ -103,7 +109,8 @@ public class MemberView {//extends ControllerFilter {
 
     // 내 정보 페이지
     @GetMapping("/member/info")
-    public String dispMyInfo(Model model, Principal principal) {
+    public String dispMyInfo(Model model, Principal principal)
+    {
 		// Auth Check
 		if (memberService.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
 			return G_LOGOUT_REDIRECT_URL;

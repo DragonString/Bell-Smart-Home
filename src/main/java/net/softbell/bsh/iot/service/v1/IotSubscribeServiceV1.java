@@ -3,11 +3,10 @@ package net.softbell.bsh.iot.service.v1;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
@@ -18,16 +17,14 @@ import net.softbell.bsh.util.BellLog;
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT 구독 서비스
  */
+@Slf4j
+@AllArgsConstructor
 @Service
 public class IotSubscribeServiceV1
 {
 	// Global Field
-	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
-	
-	@Autowired
-	private IotChannelCompV1 iotChannelCompV1;
-	@Autowired
-	private NodeRepo nodeRepo;
+	private final IotChannelCompV1 iotChannelCompV1;
+	private final NodeRepo nodeRepo;
 
 	
 	public BaseV1Dto procTopicSubscribe()
@@ -45,7 +42,7 @@ public class IotSubscribeServiceV1
 									.build();
 		
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "Node Topic Channel Subscribe");
+		log.info(BellLog.getLogHead() + "Node Topic Channel Subscribe");
 		
 		// Return
 		return data;
@@ -66,7 +63,7 @@ public class IotSubscribeServiceV1
 									.build();
 		
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "Node UID Channel Subscribe (" + uid + ")");
+		log.info(BellLog.getLogHead() + "Node UID Channel Subscribe (" + uid + ")");
 		
 		// Return
 		return data;
@@ -95,7 +92,7 @@ public class IotSubscribeServiceV1
 			iotChannelCompV1.sendDataToken(message);
 
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "Node Token Channel Subscribe (" + token + ")");
+		log.info(BellLog.getLogHead() + "Node Token Channel Subscribe (" + token + ")");
 		
 		// Return
 		return msgInfo;

@@ -17,6 +17,9 @@
 		    		<tr>
 		    			<td><h5 class="align-middle text-center text-danger">유지보수 모드 활성화</h1></td>
 		    		</tr>
+		    		<tr th:if="${param.error}">
+		    			<td class="alert alert-danger text-center"><strong>로그인 진행 중 문제가 발생했습니다.</strong></td>
+		    		</tr>
 		    		<tr>
 		    			<td class="align-middle">
 		    				<input class="form-control" type="text" name="userid" placeholder="아이디" autofocus>

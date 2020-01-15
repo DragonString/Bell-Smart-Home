@@ -1,5 +1,6 @@
 package net.softbell.bsh.controller.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -13,20 +14,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
-import net.softbell.bsh.iot.service.v1.IotMonitorServiceV1;
+import net.softbell.bsh.dto.request.MemberDto;
+import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 모니터 뷰 컨트롤러
+ * @Description : 노드 뷰 컨트롤러
  */
 @AllArgsConstructor
 @Controller
-@RequestMapping("/monitor")
-public class MonitorView
+@RequestMapping("/node")
+public class NodeView
 {
 	// Global Field
-	private final String G_BASE_PATH = "services/monitor";
-	private final IotMonitorServiceV1 iotMonitorService;
+	private final String G_BASE_PATH = "services/node";
+	private final IotNodeServiceV1 iotNodeService;
 	
 	@GetMapping()
     public String dispIndex(Model model,
@@ -37,13 +39,13 @@ public class MonitorView
 		Page<Node> pageNode;
 		
 		// Init
-		pageNode = iotMonitorService.getAllNodes(intPage, intCount);
+		pageNode = iotNodeService.getAllNodes(intPage, intCount);
 		
 		// Process
 		model.addAttribute("listNode", pageNode);
 		
 		// Return
-        return G_BASE_PATH + "/index";
+        return G_BASE_PATH + "/nodeList";
     }
 	
 	@GetMapping("/{id}")
@@ -53,7 +55,7 @@ public class MonitorView
 		Node node;
 		
 		// Init
-		node = iotMonitorService.getNode(intNodeId);
+		node = iotNodeService.getNode(intNodeId);
 		
 		// Process
 		model.addAttribute("nodeInfo", node);
@@ -69,7 +71,7 @@ public class MonitorView
 		List<NodeItemHistory> pageNodeItemHistory;
 		
 		// Init
-		pageNodeItemHistory = iotMonitorService.getNodeItemHistory(intNodeItemId);
+		pageNodeItemHistory = iotNodeService.getNodeItemHistory(intNodeItemId);
 		
 		// Process
 		model.addAttribute("listNodeItemHistory", pageNodeItemHistory);

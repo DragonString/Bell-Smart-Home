@@ -2,11 +2,11 @@ package net.softbell.bsh.iot.controller.stomp.v1;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.AllArgsConstructor;
 import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1Dto;
 import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto;
 import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto;
@@ -18,12 +18,12 @@ import net.softbell.bsh.iot.service.v1.IotTokenServiceV1;
  * STOMP publish: /api/stomp/pub
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
+@AllArgsConstructor
 @RestController
 public class TokenStompV1
 {
 	// Global Field
-	@Autowired
-	private IotTokenServiceV1 iotTokenServiceV1;
+	private final IotTokenServiceV1 iotTokenServiceV1;
 	
 	
 	@MessageMapping("/iot/v1/node/token/{token}/SET/INFO/NODE")

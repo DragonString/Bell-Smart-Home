@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.dto.response.ResultDto;
-import net.softbell.bsh.iot.service.v1.IotControlServiceV1;
+import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.ResponseService;
 
 /**
@@ -21,16 +21,16 @@ import net.softbell.bsh.service.ResponseService;
 public class IotControlRestV1
 {
     private final ResponseService responseService;
-    private final IotControlServiceV1 iotControlService;
+    private final IotNodeServiceV1 iotNodeService;
 	
 	@PostMapping("/item/set/{id}")
-	public ResultDto checkTokenAvailable(@PathVariable("id")long id, @RequestParam("value")short value)
+	public ResultDto setNodeItemValue(@PathVariable("id")long id, @RequestParam("value")short value)
 	{
 		// Field
 		boolean isSuccess;
 		
 		// Init
-		isSuccess = iotControlService.setItemValue(id, value);
+		isSuccess = iotNodeService.setItemValue(id, value);
 		
 		// Return
 		if (isSuccess)

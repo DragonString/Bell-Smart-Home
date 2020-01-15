@@ -4,11 +4,11 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorate="~{layout/defaultLayout}">
 	<head>
-	    <title>모니터링</title>
+	    <title>노드</title>
 	</head>
 	<body>
 		<th:block layout:fragment="content">
-	    	<h1>노드 모니터링</h1>
+	    	<h1>노드 리스트</h1>
 	    	<hr class="bg-white">
 	    	<table class="table table-striped table-hover text-white">
 				<thead>
@@ -18,7 +18,7 @@
 				</thead>
 				<tbody>
 					<tr th:if="${not #lists.isEmpty(listNode)}" th:each="nodeValue : ${listNode}">
-						<td class="align-middle text-center"><a th:href="'/monitor/' + ${ nodeValue.nodeId }" th:text="${ nodeValue.alias }"></a></td>
+						<td class="align-middle text-center"><a th:href="'/node/' + ${ nodeValue.nodeId }" th:text="${ nodeValue.alias }"></a></td>
 						<td class="align-middle text-center" th:text="${ nodeValue.enableStatus }"></td>
 						<td class="align-middle text-center" th:text="${ nodeValue.controlMode }"></td>
 <!-- 						<td th:if="${ logValue.ipv4 } != '0:0:0:0:0:0:0:1'" class="align-middle text-center" th:text="${ logValue.ipv4 }"></td> -->
