@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import lombok.AllArgsConstructor;
@@ -85,6 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.anyRequest().hasRole("MEMBER") // 기타 모든 페이지는 Member 권한 보유자만 가능
 		.and()
 			.csrf() // CSRF 설정
+				.csrfTokenRepository(new CookieCsrfTokenRepository())
 				.ignoringAntMatchers("/api/**") // API는 CSRF 사용 안함 (헤더로 인증하기 때문)
 		.and()
 			.formLogin() // 폼 로그인 설정
@@ -122,6 +124,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 	    			.frameOptions()
 	    				.disable();
     	}
+    	
+//    	http.csrf().disable(); // TODO ############# 임시 해제
 	}
 	
 	@Override

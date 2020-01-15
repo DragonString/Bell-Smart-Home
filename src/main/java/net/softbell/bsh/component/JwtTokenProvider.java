@@ -44,7 +44,7 @@ public class JwtTokenProvider
     
     public void setCookieAuth(HttpServletResponse response, Authentication authentication)
     {
-    	CookieUtil.create(response, "X-AUTH-TOKEN", createToken(authentication), false, 60 * 60);
+    	CookieUtil.create(response, "X-AUTH-TOKEN", createToken(authentication), false, false, 60 * 60);
     }
 
     // Jwt 토큰 생성

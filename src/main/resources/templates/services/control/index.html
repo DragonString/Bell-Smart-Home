@@ -10,16 +10,11 @@
 		<th:block layout:fragment="content">
 	    	<h1>컨텐츠 내용</h1>
 	    	<hr>
-	    	<a href="/iot/led?mode=circuit&value=on">LED ON</a>
-	    	<a href="/iot/led?mode=circuit&value=off">LED OFF</a>
-	    	<a href="/iot/led?mode=bar&value=off">OFF</a>
-	    	<a href="/iot/led?mode=bar&value=red">RED</a>
-	    	<a href="/iot/led?mode=bar&value=green">GREEN</a>
-	    	<a href="/iot/led?mode=bar&value=blue">BLUE</a>
-	    	<a href="/iot/led?mode=bar&value=white">WHITE</a>
+	    	<button id="btnTest1" onClick="setItem(1);">테스트 활성화</button>
+	    	<button id="btnTest2" onClick="setItem(0);">테스트 비활성화</button>
 		</th:block>
 		<th:block layout:fragment="pageScript">
-			<script src="/rss/js/page/login.js"></script>
+			<script src="/rss/js/page/control.js"></script>
 		</th:block>
 	</body>
 </html>

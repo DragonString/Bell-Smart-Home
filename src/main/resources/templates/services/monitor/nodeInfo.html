@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/defaultLayout}">
+	<head>
+	    <title>노드 상세정보</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+	    	<h1>노드 상세정보</h1>
+	    	<hr class="bg-white">
+	    	<table class="table table-striped table-hover text-white">
+				<thead>
+					<th class="align-middle text-center w-25">이름</th>
+					<th class="align-middle text-center">값</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="align-middle text-center">활성화 상태</td>
+						<td class="align-middle text-center" th:text="${ nodeInfo.enableStatus }"></td>
+					</tr>
+					<tr>
+						<td class="align-middle text-center">이름</td>
+						<td class="align-middle text-center" th:text="${ nodeInfo.nodeName }"></td>
+					</tr>
+					<tr>
+						<td class="align-middle text-center">별칭</td>
+						<td class="align-middle text-center" th:text="${ nodeInfo.alias }"></td>
+					</tr>
+					<tr>
+						<td class="align-middle text-center">UID</td>
+						<td class="align-middle text-center" th:text="${ nodeInfo.uid }"></td>
+					</tr>
+					<tr>
+						<td class="align-middle text-center">토큰</td>
+						<td class="align-middle text-center" th:text="${ nodeInfo.token }"></td>
+					</tr>
+					<tr>
+						<td class="align-middle text-center">컨트롤 모드</td>
+						<td class="align-middle text-center" th:text="${ nodeInfo.controlMode }"></td>
+					</tr>
+					<tr>
+						<td class="align-middle text-center">등록일</td>
+						<td class="align-middle text-center" th:text="${ #dates.format(nodeInfo.registerDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+					</tr>
+					<tr>
+						<td class="align-middle text-center">승인일</td>
+						<td class="align-middle text-center" th:text="${ #dates.format(nodeInfo.approvalDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+					</tr>
+				</tbody>
+			</table>
+			<h1>노드 아이템</h1>
+			<table class="table table-striped table-hover text-white">
+				<thead>
+					<th class="align-middle text-center">별칭</th>
+					<th class="align-middle text-center">핀 이름</th>
+					<th class="align-middle text-center">핀 타입</th>
+					<th class="align-middle text-center">핀 모드</th>
+					<th class="align-middle text-center">컨트롤 모드</th>
+					<th class="align-middle text-center">현재 값</th>
+				</thead>
+				<tbody>
+					<tr th:if="${not #lists.isEmpty(nodeInfo.nodeItems)}" th:each="itemValue : ${nodeInfo.nodeItems}">
+						<td class="align-middle text-center"><a th:href="|item/${ itemValue.itemId }|" th:text="${ itemValue.alias }"></a></td>
+						<td class="align-middle text-center" th:text="${ itemValue.pinName }"></td>
+						<td class="align-middle text-center" th:text="${ itemValue.pinType }"></td>
+						<td class="align-middle text-center" th:text="${ itemValue.pinMode }"></td>
+						<td class="align-middle text-center" th:text="${ itemValue.controlMode }"></td>
+<!-- 						<td class="align-middle text-center" th:with="maxIndex = ${#lists.size(itemValue.nodeItemHistories)}" th:text="${ itemValue.nodeItemHistories[ 1].pinStatus }"></td> -->
+					</tr>
+				</tbody>
+			</table>
+		</th:block>
+		<th:block layout:fragment="pageScript">
+<!-- 			<script src="/rss/js/page/login.js"></script> -->
+		</th:block>
+	</body>
+</html>

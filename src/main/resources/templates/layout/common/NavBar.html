@@ -1,28 +1,51 @@
-<!-- Navigation Bar -->
-<nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
-	<a th:class="navbar-brand" th:text="${nav_brand}" href="#"></a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
+<!-- 메인 카테고리 및 검색바 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	<a class="navbar-brand" th:href="@{/}">BSH</a>
+	<div class="ml-auto">
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navBar" aria-controls="navBar" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+	</div>
 	
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-		<!-- Align Nav Bar -->
-		<ul th:each="num : ${#numbers.sequence(0, 1)}" th:class="|${num == 0 ? 'nav navbar-nav mr-auto' : 'nav navbar-nav ml-auto'}|">
-			<!-- Dropdown 여부 -->
-			<li th:each="nav : ${navbar[num]}" th:class="|nav-item |" th:classappend="|${#strings.equalsIgnoreCase(nav.navType, 'dropdown') ? 'dropdown' : ''}|">
-				<!-- Type 분기 -->
-				<a th:if="${#strings.equalsIgnoreCase(nav.navType, 'link')}" th:text="${nav.navName}" th:href="${nav.navURI}" th:class="|nav-link|"></a>
-				<a th:if="${#strings.equalsIgnoreCase(nav.navType, 'disabled')}" th:text="${nav.navName}" th:href="|#|" th:class="|nav-link disabled|" tabindex="-1" aria-disabled="true"></a>
-				<a th:if="${#strings.equalsIgnoreCase(nav.navType, 'dropdown')}" th:text="${nav.navName}" th:href="${nav.navURI}" th:class="|nav-link dropdown-toggle|" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
-				<div th:if="${nav.navItems != null}" th:class="|dropdown-menu|" aria-labelledby="navbarDropdown">
-					<!-- Dropdown Items -->
-					<tr th:each="dnav : ${nav.navItems}">
-						<a th:if="${#strings.equalsIgnoreCase(dnav.navType, 'link')}" th:text="${dnav.navName}" th:href="${dnav.navURI}" th:class="|dropdown-item|"></a>
-						<div th:if="${#strings.equalsIgnoreCase(dnav.navType, 'divider')}" th:class="|dropdown-divider|"></div>
-						<a th:if="${#strings.equalsIgnoreCase(dnav.navType, 'disabled')}" th:text="${dnav.navName}" th:href="|#|" th:class="|dropdown-item disabled|" tabindex="-1" aria-disabled="true"></a>
-					</tr>
-				</div>
+	<div class="collapse navbar-collapse" id="navBar">
+		<!-- 좌측 메인메뉴바 -->
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/dashboard}">Dash Board</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/monitor}">Monitor</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/control}">Control</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/action}">Action</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" th:href="@{/trigger}">Trigger</a>
 			</li>
 		</ul>
+
+		<!-- 우측 회원바 -->
+		<ul class="navbar-nav ml-auto">
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Profile</a>
+				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+					<th:block sec:authorize="hasRole('ROLE_ADMIN')">
+						<a class="dropdown-item" th:href="@{/admin}">Admin</a>
+						<div class="dropdown-divider"></div>
+					</th:block>
+					<th:block sec:authorize="hasRole('ROLE_MEMBER')">
+						<a class="dropdown-item" th:href="@{/setting}">Setting</a>
+						<div class="dropdown-divider"></div>
+					</th:block>
+					<a sec:authorize="isAnonymous()" class="dropdown-item" th:href="@{/login}">Login</a>
+					<a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/member/info}">My Info</a>
+					<a sec:authorize="isAuthenticated()" class="dropdown-item" th:href="@{/logout}">Logout</a>
+				</div>
+			</li>
+		</Ul>
 	</div>
 </nav>
+<hr class="bg-white">

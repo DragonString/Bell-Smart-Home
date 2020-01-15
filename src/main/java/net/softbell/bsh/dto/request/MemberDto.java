@@ -42,7 +42,7 @@ public class MemberDto {
     public Member toEntity(){
     	// Default
     	if (emailAddress == null || emailAddress.isEmpty())
-    		emailAddress = emailHost + "@" + emailId;
+    		emailAddress = emailId + "@" + emailHost;
     	
     	// Generate
         return Member.builder()

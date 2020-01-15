@@ -12,7 +12,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import net.softbell.bsh.component.JwtTokenProvider;
 import net.softbell.bsh.service.MemberService;
-import net.softbell.bsh.util.CookieUtil;
+import net.softbell.bsh.util.ClientData;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -48,7 +48,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler
 			response.sendRedirect("/logout");
 		if (strRedirect == null || strRedirect.isEmpty() || strRedirect.contains("/login"))
 			strRedirect = getDefaultUrl();
-		//memberService.procLogin(strUserId, ClientData.getClientIP(request), true); // TODO BSNS 프로젝트 그대로 가져온거라 수정 필요함
+		memberService.procLogin(strUserId, ClientData.getClientIP(request), true);
 		jwtTokenProvider.setCookieAuth(response, authentication);
 		
 		// Redirect

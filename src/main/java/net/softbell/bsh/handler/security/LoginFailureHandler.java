@@ -11,12 +11,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import net.softbell.bsh.service.MemberService;
+import net.softbell.bsh.util.ClientData;
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 로그인 실패 핸들러
  */
-public class LoginFailureHandler implements AuthenticationFailureHandler {
+public class LoginFailureHandler implements AuthenticationFailureHandler
+{
 	@Autowired
 	MemberService memberService;
 	
@@ -28,23 +30,26 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 	}
 	
 	@Override
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException exception) throws IOException, ServletException {
+	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
+					throws IOException, ServletException
+	{
 		// Field
-		String strUserId = request.getParameter("username");
+		String strUserId = request.getParameter("userid");
 		
 		// Process
-		//memberService.procLogin(strUserId, ClientData.getClientIP(request), false); // TODO BSNS 프로젝트 그대로 가져온거라 수정 필요함
+		memberService.procLogin(strUserId, ClientData.getClientIP(request), false);
 		
 		// Redirect
 		response.sendRedirect(getDefaultUrl());
 	}
 	
-	public String getDefaultUrl() {
+	public String getDefaultUrl()
+	{
 		return defaultUrl;
 	}
 
-	public void setDefaultUrl(String defaultUrl) {
+	public void setDefaultUrl(String defaultUrl)
+	{
 		this.defaultUrl = defaultUrl;
 	}
 }
