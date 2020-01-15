@@ -7,15 +7,14 @@ import lombok.Setter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : BSHPv1 전용 Node Info DTO
+ * @Description : BSHPv1 전용 Item Value DTO
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class NodeInfoV1DTO
+public class ItemValueV1Dto
 {
-	private String uid;
-	private byte controlMode;
-	private String nodeName;
+	private byte pinId;
+	private short pinStatus;
 }

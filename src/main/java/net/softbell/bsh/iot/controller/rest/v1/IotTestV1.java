@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : IoT REST API 컨트롤러 V1
+ * @Description : IoT REST API 테스트 컨트롤러 V1
  */
 @RestController
 @RequestMapping("/api/rest/v1/iot/test")
@@ -29,7 +29,7 @@ public class IotTestV1
 			@RequestParam(value = "obj", required = false, defaultValue = "ITEMS")String strObj)
 	{
 		// Field
-		BaseV1DTO message = new BaseV1DTO("SERVER", strTarget, strCmd, strType, strObj);
+		BaseV1Dto message = new BaseV1Dto("SERVER", strTarget, strCmd, strType, strObj);
 		
 		// Process
 		iotComponent.sendDataToken(message);
@@ -44,7 +44,7 @@ public class IotTestV1
 			@RequestParam(value = "value", required = false, defaultValue = "1")int intValue)
 	{
 		// Field
-		BaseV1DTO message = new BaseV1DTO("SERVER", strTarget, "SET", "VALUE", "ITEM");
+		BaseV1Dto message = new BaseV1Dto("SERVER", strTarget, "SET", "VALUE", "ITEM");
 		Test2 test = new Test2(intId, intValue);
 		message.setValue(test);
 		

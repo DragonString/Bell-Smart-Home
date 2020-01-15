@@ -1,15 +1,17 @@
-package net.softbell.bsh.handler.security;
+package net.softbell.bsh.component;
 
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -21,27 +23,32 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import net.softbell.bsh.util.CookieUtil;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 인증관련 JWT 토큰 생성 및 검증 컴포넌트
+ */
 @RequiredArgsConstructor
 @Component
 public class JwtTokenProvider
-{ // JWT 토큰을 생성 및 검증 모듈
-
+{
     @Value("${spring.jwt.secret}")
     private String secretKey;
-
     private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
-
     private final UserDetailsService userDetailsService;
 
     @PostConstruct
     protected void init()
     {
-        System.out.println(secretKey + " JWT INIT -------------------======@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    }
+    
+    public void setCookieAuth(HttpServletResponse response, Authentication authentication)
+    {
+    	CookieUtil.create(response, "X-AUTH-TOKEN", createToken(authentication), false, 60 * 60);
     }
 
     // Jwt 토큰 생성
-    public String createToken(String userPk, List<String> roles)
+    public String createToken(String userPk, Collection<? extends GrantedAuthority> roles)
     {
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
@@ -79,6 +86,13 @@ public class JwtTokenProvider
     {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
+    
+    public boolean isApiMode(HttpServletRequest request)
+    {
+    	if (request.getRequestURI().startsWith("/api/") || request.getRequestURI().startsWith("/ws/"))
+    		return true;
+    	return false;
+    }
 
     // Request의 Header에서 token 파싱 : "X-AUTH-TOKEN: jwt토큰"
     public String resolveToken(HttpServletRequest request)
@@ -87,8 +101,9 @@ public class JwtTokenProvider
     	String token;
     	
     	// Load
-    	token = request.getHeader("X-AUTH-TOKEN");
-    	if (token == null)
+    	if (isApiMode(request)) // API 및 웹소켓 경로면 헤더에서 인증정보 로드 (CSRF 미사용)
+    		token = request.getHeader("X-AUTH-TOKEN");
+    	else // 일반 유저 경로면 쿠키에서 인증정보 로드 (CSRF 사용)
     		token = CookieUtil.getValue(request, "X-AUTH-TOKEN");
     	
     	// Return

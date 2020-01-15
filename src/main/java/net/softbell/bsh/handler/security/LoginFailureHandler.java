@@ -1,4 +1,4 @@
-package net.softbell.bsh.handler;
+package net.softbell.bsh.handler.security;
 
 import java.io.IOException;
 

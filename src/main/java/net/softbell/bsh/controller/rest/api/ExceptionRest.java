@@ -5,30 +5,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import net.softbell.bsh.dto.response.CommonResult;
+import net.softbell.bsh.dto.response.ResultDto;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 예외페이지 REST API 컨트롤러
+ */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/rest/exception")
-public class ExceptionController {
-
+public class ExceptionRest
+{
     @GetMapping("/entrypoint")
-    public CommonResult entrypointException()
+    public ResultDto entrypointException()
     {
-        return CommonResult.builder()
+        return ResultDto.builder()
         					.success(false)
         					.code(-200)
-        					.msg("인증실패")
+        					.message("인증실패")
         						.build();
     }
 
     @GetMapping("/denied")
-    public CommonResult accessdeniedException()
+    public ResultDto accessdeniedException()
     {
-    	return CommonResult.builder()
+    	return ResultDto.builder()
 				.success(false)
 				.code(-201)
-				.msg("권한부족")
+				.message("권한부족")
 					.build();
     }
 }

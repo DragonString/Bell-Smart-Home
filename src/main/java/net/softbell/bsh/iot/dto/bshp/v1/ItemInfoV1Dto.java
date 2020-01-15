@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ItemInfoV1DTO
+public class ItemInfoV1Dto
 {
 	private Byte controlMode;
 	private Byte pinId;

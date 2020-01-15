@@ -66,6 +66,15 @@ function sendMessage(cmd, name, content)
 		'value' : 'test4',
 		'values' : 'test5'
 	}));
+	stompClient.send("/api/stomp/queue/iot/v1/node/token/ejvdOQCAGePyjGYbnl_MGfjNLC2usXUO", {}, JSON.stringify({
+		'sender' : 'SERVER',
+		'target' : 'ejvdOQCAGePyjGYbnl_MGfjNLC2usXUO',
+		'cmd' : 'test',
+		'type' : 'test2',
+		'obj' : 'test3',
+		'value' : 'test4',
+		'values' : 'test5'
+	}));
 }
 
 function sendChat()

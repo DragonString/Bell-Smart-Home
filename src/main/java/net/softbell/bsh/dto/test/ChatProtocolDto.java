@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Deprecated
-public class ChatProtocolDTO {
+public class ChatProtocolDto {
 	private String cmd;
 	private String name;
 	private String content;

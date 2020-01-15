@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.AllArgsConstructor;
-import net.softbell.bsh.dto.member.MemberDTO;
+import net.softbell.bsh.dto.request.MemberDto;
 import net.softbell.bsh.service.MemberService;
 
 /**
@@ -60,7 +60,7 @@ public class MemberView {//extends ControllerFilter {
 
     // 회원가입 처리
     @PostMapping("/signup")
-    public String execSignup(MemberDTO memberDTO) {
+    public String execSignup(MemberDto memberDTO) {
     	// Field
     	long intResult;
     	

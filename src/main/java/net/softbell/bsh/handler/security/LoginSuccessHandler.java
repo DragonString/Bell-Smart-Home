@@ -1,4 +1,4 @@
-package net.softbell.bsh.handler;
+package net.softbell.bsh.handler.security;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import net.softbell.bsh.handler.security.JwtTokenProvider;
+import net.softbell.bsh.component.JwtTokenProvider;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.util.CookieUtil;
 
@@ -49,7 +49,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler
 		if (strRedirect == null || strRedirect.isEmpty() || strRedirect.contains("/login"))
 			strRedirect = getDefaultUrl();
 		//memberService.procLogin(strUserId, ClientData.getClientIP(request), true); // TODO BSNS 프로젝트 그대로 가져온거라 수정 필요함
-		CookieUtil.create(response, "X-AUTH-TOKEN", jwtTokenProvider.createToken(authentication), false, 60 * 60);
+		jwtTokenProvider.setCookieAuth(response, authentication);
 		
 		// Redirect
 		response.sendRedirect(strRedirect);

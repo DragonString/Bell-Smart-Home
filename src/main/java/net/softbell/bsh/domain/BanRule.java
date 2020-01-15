@@ -5,7 +5,7 @@ import lombok.Getter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 인증 상태 자료형
+ * @Description : 차단 상태 자료형
  */
 @AllArgsConstructor
 @Getter

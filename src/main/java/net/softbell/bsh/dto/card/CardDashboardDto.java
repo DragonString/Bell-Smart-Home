@@ -14,12 +14,12 @@ import lombok.NonNull;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CardDashboard {
+public class CardDashboardDto {
 	@NonNull
 	private String cardTopic;
 	@NonNull
 	private String cardLast;
 	
 	@NonNull
-	private List<CardItem> cardItems;
+	private List<CardItemDto> cardItems;
 }

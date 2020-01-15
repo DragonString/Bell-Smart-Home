@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
 import net.softbell.bsh.util.BellLog;
 
 /**
@@ -25,7 +25,7 @@ public class IotChannelCompV1
 	private SimpMessagingTemplate template;
 	
 	
-	public void sendDataUID(BaseV1DTO data)
+	public void sendDataUID(BaseV1Dto data)
 	{
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "IoT 메시지 전송 (UID: " + data.getTarget() + ")"); // TODO 나중에 제거
@@ -34,7 +34,7 @@ public class IotChannelCompV1
 		template.convertAndSend(G_UID_URL + data.getTarget(), data);
 	}
 	
-	public void sendDataToken(BaseV1DTO data)
+	public void sendDataToken(BaseV1Dto data)
 	{
 		// Log
 		G_Logger.info(BellLog.getLogHead() + "IoT 메시지 전송 (Token: " + data.getTarget() + ")"); // TODO 나중에 제거

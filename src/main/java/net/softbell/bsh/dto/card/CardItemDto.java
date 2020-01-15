@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class CardItem {
+public class CardItemDto {
 	public enum ItemType
 	{
 		PRIMARY,

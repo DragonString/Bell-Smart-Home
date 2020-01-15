@@ -13,8 +13,8 @@ import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto;
 import net.softbell.bsh.util.BellLog;
 
 /**
@@ -36,10 +36,10 @@ public class IotUIDServiceV1
 
 
 	@Transactional
-	public boolean setNewNodeInfo(String uid, NodeInfoV1DTO nodeInfo)
+	public boolean setNewNodeInfo(String uid, NodeInfoV1Dto nodeInfo)
 	{
 		// Field
-		BaseV1DTO message;
+		BaseV1Dto message;
 		Node node;
 		
 		// Init
@@ -62,7 +62,7 @@ public class IotUIDServiceV1
 		nodeRepo.save(node);
 
 		// Message
-		message = BaseV1DTO.builder().sender("SERVER")
+		message = BaseV1Dto.builder().sender("SERVER")
 									.target(uid)
 									.cmd("INFO")
 									.type("NEW")
@@ -81,7 +81,7 @@ public class IotUIDServiceV1
 	public boolean generateToken(String uid)
 	{
 		// Field
-		BaseV1DTO message;
+		BaseV1Dto message;
 		Node node;
 		String token;
 		
@@ -90,7 +90,7 @@ public class IotUIDServiceV1
 		
 		// Process
 		if (node == null)
-			message = BaseV1DTO.builder().sender("SERVER").target(uid)
+			message = BaseV1Dto.builder().sender("SERVER").target(uid)
 										.cmd("GET")
 										.type("INFO")
 										.obj("NODE")
@@ -99,7 +99,7 @@ public class IotUIDServiceV1
 		{
 			token = iotAuthCompV1.generateToken(uid);
 			
-			message = BaseV1DTO.builder().sender("SERVER").target(uid)
+			message = BaseV1Dto.builder().sender("SERVER").target(uid)
 										.cmd("SET")
 										.type("INFO")
 										.obj("TOKEN")

@@ -22,7 +22,8 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class BaseV1DTO {
+public class BaseV1Dto
+{
 	@NonNull
 	private String sender;
 	@NonNull

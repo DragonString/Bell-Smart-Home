@@ -12,9 +12,9 @@ import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
-import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto;
 import net.softbell.bsh.util.BellLog;
 
 /**

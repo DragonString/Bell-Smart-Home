@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.softbell.bsh.dto.rest.ResultDTO;
+import net.softbell.bsh.dto.response.ResultDto;
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 
 /**
@@ -21,10 +21,10 @@ public class IotAuthRestV1
 	private IotAuthCompV1 iotAuthComp;
 	
 	@GetMapping("/token/check")
-	public ResultDTO checkTokenAvailable(@RequestParam("token")String token)
+	public ResultDto checkTokenAvailable(@RequestParam("token")String token)
 	{
 		// Field
-		ResultDTO message;
+		ResultDto message;
 		boolean isAvailable;
 		
 		// Check
@@ -32,9 +32,9 @@ public class IotAuthRestV1
 		
 		// Message
 		if (isAvailable)
-			message = ResultDTO.builder().message("valid").build();
+			message = ResultDto.builder().message("valid").build();
 		else
-			message = ResultDTO.builder().message("invalid").build();
+			message = ResultDto.builder().message("invalid").build();
 		
 		// Return
 		return message;

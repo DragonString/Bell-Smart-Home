@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,25 +24,23 @@ import net.softbell.bsh.domain.MemberRole;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.repository.MemberLoginLogRepo;
 import net.softbell.bsh.domain.repository.MemberRepo;
-import net.softbell.bsh.dto.member.MemberDTO;
+import net.softbell.bsh.dto.request.MemberDto;
 import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 회원 서비스
  */
-@Service
-@AllArgsConstructor
 @Slf4j
+@AllArgsConstructor
+@Service
 public class MemberService implements UserDetailsService {
 	// Global Field
-	@Autowired
-	private MemberRepo memberRepo;
-	@Autowired
-	private MemberLoginLogRepo memberLoginLogRepo;
+	private final MemberRepo memberRepo;
+	private final MemberLoginLogRepo memberLoginLogRepo;
 	
 	@Transactional
-	public long joinUser(MemberDTO memberDto) {
+	public long joinUser(MemberDto memberDto) {
 		// Log
 		log.info(BellLog.getLogHead() + "회원가입 요청 (" + memberDto.getUserId() + " - " + memberDto.getUsername() + ")");
 		
@@ -51,10 +50,13 @@ public class MemberService implements UserDetailsService {
 
 		// Init
 		member = getMember(memberDto.getUserId());
-
+		
 		// Exception
 		if (member != null) // 같은 아이디로 회원가입이 되어있다면,
+		{
+			log.info(BellLog.getLogHead() + "member 객체: " + member.getUserId());
 			return -1; // 돌아가세요~~
+		}
 		/*if (memberDto.getPassword().length() < 6 || memberDto.getPassword().length() > 20)
 			return -1;
 		if (memberDto.getUserId().length() < 4 || memberDto.getPassword().length() > 20)
@@ -63,6 +65,7 @@ public class MemberService implements UserDetailsService {
 		// Process
 		memberDto.setPasswd(passwordEncoder.encode(memberDto.getPasswd())); // 비밀번호 암호화
 
+		log.info(BellLog.getLogHead() + "가입완료"); // TEST #### TODO
 		return memberRepo.save(memberDto.toEntity()).getMemberId();
 	}
 
@@ -86,6 +89,23 @@ public class MemberService implements UserDetailsService {
 		if (!optMember.isPresent())
 			return null;
 		return optMember.get();
+	}
+	
+	public Member loginMember(String id, String password)
+	{
+		// Field
+		Member member;
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+		// Init
+		member = getMember(id);
+
+		// Exception
+		if (member == null || !passwordEncoder.matches(password, member.getPassword())) // 현재 등록된 비번이 다르면
+			return null;
+
+		// Return
+		return member;
 	}
 	
 	/*public boolean isAdmin(String userId)

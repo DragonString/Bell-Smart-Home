@@ -13,7 +13,8 @@ public enum MemberRole
 {
     SUPERADMIN("ROLE_SUPERADMIN", 100), // 최고 관리자
     ADMIN("ROLE_ADMIN", 10), // 관리자
-    MEMBER("ROLE_MEMBER", 1), // 일반 회원
+    MEMBER("ROLE_MEMBER", 5), // 일반 회원
+    NODE("ROLE_NODE", 1), // 노드 전용 계정
     WAIT("ROLE_WAIT", 0), // 승인 대기
     BAN("ROLE_BAN", -1); // 차단
 

@@ -6,6 +6,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.util.WebUtils;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 쿠키 제어 유틸리티
+ */
 public class CookieUtil
 {
 	public static void create(HttpServletResponse httpServletResponse, String name, String value, Boolean secure, Integer maxAge, String domain)

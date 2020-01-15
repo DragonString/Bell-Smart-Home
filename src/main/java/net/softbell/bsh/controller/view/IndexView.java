@@ -10,8 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import net.softbell.bsh.dto.card.CardDashboard;
-import net.softbell.bsh.dto.card.CardItem;
+import net.softbell.bsh.dto.card.CardDashboardDto;
+import net.softbell.bsh.dto.card.CardItemDto;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -26,16 +26,16 @@ public class IndexView {
 
 	private void setDashBoard(Model model)
 	{
-		List<CardDashboard> cards = new ArrayList<CardDashboard>();
+		List<CardDashboardDto> cards = new ArrayList<CardDashboardDto>();
 		
-		List<CardItem> card_items = new ArrayList<CardItem>();
+		List<CardItemDto> card_items = new ArrayList<CardItemDto>();
 		
-		card_items.add(new CardItem("Key1", "Value"));
-		card_items.add(new CardItem("Key2", "Value", CardItem.ItemType.DANGER));
-		card_items.add(new CardItem("Key3", "Value", CardItem.ItemType.WARNING));
+		card_items.add(new CardItemDto("Key1", "Value"));
+		card_items.add(new CardItemDto("Key2", "Value", CardItemDto.ItemType.DANGER));
+		card_items.add(new CardItemDto("Key3", "Value", CardItemDto.ItemType.WARNING));
 		
 		for (int i = 1; i < 160; i++)
-			cards.add(new CardDashboard("Topic " + i, "Last update " + i + " mins ago", card_items));
+			cards.add(new CardDashboardDto("Topic " + i, "Last update " + i + " mins ago", card_items));
 		
 		model.addAttribute("cards", cards);
 	}

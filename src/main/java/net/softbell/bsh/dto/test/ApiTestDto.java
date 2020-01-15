@@ -14,12 +14,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @Deprecated
-public class APITestDTO {
+public class ApiTestDto {
 	private String strName;
 	private Integer intAge;
 	private List<ExampleClass> values;
 	
-	public APITestDTO(String strName, Integer intAge)
+	public ApiTestDto(String strName, Integer intAge)
 	{
 		this.strName = strName;
 		this.intAge = intAge;

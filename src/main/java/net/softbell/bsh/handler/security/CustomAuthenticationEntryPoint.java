@@ -15,6 +15,10 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * @Author : Bell(bell@softbell.net)
+ * @Description : 인증 실패 핸들러
+ */
 @Slf4j
 @Component
 @Builder

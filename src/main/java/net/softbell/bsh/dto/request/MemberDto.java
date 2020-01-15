@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.member;
+package net.softbell.bsh.dto.request;
 
 import java.util.Date;
 
@@ -22,7 +22,7 @@ import net.softbell.bsh.domain.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDTO {
+public class MemberDto {
     private long memberId;
     private int ban;
 	private Date banDate;

@@ -16,13 +16,13 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
 import net.softbell.bsh.domain.repository.NodeItemHistoryRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.domain.repository.NodeRepo;
-import net.softbell.bsh.dto.rest.ResultDTO;
+import net.softbell.bsh.dto.response.ResultDto;
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
-import net.softbell.bsh.iot.dto.bshp.v1.BaseV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1DTO;
-import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1DTO;
+import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto;
+import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto;
 import net.softbell.bsh.util.BellLog;
 
 /**
@@ -60,10 +60,10 @@ public class IotTokenServiceV1
 		if (node == null) // 토큰에 해당하는 노드가 없다면
 		{
 			// Field
-			BaseV1DTO data;
+			BaseV1Dto data;
 			
 			// Init
-			data = BaseV1DTO.builder().sender("SERVER")
+			data = BaseV1Dto.builder().sender("SERVER")
 							.target(token)
 							.cmd("INFO")
 							.type("CONNECTION")
@@ -83,7 +83,7 @@ public class IotTokenServiceV1
 	}
 
 	@Transactional
-	public boolean setNodeInfo(String token, NodeInfoV1DTO nodeInfo)
+	public boolean setNodeInfo(String token, NodeInfoV1Dto nodeInfo)
 	{
 		// Field
 		Node node;
@@ -112,7 +112,7 @@ public class IotTokenServiceV1
 	}
 	
 	@Transactional
-	public boolean setItemInfo(String token, ItemInfoV1DTO itemInfo)
+	public boolean setItemInfo(String token, ItemInfoV1Dto itemInfo)
 	{
 		// Field
 		Node node;
@@ -162,10 +162,10 @@ public class IotTokenServiceV1
 	public void reqItemValue(String token, int pin)
 	{
 		// Field
-		BaseV1DTO data;
+		BaseV1Dto data;
 		
 		// Init
-		data = BaseV1DTO.builder().sender("SERVER")
+		data = BaseV1Dto.builder().sender("SERVER")
 						.target(token)
 						.cmd("GET")
 						.type("VALUE")
@@ -177,7 +177,7 @@ public class IotTokenServiceV1
 		iotChannelCompV1.sendDataToken(data);
 	}
 	
-	public boolean setItemValue(String token, ItemValueV1DTO itemValue)
+	public boolean setItemValue(String token, ItemValueV1Dto itemValue)
 	{
 		// Field
 		Node node;
