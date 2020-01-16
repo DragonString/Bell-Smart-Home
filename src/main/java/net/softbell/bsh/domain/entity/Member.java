@@ -64,14 +64,8 @@ public class Member implements Serializable, UserDetails
 	@Column(name="change_passwd_date")
 	private Date changePasswdDate;
 
-	@Column(name="email_address", nullable=false, length=200)
-	private String emailAddress;
-
-	@Column(name="email_host", nullable=false, length=150)
-	private String emailHost;
-
-	@Column(name="email_id", nullable=false, length=50)
-	private String emailId;
+	@Column(name="email", nullable=false, length=200)
+	private String email;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="last_login")

@@ -84,7 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		.and()
 			.formLogin() // 폼 로그인 설정
 				.loginPage("/login")
-				.usernameParameter("userid")
+				.usernameParameter("userId")
 				.passwordParameter("password")
 				.successHandler(successHandler())
 				.failureHandler(failHandler())

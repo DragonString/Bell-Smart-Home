@@ -1,6 +1,7 @@
 package net.softbell.bsh.controller.view;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -13,4 +14,9 @@ public class TestView
 {
 	// Global Field
 	
+	@GetMapping("signup")
+	public String dispLogin()
+	{
+		return "test/sbadmin/register";
+	}
 }
