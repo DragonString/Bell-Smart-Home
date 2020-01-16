@@ -3,7 +3,6 @@ test:
   image: gliderlabs/herokuish:latest
   script:
     - echo 'Bell Soft Network DevOps Test Stage'
-    - env | grep -i jwt
     - export DATABASE_URL="jdbc:h2:mem:testdb"
     - cp -R . /tmp/app
     - /bin/herokuish buildpack test
