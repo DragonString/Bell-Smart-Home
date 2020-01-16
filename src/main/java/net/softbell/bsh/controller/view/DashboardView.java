@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/dashboard")
-public class DashboardView {
+public class DashboardView
+{
 	// Global Field
 	private final String G_BASE_PATH = "services/dashboard";
 	
 	@GetMapping()
-    public String dispIndex() {
+    public String dispIndex()
+	{
         return G_BASE_PATH + "/index";
     }
 }

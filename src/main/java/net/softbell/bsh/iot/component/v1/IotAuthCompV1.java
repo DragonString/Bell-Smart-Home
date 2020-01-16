@@ -3,12 +3,11 @@ package net.softbell.bsh.iot.component.v1;
 import java.security.SecureRandom;
 import java.util.Base64;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.repository.NodeRepo;
@@ -18,11 +17,11 @@ import net.softbell.bsh.util.BellLog;
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT 인증 컴포넌트 v1
  */
+@Slf4j
 @Component
 public class IotAuthCompV1
 {
 	// Global Field
-	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 	private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
 	private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
 	
@@ -54,7 +53,7 @@ public class IotAuthCompV1
 		nodeRepo.save(node);
 	    
 	    // Log
-	    G_Logger.info(BellLog.getLogHead() + "보안 토큰 생성 (" + uid + "->" + token + ")");
+	    log.info(BellLog.getLogHead() + "보안 토큰 생성 (" + uid + "->" + token + ")");
 		
 		// Return
 		return token;

@@ -61,19 +61,19 @@
 					<th class="align-middle text-center">현재 값</th>
 				</thead>
 				<tbody>
-					<tr th:if="${not #lists.isEmpty(nodeInfo.nodeItems)}" th:each="itemValue : ${nodeInfo.nodeItems}">
+					<tr th:if="${not #lists.isEmpty(nodeInfo.nodeItems)}" th:each="itemValue : ${nodeInfo.nodeItems}" th:with="curStatus=${ itemValue.nodeItemHistories[#lists.size(itemValue.nodeItemHistories) - 1].pinStatus }">
 						<td class="align-middle text-center"><a th:href="|item/${ itemValue.itemId }|" th:text="${ itemValue.alias }"></a></td>
 						<td class="align-middle text-center" th:text="${ itemValue.pinName }"></td>
 						<td class="align-middle text-center" th:text="${ itemValue.pinType }"></td>
 						<td class="align-middle text-center" th:text="${ itemValue.pinMode }"></td>
 						<td class="align-middle text-center" th:text="${ itemValue.controlMode }"></td>
-<!-- 						<td class="align-middle text-center" th:with="maxIndex = ${#lists.size(itemValue.nodeItemHistories)}" th:text="${ itemValue.nodeItemHistories[ 1].pinStatus }"></td> -->
+						<td class="align-middle text-center"><input th:checked="${ curStatus == 1 }" th:disabled="${ itemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).INPUT }" class="nodeItem" type="checkbox" data-toggle="toggle" th:value="${itemValue.itemId}"></td>
 					</tr>
 				</tbody>
 			</table>
 		</th:block>
 		<th:block layout:fragment="pageScript">
-<!-- 			<script src="/rss/js/page/login.js"></script> -->
+			<script src="/rss/js/page/nodeInfo.js"></script>
 		</th:block>
 	</body>
 </html>

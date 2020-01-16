@@ -1,0 +1,7 @@
+{"properties": [
+  {
+    "name": "bsh.security.jwt.secret.key",
+    "type": "java.lang.String",
+    "description": "Bell Smart Home 인증 JWT 보안 키"
+  }
+]}

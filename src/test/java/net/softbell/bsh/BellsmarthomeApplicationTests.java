@@ -17,15 +17,16 @@ import net.softbell.bsh.util.BellLog;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BellsmarthomeApplicationTests {
+public class BellsmarthomeApplicationTests
+{
 	// Global Field
-	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	@Test
-	public void contextLoads() throws Exception {
-		G_Logger.info(BellLog.getLogHead() + "Test Starting..");
+	public void contextLoads() throws Exception
+	{
+		log.info(BellLog.getLogHead() + "Test Starting..");
 		assertEquals(true, true); // 두 값이 다르면 Test 스테이지가 중단됨.
-		G_Logger.info(BellLog.getLogHead() + "Test Complete!!");
+		log.info(BellLog.getLogHead() + "Test Complete!!");
 	}
-
 }

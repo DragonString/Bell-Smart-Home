@@ -22,7 +22,8 @@ import net.softbell.bsh.domain.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDto {
+public class MemberDto
+{
     private long memberId;
     private int ban;
 	private Date banDate;
@@ -39,7 +40,8 @@ public class MemberDto {
 	private String userId;
 	private String username;
 
-    public Member toEntity(){
+    public Member toEntity()
+    {
     	// Default
     	if (emailAddress == null || emailAddress.isEmpty())
     		emailAddress = emailId + "@" + emailHost;

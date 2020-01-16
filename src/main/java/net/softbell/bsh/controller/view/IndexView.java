@@ -3,8 +3,6 @@ package net.softbell.bsh.controller.view;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +17,9 @@ import net.softbell.bsh.dto.card.CardItemDto;
  */
 @Controller
 @RequestMapping("/")
-public class IndexView {
+public class IndexView
+{
 	// Global Field
-	@SuppressWarnings("unused")
-	private final Logger G_Logger = LoggerFactory.getLogger(this.getClass());
 
 	private void setDashBoard(Model model)
 	{

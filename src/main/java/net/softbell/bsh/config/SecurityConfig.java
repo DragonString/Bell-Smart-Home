@@ -59,18 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         // static 디렉터리의 하위 파일 목록은 인증 무시 ( = 항상통과 )
         web.ignoring().antMatchers("/rss/**", "/files/**", "/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**", "/favicon.ico");
-		//web.ignoring().antMatchers("/**"); ///////////////// 임시 보안 전체 해제
-//        web.ignoring().antMatchers("/ws/**"); // 웹소켓 임시 보안 해제 #########################
-//        web.ignoring().antMatchers("/api/stomp/**"); // 웹소켓 임시 보안 해제
-//        web.ignoring().antMatchers("/test/chat"); // 웹소켓 테스트 페이지 임시 보안 해제
 	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		http.authorizeRequests().antMatchers("/test/chat").permitAll(); // ############# 테스트 페이지 임시 보안 해제
-//		http.authorizeRequests().antMatchers("/api/stomp/queue/iot/v1/node/uid/1").permitAll();
-		
 		// Common
 		http.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -101,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 				.logoutSuccessUrl("/login")
 				.invalidateHttpSession(true)
-				.deleteCookies("X-AUTH-TOKEN")
+				.deleteCookies(CustomConfig.SECURITY_COOKIE_NAME)
 		.and()
             .exceptionHandling() // 예외 핸들링
             	.accessDeniedHandler(CustomAccessDeniedHandler.builder().G_API_URI("/api/rest/exception/denied").G_VIEW_URI("/denied").build())
@@ -124,8 +117,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 	    			.frameOptions()
 	    				.disable();
     	}
-    	
-//    	http.csrf().disable(); // TODO ############# 임시 해제
 	}
 	
 	@Override

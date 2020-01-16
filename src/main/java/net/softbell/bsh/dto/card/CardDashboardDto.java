@@ -14,7 +14,8 @@ import lombok.NonNull;
 @Getter
 @Builder
 @AllArgsConstructor
-public class CardDashboardDto {
+public class CardDashboardDto
+{
 	@NonNull
 	private String cardTopic;
 	@NonNull
