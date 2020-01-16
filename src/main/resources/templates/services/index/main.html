@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/defaultLayout}">
+	<head>
+	    <title>Thymeleaf 예제</title>
+	</head>
+	<body class="bg-dark">
+		<th:block layout:fragment="content">
+			<div class="card-columns">
+				<tr th:each="card : ${cards}">
+					<th:block th:replace="libs/card"></th:block>
+				</tr>
+			</div>
+		</th:block>
+		
+		<!--<th:block layout:fragment="pageCustomScript">
+		    <script th:src="@{/assets/vendor/jquery/jquery.js}"></script>
+		</th:block>    
+		<th:block layout:fragment="pageCustomCss">
+		    <script th:src="@{/assets/vendor/jquery/jquery.css}"></script>
+		</th:block>-->
+	</body>
+</html>

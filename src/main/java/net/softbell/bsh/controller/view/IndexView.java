@@ -44,6 +44,6 @@ public class IndexView
 		setDashBoard(model);
 //		G_Logger.info(BellLog.getLogHead() + "update Complate");
 		
-		return "bs_layout";
+		return "services/index/main";
 	}
 }
