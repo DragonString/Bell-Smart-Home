@@ -4,12 +4,36 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorate="~{layout/PrimaryLayout}">
 	<head>
-		<title>모니터</title>
+		<title>노드</title>
 	</head>
 	<body>
 		<th:block layout:fragment="content">
-			<h1>모니터 내용이 들어설 예정입니다.</h1>
-			<p th:text="${#strings.startsWith(#httpServletRequest.requestURI, '/monitor')}"></p>
+			<!-- Monitor Row Start -->
+			<div class="row">
+				<!-- Node Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listNode)}" th:each="nodeValue : ${listNode}">
+					<div class="card shadow">
+						<div class="card-header bg-primary" th:text="${ nodeValue.alias }"></div>
+						<div class="card-body text-dark">
+							<div class="card-text">
+								<div th:if="${ not #lists.isEmpty(nodeValue.nodeItems) }" th:each="nodeItemValue : ${nodeValue.nodeItems}" th:with="curStatus=${ nodeItemValue.nodeItemHistories[#lists.size(nodeItemValue.nodeItemHistories) - 1].pinStatus }">
+									<span th:text="${nodeItemValue.alias}"></span>
+									<div class="progress mb-4">
+										<div th:if="${nodeItemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).OUTPUT }" th:style="${curStatus == 1} ? 'width: 100%' : 'width: 0%'" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+										<div th:if="${nodeItemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).INPUT and nodeItemValue.pinType == T(net.softbell.bsh.domain.PinTypeRule).DIGITAL}" th:style="${curStatus == 1} ? 'width: 100%' : 'width: 0%'" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+										<div th:if="${nodeItemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).INPUT and nodeItemValue.pinType == T(net.softbell.bsh.domain.PinTypeRule).ANALOG}" th:style="|width: ${curStatus / 10}%|" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer">
+							<small class="text-muted" th:text="|노드 제어 모드: ${nodeValue.controlMode}|"></small>
+						</div>
+					</div>
+				</div>
+				<!-- Node Card End -->
+			</div>
+			<!-- Monitor Row End -->
 		</th:block>
 	</body>
 </html>

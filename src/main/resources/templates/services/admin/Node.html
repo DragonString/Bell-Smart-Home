@@ -26,6 +26,7 @@
 									<th class="align-middle text-center">별칭</th>
 									<th class="align-middle text-center">활성화 여부</th>
 									<th class="align-middle text-center">제어</th>
+									<th class="align-middle text-center">정보</th>
 								</tr>
 							</thead>
 							<tfoot>
@@ -34,6 +35,7 @@
 									<th class="align-middle text-center">별칭</th>
 									<th class="align-middle text-center">활성화 여부</th>
 									<th class="align-middle text-center">제어</th>
+									<th class="align-middle text-center">정보</th>
 								</tr>
 							</tfoot>
 							<tbody>
@@ -48,10 +50,17 @@
 										<form method="POST">
 											<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 											<input type="hidden" name="intNodeId" th:value="${nodeValue.nodeId}" />
-											<input type="submit" class="btn btn-primary" formaction="/admin/node/enable" value="활성화" />
-											<input type="submit" class="btn btn-secondary" formaction="/admin/node/disable" value="비활성화" />
-											<input type="submit" class="btn btn-danger" formaction="/admin/node/reject" value="접근제한" />
+											<div class="btn-group w-100" role="group">
+												<input type="submit" class="btn btn-primary" formaction="/admin/node/enable" value="활성화" />
+												<input type="submit" class="btn btn-secondary" formaction="/admin/node/disable" value="비활성화" />
+												<input type="submit" class="btn btn-danger" formaction="/admin/node/reject" value="접근제한" />
+											</div>
 										</form>
+									</td>
+									<td class="align-middle text-center">
+										<div class="btn-group w-100" role="group">
+											<a class="btn btn-warning" th:href="|/admin/node/modify/${nodeValue.nodeId}|">수정</a>
+										</div>
 									</td>
 								</tr>
 							</tbody>

@@ -66,7 +66,7 @@
 								</tr>
 								<tr>
 									<td class="align-middle text-center">승인일</td>
-									<td class="align-middle text-center" th:if="${ not #strings.isEmpty(nodeInfo.approvalDate) }" th:text="${ #dates.format(nodeInfo.approvalDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+									<td class="align-middle text-center text-success" th:if="${ not #strings.isEmpty(nodeInfo.approvalDate) }" th:text="${ #dates.format(nodeInfo.approvalDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
 									<td class="align-middle text-center text-danger" th:if="${ #strings.isEmpty(nodeInfo.approvalDate) }">미승인</td>
 								</tr>
 							</tbody>
