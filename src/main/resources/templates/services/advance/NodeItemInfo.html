@@ -16,7 +16,7 @@
 				<div class="card-body">
 					<!-- Node Item History Chart Start -->
 					<div class="chart-area">
-						<canvas id="myAreaChart"></canvas>
+						<canvas id="areaChart"></canvas>
 					</div>
 					<!-- Node Item History Chart End -->
 					<hr>
@@ -26,21 +26,24 @@
 			<!-- Node Item History Card End -->
 		</th:block>
 		<th:block layout:fragment="pageScript">
-			<script src="/rss/vendor/chart.js/Chart.min.js"></script>
+			<script src="/rss/vendor/chart.js/2.9.3/Chart.min.js"></script><!-- Chart.js -->
+			<!-- Chart Data Load Start -->
 			<script th:inline="javascript">
 				// Field
-				var arrLabel = [];
-				var arrData = [];
+				var chartLabel = "Node Item History";
+				var chartLabels = [];
+				var chartData = [];
 				
 				// Load
 				/*<![CDATA[*/
 				    /*[# th:each="itemValue : ${listNodeItemHistory}"]*/
-						arrLabel.push(/*[[${#dates.format(itemValue.receiveDate, 'MM/dd HH:mm:ss')}]]*/);
-						arrData.push(/*[[${itemValue.pinStatus}]]*/);
+						chartLabels.push(/*[[${#dates.format(itemValue.receiveDate, 'MM/dd HH:mm:ss')}]]*/);
+						chartData.push(/*[[${itemValue.pinStatus}]]*/);
 				    /*[/]*/
 				/*]]>*/
 			</script>
-			<script src="/rss/common/js/demo/chart-area-demo.js"></script>
+			<!-- Chart Data Load End -->
+			<script src="/rss/common/js/chart/chart-area-default.js"></script><!-- Chart Area JS -->
 		</th:block>
 	</body>
 </html>

@@ -21,6 +21,7 @@ public class DashboardView
 {
 	// Global Field
 
+	@Deprecated
 	private void setDashBoard(Model model)
 	{
 		List<CardDashboardDto> cards = new ArrayList<CardDashboardDto>();
@@ -41,7 +42,7 @@ public class DashboardView
 	public String dispIndex(Model model)
 	{
 //		G_Logger.info(BellLog.getLogHead() + "update Conn");
-		setDashBoard(model);
+//		setDashBoard(model);
 //		G_Logger.info(BellLog.getLogHead() + "update Complate");
 		
 		return "services/dashboard/Dashboard";
