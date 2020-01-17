@@ -32,7 +32,7 @@ public class NodeView
 	@GetMapping()
     public String dispIndex(Model model,
     						@RequestParam(value = "page", required = false, defaultValue = "1")int intPage,
-    						@RequestParam(value = "count", required = false, defaultValue = "10")int intCount)
+    						@RequestParam(value = "count", required = false, defaultValue = "100")int intCount)
 	{
 		// Field
 		Page<Node> pageNode;

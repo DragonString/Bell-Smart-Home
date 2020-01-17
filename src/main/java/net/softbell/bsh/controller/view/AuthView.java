@@ -105,7 +105,7 @@ public class AuthView
     @GetMapping("/log")
     public String dispLoginLog(Model model, Principal principal,
     		@RequestParam(value = "page", required = false, defaultValue = "1") int intPage,
-			@RequestParam(value = "count", required = false, defaultValue = "20") int intCount)
+			@RequestParam(value = "count", required = false, defaultValue = "100") int intCount)
     {
 		// Auth Check
 		if (memberService.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
