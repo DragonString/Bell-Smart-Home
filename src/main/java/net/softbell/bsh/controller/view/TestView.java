@@ -1,8 +1,10 @@
 package net.softbell.bsh.controller.view;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -14,9 +16,10 @@ public class TestView
 {
 	// Global Field
 	
-	@GetMapping("signup")
-	public String dispLogin()
+	@GetMapping("blank")
+	public String dispPage(Model model, @RequestParam(value = "value", required = false, defaultValue = "방울 소프트 네트워크 최고다!!")String value)
 	{
-		return "test/sbadmin/register";
+		model.addAttribute("headInfo", value);
+		return "test/sbadmin/blank";
 	}
 }

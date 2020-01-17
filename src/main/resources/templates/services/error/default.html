@@ -2,24 +2,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-	layout:decorate="~{layout/defaultLayout}">
+	layout:decorate="~{layout/PrimaryLayout}">
 	<head>
-	    <title>컨트롤</title>
+		<title>페이지를 찾을 수 없습니다.</title>
 	</head>
 	<body>
 		<th:block layout:fragment="content">
-	    	<h1>컨텐츠 내용</h1>
-	    	<hr>
-	    	<a href="/iot/led?mode=circuit&value=on">LED ON</a>
-	    	<a href="/iot/led?mode=circuit&value=off">LED OFF</a>
-	    	<a href="/iot/led?mode=bar&value=off">OFF</a>
-	    	<a href="/iot/led?mode=bar&value=red">RED</a>
-	    	<a href="/iot/led?mode=bar&value=green">GREEN</a>
-	    	<a href="/iot/led?mode=bar&value=blue">BLUE</a>
-	    	<a href="/iot/led?mode=bar&value=white">WHITE</a>
-		</th:block>
-		<th:block layout:fragment="pageScript">
-			<script src="/rss/js/page/login.js"></script>
+			<div class="text-center">
+	            <div class="error mx-auto text-white" th:data-text="${#strings.isEmpty(code)} ? '404' : ${code}" th:text="${#strings.isEmpty(code)} ? '404' : ${code}"></div>
+	            <p class="lead text-gray-400 mb-5" th:text="${#strings.isEmpty(msg)} ? '존재하지 않는 페이지 입니다.' : ${msg}"></p>
+	            <a href="/">← 메인 화면으로 이동</a>
+			</div>
 		</th:block>
 	</body>
 </html>

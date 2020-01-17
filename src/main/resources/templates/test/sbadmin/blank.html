@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>블랭크</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Heading -->
+			<h1 class="h3 mb-4">다 내꼬얌!!!!</h1>
+			<h1 class="h3 mb-4" th:text="${headInfo}"></h1>
+			<input type="text" th:value="|그냥텍스트 ${headInfo}|">
+		</th:block>
+		
+		<th:block layout:fragment="pageScript">
+			
+		</th:block>
+	</body>
+</html>
