@@ -8,7 +8,81 @@
 	</head>
 	<body>
 		<th:block layout:fragment="content">
-			<h1>센터 설정 내용이 들어설 예정입니다.</h1>
+			<!-- Center Setting Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">센터 설정</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Center Setting Table Start -->
+						<table class="table table-bordered" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center w-25">키</th>
+									<th class="align-middle text-center">값</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="align-middle text-center">활성화 상태</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.isEnabled }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">IoT Action</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.iotAction }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">IoT Control</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.iotControl }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">IoT Monitor</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.iotMonitor }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">IoT Node</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.iotNode }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">IoT Reserv</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.iotReserv }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">IoT Trigger</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.iotTrigger }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">Web Auth Mode</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.webAuthMode }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">Web Login Fail Ban Time</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.webLoginFailBanTime }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">Web Login Fail Check Time</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.webLoginFailCheckTime }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">Web Login Fail Max Count</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.webLoginFailMaxCount }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">Web Maintenance</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.webMaintenance }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">Web Register</td>
+									<td class="align-middle text-center" th:text="${ centerSetting.webRegister }"></td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Center Setting Table End -->
+					</div>
+				</div>
+			</div>
+			<!-- Center Setting Card End -->
 		</th:block>
 	</body>
 </html>

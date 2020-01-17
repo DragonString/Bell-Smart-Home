@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
+import net.softbell.bsh.domain.entity.CenterSetting;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.Node;
+import net.softbell.bsh.iot.service.v1.IotCenterServiceV1;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.MemberService;
 
@@ -26,6 +28,7 @@ public class AdminView
 	private final String G_BASE_PATH = "services/admin";
 	private final MemberService memberService;
 	private final IotNodeServiceV1 iotNodeService;
+	private final IotCenterServiceV1 iotCenterService;
 	
 	@GetMapping("/member")
     public String dispMember(Model model,
@@ -63,14 +66,24 @@ public class AdminView
     }
 
 	@GetMapping("/permission")
-    public String dispPermission()
+    public String dispPermission(Model model)
 	{
         return G_BASE_PATH + "/Permission";
     }
 
 	@GetMapping("/center")
-    public String dispCenterSetting()
+    public String dispCenterSetting(Model model)
 	{
+		// Field
+		CenterSetting centerSetting;
+		
+		// Init
+		centerSetting = iotCenterService.getSetting();
+		
+		// Process
+		model.addAttribute("centerSetting", centerSetting);
+		
+		// Return
         return G_BASE_PATH + "/CenterSetting";
     }
 }

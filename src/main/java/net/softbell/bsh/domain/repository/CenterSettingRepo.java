@@ -10,7 +10,7 @@ import net.softbell.bsh.domain.entity.CenterSetting;
  * @Description : 센터 설정 리포지토리 인터페이스
  */
 @Repository
-public interface CenterSettingRepo extends JpaRepository<CenterSetting, String>
+public interface CenterSettingRepo extends JpaRepository<CenterSetting, Byte>
 {
 	
 }
