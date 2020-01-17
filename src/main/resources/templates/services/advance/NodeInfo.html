@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>노드 상세정보</title>
+		<th:block layout:fragment="pageCss">
+			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Node Info Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">노드 정보</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Node Info Table Start -->
+						<table class="table table-bordered" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center w-25">이름</th>
+									<th class="align-middle text-center">값</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th class="align-middle text-center">이름</th>
+									<th class="align-middle text-center">값</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr>
+									<td class="align-middle text-center">활성화 상태</td>
+									<td class="align-middle text-center text-warning" th:if="${ nodeInfo.enableStatus == T(net.softbell.bsh.domain.EnableStatusRule).WAIT }">인증대기</td>
+									<td class="align-middle text-center text-secondary" th:if="${ nodeInfo.enableStatus == T(net.softbell.bsh.domain.EnableStatusRule).DISABLE }">비활성화</td>
+									<td class="align-middle text-center text-success" th:if="${ nodeInfo.enableStatus == T(net.softbell.bsh.domain.EnableStatusRule).ENABLE }">활성화</td>
+									<td class="align-middle text-center text-danger" th:if="${ nodeInfo.enableStatus == T(net.softbell.bsh.domain.EnableStatusRule).REJECT }">접근제한</td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">이름</td>
+									<td class="align-middle text-center" th:text="${ nodeInfo.nodeName }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">별칭</td>
+									<td class="align-middle text-center" th:text="${ nodeInfo.alias }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">UID</td>
+									<td class="align-middle text-center" th:text="${ nodeInfo.uid }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">토큰</td>
+									<td class="align-middle text-center" th:text="${ nodeInfo.token }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">컨트롤 모드</td>
+									<td class="align-middle text-center" th:text="${ nodeInfo.controlMode }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">등록일</td>
+									<td class="align-middle text-center" th:text="${ #dates.format(nodeInfo.registerDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">승인일</td>
+									<td class="align-middle text-center" th:if="${ not #strings.isEmpty(nodeInfo.approvalDate) }" th:text="${ #dates.format(nodeInfo.approvalDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+									<td class="align-middle text-center text-danger" th:if="${ #strings.isEmpty(nodeInfo.approvalDate) }">미승인</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Node Info Table End -->
+					</div>
+				</div>
+			</div>
+			<!-- Node Info Card End -->
+			<!-- Node Item Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">노드 아이템</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Node Item DataTables Start -->
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center">별칭</th>
+									<th class="align-middle text-center">핀 이름</th>
+									<th class="align-middle text-center">핀 타입</th>
+									<th class="align-middle text-center">핀 모드</th>
+									<th class="align-middle text-center">컨트롤 모드</th>
+									<th class="align-middle text-center">현재 상태</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th class="align-middle text-center">별칭</th>
+									<th class="align-middle text-center">핀 이름</th>
+									<th class="align-middle text-center">핀 타입</th>
+									<th class="align-middle text-center">핀 모드</th>
+									<th class="align-middle text-center">컨트롤 모드</th>
+									<th class="align-middle text-center">현재 상태</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:if="${not #lists.isEmpty(nodeInfo.nodeItems)}" th:each="itemValue : ${nodeInfo.nodeItems}" th:with="curStatus=${ itemValue.nodeItemHistories[#lists.size(itemValue.nodeItemHistories) - 1].pinStatus }">
+									<td class="align-middle text-center"><a th:href="|item/${ itemValue.itemId }|" th:text="${ itemValue.alias }"></a></td>
+									<td class="align-middle text-center" th:text="${ itemValue.pinName }"></td>
+									<td class="align-middle text-center" th:text="${ itemValue.pinType }"></td>
+									<td class="align-middle text-center" th:text="${ itemValue.pinMode }"></td>
+									<td class="align-middle text-center" th:text="${ itemValue.controlMode }"></td>
+									<td class="align-middle text-center"><input th:checked="${ curStatus == 1 }" th:disabled="${ itemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).INPUT }" class="nodeItem" type="checkbox" data-toggle="toggle" data-size="lg" th:value="${itemValue.itemId}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Node Item DataTables End -->
+					</div>
+				</div>
+			</div>
+			<!-- Node Item Card End -->
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/page/js/nodeInfo.js"></script>
+			<script src="/rss/vendor/datatables/js/jquery.dataTables.min.js"></script>
+			<script src="/rss/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+			<script src="/rss/common/js/datatables-default.js"></script>
+		</th:block>
+	</body>
+</html>

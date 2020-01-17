@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	<head>
+	    <title layout:title-pattern="$LAYOUT_TITLE : $CONTENT_TITLE">BSH</title>
+	    <!-- 공통 css, js, meta tag -->
+	    <th:block th:replace="layout/common/Heads"></th:block>
+	</head>
+	<body class="bg-gradient-dark">
+	    <div class="container">
+   			<th:block layout:fragment="content"></th:block>
+	    	
+	    	<!-- Common footer -->
+		    <hr class="bg-secondary">
+		    <footer th:replace="layout/common/Footer :: BSN_Footer"></footer>
+	    </div>
+	    
+	    
+	    <!-- 공통 javascript -->
+	    <th:block th:replace="layout/common/Scripts"></th:block>
+	    <!-- page content javascript -->
+	    <th:block layout:fragment="pageScript"></th:block>
+	</body>
+</html>

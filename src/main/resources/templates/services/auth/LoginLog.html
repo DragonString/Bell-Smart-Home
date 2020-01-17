@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>활동 기록</title>
+		<th:block layout:fragment="pageCss">
+			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Activity Log Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">활동 기록</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Activity Log Table Start -->
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center w-25">요청 시각</th>
+									<th class="align-middle text-center w-50">IP</th>
+									<th class="align-middle text-center">성공 여부</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th class="align-middle text-center w-25">요청 시각</th>
+									<th class="align-middle text-center w-50">IP</th>
+									<th class="align-middle text-center">성공 여부</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:if="${not #lists.isEmpty(logList)}" th:each="logValue : ${logList}">
+									<td class="align-middle" th:text="${ #dates.format(logValue.requestDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+									<td th:if="${ logValue.ipv4 } == '0:0:0:0:0:0:0:1'" class="align-middle text-center">로컬 환경에서 접속</td>
+									<td th:if="${ logValue.ipv4 } != '0:0:0:0:0:0:0:1'" class="align-middle text-center" th:text="${ logValue.ipv4 }"></td>
+									<td th:if="${ logValue.status == T(net.softbell.bsh.domain.AuthStatusRule).SUCCESS }" class="align-middle text-center text-success">성공</td>
+									<td th:if="${ logValue.status == T(net.softbell.bsh.domain.AuthStatusRule).FAIL }" class="align-middle text-center text-danger">실패</td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Activity Log Table End -->
+					</div>
+				</div>
+			</div>
+			<!-- Node Activity Log End -->
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/vendor/datatables/js/jquery.dataTables.min.js"></script>
+			<script src="/rss/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+			<script src="/rss/common/js/datatables-default.js"></script>
+		</th:block>
+	</body>
+</html>

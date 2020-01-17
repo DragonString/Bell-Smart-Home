@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>노드</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Node Item History Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">노드 아이템 히스토리</h6>
+				</div>
+				<div class="card-body">
+					<!-- Node Item History Chart Start -->
+					<div class="chart-area">
+						<canvas id="areaChart"></canvas>
+					</div>
+					<!-- Node Item History Chart End -->
+					<hr>
+					<p>아이템 별칭: <span th:text="${nodeItem.alias}"></span></p>
+				</div>
+			</div>
+			<!-- Node Item History Card End -->
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/vendor/chart.js/2.9.3/Chart.min.js"></script><!-- Chart.js -->
+			<!-- Chart Data Load Start -->
+			<script th:inline="javascript">
+				/*<![CDATA[*/
+				// Field
+				var chartLabel = /*[[${nodeItem.alias}]]*/;
+				var chartLabels = [];
+				var chartData = [];
+				
+				// Load
+				    /*[# th:each="itemValue : ${listNodeItemHistory}"]*/
+						chartLabels.push(/*[[${#dates.format(itemValue.receiveDate, 'MM/dd HH:mm:ss')}]]*/);
+						chartData.push(/*[[${itemValue.pinStatus}]]*/);
+				    /*[/]*/
+				/*]]>*/
+			</script>
+			<!-- Chart Data Load End -->
+			<script src="/rss/common/js/chart/chart-area-default.js"></script><!-- Chart Area JS -->
+		</th:block>
+	</body>
+</html>

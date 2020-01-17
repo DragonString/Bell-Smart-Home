@@ -1,6 +1,7 @@
 package net.softbell.bsh.iot.service.v1;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
@@ -62,6 +64,21 @@ public class IotNodeServiceV1
 		// Return
 		if (optNode.isPresent())
 			return optNode.get();
+		else
+			return null;
+	}
+	
+	public NodeItem getNodeItem(long itemId)
+	{
+		// Field
+		Optional<NodeItem> optNodeItem;
+		
+		// Init
+		optNodeItem = nodeItemRepo.findById(itemId);
+		
+		// Return
+		if (optNodeItem.isPresent())
+			return optNodeItem.get();
 		else
 			return null;
 	}
@@ -116,6 +133,35 @@ public class IotNodeServiceV1
 		// Send5
 		iotChannelCompV1.sendDataToken(baseMessage);
 		iotChannelCompV1.sendDataToken(getValueMessage);
+		
+		// Return
+		return true;
+	}
+	
+	public boolean setNodeEnableStatus(long nodeId, EnableStatusRule enableStatusRule)
+	{
+		// Field
+		Optional<Node> optNode;
+		Node node;
+		
+		// Init
+		optNode = nodeRepo.findById(nodeId);
+		
+		// Exception
+		if (!optNode.isPresent())
+			return false;
+		else
+			node = optNode.get();
+		if (node.getEnableStatus() == enableStatusRule)
+			return false;
+		
+		// Process
+		if (node.getEnableStatus() == EnableStatusRule.WAIT && enableStatusRule != EnableStatusRule.REJECT)
+			node.setApprovalDate(new Date());
+		node.setEnableStatus(enableStatusRule);
+		
+		// DB - Update
+		nodeRepo.save(node);
 		
 		// Return
 		return true;

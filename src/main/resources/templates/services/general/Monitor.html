@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>모니터</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<h1>모니터 내용이 들어설 예정입니다.</h1>
+			<p th:text="${#strings.startsWith(#httpServletRequest.requestURI, '/monitor')}"></p>
+		</th:block>
+	</body>
+</html>
