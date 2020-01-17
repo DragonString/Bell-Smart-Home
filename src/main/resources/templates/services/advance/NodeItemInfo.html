@@ -29,13 +29,13 @@
 			<script src="/rss/vendor/chart.js/2.9.3/Chart.min.js"></script><!-- Chart.js -->
 			<!-- Chart Data Load Start -->
 			<script th:inline="javascript">
+				/*<![CDATA[*/
 				// Field
-				var chartLabel = "Node Item History";
+				var chartLabel = /*[[${nodeItem.alias}]]*/;
 				var chartLabels = [];
 				var chartData = [];
 				
 				// Load
-				/*<![CDATA[*/
 				    /*[# th:each="itemValue : ${listNodeItemHistory}"]*/
 						chartLabels.push(/*[[${#dates.format(itemValue.receiveDate, 'MM/dd HH:mm:ss')}]]*/);
 						chartData.push(/*[[${itemValue.pinStatus}]]*/);
