@@ -69,14 +69,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
     		.authorizeRequests() // 페이지 권한 설정
-				.antMatchers("/admin/**").hasRole("ADMIN")
-				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup", // 인증
-							"/denied", "/api/rest/exception/**", // 권한 예외
+				.antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup", // 계정 인증
+							"/api/rest/exception/**", // 권한 예외
 							"/api/rest/*/auth/**", // API 인증
 							"/api/rest/*/status/**", // 서버 Status
 							"/api/rest/*/iot/auth/**").permitAll() // IoT API 인증
+				.antMatchers("/denied").authenticated()
 				.antMatchers("/ws/**").hasRole("NODE") // WebSocket 인증
-				.anyRequest().hasRole("MEMBER") // 기타 모든 페이지는 Member 권한 보유자만 가능
+				.anyRequest().hasAnyRole("MEMBER", "ADMIN", "SUPERADMIN") // 기타 모든 페이지는 Member 권한 보유자만 가능
 		.and()
 			.csrf() // CSRF 설정
 				.csrfTokenRepository(new CookieCsrfTokenRepository())

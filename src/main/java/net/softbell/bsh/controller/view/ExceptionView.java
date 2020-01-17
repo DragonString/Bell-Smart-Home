@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -16,14 +18,14 @@ import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 커스텀 에러 컨트롤러
+ * @Description : 예외 페이지 컨트롤러
  */
 @Slf4j
 @Controller
-public class CustomErrorController implements ErrorController
+public class ExceptionView implements ErrorController
 {
 	// Global Field
-	public static final String G_ERROR_DEFAULT_PATH = "services/error/default";
+	public static final String G_ERROR_DEFAULT_PATH = "services/error/";
 	private static final String ERROR_PATH = "/error";
 	
 	@Override
@@ -65,6 +67,17 @@ public class CustomErrorController implements ErrorController
 	public String defaultError()
 	{
 		// Return
-		return G_ERROR_DEFAULT_PATH;
+		return G_ERROR_DEFAULT_PATH + "Default";
 	}
+
+    // 접근 거부 페이지
+    @GetMapping("/denied")
+    public String dispDenied(Model model, Principal principal)
+    {
+    	// Init
+    	//FilterModelPrincipal(model, principal);
+    	
+    	// Return
+        return G_ERROR_DEFAULT_PATH + "/Denied";
+    }
 }

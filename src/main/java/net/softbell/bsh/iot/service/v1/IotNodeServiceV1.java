@@ -66,6 +66,21 @@ public class IotNodeServiceV1
 			return null;
 	}
 	
+	public NodeItem getNodeItem(long itemId)
+	{
+		// Field
+		Optional<NodeItem> optNodeItem;
+		
+		// Init
+		optNodeItem = nodeItemRepo.findById(itemId);
+		
+		// Return
+		if (optNodeItem.isPresent())
+			return optNodeItem.get();
+		else
+			return null;
+	}
+	
 	public List<NodeItemHistory> getNodeItemHistory(long nodeItemId)
 	{
 		// Field

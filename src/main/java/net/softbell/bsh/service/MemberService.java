@@ -79,7 +79,8 @@ public class MemberService implements UserDetailsService
 		// Check
 		if (member == null)
 			return null;
-		member.setName("이름");
+		
+		// Return
 		return member;
 	}
 	

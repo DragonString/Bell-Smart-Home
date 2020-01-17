@@ -22,4 +22,11 @@ public class TestView
 		model.addAttribute("headInfo", value);
 		return "test/sbadmin/blank";
 	}
+	
+	@GetMapping("node")
+	public String dispNodeInfo(Model model)
+	{
+//		model.addAttribute("headInfo", value);
+		return "test/sbadmin/NodeList";
+	}
 }

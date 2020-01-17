@@ -1,6 +1,5 @@
 package net.softbell.bsh.controller.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.Node;
+import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
-import net.softbell.bsh.dto.request.MemberDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 
 /**
@@ -27,7 +26,7 @@ import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 public class NodeView
 {
 	// Global Field
-	private final String G_BASE_PATH = "services/node";
+	private final String G_BASE_PATH = "services/advance";
 	private final IotNodeServiceV1 iotNodeService;
 	
 	@GetMapping()
@@ -45,7 +44,7 @@ public class NodeView
 		model.addAttribute("listNode", pageNode);
 		
 		// Return
-        return G_BASE_PATH + "/nodeList";
+        return G_BASE_PATH + "/NodeList";
     }
 	
 	@GetMapping("/{id}")
@@ -61,7 +60,7 @@ public class NodeView
 		model.addAttribute("nodeInfo", node);
 		
 		// Return
-        return G_BASE_PATH + "/nodeInfo";
+        return G_BASE_PATH + "/NodeInfo";
     }
 	
 	@GetMapping("/item/{id}")
@@ -69,12 +68,15 @@ public class NodeView
 	{
 		// Field
 		List<NodeItemHistory> pageNodeItemHistory;
+		NodeItem nodeItem;
 		
 		// Init
 		pageNodeItemHistory = iotNodeService.getNodeItemHistory(intNodeItemId);
+		nodeItem = iotNodeService.getNodeItem(intNodeItemId);
 		
 		// Process
 		model.addAttribute("listNodeItemHistory", pageNodeItemHistory);
+		model.addAttribute("nodeItem", nodeItem);
 		
 		// Return
         return G_BASE_PATH + "/nodeItemInfo";
