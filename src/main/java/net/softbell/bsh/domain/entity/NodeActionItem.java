@@ -48,10 +48,10 @@ public class NodeActionItem implements Serializable
 	private short pinStatus;
 
 	@ManyToOne
-	@JoinColumn(name="item_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="item_id", nullable=false)
 	private NodeItem nodeItem;
 
 	@ManyToOne
-	@JoinColumn(name="action_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="action_id", nullable=false)
 	private NodeAction nodeAction;
 }
