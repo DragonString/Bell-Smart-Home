@@ -39,6 +39,7 @@ public class IotActionServiceV1
 {
 	// Global Field
 	private final MemberService memberService;
+	private final IotNodeServiceV1 iotNodeServiceV1;
 	private final IotChannelCompV1 iotChannelCompV1;
 	private final IotAuthCompV1 iotAuthCompV1;
 	private final NodeItemRepo nodeItemRepo;
@@ -263,5 +264,31 @@ public class IotActionServiceV1
 		
 		// Return
 		return true;
+	}
+	
+	public boolean execAction(long actionId)
+	{
+		// Field
+		Optional<NodeAction> optNodeAction;
+		List<NodeActionItem> listNodeActionItem;
+		boolean isSuccess = true;
+		
+		// Init
+		optNodeAction = nodeActionRepo.findById(actionId);
+		
+		// Exception
+		if (!optNodeAction.isPresent())
+			return false;
+		
+		// Load
+		listNodeActionItem = optNodeAction.get().getNodeActionItems();
+		
+		// Process
+		for (NodeActionItem actionItem : listNodeActionItem)
+			if (!iotNodeServiceV1.setItemValue(actionItem.getNodeItem().getItemId(), actionItem.getPinStatus()))
+				isSuccess = false;
+		
+		// Return
+		return isSuccess;
 	}
 }

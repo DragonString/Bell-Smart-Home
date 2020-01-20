@@ -26,7 +26,7 @@
 									<div class="font-weight-bold text-primary text-uppercase mb-1"><a th:href="@{/action/} + ${nodeAction.actionId}" th:text="${nodeAction.description}">액션 설명</a></div>
 								</div>
 								<div class="col-auto">
-									<button class="btn btn-primary">실행</button>
+									<button class="btn btn-primary" th:onclick="|setItem(${nodeAction.actionId});|">실행</button>
 								</div>
 							</div>
 						</div>
@@ -35,6 +35,9 @@
 				<!-- Home Status Card End -->
 			</div>
 			<!-- Home Status Card Row End -->
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/page/js/action.js"></script>
 		</th:block>
 	</body>
 </html>

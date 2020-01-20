@@ -3,12 +3,11 @@ package net.softbell.bsh.iot.controller.rest.v1;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.dto.response.ResultDto;
-import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
+import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
 import net.softbell.bsh.service.ResponseService;
 
 /**
@@ -21,7 +20,7 @@ import net.softbell.bsh.service.ResponseService;
 public class IotActionRestV1
 {
     private final ResponseService responseService;
-    private final IotNodeServiceV1 iotNodeService;
+    private final IotActionServiceV1 iotActionService;
 	
 	@PostMapping("/exec/{id}")
 	public ResultDto setNodeItemValue(@PathVariable("id")long actionId)
@@ -30,7 +29,7 @@ public class IotActionRestV1
 		boolean isSuccess;
 		
 		// Init
-		isSuccess = false; //iotNodeService.setItemValue(id, value); // TODO
+		isSuccess = iotActionService.execAction(actionId);
 		
 		// Return
 		if (isSuccess)
