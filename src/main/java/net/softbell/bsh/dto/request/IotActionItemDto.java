@@ -9,7 +9,7 @@ import lombok.ToString;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 회원정보 DTO
+ * @Description : 액션 아이템 DTO
  */
 @Getter
 @Setter

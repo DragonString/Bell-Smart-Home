@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>예약</title>
+		<th:block layout:fragment="pageCss">
+			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Reservation Modify</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<form method="POST" th:action="@{/reserv/modify/} + ${reservInfo.reservId}">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<!-- Reservation Info Create Card Start -->
+				<div class="card shadow mb-4 text-dark">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">예약 정보</h6>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<!-- Action Info Create Table Start -->
+							<table class="table table-bordered" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th class="align-middle text-center w-25">이름</th>
+										<th class="align-middle text-center">값</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="align-middle text-center">활성화 상태</td>
+										<td class="align-middle text-center"><input name="enableStatus" th:checked="${reservInfo.enableStatus == T(net.softbell.bsh.domain.EnableStatusRule).ENABLE}" type="checkbox" value="true" data-toggle="toggle" data-size="lg"></td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">설명</td>
+										<td class="align-middle text-center"><input type="text" name="description" th:value="${reservInfo.description}" class="form-control" placeholder="간략한 예약 설명"></td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">표현식</td>
+										<td class="align-middle text-center"><input type="text" name="expression" th:value="${reservInfo.expression}" class="form-control" placeholder="표현식"></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Action Info Create Table End -->
+						</div>
+					</div>
+				</div>
+				<!-- Reservation Info Create Card End -->
+				<!-- Reservation Action Create Card Start -->
+				<div class="card shadow mb-4 text-dark">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">예약 액션</h6>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<!-- Reservation Action Create Table Start -->
+							<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th class="align-middle text-center w-25">사용 여부</th>
+										<th class="align-middle text-center">액션 설명</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:if="${not #lists.isEmpty(listActionAct)}" th:each="value,index : ${listActionAct}">
+										<td class="align-middle text-center"><input th:name="|mapAction[${value.nodeAction.actionId}].actionId|" th:value="${value.nodeAction.actionId}" checked type="checkbox" data-toggle="toggle" data-size="sm"></td>
+										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.nodeAction.actionId}" th:text="${value.nodeAction.description}" target="_blank"></a></td>
+									</tr>
+									<tr th:if="${not #lists.isEmpty(listAction)}" th:each="value,index : ${listAction}">
+										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
+										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Reservation Action Create Table End -->
+						</div>
+					</div>
+				</div>
+				<!-- Reservation Action Create Card End -->
+				<input class="form-control btn btn-primary" type="submit" value="수정">
+<!-- 				<input class="form-control btn btn-danger" type="submit" value="삭제" th:formaction="@{/action/delete/} + ${reservInfo.reservId}"> -->
+				<a class="form-control btn btn-danger" href="#" data-toggle="modal" data-target="#removeModal">삭제</a>
+			</form>
+		</th:block>
+		
+		<th:block layout:fragment="modal">	
+			<!-- Remove Check Modal Start -->
+			<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="removeModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="removeModalLabel">삭제</h5>
+							<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">×</span>
+							</button>
+						</div>
+						<div class="modal-body">정말로 예약을 삭제하시겠습니까?</div>
+						<div class="modal-footer">
+							<form method="POST" name="removeActionForm" th:action="@{/action/delete/} + ${reservInfo.reservId}">
+								<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+								<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
+								<a class="btn btn-danger" href="#" onclick="javascript:document.removeActionForm.submit();"><i class="fas fa-exclamation-triangle"></i> 삭제</a>
+<!-- 								<input class="form-control btn btn-danger" type="submit" value="삭제"> -->
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- Remove Check Modal End -->
+		</th:block>
+		
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/vendor/datatables/js/jquery.dataTables.min.js"></script>
+			<script src="/rss/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+			<script src="/rss/common/js/datatables-default.js"></script>
+		</th:block>
+	</body>
+</html>

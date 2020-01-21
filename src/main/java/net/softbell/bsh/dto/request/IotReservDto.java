@@ -11,7 +11,7 @@ import lombok.ToString;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 액션정보 DTO
+ * @Description : 예약정보 DTO
  */
 @Getter
 @Setter
@@ -19,10 +19,10 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IotActionDto
+public class IotReservDto
 {
-	private Long actionId;
     private boolean enableStatus;
     private String description;
-    private HashMap<Long, IotActionItemDto> mapActionItem;
+    private String expression;
+    private HashMap<Long, IotActionDto> mapAction;
 }

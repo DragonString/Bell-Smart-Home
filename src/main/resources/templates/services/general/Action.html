@@ -15,9 +15,9 @@
 			</div>
 			<!-- Page Head Line End -->
 			
-			<!-- Home Status Card Row Start -->
+			<!-- Action Card Row Start -->
 			<div class="row">
-				<!-- Home Status Card Start -->
+				<!-- Action Card Start -->
 				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listNodeAction)}" th:each="nodeAction : ${listNodeAction}">
 					<div class="card border-left-primary shadow h-100 py-2">
 						<div class="card-body">
@@ -32,9 +32,9 @@
 						</div>
 					</div>
 				</div>
-				<!-- Home Status Card End -->
+				<!-- Action Card End -->
 			</div>
-			<!-- Home Status Card Row End -->
+			<!-- Action Card Row End -->
 		</th:block>
 		<th:block layout:fragment="pageScript">
 			<script src="/rss/page/js/action.js"></script>
