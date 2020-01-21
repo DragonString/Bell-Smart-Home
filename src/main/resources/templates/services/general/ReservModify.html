@@ -17,7 +17,7 @@
 			</div>
 			<!-- Page Head Line End -->
 			
-			<form method="POST" th:action="@{/reserv/modify/} + ${reservInfo.reservId}">
+			<form method="POST" th:action="@{/reserv/modify/} + ${cardReservInfo.reservId}">
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				<!-- Reservation Info Create Card Start -->
 				<div class="card shadow mb-4 text-dark">
@@ -37,15 +37,15 @@
 								<tbody>
 									<tr>
 										<td class="align-middle text-center">활성화 상태</td>
-										<td class="align-middle text-center"><input name="enableStatus" th:checked="${reservInfo.enableStatus == T(net.softbell.bsh.domain.EnableStatusRule).ENABLE}" type="checkbox" value="true" data-toggle="toggle" data-size="lg"></td>
+										<td class="align-middle text-center"><input name="enableStatus" th:checked="${cardReservInfo.enableStatus}" type="checkbox" value="true" data-toggle="toggle" data-size="lg"></td>
 									</tr>
 									<tr>
 										<td class="align-middle text-center">설명</td>
-										<td class="align-middle text-center"><input type="text" name="description" th:value="${reservInfo.description}" class="form-control" placeholder="간략한 예약 설명"></td>
+										<td class="align-middle text-center"><input type="text" name="description" th:value="${cardReservInfo.description}" class="form-control" placeholder="간략한 예약 설명"></td>
 									</tr>
 									<tr>
 										<td class="align-middle text-center">표현식</td>
-										<td class="align-middle text-center"><input type="text" name="expression" th:value="${reservInfo.expression}" class="form-control" placeholder="표현식"></td>
+										<td class="align-middle text-center"><input type="text" name="expression" th:value="${cardReservInfo.expression}" class="form-control" placeholder="표현식"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -70,11 +70,11 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listActionAct)}" th:each="value,index : ${listActionAct}">
-										<td class="align-middle text-center"><input th:name="|mapAction[${value.nodeAction.actionId}].actionId|" th:value="${value.nodeAction.actionId}" checked type="checkbox" data-toggle="toggle" data-size="sm"></td>
-										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.nodeAction.actionId}" th:text="${value.nodeAction.description}" target="_blank"></a></td>
+									<tr th:if="${not #lists.isEmpty(listCardActionAct)}" th:each="value : ${listCardActionAct}">
+										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" checked type="checkbox" data-toggle="toggle" data-size="sm"></td>
+										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
 									</tr>
-									<tr th:if="${not #lists.isEmpty(listAction)}" th:each="value,index : ${listAction}">
+									<tr th:if="${not #lists.isEmpty(listCardAction)}" th:each="value : ${listCardAction}">
 										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
 									</tr>
@@ -86,7 +86,7 @@
 				</div>
 				<!-- Reservation Action Create Card End -->
 				<input class="form-control btn btn-primary" type="submit" value="수정">
-<!-- 				<input class="form-control btn btn-danger" type="submit" value="삭제" th:formaction="@{/action/delete/} + ${reservInfo.reservId}"> -->
+<!-- 				<input class="form-control btn btn-danger" type="submit" value="삭제" th:formaction="@{/action/delete/} + ${cardReservInfo.reservId}"> -->
 				<a class="form-control btn btn-danger" href="#" data-toggle="modal" data-target="#removeModal">삭제</a>
 			</form>
 		</th:block>
@@ -104,7 +104,7 @@
 						</div>
 						<div class="modal-body">정말로 예약을 삭제하시겠습니까?</div>
 						<div class="modal-footer">
-							<form method="POST" name="removeActionForm" th:action="@{/action/delete/} + ${reservInfo.reservId}">
+							<form method="POST" name="removeActionForm" th:action="@{/action/delete/} + ${cardReservInfo.reservId}">
 								<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 								<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
 								<a class="btn btn-danger" href="#" onclick="javascript:document.removeActionForm.submit();"><i class="fas fa-exclamation-triangle"></i> 삭제</a>

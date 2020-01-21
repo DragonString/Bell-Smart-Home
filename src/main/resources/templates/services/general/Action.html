@@ -18,15 +18,15 @@
 			<!-- Action Card Row Start -->
 			<div class="row">
 				<!-- Action Card Start -->
-				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listNodeAction)}" th:each="nodeAction : ${listNodeAction}">
+				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCard)}" th:each="cardValue : ${listCard}">
 					<div class="card border-left-primary shadow h-100 py-2">
 						<div class="card-body">
 							<div class="row no-gutters align-items-center">
 								<div class="col mr-2">
-									<div class="font-weight-bold text-primary text-uppercase mb-1"><a th:href="@{/action/} + ${nodeAction.actionId}" th:text="${nodeAction.description}">액션 설명</a></div>
+									<div class="font-weight-bold text-primary text-uppercase mb-1"><a th:href="@{/action/} + ${cardValue.actionId}" th:text="${cardValue.description}">액션 설명</a></div>
 								</div>
 								<div class="col-auto">
-									<button class="btn btn-primary" th:onclick="|setItem(${nodeAction.actionId});|">실행</button>
+									<button class="btn btn-primary" th:onclick="|setItem(${cardValue.actionId});|">실행</button>
 								</div>
 							</div>
 						</div>

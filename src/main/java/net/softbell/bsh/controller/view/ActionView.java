@@ -15,7 +15,9 @@ import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeActionItem;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.dto.request.IotActionDto;
+import net.softbell.bsh.dto.view.ActionInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
+import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -28,6 +30,7 @@ public class ActionView
 {
 	// Global Field
 	private final String G_BASE_PATH = "services/general";
+	private final ViewDtoConverterService viewDtoConverterService;
 	private final IotActionServiceV1 iotActionService;
 	
 	@GetMapping()
@@ -40,7 +43,7 @@ public class ActionView
 		listNodeAction = iotActionService.getAllNodeActions(auth);
 		
 		// Process
-		model.addAttribute("listNodeAction", listNodeAction);
+		model.addAttribute("listCard", viewDtoConverterService.convActionSummaryCards(listNodeAction));
 		
 		// Return
         return G_BASE_PATH + "/Action";
@@ -61,9 +64,9 @@ public class ActionView
 			listNodeItem.remove(actionItem.getNodeItem());
 		
 		// Process
-		model.addAttribute("actionInfo", nodeAction);
-		model.addAttribute("listNodeItemAct", nodeAction.getNodeActionItems());
-		model.addAttribute("listNodeItem", listNodeItem);
+		model.addAttribute("cardActionInfo", new ActionInfoCardDto(nodeAction));
+		model.addAttribute("listCardItemAct", viewDtoConverterService.convActionItemCards(nodeAction.getNodeActionItems()));
+		model.addAttribute("listCardItem", viewDtoConverterService.convActionItemCards(listNodeItem));
 		
 		// Return
         return G_BASE_PATH + "/ActionModify";
@@ -79,7 +82,7 @@ public class ActionView
 		listNodeItem = iotActionService.getAvailableNodeItem(auth);
 		
 		// Process
-		model.addAttribute("listNodeItem", listNodeItem);
+		model.addAttribute("listCardItem", viewDtoConverterService.convActionItemCards(listNodeItem));
 		
 		// Return
         return G_BASE_PATH + "/ActionCreate";

@@ -68,11 +68,11 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listNodeItem)}" th:each="value,index : ${listNodeItem}">
+									<tr th:if="${not #lists.isEmpty(listCardItem)}" th:each="value : ${listCardItem}">
 										<td class="align-middle text-center"><input th:name="|mapActionItem[${value.itemId}].itemId|" th:value="${value.itemId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
-										<td class="align-middle text-center"><a th:href="@{/node/} + ${value.node.nodeId}" th:text="${value.node.alias}" target="_blank"></a></td>
-										<td class="align-middle text-center"><a th:href="@{/node/item/} + ${value.itemId}" th:text="${value.alias}" target="_blank"></a></td>
-										<td class="align-middle text-center"><input type="number" th:name="|mapActionItem[${value.itemId}].itemStatus|" class="form-control" placeholder="값" th:value="|1|" min="0" max="1024"></td>
+										<td class="align-middle text-center"><a th:href="@{/node/} + ${value.nodeId}" th:text="${value.nodeAlias}" target="_blank"></a></td>
+										<td class="align-middle text-center"><a th:href="@{/node/item/} + ${value.itemId}" th:text="${value.itemAlias}" target="_blank"></a></td>
+										<td class="align-middle text-center"><input type="number" th:name="|mapActionItem[${value.itemId}].itemStatus|" class="form-control" placeholder="값" th:value="|1|" th:min="${value.pinMin}" th:max="${value.pinMax}"></td>
 									</tr>
 								</tbody>
 							</table>

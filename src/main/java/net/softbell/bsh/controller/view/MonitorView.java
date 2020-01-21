@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
+import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -22,6 +23,7 @@ public class MonitorView
 {
 	// Global Field
 	private final String G_BASE_PATH = "services/general";
+	private final ViewDtoConverterService viewDtoConverterService;
 	private final IotNodeServiceV1 iotNodeService;
 	
 	@GetMapping()
@@ -36,7 +38,7 @@ public class MonitorView
 		pageNode = iotNodeService.getAllNodes(intPage, intCount);
 		
 		// Process
-		model.addAttribute("listNode", pageNode);
+		model.addAttribute("listCards", viewDtoConverterService.convMonitorSummaryCards(pageNode.getContent()));
 		
 		// Return
         return G_BASE_PATH + "/Monitor";

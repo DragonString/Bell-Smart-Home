@@ -17,23 +17,21 @@
 			<!-- Monitor Row Start -->
 			<div class="row">
 				<!-- Node Card Start -->
-				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listNode)}" th:each="nodeValue : ${listNode}">
+				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCards)}" th:each="cardValue : ${listCards}">
 					<div class="card shadow">
-						<div class="card-header bg-primary" th:text="${ nodeValue.alias }"></div>
+						<div class="card-header bg-primary" th:text="${ cardValue.alias }"></div>
 						<div class="card-body text-dark">
 							<div class="card-text">
-								<div th:if="${ not #lists.isEmpty(nodeValue.nodeItems) }" th:each="nodeItemValue : ${nodeValue.nodeItems}" th:with="curStatus=${ nodeItemValue.nodeItemHistories[#lists.size(nodeItemValue.nodeItemHistories) - 1].pinStatus }">
-									<span th:text="${nodeItemValue.alias}"></span>
+								<div th:if="${ not #lists.isEmpty(cardValue.listItems) }" th:each="cardItemValue : ${cardValue.listItems}">
+									<span th:text="${cardItemValue.alias}"></span>
 									<div class="progress mb-4">
-										<div th:if="${nodeItemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).OUTPUT }" th:style="${curStatus == 1} ? 'width: 100%' : 'width: 0%'" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
-										<div th:if="${nodeItemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).INPUT and nodeItemValue.pinType == T(net.softbell.bsh.domain.PinTypeRule).DIGITAL}" th:style="${curStatus == 1} ? 'width: 100%' : 'width: 0%'" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
-										<div th:if="${nodeItemValue.pinMode == T(net.softbell.bsh.domain.PinModeRule).INPUT and nodeItemValue.pinType == T(net.softbell.bsh.domain.PinTypeRule).ANALOG}" th:style="|width: ${curStatus / 10}%|" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+										<div th:style="|width: ${cardItemValue.widthPercent}%|" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
 									</div>
 								</div>
 							</div>
 						</div>
 						<div class="card-footer">
-							<small class="text-muted" th:text="|노드 제어 모드: ${nodeValue.controlMode}|"></small>
+							<small class="text-muted" th:text="|노드 제어 모드: ${cardValue.controlMode}|"></small>
 						</div>
 					</div>
 				</div>

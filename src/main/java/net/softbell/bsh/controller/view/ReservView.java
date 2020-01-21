@@ -15,7 +15,9 @@ import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
 import net.softbell.bsh.dto.request.IotReservDto;
+import net.softbell.bsh.dto.view.ReservInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotReservServiceV1;
+import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -28,6 +30,7 @@ public class ReservView
 {
 	// Global Field
 	private final String G_BASE_PATH = "services/general";
+	private final ViewDtoConverterService viewDtoConverterService;
 	private final IotReservServiceV1 iotReservService;
 	
 	@GetMapping()
@@ -40,7 +43,8 @@ public class ReservView
 		listReserv = iotReservService.getAllReservs(auth);
 		
 		// Process
-		model.addAttribute("listReserv", listReserv);
+//		model.addAttribute("listReserv", listReserv);
+		model.addAttribute("listCard", viewDtoConverterService.convReservSummaryCards(listReserv));
 		
 		// Return
         return G_BASE_PATH + "/Reserv";
@@ -61,9 +65,9 @@ public class ReservView
 			listNodeAction.remove(reservActionItem.getNodeAction());
 		
 		// Process
-		model.addAttribute("reservInfo", nodeReserv);
-		model.addAttribute("listActionAct", nodeReserv.getNodeReservActions());
-		model.addAttribute("listAction", listNodeAction);
+		model.addAttribute("cardReservInfo", new ReservInfoCardDto(nodeReserv));
+		model.addAttribute("listCardActionAct", viewDtoConverterService.convReservActionCards(nodeReserv.getNodeReservActions()));
+		model.addAttribute("listCardAction", viewDtoConverterService.convReservActionCards(listNodeAction));
 		
 		// Return
         return G_BASE_PATH + "/ReservModify";
@@ -79,7 +83,7 @@ public class ReservView
 		listNodeAction = iotReservService.getAvailableAction(auth);
 		
 		// Process
-		model.addAttribute("listAction", listNodeAction);
+		model.addAttribute("listCardAction", viewDtoConverterService.convReservActionCards(listNodeAction));
 		
 		// Return
         return G_BASE_PATH + "/ReservCreate";

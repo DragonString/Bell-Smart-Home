@@ -17,7 +17,7 @@
 			</div>
 			<!-- Page Head Line End -->
 			
-			<form method="POST" th:action="@{/action/modify/} + ${actionInfo.actionId}">
+			<form method="POST" th:action="@{/action/modify/} + ${cardActionInfo.actionId}">
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 				<!-- Action Info Create Card Start -->
 				<div class="card shadow mb-4 text-dark">
@@ -37,11 +37,11 @@
 								<tbody>
 									<tr>
 										<td class="align-middle text-center">활성화 상태</td>
-										<td class="align-middle text-center"><input name="enableStatus" th:checked="${actionInfo.enableStatus == T(net.softbell.bsh.domain.EnableStatusRule).ENABLE}" type="checkbox" value="true" data-toggle="toggle" data-size="lg"></td>
+										<td class="align-middle text-center"><input name="enableStatus" th:checked="${cardActionInfo.enableStatus}" type="checkbox" value="true" data-toggle="toggle" data-size="lg"></td>
 									</tr>
 									<tr>
 										<td class="align-middle text-center">설명</td>
-										<td class="align-middle text-center"><input type="text" name="description" th:value="${actionInfo.description}" class="form-control" placeholder="간략한 액션 설명"></td>
+										<td class="align-middle text-center"><input type="text" name="description" th:value="${cardActionInfo.description}" class="form-control" placeholder="간략한 액션 설명"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -68,17 +68,17 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listNodeItemAct)}" th:each="value,index : ${listNodeItemAct}">
-										<td class="align-middle text-center"><input th:name="|mapActionItem[${value.nodeItem.itemId}].itemId|" th:value="${value.nodeItem.itemId}" checked type="checkbox" data-toggle="toggle" data-size="sm"></td>
-										<td class="align-middle text-center"><a th:href="@{/node/} + ${value.nodeItem.node.nodeId}" th:text="${value.nodeItem.node.alias}" target="_blank"></a></td>
-										<td class="align-middle text-center"><a th:href="@{/node/item/} + ${value.nodeItem.itemId}" th:text="${value.nodeItem.alias}" target="_blank"></a></td>
-										<td class="align-middle text-center"><input type="number" th:name="|mapActionItem[${value.nodeItem.itemId}].itemStatus|" class="form-control" placeholder="값" th:value="${value.pinStatus}" min="0" max="1024"></td>
+									<tr th:if="${not #lists.isEmpty(listCardItemAct)}" th:each="value : ${listCardItemAct}">
+										<td class="align-middle text-center"><input th:name="|mapActionItem[${value.itemId}].itemId|" th:value="${value.itemId}" checked type="checkbox" data-toggle="toggle" data-size="sm"></td>
+										<td class="align-middle text-center"><a th:href="@{/node/} + ${value.nodeId}" th:text="${value.nodeAlias}" target="_blank"></a></td>
+										<td class="align-middle text-center"><a th:href="@{/node/item/} + ${value.itemId}" th:text="${value.itemAlias}" target="_blank"></a></td>
+										<td class="align-middle text-center"><input type="number" th:name="|mapActionItem[${value.itemId}].itemStatus|" class="form-control" placeholder="값" th:value="${value.pinStatus}" th:min="${value.pinMin}" th:max="${value.pinMax}"></td>
 									</tr>
-									<tr th:if="${not #lists.isEmpty(listNodeItem)}" th:each="value,index : ${listNodeItem}">
+									<tr th:if="${not #lists.isEmpty(listCardItem)}" th:each="value : ${listCardItem}">
 										<td class="align-middle text-center"><input th:name="|mapActionItem[${value.itemId}].itemId|" th:value="${value.itemId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
-										<td class="align-middle text-center"><a th:href="@{/node/} + ${value.node.nodeId}" th:text="${value.node.alias}" target="_blank"></a></td>
-										<td class="align-middle text-center"><a th:href="@{/node/item/} + ${value.itemId}" th:text="${value.alias}" target="_blank"></a></td>
-										<td class="align-middle text-center"><input type="number" th:name="|mapActionItem[${value.itemId}].itemStatus|" class="form-control" placeholder="값" th:value="|1|" min="0" max="1024"></td>
+										<td class="align-middle text-center"><a th:href="@{/node/} + ${value.nodeId}" th:text="${value.nodeAlias}" target="_blank"></a></td>
+										<td class="align-middle text-center"><a th:href="@{/node/item/} + ${value.itemId}" th:text="${value.itemAlias}" target="_blank"></a></td>
+										<td class="align-middle text-center"><input type="number" th:name="|mapActionItem[${value.itemId}].itemStatus|" class="form-control" placeholder="값" th:value="|1|" th:min="${value.pinMin}" th:max="${value.pinMax}"></td>
 									</tr>
 								</tbody>
 							</table>
@@ -88,7 +88,7 @@
 				</div>
 				<!-- Action Item Create Card End -->
 				<input class="form-control btn btn-primary" type="submit" value="수정">
-<!-- 				<input class="form-control btn btn-danger" type="submit" value="삭제" th:formaction="@{/action/delete/} + ${actionInfo.actionId}"> -->
+<!-- 				<input class="form-control btn btn-danger" type="submit" value="삭제" th:formaction="@{/action/delete/} + ${cardActionInfo.actionId}"> -->
 				<a class="form-control btn btn-danger" href="#" data-toggle="modal" data-target="#removeModal">삭제</a>
 			</form>
 		</th:block>
@@ -106,7 +106,7 @@
 						</div>
 						<div class="modal-body">정말로 액션을 삭제하시겠습니까?</div>
 						<div class="modal-footer">
-							<form method="POST" name="removeActionForm" th:action="@{/action/delete/} + ${actionInfo.actionId}">
+							<form method="POST" name="removeActionForm" th:action="@{/action/delete/} + ${cardActionInfo.actionId}">
 								<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 								<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
 								<a class="btn btn-danger" href="#" onclick="javascript:document.removeActionForm.submit();"><i class="fas fa-exclamation-triangle"></i> 삭제</a>
