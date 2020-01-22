@@ -16,12 +16,14 @@ import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeActionItem;
+import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
 import net.softbell.bsh.domain.repository.NodeActionRepo;
 import net.softbell.bsh.domain.repository.NodeReservActionRepo;
 import net.softbell.bsh.domain.repository.NodeReservRepo;
 import net.softbell.bsh.dto.request.IotActionDto;
+import net.softbell.bsh.dto.request.IotActionItemDto;
 import net.softbell.bsh.dto.request.IotReservDto;
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
@@ -154,6 +156,112 @@ public class IotReservServiceV1
 		
 		// Log
 		log.info(BellLog.getLogHead() + "Created Reservation (" + nodeReserv.getReservId() + ", " + iotReservDto.getDescription() + ")");
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean modifyReservation(Authentication auth, long reservId, IotReservDto iotReservDto)
+	{
+		// Field
+		Optional<NodeReserv> optNodeReserv;
+		NodeReserv nodeReserv;
+		HashMap<Long, IotActionDto> mapAction;
+		List<NodeReservAction> listNodeReservAction;
+		EnableStatusRule enableStatus;
+		
+		// Init
+		optNodeReserv = nodeReservRepo.findById(reservId);
+		mapAction = iotReservDto.getMapAction();
+		listNodeReservAction = new ArrayList<NodeReservAction>();
+		if (iotReservDto.isEnableStatus())
+			enableStatus = EnableStatusRule.ENABLE;
+		else
+			enableStatus = EnableStatusRule.DISABLE;
+		
+		// Exception
+		if (!optNodeReserv.isPresent())
+			return false;
+		
+		// Load
+		nodeReserv = optNodeReserv.get();
+//				listNodeActionItem = nodeAction.getNodeActionItems();
+		
+		// DB - Action Item Clear
+		nodeReservActionRepo.deleteAll(nodeReserv.getNodeReservActions());
+		nodeReservActionRepo.flush();
+//				nodeActionRepo.flush();
+//				for (NodeActionItem value : listNodeActionItem)
+//					nodeAction.removeNodeActionItem(value);
+		
+		// Data Process - Item Info
+		nodeReserv.setNodeReservActions(null);
+		nodeReserv.setEnableStatus(enableStatus);
+		nodeReserv.setDescription(iotReservDto.getDescription());
+		nodeReserv.setExpression(iotReservDto.getExpression());
+		
+		// DB - Save
+		nodeReservRepo.save(nodeReserv);
+		
+		// Data Process - Action Item Info
+		if (mapAction != null)
+		{
+			mapAction.forEach((key, value) ->
+			{
+				if(value.getActionId() != 0)
+				{
+					// Field
+					Optional<NodeAction> optNodeAction;
+					NodeReservAction nodeReservAction;
+					
+					// Init
+					optNodeAction = nodeActionRepo.findById(value.getActionId());
+					
+					// Build
+					if (optNodeAction.isPresent())
+					{
+						nodeReservAction = NodeReservAction.builder()
+														.nodeAction(optNodeAction.get())
+														.nodeReserv(nodeReserv)
+															.build();
+						
+						// List Add
+						listNodeReservAction.add(nodeReservAction);
+					}
+				}
+			});
+			nodeReserv.setNodeReservActions(listNodeReservAction);
+		}
+		
+		// DB - Update
+//				nodeActionRepo.save(nodeAction);
+		nodeReservActionRepo.saveAll(listNodeReservAction);
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean deleteReserv(Authentication auth, long reservId)
+	{
+		// Field
+		Optional<NodeReserv> optNodeReserv;
+		NodeReserv nodeReserv;
+		
+		// Init
+		optNodeReserv = nodeReservRepo.findById(reservId);
+		
+		// Exception
+		if (!optNodeReserv.isPresent())
+			return false;
+		
+		// Load
+		nodeReserv = optNodeReserv.get();
+		
+		// DB - Delete
+		nodeReservActionRepo.deleteAll(nodeReserv.getNodeReservActions());
+		nodeReservRepo.delete(nodeReserv);
 		
 		// Return
 		return true;

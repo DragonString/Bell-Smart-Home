@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.view;
+package net.softbell.bsh.dto.view.general;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,16 +6,16 @@ import net.softbell.bsh.domain.entity.NodeAction;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 예약 등록 및 수정뷰 액션 카드정보 DTO
+ * @Description : 액션뷰 카드정보 DTO
  */
 @Getter
 @Setter
-public class ReservActionCardDto
+public class ActionSummaryCardDto
 {
 	private long actionId;
 	private String description;
 	
-	public ReservActionCardDto(NodeAction entity)
+	public ActionSummaryCardDto(NodeAction entity)
 	{
 		// Exception
 		if (entity == null)

@@ -68,7 +68,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listCardItem)}" th:each="value : ${listCardItem}">
+									<tr th:if="${not #lists.isEmpty(listCardItems)}" th:each="value : ${listCardItems}">
 										<td class="align-middle text-center"><input th:name="|mapActionItem[${value.itemId}].itemId|" th:value="${value.itemId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/node/} + ${value.nodeId}" th:text="${value.nodeAlias}" target="_blank"></a></td>
 										<td class="align-middle text-center"><a th:href="@{/node/item/} + ${value.itemId}" th:text="${value.itemAlias}" target="_blank"></a></td>

@@ -2,6 +2,7 @@ package net.softbell.bsh.controller.view;
 
 import java.security.Principal;
 
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.Member;
+import net.softbell.bsh.domain.entity.MemberLoginLog;
+import net.softbell.bsh.dto.view.MemberProfileCardDto;
 import net.softbell.bsh.service.MemberService;
+import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -25,6 +29,7 @@ public class AuthView
 	// Global Field
 	private final String G_BASE_PATH = "services/auth";
 	private final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";
+	private final ViewDtoConverterService viewDtoConverterService;
     private final MemberService memberService;
 
     // 내 정보 페이지
@@ -42,7 +47,7 @@ public class AuthView
 		member = memberService.getMember(principal.getName());
 		
     	// Process
-    	model.addAttribute("memberInfo", member);
+    	model.addAttribute("cardMemberProfile", new MemberProfileCardDto(member));
 //    	if (memberService.checkDelete(principal.getName()))
 //    			model.addAttribute("checkDelete", "1");
     	
@@ -58,11 +63,6 @@ public class AuthView
 		if (memberService.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
 			return G_LOGOUT_REDIRECT_URL;
 		
-    	// Init
-		
-    	// Process
-    	model.addAttribute("memberInfo", memberService.getMember(principal.getName()));
-   	
     	// Return
         return G_BASE_PATH + "/Modify";
     }
@@ -93,7 +93,8 @@ public class AuthView
 /*
     // 회원탈퇴 처리
     @PostMapping("/delete")
-    public String execDelete(MemberInfoDTO memberDto) {
+    public String execDelete(MemberInfoDTO memberDto)
+    {
     	// Check
         if (!memberService.deleteUser(memberDto))
         	return "redirect:/member/info?error";
@@ -111,19 +112,23 @@ public class AuthView
 		if (memberService.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
 			return G_LOGOUT_REDIRECT_URL;
 		
-    	// Init
-    	
     	// Exception
     	if (intPage < 1)
     		intPage = 1;
     	if (intCount < 1)
     		intCount = 1;
     	
+    	// Field
+    	Page<MemberLoginLog> pageMemberLoginLog;
+    	
+    	// Init
+    	pageMemberLoginLog = memberService.getLoginLog(principal, intPage, intCount);
+    	
     	// Process
-    	model.addAttribute("logList", memberService.getLoginLog(principal, intPage, intCount));
-		model.addAttribute("logCurPage", intPage);
-		model.addAttribute("logPageCount", intCount);
-    	model.addAttribute("logMaxPage", memberService.getLoginLogMaxPage(principal, intCount));
+    	model.addAttribute("listCardActivityLogs", viewDtoConverterService.convMemberActivityLogCards(pageMemberLoginLog.getContent()));
+//		model.addAttribute("logCurPage", intPage);
+//		model.addAttribute("logPageCount", intCount);
+//    	model.addAttribute("logMaxPage", memberService.getLoginLogMaxPage(principal, intCount));
     	
     	// Return
         return G_BASE_PATH + "/LoginLog";

@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view.general;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
 import net.softbell.bsh.dto.request.IotReservDto;
-import net.softbell.bsh.dto.view.ReservInfoCardDto;
+import net.softbell.bsh.dto.view.general.ReservInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotReservServiceV1;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
@@ -43,8 +43,7 @@ public class ReservView
 		listReserv = iotReservService.getAllReservs(auth);
 		
 		// Process
-//		model.addAttribute("listReserv", listReserv);
-		model.addAttribute("listCard", viewDtoConverterService.convReservSummaryCards(listReserv));
+		model.addAttribute("listCardReservs", viewDtoConverterService.convReservSummaryCards(listReserv));
 		
 		// Return
         return G_BASE_PATH + "/Reserv";
@@ -66,8 +65,8 @@ public class ReservView
 		
 		// Process
 		model.addAttribute("cardReservInfo", new ReservInfoCardDto(nodeReserv));
-		model.addAttribute("listCardActionAct", viewDtoConverterService.convReservActionCards(nodeReserv.getNodeReservActions()));
-		model.addAttribute("listCardAction", viewDtoConverterService.convReservActionCards(listNodeAction));
+		model.addAttribute("listCardActionActives", viewDtoConverterService.convReservActionCards(nodeReserv.getNodeReservActions()));
+		model.addAttribute("listCardActions", viewDtoConverterService.convReservActionCards(listNodeAction));
 		
 		// Return
         return G_BASE_PATH + "/ReservModify";
@@ -83,7 +82,7 @@ public class ReservView
 		listNodeAction = iotReservService.getAvailableAction(auth);
 		
 		// Process
-		model.addAttribute("listCardAction", viewDtoConverterService.convReservActionCards(listNodeAction));
+		model.addAttribute("listCardActions", viewDtoConverterService.convReservActionCards(listNodeAction));
 		
 		// Return
         return G_BASE_PATH + "/ReservCreate";
@@ -104,5 +103,39 @@ public class ReservView
 			return "redirect:/reserv";
 		else
 			return "redirect:/reserv?error";
+    }
+	
+	@PostMapping("/modify/{id}")
+    public String procModify(Model model, Authentication auth,
+							@PathVariable("id") long reservId,
+    						IotReservDto iotReservationDto)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = iotReservService.modifyReservation(auth, reservId, iotReservationDto);
+		
+		// Return
+		if (isSuccess)
+			return "redirect:/reserv";
+		else
+			return "redirect:/reserv/modify/" + reservId + "?error";
+    }
+	
+	@PostMapping("/delete/{id}")
+    public String procDelete(Model model, Authentication auth, @PathVariable("id") long reservId)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = iotReservService.deleteReserv(auth, reservId);
+		
+		// Return
+		if (isSuccess)
+			return "redirect:/reserv";
+		else
+			return "redirect:/reserv/modify/" + reservId + "?error";
     }
 }

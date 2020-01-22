@@ -40,7 +40,7 @@
 					 	   			</tr>
 								</thead>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listMember)}" th:each="member : ${listMember}">
+									<tr th:if="${not #lists.isEmpty(listCardMembers)}" th:each="member : ${listCardMembers}">
 										<td class="align-middle text-center"><input type="checkbox" name="intMemberId" th:value="${ member.memberId }" /></td>
 										<td class="align-middle text-center" th:text="${ member.memberId }"></td>
 										<td class="align-middle text-center" th:text="${ member.userId }"></td>

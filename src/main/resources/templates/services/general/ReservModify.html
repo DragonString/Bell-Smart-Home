@@ -70,11 +70,11 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listCardActionAct)}" th:each="value : ${listCardActionAct}">
+									<tr th:if="${not #lists.isEmpty(listCardActionActives)}" th:each="value : ${listCardActionActives}">
 										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" checked type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
 									</tr>
-									<tr th:if="${not #lists.isEmpty(listCardAction)}" th:each="value : ${listCardAction}">
+									<tr th:if="${not #lists.isEmpty(listCardActions)}" th:each="value : ${listCardActions}">
 										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
 									</tr>
@@ -104,7 +104,7 @@
 						</div>
 						<div class="modal-body">정말로 예약을 삭제하시겠습니까?</div>
 						<div class="modal-footer">
-							<form method="POST" name="removeActionForm" th:action="@{/action/delete/} + ${cardReservInfo.reservId}">
+							<form method="POST" name="removeActionForm" th:action="@{/reserv/delete/} + ${cardReservInfo.reservId}">
 								<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 								<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
 								<a class="btn btn-danger" href="#" onclick="javascript:document.removeActionForm.submit();"><i class="fas fa-exclamation-triangle"></i> 삭제</a>

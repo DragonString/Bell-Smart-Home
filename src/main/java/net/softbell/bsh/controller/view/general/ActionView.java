@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view.general;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeActionItem;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.dto.request.IotActionDto;
-import net.softbell.bsh.dto.view.ActionInfoCardDto;
+import net.softbell.bsh.dto.view.general.ActionInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
@@ -43,7 +43,7 @@ public class ActionView
 		listNodeAction = iotActionService.getAllNodeActions(auth);
 		
 		// Process
-		model.addAttribute("listCard", viewDtoConverterService.convActionSummaryCards(listNodeAction));
+		model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
 		
 		// Return
         return G_BASE_PATH + "/Action";
@@ -65,8 +65,8 @@ public class ActionView
 		
 		// Process
 		model.addAttribute("cardActionInfo", new ActionInfoCardDto(nodeAction));
-		model.addAttribute("listCardItemAct", viewDtoConverterService.convActionItemCards(nodeAction.getNodeActionItems()));
-		model.addAttribute("listCardItem", viewDtoConverterService.convActionItemCards(listNodeItem));
+		model.addAttribute("listCardItemActives", viewDtoConverterService.convActionItemCards(nodeAction.getNodeActionItems()));
+		model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem));
 		
 		// Return
         return G_BASE_PATH + "/ActionModify";
@@ -82,7 +82,7 @@ public class ActionView
 		listNodeItem = iotActionService.getAvailableNodeItem(auth);
 		
 		// Process
-		model.addAttribute("listCardItem", viewDtoConverterService.convActionItemCards(listNodeItem));
+		model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem));
 		
 		// Return
         return G_BASE_PATH + "/ActionCreate";
@@ -118,7 +118,7 @@ public class ActionView
 		
 		// Return
 		if (isSuccess)
-			return "redirect:/action/";
+			return "redirect:/action";
 		else
 			return "redirect:/action/modify/" + actionId + "?error";
     }

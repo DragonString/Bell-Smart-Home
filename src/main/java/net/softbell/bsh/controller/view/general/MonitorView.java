@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view.general;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class MonitorView
 		pageNode = iotNodeService.getAllNodes(intPage, intCount);
 		
 		// Process
-		model.addAttribute("listCards", viewDtoConverterService.convMonitorSummaryCards(pageNode.getContent()));
+		model.addAttribute("listCardNodes", viewDtoConverterService.convMonitorSummaryCards(pageNode.getContent()));
 		
 		// Return
         return G_BASE_PATH + "/Monitor";

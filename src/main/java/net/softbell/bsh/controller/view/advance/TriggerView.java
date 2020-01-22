@@ -1,6 +1,7 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view.advance;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -16,7 +17,7 @@ public class TriggerView
 	private final String G_BASE_PATH = "services/advance";
 	
 	@GetMapping()
-    public String dispIndex()
+    public String dispIndex(Model model)
 	{
         return G_BASE_PATH + "/Trigger";
     }

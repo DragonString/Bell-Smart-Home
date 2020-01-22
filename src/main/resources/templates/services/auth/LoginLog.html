@@ -41,7 +41,7 @@
 								</tr>
 							</tfoot>
 							<tbody>
-								<tr th:if="${not #lists.isEmpty(logList)}" th:each="logValue : ${logList}">
+								<tr th:if="${not #lists.isEmpty(listCardActivityLogs)}" th:each="logValue : ${listCardActivityLogs}">
 									<td class="align-middle" th:text="${ #dates.format(logValue.requestDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
 									<td th:if="${ logValue.ipv4 } == '0:0:0:0:0:0:0:1'" class="align-middle text-center">로컬 환경에서 접속</td>
 									<td th:if="${ logValue.ipv4 } != '0:0:0:0:0:0:0:1'" class="align-middle text-center" th:text="${ logValue.ipv4 }"></td>

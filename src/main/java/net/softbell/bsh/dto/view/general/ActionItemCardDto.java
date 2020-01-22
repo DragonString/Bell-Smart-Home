@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.view;
+package net.softbell.bsh.dto.view.general;
 
 import lombok.Getter;
 import lombok.Setter;

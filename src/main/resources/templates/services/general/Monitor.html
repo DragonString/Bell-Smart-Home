@@ -17,7 +17,7 @@
 			<!-- Monitor Row Start -->
 			<div class="row">
 				<!-- Node Card Start -->
-				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCards)}" th:each="cardValue : ${listCards}">
+				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCardNodes)}" th:each="cardValue : ${listCardNodes}">
 					<div class="card shadow">
 						<div class="card-header bg-primary" th:text="${ cardValue.alias }"></div>
 						<div class="card-body text-dark">

@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view.admin;
 
 import java.security.Principal;
 
@@ -15,13 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.Node;
+import net.softbell.bsh.dto.view.admin.NodeManageInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.MemberService;
+import net.softbell.bsh.service.ViewDtoConverterService;
 import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 관리자 회원 관리 뷰 컨트롤러
+ * @Description : 관리자 노드 관리 뷰 컨트롤러
  */
 @Slf4j
 @AllArgsConstructor
@@ -33,8 +35,32 @@ public class AdminNodeView
 	private final String G_BASE_PATH = "services/admin";
 	private final String G_BASE_REDIRECT_URL = "redirect:/admin/node";
 	private final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";
+	private final ViewDtoConverterService viewDtoConverterService;
 	private final MemberService memberService;
 	private final IotNodeServiceV1 iotNodeService;
+    
+    // 노드 정보 수정페이지 출력
+    @GetMapping("modify/{id}")
+    public String dispNodeModify(Model model, Principal principal, @PathVariable("id") long nodeId)
+    {
+    	// Field
+    	Member member = memberService.getAdminMember(principal.getName());
+		Node node;
+		
+		// Init
+		node = iotNodeService.getNode(nodeId);
+    	
+    	// Exception
+    	if (member == null)
+    		return G_LOGOUT_REDIRECT_URL;
+    	
+    	// Process
+		model.addAttribute("cardNodeInfo", new NodeManageInfoCardDto(node));
+		model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeManageItemCards(node.getNodeItems()));
+		
+		// Return
+        return G_BASE_PATH + "/NodeModify";
+    }
 	
 	// 노드 비활성화 처리
     @PostMapping("disable")
@@ -100,28 +126,6 @@ public class AdminNodeView
         	return G_BASE_REDIRECT_URL;
     	else
     		return G_BASE_REDIRECT_URL + "?error";
-    }
-    
-    // 노드 정보 수정페이지 출력
-    @GetMapping("modify/{id}")
-    public String dispNodeModify(Model model, Principal principal, @PathVariable("id") long nodeId)
-    {
-    	// Field
-    	Member member = memberService.getAdminMember(principal.getName());
-		Node node;
-		
-		// Init
-		node = iotNodeService.getNode(nodeId);
-    	
-    	// Exception
-    	if (member == null)
-    		return G_LOGOUT_REDIRECT_URL;
-    	
-    	// Process
-    	model.addAttribute("nodeInfo", node);
-		
-		// Return
-        return G_BASE_PATH + "/NodeModify";
     }
     
     // 노드 정보 수정 프로세스 수행
