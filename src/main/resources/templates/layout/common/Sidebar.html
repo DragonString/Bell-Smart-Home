@@ -1,0 +1,94 @@
+<ul class="navbar-nav bg-gray-900 sidebar sidebar-dark accordion" id="accordionSidebar">
+	<!-- Sidebar - Brand Start -->
+	<a id="collapseBrand" class="sidebar-brand d-flex align-items-center justify-content-center collapse" href="/" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+<!-- 		<div class="sidebar-brand-icon rotate-n-15"><i class="fas fa-laugh-wink"></i></div> -->
+<!-- 		<div class="sidebar-brand-icon"><img src="/favicon.ico" style="width: 50px"></div> -->
+		<div class="sidebar-brand-text">Bell Smart Home</div>
+	</a>
+	<!-- Sidebar - Brand End -->
+
+	<hr class="sidebar-divider my-0"><!-- Divider -->
+
+	<!-- Nav Item - Dashboard Start -->
+	<li class="nav-item" th:classappend="${#strings.equals(#httpServletRequest.requestURI, '/')} ? 'active' : ''">
+		<a class="nav-link" href="/"><i class="fas fa-fw fa-tachometer-alt"></i> <span>대시보드</span></a>
+	</li>
+	<!-- Nav Item - Dashboard End -->
+
+	<!-- Divider -->
+	<hr class="sidebar-divider">
+
+	<!-- Heading -->
+	<div class="sidebar-heading">일반</div>
+	
+	<!-- Nav Item - Monitor Start -->
+	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/monitor')} ? 'active' : ''">
+		<a class="nav-link" href="/monitor">
+			<i class="fas fa-fw fa-chart-area"></i> <span>모니터</span>
+		</a>
+	</li>
+	<!-- Nav Item - Monitor End -->
+	
+	<!-- Nav Item - Reservation Start -->
+	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/reserv')} ? 'active' : ''">
+		<a class="nav-link" href="/reserv">
+			<i class="fas fa-fw fa-bell"></i> <span>예약</span>
+		</a>
+	</li>
+	<!-- Nav Item - Reservation End -->
+	
+	<!-- Nav Item - Action Start -->
+	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/action')} ? 'active' : ''">
+		<a class="nav-link" href="/action">
+			<i class="fas fa-fw fa-power-off"></i> <span>액션</span>
+		</a>
+	</li>
+	<!-- Nav Item - Action End -->
+
+	<hr class="sidebar-divider"><!-- Divider -->
+	<div class="sidebar-heading">고급</div><!-- Heading -->
+	
+	<!-- Nav Item - Control Start -->
+	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/node')} ? 'active' : ''">
+		<a class="nav-link" href="/node">
+			<i class="fas fa-fw fa-cog"></i> <span>노드 제어</span>
+		</a>
+	</li>
+	<!-- Nav Item - Control End -->
+	
+	<!-- Nav Item - Trigger Start -->
+	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/trigger')} ? 'active' : ''">
+		<a class="nav-link" href="/trigger">
+			<i class="fas fa-fw fa-joint"></i> <span>트리거</span>
+		</a>
+	</li>
+	<!-- Nav Item - Trigger End -->
+	
+	
+	<!-- Nav Item - Pages Collapse Menu Start -->
+	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin')} ? 'active' : ''">
+		<a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseAdmin" aria-expanded="true" aria-controls="collapseAdmin">
+			<i class="fas fa-fw fa-wrench"></i> <span>관리자</span>
+		</a>
+		<div id="collapseAdmin" class="collapse" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin')} ? 'show' : ''" aria-labelledby="headingPages" data-parent="#accordionSidebar">
+			<div class="bg-white py-2 collapse-inner rounded">
+				<h6 class="collapse-header">보안 설정:</h6>
+				<a class="collapse-item" href="/admin/member" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/member')} ? 'active' : ''">회원</a>
+				<a class="collapse-item" href="/admin/node" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/node')} ? 'active' : ''">노드</a>
+				<a class="collapse-item" href="/admin/permission" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/permission')} ? 'active' : ''">권한</a>
+				<div class="collapse-divider"></div>
+				<h6 class="collapse-header">센터 설정:</h6>
+				<a class="collapse-item" href="/admin/center" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/center')} ? 'active' : ''">기본 규칙</a>
+			</div>
+		</div>
+	</li>
+	<!-- Nav Item - Pages Collapse Menu End -->
+
+	<hr class="sidebar-divider d-none d-md-block"><!-- Divider -->
+
+	<!-- Sidebar Toggler (Sidebar) Start -->
+	<div class="text-center d-none d-md-inline">
+		<button class="rounded-circle border-0" id="sidebarToggle"></button>
+	</div>
+	<!-- Sidebar Toggler (Sidebar) End -->
+</ul>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	<head>
+	    <title layout:title-pattern="$LAYOUT_TITLE : $CONTENT_TITLE">BSH</title>
+	    
+	    <!-- 공통 css, js, meta tag Start -->
+	    <th:block th:replace="layout/common/Heads"></th:block>
+	    <!-- 공통 css, js, meta tag End -->
+	    <!-- 페이지 전용 css Start -->
+	    <th:block layout:fragment="pageCss"></th:block>
+	    <!-- 페이지 전용 css End -->
+	</head>
+	<body id="page-top" class="bg-gradient-dark">
+		<!-- Page Wrapper -->
+		<div id="wrapper">
+			<!-- Sidebar Start -->
+			<th:block th:replace="layout/common/Sidebar"></th:block>
+			<!-- Sidebar End -->
+			
+			<!-- Content Wrapper Start -->
+			<div id="content-wrapper" class="d-flex flex-column bg-gradient-dark">
+				<!-- Main Content Start -->
+				<div id="content">
+					<!-- Topbar Start -->
+					<th:block th:replace="layout/common/Topbar"></th:block>
+					<!-- Topbar End -->
+					
+					<!-- Page Content Start -->
+					<div class="container-fluid text-white">
+						<th:block layout:fragment="content"></th:block>
+					</div>
+					<!-- Page Content End -->
+				</div>
+				<!-- Main Content End -->
+				
+				<!-- Common footer Start -->
+				<footer th:replace="layout/common/Footer :: BSN_Footer"></footer>
+				<!-- Common footer End -->
+			</div>
+			<!-- Content Wrapper End -->
+		</div>
+		<!-- End of Page Wrapper -->
+    	
+	    <th:block th:replace="layout/common/CommonModal"></th:block>
+	    <th:block layout:fragment="modal"></th:block>
+	    
+	    <!-- 공통 javascript Start -->
+	    <th:block th:replace="layout/common/Scripts"></th:block>
+	    <!-- 공통 javascript End -->
+	    
+	    <!-- 페이지 전용 javascript Start -->
+	    <th:block layout:fragment="pageScript"></th:block>
+	    <!-- 페이지 전용 javascript End -->
+	</body>
+</html>

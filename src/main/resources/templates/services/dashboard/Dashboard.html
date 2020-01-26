@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+	    <title>Bell Smart Home</title>
+		<th:block layout:fragment="pageCss">
+		    
+		</th:block>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Dashboard</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<!-- Home Alert Row Start -->
+			<div class="row">
+				<!-- Home Alert Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card shadow">
+						<div class="card-header bg-danger"><i class="fas fa-exclamation-triangle"></i> 경고</div>
+						<div class="card-body text-dark">
+							<div class="card-text">현재 실외 온도가 <strong class="text-danger">-4℃</strong>로 매우 낮습니다.</div>
+						</div>
+						<div class="card-footer">
+							<small class="text-muted">5시간 전 확인 됨</small>
+						</div>
+					</div>
+				</div>
+				<!-- Home Alert Card End -->
+				<!-- Home Alert Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card shadow">
+						<div class="card-header bg-danger"><i class="fas fa-exclamation-triangle"></i> 경고</div>
+						<div class="card-body text-dark">
+							<div class="card-text">현재 거실 습도가 <strong class="text-primary">20%</strong>로 매우 낮습니다.</div>
+						</div>
+						<div class="card-footer">
+							<small class="text-muted">12분 전 확인 됨</small>
+						</div>
+					</div>
+				</div>
+				<!-- Home Alert Card End -->
+				<!-- Home Alert Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card shadow">
+						<div class="card-header bg-warning"><i class="fas fa-exclamation"></i> 주의</div>
+						<div class="card-body text-dark">
+							<div class="card-text">현재 화장실 습도가 <strong class="text-danger">70%</strong>로 매우 높습니다.</div>
+						</div>
+						<div class="card-footer">
+							<small class="text-muted">3분 전 확인 됨</small>
+						</div>
+					</div>
+				</div>
+				<!-- Home Alert Card End -->
+			</div>
+			<!-- Home Alert Row End -->
+			
+			<!-- Home Status Card Row Start -->
+			<div class="row">
+				<!-- Home Status Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">실내 평균 온도</div>
+									<div class="progress mb-4">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 20%" aria-valuenow="2" aria-valuemin="-20" aria-valuemax="50">2℃</div>
+									</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-info fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Home Status Card End -->
+				<!-- Home Status Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">실내 평균 습도</div>
+									<div class="progress mb-4">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="50">15%</div>
+									</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-info fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Home Status Card End -->
+				<!-- Home Status Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">실외 평균 온도</div>
+									<div class="progress mb-4">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: 10%" aria-valuenow="2" aria-valuemin="-20" aria-valuemax="50">-2℃</div>
+									</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-info fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Home Status Card End -->
+				<!-- Home Status Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">실외 평균 습도</div>
+									<div class="progress mb-4">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 20%" aria-valuenow="2" aria-valuemin="-20" aria-valuemax="50">20%</div>
+									</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-info fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Home Status Card End -->
+				<!-- Home Status Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">실내 켜진 전등</div>
+									<div class="progress mb-4">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-danger" role="progressbar" style="width: 80%" aria-valuenow="2" aria-valuemin="-20" aria-valuemax="50">8/10</div>
+									</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-info fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Home Status Card End -->
+				<!-- Home Status Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">열린 창문</div>
+									<div class="progress mb-4">
+										<div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: 10%" aria-valuenow="2" aria-valuemin="-20" aria-valuemax="50">1/10</div>
+									</div>
+								</div>
+								<div class="col-auto">
+									<i class="fas fa-info fa-2x text-gray-300"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Home Status Card End -->
+			</div>
+			<!-- Home Status Card Row End -->
+		</th:block>
+		
+		<th:block layout:fragment="pageScript">
+			
+		</th:block>
+	</body>
+</html>

@@ -42,7 +42,7 @@ public class JwtAuthenticationFilter extends GenericFilterBean
             SecurityContextHolder.getContext().setAuthentication(auth);
             
             if (!jwtTokenProvider.isApiMode((HttpServletRequest)request)) // API 모드가 아니면
-            	jwtTokenProvider.setCookieAuth((HttpServletResponse) response, auth); // 인증 토큰 만료 기간 연장
+            	jwtTokenProvider.setCookieAuth((HttpServletRequest) request, (HttpServletResponse) response, auth); // 인증 토큰 만료 기간 연장
         }
         
         // Filter

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>프로필</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Profile</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<div class="row justify-content-center">
+				<div class="col-xl-5 col-lg-7 col-md-8">
+					<!-- Profile Card Start -->
+					<div class="card shadow mb-4 text-dark">
+						<div class="card-header py-3">
+							<h6 class="m-0 font-weight-bold text-primary">프로필</h6>
+						</div>
+						<div class="card-body">
+							<div class="table-responsive">
+								<!-- Profile Table Start -->
+								<table class="table table-bordered" width="100%" cellspacing="0">
+									<tbody>
+										<tr>
+							    			<td class="align-middle text-center">이름</td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.name }"></td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">닉네임</td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.nickname }"></td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">아이디</td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.userId }"></td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">이메일</td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.email }"></td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">비밀번호</td>
+							    			<td class="align-middle"><a href="/member/modify" class="form-control btn btn-primary">비밀번호 변경</a></td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">정지여부</td>
+											<td th:if="${ cardMemberProfile.ban == T(net.softbell.bsh.domain.BanRule).NORMAL }" class="align-middle text-success">정상</td>
+											<td th:if="${ cardMemberProfile.ban == T(net.softbell.bsh.domain.BanRule).TEMP }" class="align-middle text-danger">임시 정지</td>
+											<td th:if="${ cardMemberProfile.ban == T(net.softbell.bsh.domain.BanRule).PERMANENT }" class="align-middle text-danger">영구 정지</td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">권한</td>
+							    			<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).SUPERADMIN }" class="align-middle text-danger">최고 관리자</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).ADMIN }" class="align-middle text-danger">관리자</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).MEMBER }" class="align-middle text-success">회원</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).WAIT }" class="align-middle text-secondary">승인대기</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).BAN }" class="align-middle text-warning">계정 정지</td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">가입일</td>
+							    			<td class="align-middle" th:text="${ #dates.format(cardMemberProfile.registerDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+							    		</tr>
+							    		<tr>
+							    			<td class="align-middle text-center">계정</td>
+							    			<td class="align-middle">
+					<!-- 		    				<c:if test="${strDeleteAppend == 'disabled'}"> -->
+					<!-- 		    					<div class="alert alert-danger"><spring:message code="myinfo.withdrawal.msg" /></div> -->
+					<!-- 		    				</c:if> -->
+					<!-- 		    				<button class="form-control btn btn-danger" data-toggle="modal" data-target="#deleteModal" ${ strDeleteAppend } data-placement="top" title="<spring:message code="myinfo.withdrawal.msg" />">title=이 계정으로 등록된 상품이나 주문이 없어야 탈퇴가 가능합니다.<spring:message code="out" />탈퇴하기</button> -->
+						    				</td>
+							    		</tr>
+									</tbody>
+								</table>
+								<!-- Profile Table End -->
+							</div>
+						</div>
+					</div>
+					<!-- Profile Card End -->
+				</div>
+			</div>
+		</th:block>
+	</body>
+</html>

@@ -33,7 +33,7 @@ public class CenterSetting implements Serializable
 	
 	@Id
 	@Column(name="is_enabled", unique=true, nullable=false)
-	private boolean isEnabled;
+	private byte isEnabled;
 
 	@Column(name="iot_action", nullable=false)
 	private byte iotAction;

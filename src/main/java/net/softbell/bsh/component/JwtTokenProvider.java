@@ -21,6 +21,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import net.softbell.bsh.config.CustomConfig;
 import net.softbell.bsh.util.CookieUtil;
 
 /**
@@ -31,7 +32,7 @@ import net.softbell.bsh.util.CookieUtil;
 @Component
 public class JwtTokenProvider
 {
-    @Value("${spring.jwt.secret}")
+    @Value("${bsh.security.jwt.secret.key}")
     private String secretKey;
     private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
     private final UserDetailsService userDetailsService;
@@ -42,9 +43,24 @@ public class JwtTokenProvider
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
     
-    public void setCookieAuth(HttpServletResponse response, Authentication authentication)
+    public void setCookieAuth(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
     {
-    	CookieUtil.create(response, "X-AUTH-TOKEN", createToken(authentication), false, false, 60 * 60);
+    	// Field
+    	int maxAge, multiple;
+    	String strAutoLogin;
+    	
+    	// Init
+    	maxAge = 60 * 60;
+    	multiple = 1;
+    	strAutoLogin = CookieUtil.getValue(request, CustomConfig.AUTO_LOGIN_COOKIE_NAME);
+    	
+    	// Check
+    	if (strAutoLogin != null && strAutoLogin.equalsIgnoreCase("1"))
+    		multiple = 24 * 7;
+    	maxAge *= multiple;
+    	
+    	// Create
+    	CookieUtil.create(response, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication, multiple), false, false, maxAge);
     }
 
     // Jwt 토큰 생성
@@ -61,15 +77,24 @@ public class JwtTokenProvider
                 .compact();
     }
     
-    public String createToken(Authentication authentication)
+    public String createToken(Authentication authentication, int multiple)
     {
+    	// Field
         Claims claims = Jwts.claims().setSubject(authentication.getName());
+        
+        // Init
         claims.put("roles", authentication.getAuthorities());
         Date now = new Date();
+        
+        // Exception
+        if (multiple < 1)
+        	multiple = 1;
+        
+        // Return
         return Jwts.builder()
                 .setClaims(claims) // 데이터
                 .setIssuedAt(now) // 토큰 발행일자
-                .setExpiration(new Date(now.getTime() + tokenValidMilisecond)) // set Expire Time
+                .setExpiration(new Date(now.getTime() + tokenValidMilisecond * multiple)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
                 .compact();
     }
@@ -102,9 +127,9 @@ public class JwtTokenProvider
     	
     	// Load
     	if (isApiMode(request)) // API 및 웹소켓 경로면 헤더에서 인증정보 로드 (CSRF 미사용)
-    		token = request.getHeader("X-AUTH-TOKEN");
+    		token = request.getHeader(CustomConfig.SECURITY_HEADER_NAME);
     	else // 일반 유저 경로면 쿠키에서 인증정보 로드 (CSRF 사용)
-    		token = CookieUtil.getValue(request, "X-AUTH-TOKEN");
+    		token = CookieUtil.getValue(request, CustomConfig.SECURITY_COOKIE_NAME);
     	
     	// Return
         return token;

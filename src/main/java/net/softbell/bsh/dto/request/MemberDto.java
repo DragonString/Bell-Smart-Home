@@ -22,35 +22,29 @@ import net.softbell.bsh.domain.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDto {
+public class MemberDto
+{
     private long memberId;
     private int ban;
 	private Date banDate;
 	private Date changePasswdDate;
-	private String emailAddress;
-	private String emailHost;
-	private String emailId;
+	private String email;
 	private Date lastLogin;
 	private int loginFailcount;
 	private String nickname;
-	private String passwd;
+	private String password;
 	private int permission;
 	private Date registerDate;
 	private String userId;
 	private String username;
 
-    public Member toEntity(){
-    	// Default
-    	if (emailAddress == null || emailAddress.isEmpty())
-    		emailAddress = emailId + "@" + emailHost;
-    	
+    public Member toEntity()
+    {
     	// Generate
         return Member.builder()
                 .userId(userId)
-        		.emailAddress(emailAddress)
-                .password(passwd)
-        		.emailHost(emailHost)
-        		.emailId(emailId)
+        		.email(email)
+                .password(password)
                 .name(username)
         		.nickname(nickname)
                 .registerDate(new Date())

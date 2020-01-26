@@ -59,31 +59,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         // static 디렉터리의 하위 파일 목록은 인증 무시 ( = 항상통과 )
         web.ignoring().antMatchers("/rss/**", "/files/**", "/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**", "/favicon.ico");
-		//web.ignoring().antMatchers("/**"); ///////////////// 임시 보안 전체 해제
-//        web.ignoring().antMatchers("/ws/**"); // 웹소켓 임시 보안 해제 #########################
-//        web.ignoring().antMatchers("/api/stomp/**"); // 웹소켓 임시 보안 해제
-//        web.ignoring().antMatchers("/test/chat"); // 웹소켓 테스트 페이지 임시 보안 해제
 	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception
 	{
-		http.authorizeRequests().antMatchers("/test/chat").permitAll(); // ############# 테스트 페이지 임시 보안 해제
-//		http.authorizeRequests().antMatchers("/api/stomp/queue/iot/v1/node/uid/1").permitAll();
-		
 		// Common
 		http.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
     		.authorizeRequests() // 페이지 권한 설정
-				.antMatchers("/admin/**").hasRole("ADMIN")
-				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup", // 인증
-							"/denied", "/api/rest/exception/**", // 권한 예외
+				.antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
+				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup", // 계정 인증
+							"/api/rest/exception/**", // 권한 예외
 							"/api/rest/*/auth/**", // API 인증
 							"/api/rest/*/status/**", // 서버 Status
 							"/api/rest/*/iot/auth/**").permitAll() // IoT API 인증
+				.antMatchers("/denied").authenticated()
 				.antMatchers("/ws/**").hasRole("NODE") // WebSocket 인증
-				.anyRequest().hasRole("MEMBER") // 기타 모든 페이지는 Member 권한 보유자만 가능
+				.anyRequest().hasAnyRole("MEMBER", "ADMIN", "SUPERADMIN") // 기타 모든 페이지는 Member 권한 보유자만 가능
 		.and()
 			.csrf() // CSRF 설정
 				.csrfTokenRepository(new CookieCsrfTokenRepository())
@@ -91,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 		.and()
 			.formLogin() // 폼 로그인 설정
 				.loginPage("/login")
-				.usernameParameter("userid")
+				.usernameParameter("userId")
 				.passwordParameter("password")
 				.successHandler(successHandler())
 				.failureHandler(failHandler())
@@ -101,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 				.logoutSuccessUrl("/login")
 				.invalidateHttpSession(true)
-				.deleteCookies("X-AUTH-TOKEN")
+				.deleteCookies(CustomConfig.SECURITY_COOKIE_NAME, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
 		.and()
             .exceptionHandling() // 예외 핸들링
             	.accessDeniedHandler(CustomAccessDeniedHandler.builder().G_API_URI("/api/rest/exception/denied").G_VIEW_URI("/denied").build())
@@ -124,8 +118,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 	    			.frameOptions()
 	    				.disable();
     	}
-    	
-//    	http.csrf().disable(); // TODO ############# 임시 해제
 	}
 	
 	@Override

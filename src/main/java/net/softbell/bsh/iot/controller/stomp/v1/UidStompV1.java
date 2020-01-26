@@ -1,10 +1,10 @@
 package net.softbell.bsh.iot.controller.stomp.v1;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.AllArgsConstructor;
 import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto;
 import net.softbell.bsh.iot.service.v1.IotUIDServiceV1;
 
@@ -14,12 +14,12 @@ import net.softbell.bsh.iot.service.v1.IotUIDServiceV1;
  * STOMP publish: /api/stomp/pub
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
+@AllArgsConstructor
 @RestController
 public class UidStompV1
 {
 	// Global Field
-	@Autowired
-	private IotUIDServiceV1 iotUIDServiceV1;
+	private final IotUIDServiceV1 iotUIDServiceV1;
 	
 	
 	@MessageMapping("/iot/v1/node/uid/{uid}/SET/INFO/NODE")

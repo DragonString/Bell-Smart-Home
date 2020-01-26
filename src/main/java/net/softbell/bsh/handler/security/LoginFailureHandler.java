@@ -20,7 +20,7 @@ import net.softbell.bsh.util.ClientData;
 public class LoginFailureHandler implements AuthenticationFailureHandler
 {
 	@Autowired
-	MemberService memberService;
+	private MemberService memberService;
 	
 	private String defaultUrl;
 

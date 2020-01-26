@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>비밀번호 변경</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Modify Account Information</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<!-- Modify Card Start -->
+			<div class="row justify-content-center">
+				<div class="col-xl-5 col-lg-6 col-md-8">
+					<div class="card o-hidden border-0 shadow-lg my-5">
+						<!-- Modify Card Body Start -->
+						<div class="card-body p-0">
+							<div class="row">
+								<div class="col-lg">
+									<div class="p-5">
+										<div class="text-center">
+											<h1 class="h4 text-gray-900 mb-4">비밀번호 변경</h1>
+										</div>
+										<form onchange="checkPasswordValid('#modifyForm', false, true);" onsubmit="return checkPasswordValid('#modifyForm', false, true);" id="modifyForm"  class="user" method="POST" action="/modify">
+											<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+											<div class="form-group">
+												<input type="password" class="form-control form-control-user pass-cur" name="curPassword" placeholder="현재 비밀번호" autofocus>
+											</div>
+											<div class="form-group">
+												<input type="password" class="form-control form-control-user pass-ori" name="modPassword" placeholder="변경할 비밀번호">
+												<div class="invalid-feedback">다시 입력</div>
+												<div class="valid-feedback">잘했어요!</div>
+											</div>
+											<div class="form-group">
+												<input type="password" class="form-control form-control-user pass-valid" placeholder="변경할 비밀번호 재입력">
+												<div class="invalid-feedback">다시 입력</div>
+												<div class="valid-feedback">잘했어요!</div>
+											</div>
+											<input type="submit" class="btn btn-primary btn-user btn-block" value="비밀번호 변경">
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Modify Card Body End -->
+					</div>
+				</div>
+			</div>
+			<!-- Modify Card End -->
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/page/js/member.js"></script>
+		</th:block>
+	</body>
+</html>

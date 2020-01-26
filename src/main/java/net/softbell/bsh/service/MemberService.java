@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.AuthStatusRule;
+import net.softbell.bsh.domain.BanRule;
+import net.softbell.bsh.domain.MemberRole;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
 import net.softbell.bsh.domain.repository.MemberLoginLogRepo;
@@ -34,13 +36,15 @@ import net.softbell.bsh.util.BellLog;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class MemberService implements UserDetailsService {
+public class MemberService implements UserDetailsService
+{
 	// Global Field
 	private final MemberRepo memberRepo;
 	private final MemberLoginLogRepo memberLoginLogRepo;
 	
 	@Transactional
-	public long joinUser(MemberDto memberDto) {
+	public long joinUser(MemberDto memberDto)
+	{
 		// Log
 		log.info(BellLog.getLogHead() + "회원가입 요청 (" + memberDto.getUserId() + " - " + memberDto.getUsername() + ")");
 		
@@ -63,7 +67,7 @@ public class MemberService implements UserDetailsService {
 			return -1;*/
 
 		// Process
-		memberDto.setPasswd(passwordEncoder.encode(memberDto.getPasswd())); // 비밀번호 암호화
+		memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword())); // 비밀번호 암호화
 
 		log.info(BellLog.getLogHead() + "가입완료"); // TEST #### TODO
 		return memberRepo.save(memberDto.toEntity()).getMemberId();
@@ -77,6 +81,8 @@ public class MemberService implements UserDetailsService {
 		// Check
 		if (member == null)
 			return null;
+		
+		// Return
 		return member;
 	}
 	
@@ -89,6 +95,26 @@ public class MemberService implements UserDetailsService {
 		if (!optMember.isPresent())
 			return null;
 		return optMember.get();
+	}
+	
+	public Member getAdminMember(String userId)
+	{
+		// Field
+    	Member member;
+    	
+    	// Init
+    	member = getMember(userId);
+    	
+    	// Exception
+    	if (member == null)
+    		return null;
+    	
+		// Auth Check
+		if (!(member.getPermission() == MemberRole.ADMIN || member.getPermission() == MemberRole.SUPERADMIN) || 
+				member.getBan() != BanRule.NORMAL) // 관리자가 아니거나 정지 회원이면 로그아웃처리
+			return null;
+		
+		return member;
 	}
 	
 	public Member loginMember(String id, String password)
@@ -111,7 +137,19 @@ public class MemberService implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException
 	{
-		return getMember(userId);
+		// Field
+		Member member;
+		
+		// Init
+		member = getMember(userId);
+		
+		// Ban Check
+		if (member != null)
+			if (member.getBan() != BanRule.NORMAL)
+				member.setPermission(MemberRole.BAN);
+		
+		// Return
+		return member;
 	}
 	
 	@Transactional
@@ -182,23 +220,22 @@ public class MemberService implements UserDetailsService {
 		memberRepo.delete(member);
 		
 		return true;
-	}
+	}*/
 	
 	@Transactional
-	public boolean deleteUserList(Principal principal, List<Integer> listMemberId) {
+	public boolean deleteUserList(Principal principal, List<Integer> listMemberId)
+	{
 		// Log
-		G_Logger.info(BellLog.getLogHead() + "회원 탈퇴 요청 (" + listMemberId.size() + ")");
+		log.info(BellLog.getLogHead() + "회원 탈퇴 요청 (" + listMemberId.size() + ") (" + principal.getName() + ")");
 		
 		// Field
-		Member member;
 		boolean isError = false;
-		boolean isSuperAdmin = isSuperAdmin(principal.getName());
 		Member memberMySelf = getMember(principal.getName());
 
 		// Init
 		for (int value : listMemberId)
 		{
-			member = getMember(value);
+			Member member = getMember(value);
 	
 			// Exception
 			if (member == null || member == memberMySelf) // 해당하는 회원이 없으면
@@ -206,7 +243,7 @@ public class MemberService implements UserDetailsService {
 				isError = true;
 				continue;
 			}
-			if (member.getIsAdmin().equalsIgnoreCase("1") && !isSuperAdmin) // 최고관리자가 아니면 최고관리자 제어 불가
+			if (member.getPermission() == MemberRole.SUPERADMIN  && memberMySelf.getPermission() != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
 				continue;
 	
 			// Process
@@ -215,7 +252,7 @@ public class MemberService implements UserDetailsService {
 		
 		return !isError;
 	}
-
+/*
 	public MemberDTO getInfo(Principal principal) {
 		// Field
 		MemberDTO memberDTO;
@@ -238,7 +275,8 @@ public class MemberService implements UserDetailsService {
 	}
 */
 	@Transactional
-	public Member modifyInfo(Principal principal, String strCurPassword, String strModPassword) {
+	public Member modifyInfo(Principal principal, String strCurPassword, String strModPassword)
+	{
 		// Log
 		log.info(BellLog.getLogHead() + "회원정보 수정 요청 (" + principal.getName() + ")");
 		
@@ -266,29 +304,21 @@ public class MemberService implements UserDetailsService {
 		// Return
 		return member;
 	}
-/*
-	public List<MemberDTO> getMemberList(int intPage, int intCount) {
+
+	public Page<Member> getMemberList(int intPage, int intCount)
+	{
 		// Field
 		Page<Member> pageMember;
 		Pageable curPage;
-		List<MemberDTO> listMemberDTO;
 
 		// Init
 		curPage = PageRequest.of(intPage - 1, intCount, new Sort(Direction.DESC, "memberId"));
 		pageMember = memberRepo.findAll(curPage);
-		listMemberDTO = new ArrayList<MemberDTO>();
-
-		// Process
-		for (Member member : pageMember) {
-			listMemberDTO.add(MemberDTO.builder().id(member.getMemberId()).userId(member.getUserId())
-					.username(member.getUsername()).birthday(member.getBirthday()).regDate(member.getRegdate())
-					.isBan(member.getIsBan()).isAdmin(member.getIsAdmin()).build());
-		}
 
 		// Return
-		return listMemberDTO;
+		return pageMember;
 	}
-
+/*
 	public int getMemberMaxPage(int intCount) {
 		// Field
 		long longCount;
@@ -302,17 +332,24 @@ public class MemberService implements UserDetailsService {
 
 		// Return
 		return intMaxPage;
-	}
-
-	public boolean procMemberBan(Principal principal, List<Integer> listMemberId, boolean isBan) {
+	}*/
+	
+	public boolean procMemberApproval(Principal principal, List<Integer> listMemberId, boolean isApproval, boolean isMember)
+	{
 		// Log
-		G_Logger.info(BellLog.getLogHead() + listMemberId.size() + "명 회원 정지(" + isBan + ") 처리 (" + principal.getName() + ")");
+		log.info(BellLog.getLogHead() + listMemberId.size() + "명 회원 승인(" + isApproval + ") 처리 (" + principal.getName() + ")");
 		
 		// Field
 		int intSuccess = listMemberId.size();
-		boolean isSuperAdmin = isSuperAdmin(principal.getName());
-		Member memberMySelf = getMember(principal.getName());
+		Member memberMySelf;
 
+		// Init
+		memberMySelf = getAdminMember(principal.getName());
+		
+		// Exception
+		if (memberMySelf == null)
+			return false;
+		
 		// Process
 		for (int intMemberId : listMemberId) {
 			// Field
@@ -322,18 +359,22 @@ public class MemberService implements UserDetailsService {
 			member = getMember(intMemberId);
 			
 			// Exception
-			if (member == null || member == memberMySelf) {
+			if (member == null)
+			{
 				intSuccess--;
 				continue;
 			}
-			if (member.getIsAdmin().equalsIgnoreCase("1") && !isSuperAdmin) // 최고관리자가 아니면 최고관리자 제어 불가
+			if (member.getPermission() != MemberRole.WAIT) // 승인 대기중 회원만 제어 가능
 				continue;
 
 			// Process
-			if (isBan)
-				member.setIsBan("Y");
+			if (isApproval)
+				if (isMember)
+					member.setPermission(MemberRole.MEMBER);
+				else
+					member.setPermission(MemberRole.NODE);
 			else
-				member.setIsBan("N");
+				member.setPermission(MemberRole.BAN);
 
 			// Process - DB Update
 			memberRepo.save(member);
@@ -345,20 +386,25 @@ public class MemberService implements UserDetailsService {
 		return true;
 	}
 
-	public boolean procSetAdmin(Principal principal, List<Integer> listMemberId, boolean isAdd) {
+	public boolean procMemberBan(Principal principal, List<Integer> listMemberId, boolean isBan)
+	{
 		// Log
-		G_Logger.info(BellLog.getLogHead() + listMemberId.size() + "명 관리자 설정(" + isAdd + ") 처리 (" + principal.getName() + ")");
-		
-		// Exception
-		if (!isSuperAdmin(principal.getName())) // 권한 제어는 최고 관리자가 아니면 불가능
-			return false;
+		log.info(BellLog.getLogHead() + listMemberId.size() + "명 회원 정지(" + isBan + ") 처리 (" + principal.getName() + ")");
 		
 		// Field
 		int intSuccess = listMemberId.size();
-		Member memberMySelf = getMember(principal.getName());
+		Member memberMySelf;
 
+		// Init
+		memberMySelf = getMember(principal.getName());
+		
+		// Exception
+		if (memberMySelf == null)
+			return false;
+		
 		// Process
-		for (int intMemberId : listMemberId) {
+		for (int intMemberId : listMemberId)
+		{
 			// Field
 			Member member;
 
@@ -366,16 +412,71 @@ public class MemberService implements UserDetailsService {
 			member = getMember(intMemberId);
 			
 			// Exception
-			if (member == null || member == memberMySelf) {
+			if (member == null || member == memberMySelf)
+			{
+				intSuccess--;
+				continue;
+			}
+			if (member.getPermission() == MemberRole.SUPERADMIN  && memberMySelf.getPermission() != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
+				continue;
+
+			// Process
+			if (isBan)
+				member.setBan(BanRule.PERMANENT);
+			else
+				member.setBan(BanRule.NORMAL);
+
+			// Process - DB Update
+			memberRepo.save(member);
+		}
+
+		// Return
+		if (intSuccess <= 0)
+			return false;
+		return true;
+	}
+
+	public boolean procSetAdmin(Principal principal, List<Integer> listMemberId, boolean isAdd)
+	{
+		// Log
+		log.info(BellLog.getLogHead() + listMemberId.size() + "명 관리자 설정(" + isAdd + ") 처리 (" + principal.getName() + ")");
+		
+		// Exception
+		
+		
+		// Field
+		int intSuccess = listMemberId.size();
+		Member memberMySelf = getMember(principal.getName());
+		
+		// Exception
+		if (memberMySelf.getPermission() != MemberRole.SUPERADMIN) // 권한 제어는 최고 관리자가 아니면 불가능
+			return false;
+
+		// Process
+		for (int intMemberId : listMemberId)
+		{
+			// Field
+			Member member;
+
+			// Init
+			member = getMember(intMemberId);
+			
+			// Exception
+			if (member == null || member == memberMySelf)
+			{
 				intSuccess--;
 				continue;
 			}
 
 			// Process
 			if (isAdd)
-				member.setIsAdmin("Y");
+			{
+				if (member.getPermission() == MemberRole.MEMBER)
+					member.setPermission(MemberRole.ADMIN);
+			}
 			else
-				member.setIsAdmin("N");
+				if (member.getPermission() == MemberRole.ADMIN)
+					member.setPermission(MemberRole.MEMBER);
 
 			// Process - DB Update
 			memberRepo.save(member);
@@ -385,7 +486,7 @@ public class MemberService implements UserDetailsService {
 		if (intSuccess <= 0)
 			return false;
 		return true;
-	}*/
+	}
 	
 	public Page<MemberLoginLog> getLoginLog(Principal principal, int intPage, int intCount)
 	{
@@ -411,7 +512,8 @@ public class MemberService implements UserDetailsService {
 		return pageMemberLoginLog;
 	}
 	
-	public long getLoginLogMaxPage(Principal principal, int intCount) {
+	public long getLoginLogMaxPage(Principal principal, int intCount)
+	{
 		// Field
 		Member member;
 		long longCount;
