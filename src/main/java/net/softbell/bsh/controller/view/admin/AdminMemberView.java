@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view.admin;
 
 import java.security.Principal;
 import java.util.List;

@@ -8,7 +8,36 @@
 	</head>
 	<body>
 		<th:block layout:fragment="content">
-			<h1>액션 내용이 들어설 예정입니다.</h1>
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Action</h1>
+				<a th:href="@{/action/create}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus"></i> 액션 생성</a>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<!-- Action Card Row Start -->
+			<div class="row">
+				<!-- Action Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCardActions)}" th:each="cardValue : ${listCardActions}">
+					<div class="card border-left-primary shadow h-100 py-2">
+						<div class="card-body">
+							<div class="row no-gutters align-items-center">
+								<div class="col mr-2">
+									<div class="font-weight-bold text-primary text-uppercase mb-1"><a th:href="@{/action/} + ${cardValue.actionId}" th:text="${cardValue.description}">액션 설명</a></div>
+								</div>
+								<div class="col-auto">
+									<button class="btn btn-primary" th:onclick="|setItem(${cardValue.actionId});|">실행</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Action Card End -->
+			</div>
+			<!-- Action Card Row End -->
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/page/js/action.js"></script>
 		</th:block>
 	</body>
 </html>

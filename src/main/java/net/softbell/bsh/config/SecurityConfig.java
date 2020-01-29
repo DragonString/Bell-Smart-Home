@@ -95,7 +95,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 				.logoutSuccessUrl("/login")
 				.invalidateHttpSession(true)
-				.deleteCookies(CustomConfig.SECURITY_COOKIE_NAME)
+				.deleteCookies(CustomConfig.SECURITY_COOKIE_NAME, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
 		.and()
             .exceptionHandling() // 예외 핸들링
             	.accessDeniedHandler(CustomAccessDeniedHandler.builder().G_API_URI("/api/rest/exception/denied").G_VIEW_URI("/denied").build())

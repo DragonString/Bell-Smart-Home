@@ -130,7 +130,7 @@ public class IotNodeServiceV1
 		baseMessage = iotMessageService.getBaseMessage(token, "SET", "VALUE", "ITEM", itemValueData);
 		getValueMessage = iotMessageService.getBaseMessage(token, "GET", "VALUE", "ITEM", pinId);
 		
-		// Send5
+		// Send
 		iotChannelCompV1.sendDataToken(baseMessage);
 		iotChannelCompV1.sendDataToken(getValueMessage);
 		
@@ -162,6 +162,50 @@ public class IotNodeServiceV1
 		
 		// DB - Update
 		nodeRepo.save(node);
+		
+		// Return
+		return true;
+	}
+	
+	public boolean setNodeAlias(long nodeId, String alias)
+	{
+		// Field
+		Node node;
+		
+		// Init
+		node = getNode(nodeId);
+		
+		// Exception
+		if (node == null)
+			return false;
+		
+		// Process
+		node.setAlias(alias);
+		
+		// DB - Update
+		nodeRepo.save(node);
+		
+		// Return
+		return true;
+	}
+	
+	public boolean setNodeItemAlias(long nodeItemId, String alias)
+	{
+		// Field
+		NodeItem nodeItem;
+		
+		// Init
+		nodeItem = getNodeItem(nodeItemId);
+		
+		// Exception
+		if (nodeItem == null)
+			return false;
+		
+		// Process
+		nodeItem.setAlias(alias);
+		
+		// DB - Update
+		nodeItemRepo.save(nodeItem);
 		
 		// Return
 		return true;

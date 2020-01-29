@@ -1,4 +1,4 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view.admin;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -11,9 +11,11 @@ import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.CenterSetting;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.Node;
+import net.softbell.bsh.dto.view.admin.CenterSettingSummaryCardDto;
 import net.softbell.bsh.iot.service.v1.IotCenterServiceV1;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.MemberService;
+import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -26,6 +28,7 @@ public class AdminView
 {
 	// Global Field
 	private final String G_BASE_PATH = "services/admin";
+	private final ViewDtoConverterService viewDtoConverterService;
 	private final MemberService memberService;
 	private final IotNodeServiceV1 iotNodeService;
 	private final IotCenterServiceV1 iotCenterService;
@@ -42,7 +45,7 @@ public class AdminView
 		pageMember = memberService.getMemberList(intPage, intCount);
 		
 		// Load
-		model.addAttribute("listMember", pageMember);
+		model.addAttribute("listCardMembers", viewDtoConverterService.convMemberSummaryCards(pageMember.getContent()));
 		
 		// Return
         return G_BASE_PATH + "/Member";
@@ -60,7 +63,7 @@ public class AdminView
 		pageNode = iotNodeService.getAllNodes(intPage, intCount);
 		
 		// Process
-		model.addAttribute("listNode", pageNode);
+		model.addAttribute("listCardNodes", viewDtoConverterService.convNodeManageSummaryCards(pageNode.getContent()));
 		
         return G_BASE_PATH + "/Node";
     }
@@ -81,7 +84,7 @@ public class AdminView
 		centerSetting = iotCenterService.getSetting();
 		
 		// Process
-		model.addAttribute("centerSetting", centerSetting);
+		model.addAttribute("cardCenterSetting", new CenterSettingSummaryCardDto(centerSetting));
 		
 		// Return
         return G_BASE_PATH + "/CenterSetting";

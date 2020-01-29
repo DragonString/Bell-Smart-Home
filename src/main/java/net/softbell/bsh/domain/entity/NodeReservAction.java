@@ -41,7 +41,7 @@ public class NodeReservAction implements Serializable
 	private long reservActionId;
 
 	@ManyToOne
-	@JoinColumn(name="reserv_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="reserv_id", nullable=false)
 	private NodeReserv nodeReserv;
 
 	@ManyToOne

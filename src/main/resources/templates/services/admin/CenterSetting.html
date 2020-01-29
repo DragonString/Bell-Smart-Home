@@ -8,6 +8,12 @@
 	</head>
 	<body>
 		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Center Setting</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
 			<!-- Center Setting Card Start -->
 			<div class="card shadow mb-4 text-dark">
 				<div class="card-header py-3">
@@ -26,55 +32,55 @@
 							<tbody>
 								<tr>
 									<td class="align-middle text-center">활성화 상태</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.isEnabled }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.isEnabled }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Action</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.iotAction }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotAction }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Control</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.iotControl }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotControl }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Monitor</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.iotMonitor }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotMonitor }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Node</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.iotNode }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotNode }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Reserv</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.iotReserv }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotReserv }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Trigger</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.iotTrigger }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotTrigger }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Auth Mode</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.webAuthMode }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webAuthMode }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Login Fail Ban Time</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.webLoginFailBanTime }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webLoginFailBanTime }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Login Fail Check Time</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.webLoginFailCheckTime }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webLoginFailCheckTime }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Login Fail Max Count</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.webLoginFailMaxCount }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webLoginFailMaxCount }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Maintenance</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.webMaintenance }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webMaintenance }"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Register</td>
-									<td class="align-middle text-center" th:text="${ centerSetting.webRegister }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webRegister }"></td>
 								</tr>
 							</tbody>
 						</table>

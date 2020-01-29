@@ -4,12 +4,40 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorate="~{layout/PrimaryLayout}">
 	<head>
-		<title>모니터</title>
+		<title>노드</title>
 	</head>
 	<body>
 		<th:block layout:fragment="content">
-			<h1>모니터 내용이 들어설 예정입니다.</h1>
-			<p th:text="${#strings.startsWith(#httpServletRequest.requestURI, '/monitor')}"></p>
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Monitor</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<!-- Monitor Row Start -->
+			<div class="row">
+				<!-- Node Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCardNodes)}" th:each="cardValue : ${listCardNodes}">
+					<div class="card shadow">
+						<div class="card-header bg-primary" th:text="${ cardValue.alias }"></div>
+						<div class="card-body text-dark">
+							<div class="card-text">
+								<div th:if="${ not #lists.isEmpty(cardValue.listItems) }" th:each="cardItemValue : ${cardValue.listItems}">
+									<span th:text="${cardItemValue.alias}"></span>
+									<div class="progress mb-4">
+										<div th:style="|width: ${cardItemValue.widthPercent}%|" class="progress-bar progress-bar-striped progress-bar-animated bg-success"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="card-footer">
+							<small class="text-muted" th:text="|노드 제어 모드: ${cardValue.controlMode}|"></small>
+						</div>
+					</div>
+				</div>
+				<!-- Node Card End -->
+			</div>
+			<!-- Monitor Row End -->
 		</th:block>
 	</body>
 </html>

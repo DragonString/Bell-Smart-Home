@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>예약</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Reservation Create</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<form method="POST" action="/reserv/create">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				<!-- Reservation Info Create Card Start -->
+				<div class="card shadow mb-4 text-dark">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">예약 정보</h6>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<!-- Reservation Info Create Table Start -->
+							<table class="table table-bordered" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th class="align-middle text-center w-25">이름</th>
+										<th class="align-middle text-center">값</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="align-middle text-center">활성화 상태</td>
+										<td class="align-middle text-center"><input name="enableStatus" type="checkbox" value="true" checked data-toggle="toggle" data-size="lg"></td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">설명</td>
+										<td class="align-middle text-center"><input type="text" name="description" class="form-control" placeholder="간략한 예약 설명"></td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">표현식</td>
+										<td class="align-middle text-center"><input type="text" name="expression" class="form-control" placeholder="표현식"></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Reservation Info Create Table End -->
+						</div>
+					</div>
+				</div>
+				<!-- Reservation Info Create Card End -->
+				<!-- Reservation Action Create Card Start -->
+				<div class="card shadow mb-4 text-dark">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">예약 액션</h6>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<!-- Reservation Action Create Table Start -->
+							<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th class="align-middle text-center w-25">사용 여부</th>
+										<th class="align-middle text-center">액션 설명</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:if="${not #lists.isEmpty(listCardActions)}" th:each="value,index : ${listCardActions}">
+										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
+										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Reservation Action Create Table End -->
+						</div>
+					</div>
+				</div>
+				<!-- Reservation Action Create Card End -->
+				<input class="form-control btn btn-primary" type="submit" value="저장">
+			</form>
+		</th:block>
+	</body>
+</html>

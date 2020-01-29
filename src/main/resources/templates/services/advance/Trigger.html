@@ -8,7 +8,13 @@
 	</head>
 	<body>
 		<th:block layout:fragment="content">
-			<h1>트리거 내용이 들어설 예정입니다.</h1>
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Trigger</h1>
+				<a th:href="@{/trigger/create}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus"></i> 트리거 생성</a>
+			</div>
+			<!-- Page Head Line End -->
+			
 		</th:block>
 	</body>
 </html>

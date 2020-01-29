@@ -43,9 +43,24 @@ public class JwtTokenProvider
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
     
-    public void setCookieAuth(HttpServletResponse response, Authentication authentication)
+    public void setCookieAuth(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
     {
-    	CookieUtil.create(response, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication), false, false, 60 * 60);
+    	// Field
+    	int maxAge, multiple;
+    	String strAutoLogin;
+    	
+    	// Init
+    	maxAge = 60 * 60;
+    	multiple = 1;
+    	strAutoLogin = CookieUtil.getValue(request, CustomConfig.AUTO_LOGIN_COOKIE_NAME);
+    	
+    	// Check
+    	if (strAutoLogin != null && strAutoLogin.equalsIgnoreCase("1"))
+    		multiple = 24 * 7;
+    	maxAge *= multiple;
+    	
+    	// Create
+    	CookieUtil.create(response, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication, multiple), false, false, maxAge);
     }
 
     // Jwt 토큰 생성
@@ -62,15 +77,24 @@ public class JwtTokenProvider
                 .compact();
     }
     
-    public String createToken(Authentication authentication)
+    public String createToken(Authentication authentication, int multiple)
     {
+    	// Field
         Claims claims = Jwts.claims().setSubject(authentication.getName());
+        
+        // Init
         claims.put("roles", authentication.getAuthorities());
         Date now = new Date();
+        
+        // Exception
+        if (multiple < 1)
+        	multiple = 1;
+        
+        // Return
         return Jwts.builder()
                 .setClaims(claims) // 데이터
                 .setIssuedAt(now) // 토큰 발행일자
-                .setExpiration(new Date(now.getTime() + tokenValidMilisecond)) // set Expire Time
+                .setExpiration(new Date(now.getTime() + tokenValidMilisecond * multiple)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
                 .compact();
     }

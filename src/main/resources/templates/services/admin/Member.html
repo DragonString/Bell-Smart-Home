@@ -11,6 +11,12 @@
 	</head>
 	<body>
 		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Member Manage</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
 			<!-- Member Card Start -->
 			<div class="card shadow mb-4 text-dark">
 				<div class="card-header py-3">
@@ -34,7 +40,7 @@
 					 	   			</tr>
 								</thead>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listMember)}" th:each="member : ${listMember}">
+									<tr th:if="${not #lists.isEmpty(listCardMembers)}" th:each="member : ${listCardMembers}">
 										<td class="align-middle text-center"><input type="checkbox" name="intMemberId" th:value="${ member.memberId }" /></td>
 										<td class="align-middle text-center" th:text="${ member.memberId }"></td>
 										<td class="align-middle text-center" th:text="${ member.userId }"></td>

@@ -8,6 +8,12 @@
 	</head>
 	<body>
 		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Profile</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
 			<div class="row justify-content-center">
 				<div class="col-xl-5 col-lg-7 col-md-8">
 					<!-- Profile Card Start -->
@@ -22,19 +28,19 @@
 									<tbody>
 										<tr>
 							    			<td class="align-middle text-center">이름</td>
-							    			<td class="align-middle" th:text="${ memberInfo.name }"></td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.name }"></td>
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">닉네임</td>
-							    			<td class="align-middle" th:text="${ memberInfo.nickname }"></td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.nickname }"></td>
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">아이디</td>
-							    			<td class="align-middle" th:text="${ memberInfo.userId }"></td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.userId }"></td>
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">이메일</td>
-							    			<td class="align-middle" th:text="${ memberInfo.email }"></td>
+							    			<td class="align-middle" th:text="${ cardMemberProfile.email }"></td>
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">비밀번호</td>
@@ -42,21 +48,21 @@
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">정지여부</td>
-											<td th:if="${ memberInfo.ban == T(net.softbell.bsh.domain.BanRule).NORMAL }" class="align-middle text-success">정상</td>
-											<td th:if="${ memberInfo.ban == T(net.softbell.bsh.domain.BanRule).TEMP }" class="align-middle text-danger">임시 정지</td>
-											<td th:if="${ memberInfo.ban == T(net.softbell.bsh.domain.BanRule).PERMANENT }" class="align-middle text-danger">영구 정지</td>
+											<td th:if="${ cardMemberProfile.ban == T(net.softbell.bsh.domain.BanRule).NORMAL }" class="align-middle text-success">정상</td>
+											<td th:if="${ cardMemberProfile.ban == T(net.softbell.bsh.domain.BanRule).TEMP }" class="align-middle text-danger">임시 정지</td>
+											<td th:if="${ cardMemberProfile.ban == T(net.softbell.bsh.domain.BanRule).PERMANENT }" class="align-middle text-danger">영구 정지</td>
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">권한</td>
-							    			<td th:if="${ memberInfo.permission == T(net.softbell.bsh.domain.MemberRole).SUPERADMIN }" class="align-middle text-danger">최고 관리자</td>
-											<td th:if="${ memberInfo.permission == T(net.softbell.bsh.domain.MemberRole).ADMIN }" class="align-middle text-danger">관리자</td>
-											<td th:if="${ memberInfo.permission == T(net.softbell.bsh.domain.MemberRole).MEMBER }" class="align-middle text-success">회원</td>
-											<td th:if="${ memberInfo.permission == T(net.softbell.bsh.domain.MemberRole).WAIT }" class="align-middle text-secondary">승인대기</td>
-											<td th:if="${ memberInfo.permission == T(net.softbell.bsh.domain.MemberRole).BAN }" class="align-middle text-warning">계정 정지</td>
+							    			<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).SUPERADMIN }" class="align-middle text-danger">최고 관리자</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).ADMIN }" class="align-middle text-danger">관리자</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).MEMBER }" class="align-middle text-success">회원</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).WAIT }" class="align-middle text-secondary">승인대기</td>
+											<td th:if="${ cardMemberProfile.permission == T(net.softbell.bsh.domain.MemberRole).BAN }" class="align-middle text-warning">계정 정지</td>
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">가입일</td>
-							    			<td class="align-middle" th:text="${ #dates.format(memberInfo.registerDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
+							    			<td class="align-middle" th:text="${ #dates.format(cardMemberProfile.registerDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
 							    		</tr>
 							    		<tr>
 							    			<td class="align-middle text-center">계정</td>

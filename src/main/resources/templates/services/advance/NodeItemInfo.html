@@ -8,6 +8,12 @@
 	</head>
 	<body>
 		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Node Item History</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
 			<!-- Node Item History Card Start -->
 			<div class="card shadow mb-4 text-dark">
 				<div class="card-header py-3">
@@ -20,7 +26,7 @@
 					</div>
 					<!-- Node Item History Chart End -->
 					<hr>
-					<p>아이템 별칭: <span th:text="${nodeItem.alias}"></span></p>
+					<p>아이템 별칭: <span th:text="${cardNodeItemHistory.alias}"></span></p>
 				</div>
 			</div>
 			<!-- Node Item History Card End -->
@@ -31,12 +37,12 @@
 			<script th:inline="javascript">
 				/*<![CDATA[*/
 				// Field
-				var chartLabel = /*[[${nodeItem.alias}]]*/;
+				var chartLabel = /*[[${cardNodeItemHistory.alias}]]*/;
 				var chartLabels = [];
 				var chartData = [];
 				
 				// Load
-				    /*[# th:each="itemValue : ${listNodeItemHistory}"]*/
+				    /*[# th:each="itemValue : ${cardNodeItemHistory.listItems}"]*/
 						chartLabels.push(/*[[${#dates.format(itemValue.receiveDate, 'MM/dd HH:mm:ss')}]]*/);
 						chartData.push(/*[[${itemValue.pinStatus}]]*/);
 				    /*[/]*/

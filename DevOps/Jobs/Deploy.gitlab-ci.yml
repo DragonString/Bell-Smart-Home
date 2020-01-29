@@ -27,6 +27,28 @@ review:
     variables:
       - $REVIEW_DISABLED
 
+emergency_stop_review:
+  extends: .auto-deploy
+  stage: review
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo 'Bell Soft Network DevOps Cleanup Stage'
+    - auto-deploy initialize_tiller
+    - auto-deploy delete
+  environment:
+    name: review/$CI_COMMIT_REF_NAME
+    action: stop
+  when: manual
+  allow_failure: true
+  only:
+    refs:
+      - review_main
+    kubernetes: active
+  except:
+    variables:
+      - $REVIEW_DISABLED
+
 stop_review:
   extends: .auto-deploy
   stage: cleanup

@@ -8,4 +8,5 @@ public class CustomConfig
 {
 	public static final String SECURITY_HEADER_NAME = "X-AUTH-TOKEN";
 	public static final String SECURITY_COOKIE_NAME = "X-AUTH-TOKEN";
+	public static final String AUTO_LOGIN_COOKIE_NAME = "AutoLogin";
 }
