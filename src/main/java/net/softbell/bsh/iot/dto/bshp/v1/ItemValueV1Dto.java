@@ -18,5 +18,5 @@ import lombok.Setter;
 public class ItemValueV1Dto
 {
 	private byte pinId;
-	private short pinStatus;
+	private long pinStatus;
 }

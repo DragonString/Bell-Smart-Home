@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,11 +52,11 @@ public class NodeGroupItem implements Serializable
 	@Column(name="assign_date", nullable=false)
 	private Date assignDate;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="node_group_id", nullable=false, insertable=false, updatable=false)
 	private NodeGroup nodeGroup;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="node_id", nullable=false, insertable=false, updatable=false)
 	private Node node;
 }

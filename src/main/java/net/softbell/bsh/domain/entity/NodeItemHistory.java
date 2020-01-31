@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -44,13 +45,13 @@ public class NodeItemHistory implements Serializable
 	private long itemHistoryId;
 
 	@Column(name="pin_status", nullable=false)
-	private short pinStatus;
+	private long pinStatus;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="receive_date", nullable=false)
 	private Date receiveDate;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false)
 	private NodeItem nodeItem;
 }

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -45,13 +46,13 @@ public class NodeActionItem implements Serializable
 	private long actionItemId;
 
 	@Column(name="pin_status", nullable=false)
-	private short pinStatus;
+	private long pinStatus;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false)
 	private NodeItem nodeItem;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="action_id", nullable=false)
 	private NodeAction nodeAction;
 }

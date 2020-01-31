@@ -23,7 +23,7 @@ public class NodeItemCardDto
 	private PinTypeRule pinType;
 	private PinModeRule pinMode;
 	private byte controlMode;
-	private short lastStatus;
+	private long lastStatus;
 	
 	public NodeItemCardDto(NodeItem entity)
 	{

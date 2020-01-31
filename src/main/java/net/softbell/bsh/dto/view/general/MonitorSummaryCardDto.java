@@ -44,7 +44,7 @@ public class MonitorSummaryCardDto
 	public class MonitorCardItemDto
 	{
 		private String alias;
-		private short lastStatus;
+		private long lastStatus;
 		private int widthPercent;
 		
 		public MonitorCardItemDto(NodeItem entity)
@@ -81,7 +81,7 @@ public class MonitorSummaryCardDto
 						else
 							this.widthPercent = 100;
 					else if (entity.getPinType() == PinTypeRule.ANALOG)
-						this.widthPercent = this.lastStatus / 10;
+						this.widthPercent = (int) (this.lastStatus / 10);
 						
 					break;
 					

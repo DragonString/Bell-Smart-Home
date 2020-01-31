@@ -17,8 +17,8 @@ public class ActionItemCardDto
 	private long nodeId;
 	private String nodeAlias;
 	private String itemAlias;
-	private short pinStatus;
-	private short pinMin, pinMax;
+	private long pinStatus;
+	private long pinMin, pinMax;
 	
 	public ActionItemCardDto(NodeItem entity)
 	{

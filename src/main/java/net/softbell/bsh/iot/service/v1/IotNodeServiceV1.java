@@ -106,7 +106,7 @@ public class IotNodeServiceV1
 		return listNodeItemHistory;
 	}
 	
-	public boolean setItemValue(long itemId, short itemValue)
+	public boolean setItemValue(long itemId, long itemValue)
 	{
 		// Field
 		Optional<NodeItem> optNodeItem;

@@ -67,7 +67,7 @@ public class NodeItemHistoryCardDto
 	public class NodeItemHistoryCardItemDto
 	{
 		private Date receiveDate;
-		private short pinStatus;
+		private long pinStatus;
 		
 		public NodeItemHistoryCardItemDto(NodeItemHistory entity)
 		{
