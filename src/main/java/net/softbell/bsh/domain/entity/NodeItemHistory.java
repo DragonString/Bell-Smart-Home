@@ -44,8 +44,8 @@ public class NodeItemHistory implements Serializable
 	@Column(name="item_history_id", unique=true, nullable=false)
 	private long itemHistoryId;
 
-	@Column(name="pin_status", nullable=false)
-	private long pinStatus;
+	@Column(name="item_status", nullable=false)
+	private long itemStatus;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="receive_date", nullable=false)

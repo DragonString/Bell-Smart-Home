@@ -38,7 +38,7 @@ public class TokenStompV1
 		for (ItemInfoV1Dto itemInfo : listItemInfo)
 		{
 			iotTokenServiceV1.setItemInfo(token, itemInfo);
-			iotTokenServiceV1.reqItemValue(token, itemInfo.getPinId());
+			iotTokenServiceV1.reqItemValue(token, itemInfo.getItemIndex());
 		}
 	}
 	

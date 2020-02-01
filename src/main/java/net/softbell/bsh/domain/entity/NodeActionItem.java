@@ -45,8 +45,8 @@ public class NodeActionItem implements Serializable
 	@Column(name="action_item_id", unique=true, nullable=false)
 	private long actionItemId;
 
-	@Column(name="pin_status", nullable=false)
-	private long pinStatus;
+	@Column(name="item_status", nullable=false)
+	private long itemStatus;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false)

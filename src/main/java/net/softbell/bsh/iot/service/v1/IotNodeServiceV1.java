@@ -125,7 +125,7 @@ public class IotNodeServiceV1
 		
 		// Process
 		token = optNodeItem.get().getNode().getToken();
-		pinId = optNodeItem.get().getPinId();
+		pinId = optNodeItem.get().getItemIndex();
 		itemValueData = ItemValueV1Dto.builder().pinId(pinId).pinStatus(itemValue).build();
 		baseMessage = iotMessageService.getBaseMessage(token, "SET", "VALUE", "ITEM", itemValueData);
 		getValueMessage = iotMessageService.getBaseMessage(token, "GET", "VALUE", "ITEM", pinId);

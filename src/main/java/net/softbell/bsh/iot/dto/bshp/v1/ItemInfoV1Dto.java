@@ -16,8 +16,8 @@ import lombok.Setter;
 public class ItemInfoV1Dto
 {
 	private Byte controlMode;
-	private Byte pinId;
-	private Integer pinMode;
-	private Integer pinType;
-	private String pinName;
+	private Byte itemIndex;
+	private Integer itemCategory;
+	private Integer itemType;
+	private String itemName;
 }

@@ -20,8 +20,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import net.softbell.bsh.domain.PinModeRule;
-import net.softbell.bsh.domain.PinTypeRule;
+import net.softbell.bsh.domain.ItemCategoryRule;
+import net.softbell.bsh.domain.ItemModeRule;
+import net.softbell.bsh.domain.ItemTypeRule;
 
 
 /**
@@ -51,17 +52,20 @@ public class NodeItem implements Serializable
 	@Column(name="control_mode", nullable=false)
 	private byte controlMode;
 
-	@Column(name="pin_id", nullable=false)
-	private byte pinId;
+	@Column(name="item_index", nullable=false)
+	private byte itemIndex;
 
-	@Column(name="pin_mode", nullable=false)
-	private PinModeRule pinMode;
+	@Column(name="item_mode", nullable=false)
+	private ItemModeRule itemMode;
+	
+	@Column(name="item_category", nullable=false)
+	private ItemCategoryRule itemCategory;
 
-	@Column(name="pin_name", nullable=false, length=50)
-	private String pinName;
+	@Column(name="item_name", nullable=false, length=50)
+	private String itemName;
 
-	@Column(name="pin_type", nullable=false)
-	private PinTypeRule pinType;
+	@Column(name="item_type", nullable=false)
+	private ItemTypeRule itemType;
 
 	@OneToMany(mappedBy="nodeItem")
 	private List<NodeActionItem> nodeActionItems;

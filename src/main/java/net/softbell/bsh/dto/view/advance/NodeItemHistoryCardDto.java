@@ -77,7 +77,7 @@ public class NodeItemHistoryCardDto
 			
 			// Convert
 			this.receiveDate = entity.getReceiveDate();
-			this.pinStatus = entity.getPinStatus();
+			this.pinStatus = entity.getItemStatus();
 		}
 	}
 }

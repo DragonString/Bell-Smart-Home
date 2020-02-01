@@ -4,8 +4,8 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.softbell.bsh.domain.PinModeRule;
-import net.softbell.bsh.domain.PinTypeRule;
+import net.softbell.bsh.domain.ItemCategoryRule;
+import net.softbell.bsh.domain.ItemTypeRule;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
 
@@ -19,9 +19,9 @@ public class NodeItemCardDto
 {
 	private long itemId;
 	private String alias;
-	private String pinName;
-	private PinTypeRule pinType;
-	private PinModeRule pinMode;
+	private String itemName;
+	private ItemTypeRule itemType;
+	private ItemCategoryRule itemCategory;
 	private byte controlMode;
 	private long lastStatus;
 	
@@ -42,10 +42,10 @@ public class NodeItemCardDto
 		// Convert
 		this.itemId = entity.getItemId();
 		this.alias = entity.getAlias();
-		this.pinName = entity.getPinName();
-		this.pinType = entity.getPinType();
-		this.pinMode = entity.getPinMode();
+		this.itemName = entity.getItemName();
+		this.itemType = entity.getItemType();
+		this.itemCategory = entity.getItemCategory();
 		this.controlMode = entity.getControlMode();
-		this.lastStatus = lastHistory.getPinStatus();
+		this.lastStatus = lastHistory.getItemStatus();
 	}
 }

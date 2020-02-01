@@ -5,7 +5,6 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.softbell.bsh.domain.PinTypeRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
@@ -63,10 +62,10 @@ public class MonitorSummaryCardDto
 			
 			// Convert
 			this.alias = entity.getAlias();
-			this.lastStatus = lastHistory.getPinStatus();
-			switch (entity.getPinMode())
+			this.lastStatus = lastHistory.getItemStatus();
+			switch (entity.getItemMode())
 			{
-				case OUTPUT:
+				case DIGITAL:
 					if (this.lastStatus == 0)
 						this.widthPercent = 0;
 					else
@@ -74,14 +73,8 @@ public class MonitorSummaryCardDto
 					
 					break;
 					
-				case INPUT:
-					if (entity.getPinType() == PinTypeRule.DIGITAL)
-						if (this.lastStatus == 0)
-							this.widthPercent = 0;
-						else
-							this.widthPercent = 100;
-					else if (entity.getPinType() == PinTypeRule.ANALOG)
-						this.widthPercent = (int) (this.lastStatus / 10);
+				case ANALOG:
+					this.widthPercent = (int) (this.lastStatus / 10);
 						
 					break;
 					
