@@ -111,7 +111,7 @@ public class IotNodeServiceV1
 		// Field
 		Optional<NodeItem> optNodeItem;
 		BaseV1Dto baseMessage;
-		BaseV1Dto getValueMessage;
+//		BaseV1Dto getValueMessage;
 		ItemValueV1Dto itemValueData;
 		String token;
 		byte pinId;
@@ -126,13 +126,13 @@ public class IotNodeServiceV1
 		// Process
 		token = optNodeItem.get().getNode().getToken();
 		pinId = optNodeItem.get().getItemIndex();
-		itemValueData = ItemValueV1Dto.builder().pinId(pinId).pinStatus(itemValue).build();
+		itemValueData = ItemValueV1Dto.builder().itemIndex(pinId).itemStatus(itemValue).build();
 		baseMessage = iotMessageService.getBaseMessage(token, "SET", "VALUE", "ITEM", itemValueData);
-		getValueMessage = iotMessageService.getBaseMessage(token, "GET", "VALUE", "ITEM", pinId);
+//		getValueMessage = iotMessageService.getBaseMessage(token, "GET", "VALUE", "ITEM", pinId);
 		
 		// Send
 		iotChannelCompV1.sendDataToken(baseMessage);
-		iotChannelCompV1.sendDataToken(getValueMessage);
+//		iotChannelCompV1.sendDataToken(getValueMessage);
 		
 		// Return
 		return true;
@@ -206,6 +206,31 @@ public class IotNodeServiceV1
 		
 		// DB - Update
 		nodeItemRepo.save(nodeItem);
+		
+		// Return
+		return true;
+	}
+
+	public boolean restartNode(long nodeId)
+	{
+		// Field
+		Optional<Node> optNode;
+		BaseV1Dto baseMessage;
+		String token;
+		
+		// Init
+		optNode = nodeRepo.findById(nodeId);
+		
+		// Exception
+		if (!optNode.isPresent())
+			return false;
+		
+		// Process
+		token = optNode.get().getToken();
+		baseMessage = iotMessageService.getBaseMessage(token, "ACT", "SYS", "RESTART", "NOW");
+		
+		// Send
+		iotChannelCompV1.sendDataToken(baseMessage);
 		
 		// Return
 		return true;

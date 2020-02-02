@@ -17,6 +17,6 @@ import lombok.Setter;
 @Setter
 public class ItemValueV1Dto
 {
-	private byte pinId;
-	private long pinStatus;
+	private byte itemIndex;
+	private long itemStatus;
 }

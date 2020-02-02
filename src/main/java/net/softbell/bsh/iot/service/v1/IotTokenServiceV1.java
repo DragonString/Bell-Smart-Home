@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.ItemCategoryRule;
+import net.softbell.bsh.domain.ItemModeRule;
 import net.softbell.bsh.domain.ItemTypeRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
@@ -93,6 +94,7 @@ public class IotTokenServiceV1
 		// Process
 		node.setControlMode(nodeInfo.getControlMode());
 		node.setNodeName(nodeInfo.getNodeName());
+		node.setVersion(nodeInfo.getVersion());
 		
 		// DB - Save
 		nodeRepo.save(node);
@@ -124,6 +126,7 @@ public class IotTokenServiceV1
 				nodeItem.setControlMode(itemInfo.getControlMode());
 				nodeItem.setItemIndex(itemInfo.getItemIndex());
 				nodeItem.setItemCategory(ItemCategoryRule.ofLegacyCode(itemInfo.getItemCategory()));
+				nodeItem.setItemMode(ItemModeRule.ofLegacyCode(itemInfo.getItemMode()));
 				nodeItem.setItemName(itemInfo.getItemName());
 				nodeItem.setItemType(ItemTypeRule.ofLegacyCode(itemInfo.getItemType()));
 				
@@ -139,6 +142,7 @@ public class IotTokenServiceV1
 							.controlMode(itemInfo.getControlMode())
 							.itemIndex(itemInfo.getItemIndex())
 							.itemCategory(ItemCategoryRule.ofLegacyCode(itemInfo.getItemCategory()))
+							.itemMode(ItemModeRule.ofLegacyCode(itemInfo.getItemMode()))
 							.itemName(itemInfo.getItemName())
 							.itemType(ItemTypeRule.ofLegacyCode(itemInfo.getItemType()))
 							.alias(itemInfo.getItemName())
@@ -184,7 +188,7 @@ public class IotTokenServiceV1
 		if (node == null)
 			return false;
 		
-		nodeItem = nodeItemRepo.findByNodeAndItemId(node, itemValue.getPinId());
+		nodeItem = nodeItemRepo.findByNodeAndItemIndex(node, itemValue.getItemIndex());
 		
 		if (nodeItem == null)
 			return false;
@@ -192,7 +196,7 @@ public class IotTokenServiceV1
 		// Process
 		nodeItemHistory = NodeItemHistory.builder()
 										.nodeItem(nodeItem)
-										.itemStatus(itemValue.getPinStatus())
+										.itemStatus(itemValue.getItemStatus())
 										.receiveDate(new Date())
 										.build();
 		

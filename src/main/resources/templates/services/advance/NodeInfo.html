@@ -67,6 +67,10 @@
 									<td class="align-middle text-center" th:text="${ cardNodeInfo.controlMode }"></td>
 								</tr>
 								<tr>
+									<td class="align-middle text-center">라이브러리 버전</td>
+									<td class="align-middle text-center" th:text="${ cardNodeInfo.version }"></td>
+								</tr>
+								<tr>
 									<td class="align-middle text-center">등록일</td>
 									<td class="align-middle text-center" th:text="${ #dates.format(cardNodeInfo.registerDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
 								</tr>
@@ -74,6 +78,10 @@
 									<td class="align-middle text-center">승인일</td>
 									<td class="align-middle text-center text-success" th:if="${ not #strings.isEmpty(cardNodeInfo.approvalDate) }" th:text="${ #dates.format(cardNodeInfo.approvalDate, 'yyyy.MM.dd HH:mm:ss') }"></td>
 									<td class="align-middle text-center text-danger" th:if="${ #strings.isEmpty(cardNodeInfo.approvalDate) }">미승인</td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">제어</td>
+									<td class="align-middle text-center"><button class="btn btn-danger nodeRestart" th:value="${ cardNodeInfo.nodeId }">노드 재시작</button></td>
 								</tr>
 							</tbody>
 						</table>
@@ -95,6 +103,7 @@
 								<tr>
 									<th class="align-middle text-center">별칭</th>
 									<th class="align-middle text-center">아이템 이름</th>
+									<th class="align-middle text-center">아이템 모드</th>
 									<th class="align-middle text-center">아이템 타입</th>
 									<th class="align-middle text-center">아이템 카테고리</th>
 									<th class="align-middle text-center">컨트롤 모드</th>
@@ -105,6 +114,7 @@
 								<tr>
 									<th class="align-middle text-center">별칭</th>
 									<th class="align-middle text-center">아이템 이름</th>
+									<th class="align-middle text-center">아이템 모드</th>
 									<th class="align-middle text-center">아이템 타입</th>
 									<th class="align-middle text-center">아이템 카테고리</th>
 									<th class="align-middle text-center">컨트롤 모드</th>
@@ -115,10 +125,11 @@
 								<tr th:if="${not #lists.isEmpty(listCardNodeItems)}" th:each="cardValue : ${listCardNodeItems}">
 									<td class="align-middle text-center"><a th:href="|item/${ cardValue.itemId }|" th:text="${ cardValue.alias }"></a></td>
 									<td class="align-middle text-center" th:text="${ cardValue.itemName }"></td>
+									<td class="align-middle text-center" th:text="${ cardValue.itemMode }"></td>
 									<td class="align-middle text-center" th:text="${ cardValue.itemType }"></td>
 									<td class="align-middle text-center" th:text="${ cardValue.itemCategory }"></td>
 									<td class="align-middle text-center" th:text="${ cardValue.controlMode }"></td>
-									<td class="align-middle text-center"><input th:checked="${ cardValue.lastStatus == 1 }" th:disabled="${ cardValue.itemCategory == T(net.softbell.bsh.domain.ItemCategoryRule).USER }" class="nodeItem" type="checkbox" data-toggle="toggle" data-size="lg" th:value="${cardValue.itemId}"></td>
+									<td class="align-middle text-center"><input th:checked="${ cardValue.lastStatus == 1 }" th:disabled="${ cardValue.itemCategory != T(net.softbell.bsh.domain.ItemCategoryRule).CONTROL }" class="nodeItem" type="checkbox" data-toggle="toggle" data-size="lg" th:value="${cardValue.itemId}"></td>
 								</tr>
 							</tbody>
 						</table>

@@ -17,6 +17,7 @@ public class ItemInfoV1Dto
 {
 	private Byte controlMode;
 	private Byte itemIndex;
+	private Integer itemMode;
 	private Integer itemCategory;
 	private Integer itemType;
 	private String itemName;

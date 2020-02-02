@@ -3,6 +3,7 @@ package net.softbell.bsh.dto.view.admin;
 import lombok.Getter;
 import lombok.Setter;
 import net.softbell.bsh.domain.ItemCategoryRule;
+import net.softbell.bsh.domain.ItemModeRule;
 import net.softbell.bsh.domain.ItemTypeRule;
 import net.softbell.bsh.domain.entity.NodeItem;
 
@@ -17,6 +18,7 @@ public class NodeManageItemCardDto
 	private long itemId;
 	private String alias;
 	private String itemName;
+	private ItemModeRule itemMode;
 	private ItemTypeRule itemType;
 	private ItemCategoryRule itemCategory;
 	private byte controlMode;
@@ -31,6 +33,7 @@ public class NodeManageItemCardDto
 		this.itemId = entity.getItemId();
 		this.alias = entity.getAlias();
 		this.itemName = entity.getItemName();
+		this.itemMode = entity.getItemMode();
 		this.itemType = entity.getItemType();
 		this.itemCategory = entity.getItemCategory();
 		this.controlMode = entity.getControlMode();

@@ -18,4 +18,5 @@ public class NodeInfoV1Dto
 	private String uid;
 	private byte controlMode;
 	private String nodeName;
+	private String version;
 }

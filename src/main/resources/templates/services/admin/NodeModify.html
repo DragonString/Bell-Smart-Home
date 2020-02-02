@@ -93,9 +93,10 @@
 							<thead>
 								<tr>
 									<th class="align-middle text-center">별칭</th>
-									<th class="align-middle text-center">핀 이름</th>
-									<th class="align-middle text-center">핀 타입</th>
-									<th class="align-middle text-center">핀 모드</th>
+									<th class="align-middle text-center">아이템 이름</th>
+									<th class="align-middle text-center">아이템 카테고리</th>
+									<th class="align-middle text-center">아이템 타입</th>
+									<th class="align-middle text-center">아이템 모드</th>
 									<th class="align-middle text-center">컨트롤 모드</th>
 									<th class="align-middle text-center">수정</th>
 								</tr>
@@ -103,9 +104,10 @@
 							<tfoot>
 								<tr>
 									<th class="align-middle text-center">별칭</th>
-									<th class="align-middle text-center">핀 이름</th>
-									<th class="align-middle text-center">핀 타입</th>
-									<th class="align-middle text-center">핀 모드</th>
+									<th class="align-middle text-center">아이템 이름</th>
+									<th class="align-middle text-center">아이템 카테고리</th>
+									<th class="align-middle text-center">아이템 타입</th>
+									<th class="align-middle text-center">아이템 모드</th>
 									<th class="align-middle text-center">컨트롤 모드</th>
 									<th class="align-middle text-center">수정</th>
 								</tr>
@@ -118,9 +120,10 @@
 											<input type="hidden" name="id" th:value="${cardNodeInfo.nodeId}" />
 											<input type="text" class="form-control text-center" name="alias" th:value="${ itemValue.alias }">
 										</td>
-										<td class="align-middle text-center" th:text="${ itemValue.pinName }"></td>
-										<td class="align-middle text-center" th:text="${ itemValue.pinType }"></td>
-										<td class="align-middle text-center" th:text="${ itemValue.pinMode }"></td>
+										<td class="align-middle text-center" th:text="${ itemValue.itemName }"></td>
+										<td class="align-middle text-center" th:text="${ itemValue.itemCategory }"></td>
+										<td class="align-middle text-center" th:text="${ itemValue.itemType }"></td>
+										<td class="align-middle text-center" th:text="${ itemValue.itemMode }"></td>
 										<td class="align-middle text-center" th:text="${ itemValue.controlMode }"></td>
 										<td class="align-middle text-center"><input class="form-control btn btn-primary" type="submit" value="저장"></td>
 									</form>
