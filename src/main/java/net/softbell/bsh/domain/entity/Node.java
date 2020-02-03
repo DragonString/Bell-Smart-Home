@@ -53,6 +53,9 @@ public class Node implements Serializable
 
 	@Column(name="enable_status", nullable=false)
 	private EnableStatusRule enableStatus;
+	
+	@Column(name="version", nullable=false)
+	private String version;
 
 	@Column(name="node_name", nullable=false, length=50)
 	private String nodeName;

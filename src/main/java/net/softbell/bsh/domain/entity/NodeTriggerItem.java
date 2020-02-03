@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -47,11 +48,11 @@ public class NodeTriggerItem implements Serializable
 	@Column(nullable=false, length=50)
 	private String alias;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false, insertable=false, updatable=false)
 	private NodeItem nodeItem;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="trigger_id", nullable=false, insertable=false, updatable=false)
 	private NodeTrigger nodeTrigger;
 }

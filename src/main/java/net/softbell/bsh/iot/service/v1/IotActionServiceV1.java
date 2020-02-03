@@ -137,7 +137,7 @@ public class IotActionServiceV1
 					{
 						nodeActionItem = NodeActionItem.builder()
 														.nodeItem(optNodeItem.get())
-														.pinStatus(value.getItemStatus())
+														.itemStatus(value.getItemStatus())
 														.nodeAction(nodeAction)
 															.build();
 						
@@ -221,7 +221,7 @@ public class IotActionServiceV1
 					{
 						nodeActionItem = NodeActionItem.builder()
 														.nodeItem(optNodeItem.get())
-														.pinStatus(value.getItemStatus())
+														.itemStatus(value.getItemStatus())
 														.nodeAction(nodeAction)
 															.build();
 						
@@ -285,7 +285,7 @@ public class IotActionServiceV1
 		
 		// Process
 		for (NodeActionItem actionItem : listNodeActionItem)
-			if (!iotNodeServiceV1.setItemValue(actionItem.getNodeItem().getItemId(), actionItem.getPinStatus()))
+			if (!iotNodeServiceV1.setItemValue(actionItem.getNodeItem().getItemId(), actionItem.getItemStatus()))
 				isSuccess = false;
 		
 		// Return

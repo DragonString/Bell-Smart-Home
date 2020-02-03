@@ -17,8 +17,8 @@ public class ActionItemCardDto
 	private long nodeId;
 	private String nodeAlias;
 	private String itemAlias;
-	private short pinStatus;
-	private short pinMin, pinMax;
+	private long pinStatus;
+	private long pinMin, pinMax;
 	
 	public ActionItemCardDto(NodeItem entity)
 	{
@@ -46,7 +46,7 @@ public class ActionItemCardDto
 		this.nodeId = entity.getNodeItem().getNode().getNodeId();
 		this.nodeAlias = entity.getNodeItem().getNode().getAlias();
 		this.itemAlias = entity.getNodeItem().getAlias();
-		this.pinStatus = entity.getPinStatus();
+		this.pinStatus = entity.getItemStatus();
 		this.pinMin = 0;
 		this.pinMax = 1024;
 	}

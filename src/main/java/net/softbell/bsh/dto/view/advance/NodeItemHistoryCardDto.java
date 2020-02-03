@@ -67,7 +67,7 @@ public class NodeItemHistoryCardDto
 	public class NodeItemHistoryCardItemDto
 	{
 		private Date receiveDate;
-		private short pinStatus;
+		private long pinStatus;
 		
 		public NodeItemHistoryCardItemDto(NodeItemHistory entity)
 		{
@@ -77,7 +77,7 @@ public class NodeItemHistoryCardDto
 			
 			// Convert
 			this.receiveDate = entity.getReceiveDate();
-			this.pinStatus = entity.getPinStatus();
+			this.pinStatus = entity.getItemStatus();
 		}
 	}
 }

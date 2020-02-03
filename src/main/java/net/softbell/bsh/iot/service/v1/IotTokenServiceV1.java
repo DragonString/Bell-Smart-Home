@@ -7,8 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.softbell.bsh.domain.PinModeRule;
-import net.softbell.bsh.domain.PinTypeRule;
+import net.softbell.bsh.domain.ItemCategoryRule;
+import net.softbell.bsh.domain.ItemModeRule;
+import net.softbell.bsh.domain.ItemTypeRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
@@ -93,6 +94,7 @@ public class IotTokenServiceV1
 		// Process
 		node.setControlMode(nodeInfo.getControlMode());
 		node.setNodeName(nodeInfo.getNodeName());
+		node.setVersion(nodeInfo.getVersion());
 		
 		// DB - Save
 		nodeRepo.save(node);
@@ -119,16 +121,17 @@ public class IotTokenServiceV1
 		
 		// Process
 		for (NodeItem nodeItem : node.getNodeItems()) // TODO 불필요한 이 반복 부분 제거하고 NodeItemRepo에 조회절 추가하기
-			if (nodeItem.getPinId() == itemInfo.getPinId()) // DB Update
+			if (nodeItem.getItemIndex() == itemInfo.getItemIndex()) // DB Update
 			{
 				nodeItem.setControlMode(itemInfo.getControlMode());
-				nodeItem.setPinId(itemInfo.getPinId());
-				nodeItem.setPinMode(PinModeRule.ofLegacyCode(itemInfo.getPinMode()));
-				nodeItem.setPinName(itemInfo.getPinName());
-				nodeItem.setPinType(PinTypeRule.ofLegacyCode(itemInfo.getPinType()));
+				nodeItem.setItemIndex(itemInfo.getItemIndex());
+				nodeItem.setItemCategory(ItemCategoryRule.ofLegacyCode(itemInfo.getItemCategory()));
+				nodeItem.setItemMode(ItemModeRule.ofLegacyCode(itemInfo.getItemMode()));
+				nodeItem.setItemName(itemInfo.getItemName());
+				nodeItem.setItemType(ItemTypeRule.ofLegacyCode(itemInfo.getItemType()));
 				
 				nodeItemRepo.save(nodeItem);
-				log.info(BellLog.getLogHead() + "Node Item Save (" + node.getUid() + "-" + nodeItem.getPinName() + ")");
+				log.info(BellLog.getLogHead() + "Node Item Save (" + node.getUid() + "-" + nodeItem.getItemName() + ")");
 				
 				return true;
 			}
@@ -137,16 +140,17 @@ public class IotTokenServiceV1
 		NodeItem nodeItem = NodeItem.builder()
 							.node(node)
 							.controlMode(itemInfo.getControlMode())
-							.pinId(itemInfo.getPinId())
-							.pinMode(PinModeRule.ofLegacyCode(itemInfo.getPinMode()))
-							.pinName(itemInfo.getPinName())
-							.pinType(PinTypeRule.ofLegacyCode(itemInfo.getPinType()))
-							.alias(itemInfo.getPinName())
+							.itemIndex(itemInfo.getItemIndex())
+							.itemCategory(ItemCategoryRule.ofLegacyCode(itemInfo.getItemCategory()))
+							.itemMode(ItemModeRule.ofLegacyCode(itemInfo.getItemMode()))
+							.itemName(itemInfo.getItemName())
+							.itemType(ItemTypeRule.ofLegacyCode(itemInfo.getItemType()))
+							.alias(itemInfo.getItemName())
 							.build();
 		nodeItemRepo.save(nodeItem);
 
 		// Log
-		log.info(BellLog.getLogHead() + "Node New Item Save (" + node.getUid() + "-" + nodeItem.getPinName() + ")");
+		log.info(BellLog.getLogHead() + "Node New Item Save (" + node.getUid() + "-" + nodeItem.getItemName() + ")");
 		
 		// Return
 		return true;
@@ -184,7 +188,7 @@ public class IotTokenServiceV1
 		if (node == null)
 			return false;
 		
-		nodeItem = nodeItemRepo.findByNodeAndPinId(node, itemValue.getPinId());
+		nodeItem = nodeItemRepo.findByNodeAndItemIndex(node, itemValue.getItemIndex());
 		
 		if (nodeItem == null)
 			return false;
@@ -192,7 +196,7 @@ public class IotTokenServiceV1
 		// Process
 		nodeItemHistory = NodeItemHistory.builder()
 										.nodeItem(nodeItem)
-										.pinStatus(itemValue.getPinStatus())
+										.itemStatus(itemValue.getItemStatus())
 										.receiveDate(new Date())
 										.build();
 		

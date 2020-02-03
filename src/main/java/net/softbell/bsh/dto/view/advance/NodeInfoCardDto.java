@@ -15,12 +15,14 @@ import net.softbell.bsh.domain.entity.Node;
 @Setter
 public class NodeInfoCardDto
 {
+	private long nodeId;
 	private EnableStatusRule enableStatus;
 	private String nodeName;
 	private String alias;
 	private String uid;
 	private String token;
 	private byte controlMode;
+	private String version;
 	private Date registerDate;
 	private Date approvalDate;
 	
@@ -31,12 +33,14 @@ public class NodeInfoCardDto
 			return;
 		
 		// Convert
+		this.nodeId = entity.getNodeId();
 		this.enableStatus = entity.getEnableStatus();
 		this.nodeName = entity.getNodeName();
 		this.alias = entity.getAlias();
 		this.uid = entity.getUid();
 		this.token = entity.getToken();
 		this.controlMode = entity.getControlMode();
+		this.version = entity.getVersion();
 		this.registerDate = entity.getRegisterDate();
 		this.approvalDate = entity.getApprovalDate();
 	}

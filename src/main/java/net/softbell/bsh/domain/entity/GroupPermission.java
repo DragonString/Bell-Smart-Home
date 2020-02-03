@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -55,11 +56,11 @@ public class GroupPermission implements Serializable
 	@Column(name="group_permission", nullable=false)
 	private GroupRole groupPermission;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="node_group_id", nullable=false, insertable=false, updatable=false)
 	private NodeGroup nodeGroup;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="member_group_id", nullable=false, insertable=false, updatable=false)
 	private MemberGroup memberGroup;
 }

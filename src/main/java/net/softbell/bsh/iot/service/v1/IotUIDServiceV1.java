@@ -50,8 +50,9 @@ public class IotUIDServiceV1
 							.controlMode(nodeInfo.getControlMode())
 							.nodeName(nodeInfo.getNodeName())
 							.alias(nodeInfo.getNodeName())
+							.version(nodeInfo.getVersion())
 							.registerDate(new Date())
-							.enableStatus(EnableStatusRule.ENABLE) // ############## TODO 개발중 인증패스
+//							.enableStatus(EnableStatusRule.ENABLE) // ############## TODO 개발중 인증패스
 							.build();
 		
 		// DB - Save

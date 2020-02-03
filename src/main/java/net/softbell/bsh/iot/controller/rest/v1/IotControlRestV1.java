@@ -38,4 +38,20 @@ public class IotControlRestV1
 		else
 			return responseService.getFailResult(-10, "해당하는 아이템이 없음");
 	}
+	
+	@PostMapping("/node/restart/{id}")
+	public ResultDto restartNode(@PathVariable("id")long id)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = iotNodeService.restartNode(id);
+		
+		// Return
+		if (isSuccess)
+			return responseService.getSuccessResult();
+		else
+			return responseService.getFailResult(-10, "해당하는 아이템이 없음");
+	}
 }

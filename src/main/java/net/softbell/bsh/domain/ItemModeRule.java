@@ -5,22 +5,24 @@ import lombok.Getter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : IoT 핀 타입 자료형 (pinMode가 INPUT일때만 사용)
+ * @Description : IoT 아이템 모드 자료형
+ * (디지털, 아날로그)
  */
 @AllArgsConstructor
 @Getter
-public enum PinTypeRule
+public enum ItemModeRule
 {
-	DIGITAL("DIGITAL", 0), // digitalRead
-    ANALOG("ANALOG", 1), // analogRead
-    DISABLE("DISABLE", -1); // OUTPUT 모드일경우
+	ERROR("ERROR", -1),
+	
+	DIGITAL("DIGITAL", 0),
+	ANALOG("ANALOG", 1);
 
 	private String value;
     private Integer code;
     
-    public static PinTypeRule ofLegacyCode(Integer legacyCode)
+    public static ItemModeRule ofLegacyCode(Integer legacyCode)
     {
-    	for (PinTypeRule authStatusRule : values())
+    	for (ItemModeRule authStatusRule : values())
             if (authStatusRule.getCode() == legacyCode)
                 return authStatusRule;
     	

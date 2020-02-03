@@ -13,5 +13,5 @@ import net.softbell.bsh.domain.entity.NodeItem;
 @Repository
 public interface NodeItemRepo extends JpaRepository<NodeItem, Long>
 {
-	NodeItem findByNodeAndPinId(Node node, byte pinId);
+	NodeItem findByNodeAndItemIndex(Node node, byte itemIndex);
 }

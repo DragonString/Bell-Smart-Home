@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,11 +41,11 @@ public class NodeReservAction implements Serializable
 	@Column(name="reserv_action_id", unique=true, nullable=false)
 	private long reservActionId;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="reserv_id", nullable=false)
 	private NodeReserv nodeReserv;
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="action_id", nullable=false)
 	private NodeAction nodeAction;
 }
