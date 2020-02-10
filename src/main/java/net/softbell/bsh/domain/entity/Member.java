@@ -51,7 +51,7 @@ public class Member implements Serializable, UserDetails
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="member_id", unique=true, nullable=false)
-	private long memberId;
+	private Long memberId;
 
 	@Column(nullable=false)
 	private BanRule ban;
@@ -72,7 +72,7 @@ public class Member implements Serializable, UserDetails
 	private Date lastLogin;
 
 	@Column(name="login_fail_count", nullable=false)
-	private int loginFailCount;
+	private Integer loginFailCount;
 
 	@Column(nullable=false, length=40)
 	private String nickname;

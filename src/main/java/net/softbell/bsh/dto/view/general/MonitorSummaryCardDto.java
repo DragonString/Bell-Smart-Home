@@ -19,7 +19,7 @@ public class MonitorSummaryCardDto
 {
 	private String alias;
 	private List<MonitorCardItemDto> listItems;
-	private byte controlMode;
+	private Byte controlMode;
 	// TODO 마지막 연결 시각
 	
 	public MonitorSummaryCardDto(Node entity)
@@ -43,8 +43,8 @@ public class MonitorSummaryCardDto
 	public class MonitorCardItemDto
 	{
 		private String alias;
-		private long lastStatus;
-		private int widthPercent;
+		private Double lastStatus;
+		private Integer widthPercent;
 		
 		public MonitorCardItemDto(NodeItem entity)
 		{

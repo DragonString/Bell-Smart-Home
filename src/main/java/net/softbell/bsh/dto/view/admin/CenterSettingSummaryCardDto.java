@@ -12,19 +12,19 @@ import net.softbell.bsh.domain.entity.CenterSetting;
 @Setter
 public class CenterSettingSummaryCardDto
 {
-	private byte isEnabled;
-	private byte iotAction;
-	private byte iotControl;
-	private byte iotMonitor;
-	private byte iotNode;
-	private byte iotReserv;
-	private byte iotTrigger;
-	private byte webAuthMode;
-	private int webLoginFailBanTime;
-	private int webLoginFailCheckTime;
-	private byte webLoginFailMaxCount;
-	private byte webMaintenance;
-	private byte webRegister;
+	private Byte isEnabled;
+	private Byte iotAction;
+	private Byte iotControl;
+	private Byte iotMonitor;
+	private Byte iotNode;
+	private Byte iotReserv;
+	private Byte iotTrigger;
+	private Byte webAuthMode;
+	private Integer webLoginFailBanTime;
+	private Integer webLoginFailCheckTime;
+	private Byte webLoginFailMaxCount;
+	private Byte webMaintenance;
+	private Byte webRegister;
 	
 	public CenterSettingSummaryCardDto(CenterSetting entity)
 	{

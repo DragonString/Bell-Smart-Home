@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +22,7 @@ import lombok.Setter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 노드 액션 아이템 엔티티
+ * @Description : 노드 트리거 발생 액션 엔티티
  */
 @Builder
 @AllArgsConstructor
@@ -31,26 +30,20 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="node_action_item",
-	uniqueConstraints={
-		@UniqueConstraint(columnNames={"item_id", "action_id"})
-	})
-@NamedQuery(name="NodeActionItem.findAll", query="SELECT n FROM NodeActionItem n")
-public class NodeActionItem implements Serializable
+@Table(name="node_trigger_occur_action")
+@NamedQuery(name="NodeTriggerOccurAction.findAll", query="SELECT n FROM NodeTriggerOccurAction n")
+public class NodeTriggerOccurAction implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="action_item_id", unique=true, nullable=false)
-	private Long actionItemId;
-
-	@Column(name="item_status", nullable=false)
-	private Double itemStatus;
+	@Column(name="trigger_action_id", unique=true, nullable=false)
+	private Long triggerActionId;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="item_id", nullable=false)
-	private NodeItem nodeItem;
+	@JoinColumn(name="trigger_id", nullable=false)
+	private NodeTrigger nodeTrigger;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="action_id", nullable=false)

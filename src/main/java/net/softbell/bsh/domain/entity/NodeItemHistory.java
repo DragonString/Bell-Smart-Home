@@ -42,10 +42,10 @@ public class NodeItemHistory implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="item_history_id", unique=true, nullable=false)
-	private long itemHistoryId;
+	private Long itemHistoryId;
 
 	@Column(name="item_status", nullable=false)
-	private long itemStatus;
+	private Double itemStatus;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="receive_date", nullable=false)

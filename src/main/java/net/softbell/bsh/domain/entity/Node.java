@@ -42,14 +42,14 @@ public class Node implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="node_id", unique=true, nullable=false)
-	private long nodeId;
+	private Long nodeId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="approval_date")
 	private Date approvalDate;
 
 	@Column(name="control_mode", nullable=false)
-	private byte controlMode;
+	private Byte controlMode;
 
 	@Column(name="enable_status", nullable=false)
 	private EnableStatusRule enableStatus;

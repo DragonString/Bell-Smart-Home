@@ -43,7 +43,7 @@ public class NodeConnectionLog implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="log_id", unique=true, nullable=false)
-	private long logId;
+	private Long logId;
 
 	@Column(nullable=false, length=15)
 	private String ipv4;

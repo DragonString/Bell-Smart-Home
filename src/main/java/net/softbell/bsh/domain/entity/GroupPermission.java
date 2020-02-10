@@ -47,7 +47,7 @@ public class GroupPermission implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="group_permission_id", unique=true, nullable=false)
-	private long groupPermissionId;
+	private Long groupPermissionId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="assign_date", nullable=false)

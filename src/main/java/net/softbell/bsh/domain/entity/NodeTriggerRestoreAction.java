@@ -22,7 +22,7 @@ import lombok.Setter;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 노드 트리거 액션 엔티티
+ * @Description : 노드 트리거 복구 액션 엔티티
  */
 @Builder
 @AllArgsConstructor
@@ -30,26 +30,22 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="node_trigger_action")
-@NamedQuery(name="NodeTriggerAction.findAll", query="SELECT n FROM NodeTriggerAction n")
-public class NodeTriggerAction implements Serializable
+@Table(name="node_trigger_restore_action")
+@NamedQuery(name="NodeTriggerRestoreAction.findAll", query="SELECT n FROM NodeTriggerRestoreAction n")
+public class NodeTriggerRestoreAction implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_action_id", unique=true, nullable=false)
-	private long triggerActionId;
+	private Long triggerActionId;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="trigger_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="trigger_id", nullable=false)
 	private NodeTrigger nodeTrigger;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="action_id_occur")
-	private NodeAction nodeActionOccur;
-
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="action_id_restore")
-	private NodeAction nodeActionRestore;
+	@JoinColumn(name="action_id", nullable=false)
+	private NodeAction nodeAction;
 }

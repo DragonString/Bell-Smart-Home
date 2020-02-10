@@ -43,16 +43,16 @@ public class NodeTriggerItem implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_item_id", unique=true, nullable=false)
-	private long triggerItemId;
+	private Long triggerItemId;
 
 	@Column(nullable=false, length=50)
 	private String alias;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="item_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="item_id", nullable=false)
 	private NodeItem nodeItem;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="trigger_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="trigger_id", nullable=false)
 	private NodeTrigger nodeTrigger;
 }

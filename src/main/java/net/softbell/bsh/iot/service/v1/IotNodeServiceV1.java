@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -51,6 +52,18 @@ public class IotNodeServiceV1
 		
 		// Return
 		return nodeRepo.findAll(curPage);
+	}
+
+	public List<NodeItem> getAllNodeItems(Authentication auth)
+	{
+		// Field
+		// TODO 회원 권한에 맞는 아이템만 조회하는 기능 추가 필요... 언젠가는... 하겠지.... 권한... 보안... 으어...
+		
+		// Init
+		
+		
+		// Return
+		return nodeItemRepo.findAll();
 	}
 	
 	public Node getNode(long nodeId)
@@ -106,7 +119,7 @@ public class IotNodeServiceV1
 		return listNodeItemHistory;
 	}
 	
-	public boolean setItemValue(long itemId, long itemValue)
+	public boolean setItemValue(long itemId, double itemValue)
 	{
 		// Field
 		Optional<NodeItem> optNodeItem;

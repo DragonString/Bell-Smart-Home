@@ -44,16 +44,16 @@ public class NodeItem implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="item_id", unique=true, nullable=false)
-	private long itemId;
+	private Long itemId;
 
 	@Column(nullable=false, length=50)
 	private String alias;
 
 	@Column(name="control_mode", nullable=false)
-	private byte controlMode;
+	private Byte controlMode;
 
 	@Column(name="item_index", nullable=false)
-	private byte itemIndex;
+	private Byte itemIndex;
 
 	@Column(name="item_mode", nullable=false)
 	private ItemModeRule itemMode;

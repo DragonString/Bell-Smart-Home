@@ -12,7 +12,7 @@ import net.softbell.bsh.domain.entity.NodeAction;
 @Setter
 public class ActionSummaryCardDto
 {
-	private long actionId;
+	private Long actionId;
 	private String description;
 	
 	public ActionSummaryCardDto(NodeAction entity)

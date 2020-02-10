@@ -40,7 +40,7 @@ public class NodeGroup implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="node_group_id", unique=true, nullable=false)
-	private long nodeGroupId;
+	private Long nodeGroupId;
 
 	@Column(name="enable_status", nullable=false)
 	private EnableStatusRule enableStatus;

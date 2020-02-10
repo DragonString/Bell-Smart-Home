@@ -15,13 +15,13 @@ import net.softbell.bsh.domain.entity.Node;
 @Setter
 public class NodeInfoCardDto
 {
-	private long nodeId;
+	private Long nodeId;
 	private EnableStatusRule enableStatus;
 	private String nodeName;
 	private String alias;
 	private String uid;
 	private String token;
-	private byte controlMode;
+	private Byte controlMode;
 	private String version;
 	private Date registerDate;
 	private Date approvalDate;

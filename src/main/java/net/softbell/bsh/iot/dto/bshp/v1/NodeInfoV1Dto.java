@@ -16,7 +16,7 @@ import lombok.Setter;
 public class NodeInfoV1Dto
 {
 	private String uid;
-	private byte controlMode;
+	private Byte controlMode;
 	private String nodeName;
 	private String version;
 }

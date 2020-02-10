@@ -2,27 +2,27 @@ package net.softbell.bsh.dto.view.general;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.softbell.bsh.domain.entity.NodeReserv;
+import net.softbell.bsh.domain.entity.NodeAction;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 예약뷰 카드정보 DTO
+ * @Description : 트리거 등록 및 수정뷰 액션 카드정보 DTO
  */
 @Getter
 @Setter
-public class ReservSummaryCardDto
+public class TriggerActionCardDto
 {
-	private Long reservId;
+	private Long actionId;
 	private String description;
 	
-	public ReservSummaryCardDto(NodeReserv entity)
+	public TriggerActionCardDto(NodeAction entity)
 	{
 		// Exception
 		if (entity == null)
 			return;
 		
 		// Convert
-		this.reservId = entity.getReservId();
+		this.actionId = entity.getActionId();
 		this.description = entity.getDescription();
 	}
 }

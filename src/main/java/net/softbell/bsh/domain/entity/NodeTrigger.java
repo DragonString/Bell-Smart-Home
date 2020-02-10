@@ -46,7 +46,7 @@ public class NodeTrigger implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_id", unique=true, nullable=false)
-	private long triggerId;
+	private Long triggerId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="change_date")
@@ -69,25 +69,44 @@ public class NodeTrigger implements Serializable
 	private Member member;
 
 	@OneToMany(mappedBy="nodeTrigger")
-	private List<NodeTriggerAction> nodeTriggerActions;
+	private List<NodeTriggerOccurAction> nodeTriggerOccurActions;
+
+	@OneToMany(mappedBy="nodeTrigger")
+	private List<NodeTriggerRestoreAction> nodeTriggerRestoreActions;
 
 	@OneToMany(mappedBy="nodeTrigger")
 	private List<NodeTriggerItem> nodeTriggerItems;
 
-	public NodeTriggerAction addNodeTriggerAction(NodeTriggerAction nodeTriggerAction)
+	public NodeTriggerOccurAction addNodeTriggerOccurAction(NodeTriggerOccurAction nodeTriggerOccurAction)
 	{
-		getNodeTriggerActions().add(nodeTriggerAction);
-		nodeTriggerAction.setNodeTrigger(this);
+		getNodeTriggerOccurActions().add(nodeTriggerOccurAction);
+		nodeTriggerOccurAction.setNodeTrigger(this);
 
-		return nodeTriggerAction;
+		return nodeTriggerOccurAction;
 	}
 
-	public NodeTriggerAction removeNodeTriggerAction(NodeTriggerAction nodeTriggerAction)
+	public NodeTriggerOccurAction removeNodeTriggerOccurAction(NodeTriggerOccurAction nodeTriggerOccurAction)
 	{
-		getNodeTriggerActions().remove(nodeTriggerAction);
-		nodeTriggerAction.setNodeTrigger(null);
+		getNodeTriggerOccurActions().remove(nodeTriggerOccurAction);
+		nodeTriggerOccurAction.setNodeTrigger(null);
 
-		return nodeTriggerAction;
+		return nodeTriggerOccurAction;
+	}
+
+	public NodeTriggerRestoreAction addNodeTriggerRestoreAction(NodeTriggerRestoreAction nodeTriggerRestoreAction)
+	{
+		getNodeTriggerRestoreActions().add(nodeTriggerRestoreAction);
+		nodeTriggerRestoreAction.setNodeTrigger(this);
+
+		return nodeTriggerRestoreAction;
+	}
+
+	public NodeTriggerRestoreAction removeNodeTriggerOccurAction(NodeTriggerRestoreAction nodeTriggerRestoreAction)
+	{
+		getNodeTriggerRestoreActions().remove(nodeTriggerRestoreAction);
+		nodeTriggerRestoreAction.setNodeTrigger(null);
+
+		return nodeTriggerRestoreAction;
 	}
 
 	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem)

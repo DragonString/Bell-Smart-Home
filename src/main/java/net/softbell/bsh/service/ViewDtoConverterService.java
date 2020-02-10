@@ -14,12 +14,15 @@ import net.softbell.bsh.domain.entity.NodeActionItem;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
+import net.softbell.bsh.domain.entity.NodeTrigger;
 import net.softbell.bsh.dto.view.MemberActivityLogCardDto;
 import net.softbell.bsh.dto.view.admin.MemberSummaryCardDto;
 import net.softbell.bsh.dto.view.admin.NodeManageItemCardDto;
 import net.softbell.bsh.dto.view.admin.NodeManageSummaryCardDto;
 import net.softbell.bsh.dto.view.advance.NodeItemCardDto;
 import net.softbell.bsh.dto.view.advance.NodeSummaryCardDto;
+import net.softbell.bsh.dto.view.advance.TriggerItemCardDto;
+import net.softbell.bsh.dto.view.advance.TriggerSummaryCardDto;
 import net.softbell.bsh.dto.view.general.ActionItemCardDto;
 import net.softbell.bsh.dto.view.general.ActionSummaryCardDto;
 import net.softbell.bsh.dto.view.general.MonitorSummaryCardDto;
@@ -221,6 +224,40 @@ public class ViewDtoConverterService
 		// Process
 		for (NodeItem entity : listEntity)
 			listCards.add(new NodeManageItemCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// NodeItem Entity List to Trigger Item Card Dto List
+	public List<TriggerItemCardDto> convTriggerItemCards(Collection<NodeItem> listEntity)
+	{
+		// Field
+		List<TriggerItemCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<TriggerItemCardDto>();
+		
+		// Process
+		for (NodeItem entity : listEntity)
+			listCards.add(new TriggerItemCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// Node Entity List to Node Manage Summary Card Dto List
+	public List<TriggerSummaryCardDto> convTriggerSummaryCards(Collection<NodeTrigger> listEntity)
+	{
+		// Field
+		List<TriggerSummaryCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<TriggerSummaryCardDto>();
+		
+		// Process
+		for (NodeTrigger entity : listEntity)
+			listCards.add(new TriggerSummaryCardDto(entity));
 		
 		// Return
 		return listCards;

@@ -42,7 +42,7 @@ public class NodeAction implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="action_id", unique=true, nullable=false)
-	private long actionId;
+	private Long actionId;
 
 	@Column(nullable=false, length=50)
 	private String description;
@@ -60,11 +60,11 @@ public class NodeAction implements Serializable
 	@OneToMany(mappedBy="nodeAction")
 	private List<NodeReservAction> nodeReservActions;
 
-	@OneToMany(mappedBy="nodeActionOccur")
-	private List<NodeTriggerAction> nodeTriggerActionsOccur;
+	@OneToMany(mappedBy="nodeAction")
+	private List<NodeTriggerOccurAction> nodeTriggerOccurActions;
 
-	@OneToMany(mappedBy="nodeActionRestore")
-	private List<NodeTriggerAction> nodeTriggerActionsRestore;
+	@OneToMany(mappedBy="nodeAction")
+	private List<NodeTriggerRestoreAction> nodeTriggerRestoreActions;
 
 	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
 	{
@@ -98,34 +98,34 @@ public class NodeAction implements Serializable
 		return nodeReservAction;
 	}
 
-	public NodeTriggerAction addNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur)
+	public NodeTriggerOccurAction addNodeTriggerOccurActions(NodeTriggerOccurAction nodeTriggerOccurActions)
 	{
-		getNodeTriggerActionsOccur().add(nodeTriggerActionsOccur);
-		nodeTriggerActionsOccur.setNodeActionOccur(this);
+		getNodeTriggerOccurActions().add(nodeTriggerOccurActions);
+		nodeTriggerOccurActions.setNodeAction(this);
+
+		return nodeTriggerOccurActions;
+	}
+
+	public NodeTriggerOccurAction removeNodeTriggerOccurActions(NodeTriggerOccurAction nodeTriggerActionsOccur)
+	{
+		getNodeTriggerOccurActions().remove(nodeTriggerActionsOccur);
+		nodeTriggerActionsOccur.setNodeAction(null);
 
 		return nodeTriggerActionsOccur;
 	}
 
-	public NodeTriggerAction removeNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur)
+	public NodeTriggerRestoreAction addNodeTriggerRestoreActions(NodeTriggerRestoreAction nodeTriggerActionsRestore)
 	{
-		getNodeTriggerActionsOccur().remove(nodeTriggerActionsOccur);
-		nodeTriggerActionsOccur.setNodeActionOccur(null);
-
-		return nodeTriggerActionsOccur;
-	}
-
-	public NodeTriggerAction addNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore)
-	{
-		getNodeTriggerActionsRestore().add(nodeTriggerActionsRestore);
-		nodeTriggerActionsRestore.setNodeActionRestore(this);
+		getNodeTriggerRestoreActions().add(nodeTriggerActionsRestore);
+		nodeTriggerActionsRestore.setNodeAction(this);
 
 		return nodeTriggerActionsRestore;
 	}
 
-	public NodeTriggerAction removeNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore)
+	public NodeTriggerRestoreAction removeNodeTriggerRestoreActions(NodeTriggerRestoreAction nodeTriggerActionsRestore)
 	{
-		getNodeTriggerActionsRestore().remove(nodeTriggerActionsRestore);
-		nodeTriggerActionsRestore.setNodeActionRestore(null);
+		getNodeTriggerRestoreActions().remove(nodeTriggerActionsRestore);
+		nodeTriggerActionsRestore.setNodeAction(null);
 
 		return nodeTriggerActionsRestore;
 	}

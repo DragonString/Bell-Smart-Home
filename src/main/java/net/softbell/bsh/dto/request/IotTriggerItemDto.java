@@ -9,7 +9,7 @@ import lombok.ToString;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 액션 아이템 DTO
+ * @Description : 트리거 아이템 정보 DTO
  */
 @Getter
 @Setter
@@ -17,9 +17,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IotActionItemDto
+public class IotTriggerItemDto
 {
-	private Long actionItemId;
 	private Long itemId;
-    private Double itemStatus;
+    private String alias;
 }

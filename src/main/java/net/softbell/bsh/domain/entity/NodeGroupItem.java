@@ -46,7 +46,7 @@ public class NodeGroupItem implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="group_item_id", unique=true, nullable=false)
-	private long groupItemId;
+	private Long groupItemId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="assign_date", nullable=false)

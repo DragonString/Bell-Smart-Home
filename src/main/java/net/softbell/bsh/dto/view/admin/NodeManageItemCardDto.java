@@ -15,13 +15,13 @@ import net.softbell.bsh.domain.entity.NodeItem;
 @Setter
 public class NodeManageItemCardDto
 {
-	private long itemId;
+	private Long itemId;
 	private String alias;
 	private String itemName;
 	private ItemModeRule itemMode;
 	private ItemTypeRule itemType;
 	private ItemCategoryRule itemCategory;
-	private byte controlMode;
+	private Byte controlMode;
 	
 	public NodeManageItemCardDto(NodeItem entity)
 	{
