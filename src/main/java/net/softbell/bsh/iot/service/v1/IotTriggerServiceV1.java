@@ -1,7 +1,6 @@
 package net.softbell.bsh.iot.service.v1;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,41 +10,44 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.TriggerLastStatusRule;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeTrigger;
-import net.softbell.bsh.domain.entity.NodeTriggerItem;
 import net.softbell.bsh.domain.entity.NodeTriggerOccurAction;
 import net.softbell.bsh.domain.entity.NodeTriggerRestoreAction;
 import net.softbell.bsh.domain.repository.NodeActionRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
-import net.softbell.bsh.domain.repository.NodeTriggerItemRepo;
 import net.softbell.bsh.domain.repository.NodeTriggerOccurActionRepo;
 import net.softbell.bsh.domain.repository.NodeTriggerRepo;
 import net.softbell.bsh.domain.repository.NodeTriggerRestoreActionRepo;
 import net.softbell.bsh.dto.request.IotTriggerDto;
-import net.softbell.bsh.dto.request.IotTriggerItemDto;
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
+import net.softbell.bsh.iot.component.v1.IotTriggerParserCompV1;
 import net.softbell.bsh.service.MemberService;
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node Trigger 서비스
  */
+@Slf4j
 @AllArgsConstructor
 @Service
 public class IotTriggerServiceV1
 {
 	// Global Field
 	private final MemberService memberService;
+	private final IotActionServiceV1 iotActionService;
+	
+	private final IotTriggerParserCompV1 iotTriggerParserComp;
 	private final IotChannelCompV1 iotChannelCompV1;
 	private final IotAuthCompV1 iotAuthCompV1;
+	
 	private final NodeTriggerRepo nodeTriggerRepo;
-	private final NodeTriggerItemRepo nodeTriggerItemRepo;
 	private final NodeTriggerOccurActionRepo nodeTriggerOccurActionRepo;
 	private final NodeTriggerRestoreActionRepo nodeTriggerRestoreActionRepo;
 	private final NodeActionRepo nodeActionRepo;
@@ -54,6 +56,22 @@ public class IotTriggerServiceV1
 	public List<NodeTrigger> getAllTriggers(Authentication auth)
 	{
 		return nodeTriggerRepo.findAll();
+	}
+	
+	public NodeTrigger getTrigger(Authentication auth, long triggerId)
+	{
+		// Field
+		Optional<NodeTrigger> optNodeTrigger;
+		
+		// Init
+		optNodeTrigger = nodeTriggerRepo.findById(triggerId);
+		
+		// Exception
+		if (!optNodeTrigger.isPresent())
+			return null;
+		
+		// Return
+		return optNodeTrigger.get();
 	}
 	
 	@Transactional
@@ -66,19 +84,15 @@ public class IotTriggerServiceV1
 		// Field
 		Member member;
 		NodeTrigger nodeTrigger;
-		HashMap<Long, IotTriggerItemDto> mapTriggerItem;
-		List<NodeTriggerItem> listTriggerItem;
 		List<NodeTriggerOccurAction> listOccurAction;
 		List<NodeTriggerRestoreAction> listRestoreAction;
 		EnableStatusRule enableStatus;
 		
 		// Init
-		listTriggerItem = new ArrayList<NodeTriggerItem>();
 		listOccurAction = new ArrayList<NodeTriggerOccurAction>();
 		listRestoreAction = new ArrayList<NodeTriggerRestoreAction>();
 		
 		member = memberService.getMember(auth.getName());
-		mapTriggerItem = iotTriggerDto.getMapTriggerItem();
 		
 		if (iotTriggerDto.isEnableStatus())
 			enableStatus = EnableStatusRule.ENABLE;
@@ -100,41 +114,6 @@ public class IotTriggerServiceV1
 		
 		// DB - Node Trigger Save
 		nodeTriggerRepo.save(nodeTrigger);
-		
-		
-		// Data Process - Node Trigger Item
-		if (mapTriggerItem != null)
-		{
-			mapTriggerItem.forEach((key, value) ->
-			{
-				if(value.getItemId() != null && value.getItemId() != 0)
-				{
-					// Field
-					Optional<NodeItem> optNodeItem;
-					NodeTriggerItem nodeTriggerItem;
-					
-					// Init
-					optNodeItem = nodeItemRepo.findById(value.getItemId());
-					
-					// Build
-					if (optNodeItem.isPresent())
-					{
-						nodeTriggerItem = NodeTriggerItem.builder()
-														.nodeTrigger(nodeTrigger)
-														.nodeItem(optNodeItem.get())
-														.alias(value.getAlias())
-															.build();
-						
-						// List Add
-						listTriggerItem.add(nodeTriggerItem);
-					}
-				}
-			});
-			nodeTrigger.setNodeTriggerItems(listTriggerItem);
-		}
-		
-		// DB - Node Trigger Items Save
-		nodeTriggerItemRepo.saveAll(listTriggerItem);
 		
 		
 		// Data Process - Node Trigger Occur Action
@@ -198,4 +177,94 @@ public class IotTriggerServiceV1
 		// Return
 		return true;
 	}
+	
+	@Transactional
+	public boolean modifyTrigger(Authentication auth, long triggerId, IotTriggerDto iotTriggerDto)
+	{
+		// Field
+		
+		// Init
+		
+		// Process
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean deleteTrigger(Authentication auth, long triggerId)
+	{
+		// Field
+		Optional<NodeTrigger> optNodeTrigger;
+		NodeTrigger nodeTrigger;
+		
+		// Init
+		optNodeTrigger = nodeTriggerRepo.findById(triggerId);
+		
+		// Exception
+		if (!optNodeTrigger.isPresent())
+			return false;
+		nodeTrigger = optNodeTrigger.get();
+		
+		// DB - Delete
+		for (NodeTriggerOccurAction entity : nodeTrigger.getNodeTriggerOccurActions())
+			nodeTriggerOccurActionRepo.delete(entity);
+		for (NodeTriggerRestoreAction entity : nodeTrigger.getNodeTriggerRestoreActions())
+			nodeTriggerRestoreActionRepo.delete(entity);
+		nodeTriggerRepo.delete(nodeTrigger);
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean procTrigger(NodeItem nodeItem)
+	{
+		// Field
+		boolean isSuccess;
+		List<NodeTrigger> listNodeTrigger;
+		List<NodeAction> listNodeAction; 
+		
+		// Init
+		isSuccess = true;
+		listNodeTrigger = iotTriggerParserComp.convTrigger(nodeItem);
+		listNodeAction = new ArrayList<NodeAction>();
+		
+		// Process
+		for (NodeTrigger nodeTrigger : listNodeTrigger)
+		{
+			// Field
+			Boolean isOccur;
+			
+			// Init
+			isOccur = iotTriggerParserComp.parseEntity(nodeTrigger);
+			
+			// Exception
+			if (isOccur == null ||
+					(nodeTrigger.getLastStatus() == TriggerLastStatusRule.OCCUR && isOccur) ||
+					(nodeTrigger.getLastStatus() == TriggerLastStatusRule.RESTORE && !isOccur))
+				continue;
+			
+			// Load
+			listNodeAction.addAll(iotTriggerParserComp.getTriggerAction(nodeTrigger, isOccur));
+			
+			// DB - Update
+			if (isOccur == null)
+				nodeTrigger.setLastStatus(TriggerLastStatusRule.ERROR); // TODO 순서 변경 필요함
+			else if (isOccur)
+				nodeTrigger.setLastStatus(TriggerLastStatusRule.OCCUR);
+			else
+				nodeTrigger.setLastStatus(TriggerLastStatusRule.RESTORE);
+		}
+		
+		// Exec Action
+		for (NodeAction nodeAction : listNodeAction)
+			if (!iotActionService.execAction(nodeAction))
+				isSuccess = false;
+		
+		// Return
+		return isSuccess;
+	}
+	
+	
 }

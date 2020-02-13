@@ -77,9 +77,6 @@ public class NodeItem implements Serializable
 	@OneToMany(mappedBy="nodeItem")
 	private List<NodeItemHistory> nodeItemHistories;
 
-	@OneToMany(mappedBy="nodeItem")
-	private List<NodeTriggerItem> nodeTriggerItems;
-
 	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
 	{
 		getNodeActionItems().add(nodeActionItem);
@@ -110,21 +107,5 @@ public class NodeItem implements Serializable
 		nodeItemHistory.setNodeItem(null);
 
 		return nodeItemHistory;
-	}
-
-	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().add(nodeTriggerItem);
-		nodeTriggerItem.setNodeItem(this);
-
-		return nodeTriggerItem;
-	}
-
-	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().remove(nodeTriggerItem);
-		nodeTriggerItem.setNodeItem(null);
-
-		return nodeTriggerItem;
 	}
 }

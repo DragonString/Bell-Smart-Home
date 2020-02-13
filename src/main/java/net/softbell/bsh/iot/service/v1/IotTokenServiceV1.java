@@ -34,6 +34,7 @@ import net.softbell.bsh.util.BellLog;
 public class IotTokenServiceV1
 {
 	// Global Field
+	private final IotTriggerServiceV1 iotTriggerService;
 	private final IotChannelCompV1 iotChannelCompV1;
 	private final IotAuthCompV1 iotAuthCompV1;
 	
@@ -174,6 +175,7 @@ public class IotTokenServiceV1
 		iotChannelCompV1.sendDataToken(data);
 	}
 	
+	@Transactional
 	public boolean setItemValue(String token, ItemValueV1Dto itemValue)
 	{
 		// Field
@@ -187,6 +189,11 @@ public class IotTokenServiceV1
 		// Exception
 		if (node == null)
 			return false;
+		if (itemValue.getItemStatus() == null)
+		{
+			log.error(BellLog.getLogHead() + "ItemStatus 수신 데이터 없음 (" + node.getAlias() + ")");
+			return false;
+		}
 		
 		nodeItem = nodeItemRepo.findByNodeAndItemIndex(node, itemValue.getItemIndex());
 		
@@ -202,6 +209,9 @@ public class IotTokenServiceV1
 		
 		// DB - Save
 		nodeItemHistoryRepo.save(nodeItemHistory);
+		
+		// Trigger Check
+		iotTriggerService.procTrigger(nodeItem);
 		
 		// Return
 		return true;

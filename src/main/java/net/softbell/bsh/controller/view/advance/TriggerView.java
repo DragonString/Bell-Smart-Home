@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeTrigger;
 import net.softbell.bsh.dto.request.IotTriggerDto;
+import net.softbell.bsh.dto.view.advance.TriggerInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1;
@@ -62,18 +63,33 @@ public class TriggerView
 		
 		// Process
 		model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
-		model.addAttribute("listCardNodeItems", viewDtoConverterService.convTriggerItemCards(iotNodeService.getAllNodeItems(auth)));
+		//model.addAttribute("listCardNodeItems", viewDtoConverterService.convTriggerItemCards(iotNodeService.getAllNodeItems(auth)));
 		
 		// Return
 		return G_BASE_PATH + "/TriggerCreate";
 	}
 	
 	@GetMapping("/{id}")
-	public String dispTrigger(Model model, @PathVariable("id") Long triggerId)
+	public String dispTrigger(Model model, Authentication auth, @PathVariable("id") Long triggerId)
 	{
 		// Field
+		NodeTrigger nodeTrigger;
+		List<NodeAction> listNodeAction;
 		
 		// Init
+		nodeTrigger = iotTriggerService.getTrigger(auth, triggerId);
+		listNodeAction = iotActionService.getAllNodeActions(auth);
+		
+		// Exception
+		if (nodeTrigger == null)
+			return "redirect:/trigger?err";
+		
+		// Process
+		model.addAttribute("cardTriggerInfo", new TriggerInfoCardDto(nodeTrigger));
+//		model.addAttribute("listCardOccurActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
+//		model.addAttribute("listCardRestoreActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
+		model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
+		//model.addAttribute("listCardNodeItems", viewDtoConverterService.convTriggerItemCards(iotNodeService.getAllNodeItems(auth)));
 		
 		// Return
 		return G_BASE_PATH + "/TriggerModify";
@@ -95,16 +111,35 @@ public class TriggerView
 			return "redirect:/trigger?err";
 	}
 	
-	@PostMapping("/modify")
-	public String procModify(Authentication auth)
+	@PostMapping("/modify/{id}")
+	public String procModify(Authentication auth, @PathVariable("id") Long triggerId, IotTriggerDto iotTriggerDto)
 	{
 		// Field
-		
-		// Init
+		boolean isSuccess;
 		
 		// Process
+		isSuccess = iotTriggerService.modifyTrigger(auth, triggerId, iotTriggerDto);
+
+		// Return
+		if (isSuccess)
+			return "redirect:/trigger/" + triggerId;
+		else
+			return "redirect:/trigger/" + triggerId + "?err";
+	}
+	
+	@PostMapping("/delete/{id}")
+	public String procDelete(Authentication auth, @PathVariable("id") Long triggerId)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Process
+		isSuccess = iotTriggerService.deleteTrigger(auth, triggerId);
 		
 		// Return
-		return "redirect:/trigger/" + 1;
+		if (isSuccess)
+			return "redirect:/trigger";
+		else
+			return "redirect:/trigger?err";
 	}
 }

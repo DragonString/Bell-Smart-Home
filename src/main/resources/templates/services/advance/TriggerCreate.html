@@ -4,7 +4,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorate="~{layout/PrimaryLayout}">
 	<head>
-		<title>트리거</title>
+		<title>트리거 생성</title>
 		<th:block layout:fragment="pageCss">
 			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 		</th:block>
@@ -54,98 +54,32 @@
 					</div>
 				</div>
 				<!-- Trigger Info Create Card End -->
-				<!-- Trigger Node Item Card Start -->
+				<!-- Trigger Action Create Card Start -->
 				<div class="card shadow mb-4 text-dark">
 					<div class="card-header py-3">
-						<h6 class="m-0 font-weight-bold text-primary">트리거 아이템</h6>
+						<h6 class="m-0 font-weight-bold text-primary">트리거 액션</h6>
 					</div>
 					<div class="card-body">
 						<div class="table-responsive">
-							<!-- Trigger Node Item DataTables Start -->
-							<table class="table table-bordered dataTable">
+							<!-- Trigger Action Create Table Start -->
+							<table class="table table-bordered dataTable" width="100%" cellspacing="0">
 								<thead>
 									<tr>
-										<th class="align-middle text-center">사용 여부</th>
-										<th class="align-middle text-center">아이템 별칭</th>
-										<th class="align-middle text-center">노드 별칭</th>
-										<th class="align-middle text-center">아이템 별칭</th>
-										<th class="align-middle text-center">아이템 모드</th>
-										<th class="align-middle text-center">아이템 타입</th>
-										<th class="align-middle text-center">아이템 카테고리</th>
+										<th class="align-middle text-center">트리거 발생</th>
+										<th class="align-middle text-center">트리거 복구</th>
+										<th class="align-middle text-center w-75">액션 설명</th>
 									</tr>
 								</thead>
 								<tfoot>
 									<tr>
-										<th class="align-middle text-center">사용 여부</th>
-										<th class="align-middle text-center">아이템 별칭</th>
-										<th class="align-middle text-center">노드 별칭</th>
-										<th class="align-middle text-center">아이템 별칭</th>
-										<th class="align-middle text-center">아이템 모드</th>
-										<th class="align-middle text-center">아이템 타입</th>
-										<th class="align-middle text-center">아이템 카테고리</th>
+										<th class="align-middle text-center">트리거 발생</th>
+										<th class="align-middle text-center">트리거 복구</th>
+										<th class="align-middle text-center w-75">액션 설명</th>
 									</tr>
 								</tfoot>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listCardNodeItems)}" th:each="cardValue : ${listCardNodeItems}">
-										<td class="align-middle text-center"><input th:name="|mapTriggerItem[${cardValue.itemId}].itemId|" th:value="${cardValue.itemId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
-										<td class="align-middle text-center"><input th:name="|mapTriggerItem[${cardValue.itemId}].alias|" class="form-control" type="text" placeholder="표현식 변수"></td>
-										<td class="align-middle text-center"><a th:href="|/node/${ cardValue.nodeId }|" th:text="${ cardValue.nodeAlias }"></a></td>
-										<td class="align-middle text-center"><a th:href="|/node/item/${ cardValue.itemId }|" th:text="${ cardValue.alias }"></a></td>
-										<td class="align-middle text-center" th:text="${ cardValue.itemMode }"></td>
-										<td class="align-middle text-center" th:text="${ cardValue.itemType }"></td>
-										<td class="align-middle text-center" th:text="${ cardValue.itemCategory }"></td>
-									</tr>
-								</tbody>
-							</table>
-							<!-- Trigger Node Item DataTables End -->
-						</div>
-					</div>
-				</div>
-				<!-- Trigger Node Item Card End -->
-				<!-- Trigger Occur Action Create Card Start -->
-				<div class="card shadow mb-4 text-dark">
-					<div class="card-header py-3">
-						<h6 class="m-0 font-weight-bold text-primary">트리거 발생 액션</h6>
-					</div>
-					<div class="card-body">
-						<div class="table-responsive">
-							<!-- Trigger Action Create Table Start -->
-							<table class="table table-bordered dataTable" width="100%" cellspacing="0">
-								<thead>
-									<tr>
-										<th class="align-middle text-center w-25">사용 여부</th>
-										<th class="align-middle text-center">액션 설명</th>
-									</tr>
-								</thead>
-								<tbody>
 									<tr th:if="${not #lists.isEmpty(listCardActions)}" th:each="value,index : ${listCardActions}">
 										<td class="align-middle text-center"><input name="occurActionId" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
-										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
-									</tr>
-								</tbody>
-							</table>
-							<!-- Trigger Action Create Table End -->
-						</div>
-					</div>
-				</div>
-				<!-- Trigger Occur Action Create Card End -->
-				<!-- Trigger Restore Action Create Card Start -->
-				<div class="card shadow mb-4 text-dark">
-					<div class="card-header py-3">
-						<h6 class="m-0 font-weight-bold text-primary">트리거 복구 액션</h6>
-					</div>
-					<div class="card-body">
-						<div class="table-responsive">
-							<!-- Trigger Action Create Table Start -->
-							<table class="table table-bordered dataTable" width="100%" cellspacing="0">
-								<thead>
-									<tr>
-										<th class="align-middle text-center w-25">사용 여부</th>
-										<th class="align-middle text-center">액션 설명</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr th:if="${not #lists.isEmpty(listCardActions)}" th:each="value,index : ${listCardActions}">
 										<td class="align-middle text-center"><input name="restoreActionId" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
 									</tr>
@@ -155,7 +89,7 @@
 						</div>
 					</div>
 				</div>
-				<!-- Trigger Restore Action Create Card End -->
+				<!-- Trigger Action Create Card End -->
 				<input class="form-control btn btn-primary" type="submit" value="저장">
 			</form>
 		</th:block>

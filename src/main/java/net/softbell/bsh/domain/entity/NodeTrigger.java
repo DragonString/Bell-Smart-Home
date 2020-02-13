@@ -74,9 +74,6 @@ public class NodeTrigger implements Serializable
 	@OneToMany(mappedBy="nodeTrigger")
 	private List<NodeTriggerRestoreAction> nodeTriggerRestoreActions;
 
-	@OneToMany(mappedBy="nodeTrigger")
-	private List<NodeTriggerItem> nodeTriggerItems;
-
 	public NodeTriggerOccurAction addNodeTriggerOccurAction(NodeTriggerOccurAction nodeTriggerOccurAction)
 	{
 		getNodeTriggerOccurActions().add(nodeTriggerOccurAction);
@@ -107,21 +104,5 @@ public class NodeTrigger implements Serializable
 		nodeTriggerRestoreAction.setNodeTrigger(null);
 
 		return nodeTriggerRestoreAction;
-	}
-
-	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().add(nodeTriggerItem);
-		nodeTriggerItem.setNodeTrigger(this);
-
-		return nodeTriggerItem;
-	}
-
-	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().remove(nodeTriggerItem);
-		nodeTriggerItem.setNodeTrigger(null);
-
-		return nodeTriggerItem;
 	}
 }

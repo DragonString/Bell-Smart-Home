@@ -1,6 +1,5 @@
 package net.softbell.bsh.dto.request;
 
-import java.util.HashMap;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +24,6 @@ public class IotTriggerDto
     private boolean enableStatus;
     private String description;
     private String expression;
-    private HashMap<Long, IotTriggerItemDto> mapTriggerItem;
     private List<Long> occurActionId;
     private List<Long> restoreActionId;
 }

@@ -17,4 +17,5 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
 public interface NodeItemHistoryRepo extends JpaRepository<NodeItemHistory, Long>
 {
 	List<NodeItemHistory> findByNodeItem(NodeItem nodeItem, Pageable page);
+	NodeItemHistory findFirstByNodeItemOrderByItemHistoryIdDesc(NodeItem nodeItem);
 }

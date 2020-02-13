@@ -1,8 +1,11 @@
 package net.softbell.bsh.domain.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.NodeTrigger;
 
 /**
@@ -12,5 +15,5 @@ import net.softbell.bsh.domain.entity.NodeTrigger;
 @Repository
 public interface NodeTriggerRepo extends JpaRepository<NodeTrigger, Long>
 {
-	
+	List<NodeTrigger> findByEnableStatusAndExpressionContaining(EnableStatusRule enableStatus, String expression);
 }

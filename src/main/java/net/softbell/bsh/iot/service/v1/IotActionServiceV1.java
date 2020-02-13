@@ -270,7 +270,6 @@ public class IotActionServiceV1
 	{
 		// Field
 		Optional<NodeAction> optNodeAction;
-		List<NodeActionItem> listNodeActionItem;
 		boolean isSuccess = true;
 		
 		// Init
@@ -280,8 +279,25 @@ public class IotActionServiceV1
 		if (!optNodeAction.isPresent())
 			return false;
 		
+		// Process
+		isSuccess = execAction(optNodeAction.get());
+		
+		// Return
+		return isSuccess;
+	}
+	
+	public boolean execAction(NodeAction nodeAction)
+	{
+		// Field
+		List<NodeActionItem> listNodeActionItem;
+		boolean isSuccess = true;
+		
+		// Exception
+		if (nodeAction == null)
+			return false;
+		
 		// Load
-		listNodeActionItem = optNodeAction.get().getNodeActionItems();
+		listNodeActionItem = nodeAction.getNodeActionItems();
 		
 		// Process
 		for (NodeActionItem actionItem : listNodeActionItem)
