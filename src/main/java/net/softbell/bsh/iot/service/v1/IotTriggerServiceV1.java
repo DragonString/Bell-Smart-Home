@@ -240,8 +240,12 @@ public class IotTriggerServiceV1
 			isOccur = iotTriggerParserComp.parseEntity(nodeTrigger);
 			
 			// Exception
-			if (isOccur == null ||
-					(nodeTrigger.getLastStatus() == TriggerLastStatusRule.OCCUR && isOccur) ||
+			if (isOccur == null)
+			{
+				nodeTrigger.setLastStatus(TriggerLastStatusRule.ERROR); // DB Update - Error
+				continue;
+			}
+			if ((nodeTrigger.getLastStatus() == TriggerLastStatusRule.OCCUR && isOccur) ||
 					(nodeTrigger.getLastStatus() == TriggerLastStatusRule.RESTORE && !isOccur))
 				continue;
 			
@@ -249,9 +253,7 @@ public class IotTriggerServiceV1
 			listNodeAction.addAll(iotTriggerParserComp.getTriggerAction(nodeTrigger, isOccur));
 			
 			// DB - Update
-			if (isOccur == null)
-				nodeTrigger.setLastStatus(TriggerLastStatusRule.ERROR); // TODO 순서 변경 필요함
-			else if (isOccur)
+			if (isOccur)
 				nodeTrigger.setLastStatus(TriggerLastStatusRule.OCCUR);
 			else
 				nodeTrigger.setLastStatus(TriggerLastStatusRule.RESTORE);

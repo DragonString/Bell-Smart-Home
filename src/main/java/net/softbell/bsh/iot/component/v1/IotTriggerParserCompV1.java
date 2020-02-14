@@ -1,9 +1,14 @@
 package net.softbell.bsh.iot.component.v1;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -43,7 +48,11 @@ public class IotTriggerParserCompV1
 		LAST("last"), // 마지막 값 조회
 		MAX("max"), // 최대 값 조회
 		MIN("min"), // 최소 값 조회
-		AVG("avg"); // 평균 값 조회
+		AVG("avg"), // 평균 값 조회
+		DIFF("diff"), // last(0)과 last(1)의 차이 여부(1 or 0)
+		CHANGE("change"), // last(0) - last(1) 의 값
+		ABSCHANGE("abschange"), // change의 절대값
+		DELTA("delta"); // 최근 n 초 간 max - min 값
 
 		private String value;
 	    
@@ -298,34 +307,146 @@ public class IotTriggerParserCompV1
 	{
 		// Field
 		Optional<NodeItem> optNodeItem;
-		NodeItemHistory nodeItemHistory;
-		Double result;
+		NodeItem nodeItem;
+		Double result = null;
+		Date dateStart = null;
+		Pageable curPage = null;
+		int intParam = 0;
 		
-		// Process
-		switch (funcType)
+		// Init
+		optNodeItem = nodeItemRepo.findById(itemId);
+		
+		// Exception
+		if (!optNodeItem.isPresent())
+			return null;
+		
+		// Load
+		nodeItem = optNodeItem.get();
+		
+		// Process - Param Parse
+		// No Parameter Function
+		if (funcType == BuiltInFunction.DIFF || 
+				funcType == BuiltInFunction.CHANGE || 
+				funcType == BuiltInFunction.ABSCHANGE)
+			intParam = 0; // Set Parameter
+		else
 		{
-			case LAST:
+			try {
+				intParam = Integer.valueOf(param);
+			} catch (Exception ex) {
+				log.error("표현식 매개변수 정수 변환 에러: " + param);
+				return null;
+			}
+		}
+		
+		// Process - DB 1 Record Find
+		if (funcType == BuiltInFunction.LAST ||
+				funcType == BuiltInFunction.DIFF ||
+				funcType == BuiltInFunction.CHANGE ||
+				funcType == BuiltInFunction.ABSCHANGE)
+		{
+			// Field
+			Page<NodeItemHistory> pageNodeItemHistory;
+			List<NodeItemHistory> listNodeItemHistory;
+			
+			// Init
+			if (funcType == BuiltInFunction.LAST)
+				curPage = PageRequest.of(intParam, 1); // Page Set
+			else
+				curPage = PageRequest.of(0, 2); // Page Set
+			
+			// Load
+			pageNodeItemHistory = nodeItemHistoryRepo.findByNodeItemOrderByItemHistoryIdDesc(nodeItem, curPage);
+			
+			// Exception
+			if (pageNodeItemHistory == null || pageNodeItemHistory.isEmpty())
+				return null;
+			
+			// Post Load
+			listNodeItemHistory = pageNodeItemHistory.getContent();
+			
+			// Process - Last
+			if (funcType == BuiltInFunction.LAST)
+				result = listNodeItemHistory.get(0).getItemStatus();
+			else
+			{
+				// Process - Other
+				// Field
+				double lastStatus;
+				double beforeStatus;
+				
 				// Init
-				optNodeItem = nodeItemRepo.findById(itemId);
-				
-				// Exception
-				if (!optNodeItem.isPresent())
-					return null;
-				
-				// Load
-				nodeItemHistory = nodeItemHistoryRepo.findFirstByNodeItemOrderByItemHistoryIdDesc(optNodeItem.get());
-				
-				// Exception
-				if (nodeItemHistory == null)
-					return null;
+				lastStatus = listNodeItemHistory.get(0).getItemStatus();
+				beforeStatus = listNodeItemHistory.get(1).getItemStatus();
 				
 				// Process
-				result = nodeItemHistory.getItemStatus();
-				break;
-				
-			default:
-				result = null;
+				switch (funcType)
+				{
+					case DIFF:
+						// TODO
+						if (lastStatus != beforeStatus)
+							result = 1D;
+						else
+							result = 0D;
+						break;
+						
+					case CHANGE:
+						result = lastStatus - beforeStatus;
+						break;
+						
+					case ABSCHANGE:
+						result = Math.abs(lastStatus - beforeStatus);
+						break;
+						
+					default:
+				}
+			}
 		}
+		// Date Function Find
+		else if (funcType == BuiltInFunction.AVG || 
+				funcType == BuiltInFunction.MIN || 
+				funcType == BuiltInFunction.MAX ||
+				funcType == BuiltInFunction.DELTA)
+		{
+			// Field
+			Calendar calendar = Calendar.getInstance();
+			
+			// Init
+	    	calendar.add(Calendar.SECOND, intParam);
+	    	dateStart = calendar.getTime();
+	    	
+	    	// Process
+	    	switch (funcType)
+			{
+				case AVG:
+					result = nodeItemHistoryRepo.avgByNodeItem(nodeItem, dateStart);
+					break;
+					
+				case MIN:
+					result = nodeItemHistoryRepo.minByNodeItem(nodeItem, dateStart);
+					break;
+					
+				case MAX:
+					result = nodeItemHistoryRepo.maxByNodeItem(nodeItem, dateStart);
+					break;
+					
+				case DELTA:
+					// Field
+					double itemMax, itemMin;
+					
+					// Init
+					itemMax = nodeItemHistoryRepo.maxByNodeItem(nodeItem, dateStart);
+					itemMin = nodeItemHistoryRepo.minByNodeItem(nodeItem, dateStart);
+					
+					// Process
+					result = itemMax - itemMin;
+					break;
+					
+				default:
+			}
+		}
+		else
+			return null; // Not Defined
 		
 		// Return
 		return result;
