@@ -17,6 +17,7 @@ import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
+import net.softbell.bsh.domain.entity.NodeTrigger;
 import net.softbell.bsh.domain.repository.NodeActionRepo;
 import net.softbell.bsh.domain.repository.NodeReservActionRepo;
 import net.softbell.bsh.domain.repository.NodeReservRepo;
@@ -234,6 +235,33 @@ public class IotReservServiceV1
 		// DB - Update
 //				nodeActionRepo.save(nodeAction);
 		nodeReservActionRepo.saveAll(listNodeReservAction);
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean setTriggerEnableStatus(Authentication auth, long reservId, boolean status)
+	{
+		// Field
+		Optional<NodeReserv> optNodeReserv;
+		NodeReserv nodeReserv;
+		
+		// Init
+		optNodeReserv = nodeReservRepo.findById(reservId);
+		
+		// Exception
+		if (!optNodeReserv.isPresent())
+			return false;
+		
+		// Load
+		nodeReserv = optNodeReserv.get();
+		
+		// DB - Update
+		if (status)
+			nodeReserv.setEnableStatus(EnableStatusRule.ENABLE);
+		else
+			nodeReserv.setEnableStatus(EnableStatusRule.DISABLE);
 		
 		// Return
 		return true;

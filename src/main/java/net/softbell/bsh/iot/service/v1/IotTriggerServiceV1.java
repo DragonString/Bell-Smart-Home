@@ -168,7 +168,7 @@ public class IotTriggerServiceV1
 			return false;
 		
 		// Field
-		Member member;
+//		Member member;
 		Optional<NodeTrigger> optNodeTrigger;
 		NodeTrigger nodeTrigger;
 		HashMap<Long, IotTriggerActionDto> mapAction;
@@ -178,7 +178,7 @@ public class IotTriggerServiceV1
 		// Init
 		listAction = new ArrayList<NodeTriggerAction>();
 		mapAction = iotTriggerDto.getMapAction();
-		member = memberService.getMember(auth.getName());
+//		member = memberService.getMember(auth.getName());
 		optNodeTrigger = nodeTriggerRepo.findById(triggerId);
 		
 		if (iotTriggerDto.isEnableStatus())
@@ -187,7 +187,7 @@ public class IotTriggerServiceV1
 			enableStatus = EnableStatusRule.DISABLE;
 		
 		// Exception
-		if (member == null || !optNodeTrigger.isPresent())
+		if (/*member == null || */!optNodeTrigger.isPresent())
 			return false;
 		
 		// Init
@@ -245,6 +245,33 @@ public class IotTriggerServiceV1
 		// DB - Node Trigger Action Save
 		nodeTriggerActionRepo.saveAll(listAction);
 		
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean setTriggerEnableStatus(Authentication auth, long triggerId, boolean status)
+	{
+		// Field
+		Optional<NodeTrigger> optNodeTrigger;
+		NodeTrigger nodeTrigger;
+		
+		// Init
+		optNodeTrigger = nodeTriggerRepo.findById(triggerId);
+		
+		// Exception
+		if (!optNodeTrigger.isPresent())
+			return false;
+		
+		// Load
+		nodeTrigger = optNodeTrigger.get();
+		
+		// DB - Update
+		if (status)
+			nodeTrigger.setEnableStatus(EnableStatusRule.ENABLE);
+		else
+			nodeTrigger.setEnableStatus(EnableStatusRule.DISABLE);
 		
 		// Return
 		return true;

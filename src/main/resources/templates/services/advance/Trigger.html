@@ -26,7 +26,7 @@
 									<div class="font-weight-bold text-primary text-uppercase mb-1"><a th:href="@{/trigger/} + ${cardValue.triggerId}" th:text="${cardValue.description}">액션 설명</a></div>
 								</div>
 								<div class="col-auto">
-									<button class="btn btn-primary" th:onclick="|setItem(${cardValue.triggerId});|">실행</button>
+									<input th:checked="${cardValue.enableStatus}" class="trigger" type="checkbox" data-toggle="toggle" data-size="sm" th:value="${cardValue.triggerId}">
 								</div>
 							</div>
 						</div>
@@ -35,6 +35,10 @@
 				<!-- Trigger Card End -->
 			</div>
 			<!-- Trigger Card Row End -->
+		</th:block>
+		
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/page/js/trigger.js"></script>
 		</th:block>
 	</body>
 </html>

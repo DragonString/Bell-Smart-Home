@@ -2,6 +2,7 @@ package net.softbell.bsh.dto.view.general;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.NodeReserv;
 
 /**
@@ -14,6 +15,7 @@ public class ReservSummaryCardDto
 {
 	private Long reservId;
 	private String description;
+	private boolean enableStatus;
 	
 	public ReservSummaryCardDto(NodeReserv entity)
 	{
@@ -24,5 +26,10 @@ public class ReservSummaryCardDto
 		// Convert
 		this.reservId = entity.getReservId();
 		this.description = entity.getDescription();
+		
+		if (entity.getEnableStatus() == EnableStatusRule.ENABLE)
+			this.enableStatus = true;
+		else
+			this.enableStatus = false;
 	}
 }

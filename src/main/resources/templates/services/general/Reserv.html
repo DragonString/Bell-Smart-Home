@@ -26,7 +26,7 @@
 									<div class="font-weight-bold text-primary text-uppercase mb-1"><a th:href="@{/reserv/} + ${cardValue.reservId}" th:text="${cardValue.description}">액션 설명</a></div>
 								</div>
 								<div class="col-auto">
-									<button class="btn btn-primary" th:onclick="|setItem(${cardValue.reservId});|">실행</button>
+									<input th:checked="${cardValue.enableStatus}" class="reserv" type="checkbox" data-toggle="toggle" data-size="sm" th:value="${cardValue.reservId}">
 								</div>
 							</div>
 						</div>
@@ -35,6 +35,10 @@
 				<!-- Reservation Card End -->
 			</div>
 			<!-- Reservation Card Row End -->
+		</th:block>
+		
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/page/js/reserv.js"></script>
 		</th:block>
 	</body>
 </html>

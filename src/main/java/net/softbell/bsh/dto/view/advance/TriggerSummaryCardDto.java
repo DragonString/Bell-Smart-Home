@@ -2,6 +2,7 @@ package net.softbell.bsh.dto.view.advance;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.NodeTrigger;
 
 /**
@@ -14,6 +15,7 @@ public class TriggerSummaryCardDto
 {
 	private Long triggerId;
 	private String description;
+	private boolean enableStatus;
 	
 	public TriggerSummaryCardDto(NodeTrigger entity)
 	{
@@ -24,5 +26,10 @@ public class TriggerSummaryCardDto
 		// Convert
 		this.triggerId = entity.getTriggerId();
 		this.description = entity.getDescription();
+		
+		if (entity.getEnableStatus() == EnableStatusRule.ENABLE)
+			this.enableStatus = true;
+		else
+			this.enableStatus = false;
 	}
 }
