@@ -1,7 +1,5 @@
 package net.softbell.bsh.dto.view.advance;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import net.softbell.bsh.domain.ItemCategoryRule;
@@ -27,19 +25,11 @@ public class NodeItemCardDto
 	private Byte controlMode;
 	private Double lastStatus;
 	
-	public NodeItemCardDto(NodeItem entity)
+	public NodeItemCardDto(NodeItem entity, NodeItemHistory lastHistory)
 	{
 		// Exception
 		if (entity == null)
 			return;
-		
-		// Field
-		List<NodeItemHistory> listHistory;
-		NodeItemHistory lastHistory;
-		
-		// Init
-		listHistory = entity.getNodeItemHistories();
-		lastHistory = listHistory.get(listHistory.size() - 1);
 		
 		// Convert
 		this.itemId = entity.getItemId();

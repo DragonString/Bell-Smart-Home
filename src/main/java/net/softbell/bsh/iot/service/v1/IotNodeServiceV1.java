@@ -96,6 +96,28 @@ public class IotNodeServiceV1
 			return null;
 	}
 	
+	public NodeItemHistory getLastNodeItemHistory(NodeItem nodeItem)
+	{
+		// Process
+		return nodeItemHistoryRepo.findFirstByNodeItemOrderByItemHistoryIdDesc(nodeItem);
+	}
+	
+	public NodeItemHistory getLastNodeItemHistory(long nodeItemId)
+	{
+		// Field
+		Optional<NodeItem> optNodeItem;
+		
+		// Init
+		optNodeItem = nodeItemRepo.findById(nodeItemId);
+		
+		// Exception
+		if (!optNodeItem.isPresent())
+			return null;
+		
+		// Process
+		return nodeItemHistoryRepo.findFirstByNodeItemOrderByItemHistoryIdDesc(optNodeItem.get());
+	}
+	
 	public List<NodeItemHistory> getNodeItemHistory(long nodeItemId)
 	{
 		// Field

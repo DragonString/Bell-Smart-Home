@@ -35,33 +35,6 @@ public class NodeItemHistoryCardDto
 			listItems.add(new NodeItemHistoryCardItemDto(nodeItem));
 	}
 	
-	public NodeItemHistoryCardDto(NodeItem entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Field
-		List<NodeItemHistory> listNodeItemHistory;
-		int intStart, intEnd;
-		
-		// Init
-		listItems = new ArrayList<NodeItemHistoryCardItemDto>();
-		listNodeItemHistory = entity.getNodeItemHistories();
-		intEnd = listNodeItemHistory.size() - 1;
-		intStart = intEnd - 50;
-		
-		// Process
-		if (intStart < 0)
-			intStart = 0;
-		listNodeItemHistory = listNodeItemHistory.subList(intStart, intEnd);
-		
-		// Convert
-		this.alias = entity.getAlias();
-		for (NodeItemHistory nodeItem :  listNodeItemHistory)
-			listItems.add(new NodeItemHistoryCardItemDto(nodeItem));
-	}
-	
 	@Getter
 	@Setter
 	public class NodeItemHistoryCardItemDto

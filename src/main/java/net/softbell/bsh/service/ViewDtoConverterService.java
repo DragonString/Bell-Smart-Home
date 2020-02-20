@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
 import net.softbell.bsh.domain.entity.Node;
@@ -25,17 +26,23 @@ import net.softbell.bsh.dto.view.advance.TriggerItemCardDto;
 import net.softbell.bsh.dto.view.advance.TriggerSummaryCardDto;
 import net.softbell.bsh.dto.view.general.ActionItemCardDto;
 import net.softbell.bsh.dto.view.general.ActionSummaryCardDto;
+import net.softbell.bsh.dto.view.general.MonitorCardItemDto;
 import net.softbell.bsh.dto.view.general.MonitorSummaryCardDto;
 import net.softbell.bsh.dto.view.general.ReservActionCardDto;
 import net.softbell.bsh.dto.view.general.ReservSummaryCardDto;
+import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 엔티티 to 뷰 DTO 변환 서비스
  */
+@RequiredArgsConstructor
 @Service
 public class ViewDtoConverterService
 {
+	// Global Field
+	private final IotNodeServiceV1 iotNodeService;
+	
 	// Node Entity List to Monitor Card Dto List
 	public List<MonitorSummaryCardDto> convMonitorSummaryCards(Collection<Node> listEntity)
 	{
@@ -47,7 +54,23 @@ public class ViewDtoConverterService
 		
 		// Process
 		for (Node entity : listEntity)
-			listCards.add(new MonitorSummaryCardDto(entity));
+		{
+			// Field
+			MonitorSummaryCardDto cardDto;
+			List<MonitorCardItemDto> listItems;
+			
+			// Init
+			cardDto = new MonitorSummaryCardDto(entity);
+			listItems = new ArrayList<MonitorCardItemDto>();
+			
+			// Process
+			for (NodeItem nodeItem :  entity.getNodeItems())
+				listItems.add(new MonitorCardItemDto(nodeItem, iotNodeService.getLastNodeItemHistory(nodeItem)));
+			
+			// Add
+			cardDto.setListItems(listItems);
+			listCards.add(cardDto);
+		}
 		
 		// Return
 		return listCards;
@@ -155,7 +178,7 @@ public class ViewDtoConverterService
 		
 		// Process
 		for (NodeItem entity : listEntity)
-			listCards.add(new NodeItemCardDto(entity));
+			listCards.add(new NodeItemCardDto(entity, iotNodeService.getLastNodeItemHistory(entity)));
 		
 		// Return
 		return listCards;

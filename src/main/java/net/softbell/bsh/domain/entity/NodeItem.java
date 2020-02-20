@@ -74,9 +74,6 @@ public class NodeItem implements Serializable
 	@JoinColumn(name="node_id", nullable=false)
 	private Node node;
 
-	@OneToMany(mappedBy="nodeItem")
-	private List<NodeItemHistory> nodeItemHistories;
-
 	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
 	{
 		getNodeActionItems().add(nodeActionItem);
@@ -91,21 +88,5 @@ public class NodeItem implements Serializable
 		nodeActionItem.setNodeItem(null);
 
 		return nodeActionItem;
-	}
-
-	public NodeItemHistory addNodeItemHistory(NodeItemHistory nodeItemHistory)
-	{
-		getNodeItemHistories().add(nodeItemHistory);
-		nodeItemHistory.setNodeItem(this);
-
-		return nodeItemHistory;
-	}
-
-	public NodeItemHistory removeNodeItemHistory(NodeItemHistory nodeItemHistory)
-	{
-		getNodeItemHistories().remove(nodeItemHistory);
-		nodeItemHistory.setNodeItem(null);
-
-		return nodeItemHistory;
 	}
 }
