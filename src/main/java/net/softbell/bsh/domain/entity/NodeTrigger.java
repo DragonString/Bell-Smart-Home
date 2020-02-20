@@ -69,40 +69,21 @@ public class NodeTrigger implements Serializable
 	private Member member;
 
 	@OneToMany(mappedBy="nodeTrigger")
-	private List<NodeTriggerOccurAction> nodeTriggerOccurActions;
+	private List<NodeTriggerAction> nodeTriggerActions;
 
-	@OneToMany(mappedBy="nodeTrigger")
-	private List<NodeTriggerRestoreAction> nodeTriggerRestoreActions;
-
-	public NodeTriggerOccurAction addNodeTriggerOccurAction(NodeTriggerOccurAction nodeTriggerOccurAction)
+	public NodeTriggerAction addNodeTriggerAction(NodeTriggerAction nodeTriggerAction)
 	{
-		getNodeTriggerOccurActions().add(nodeTriggerOccurAction);
-		nodeTriggerOccurAction.setNodeTrigger(this);
+		getNodeTriggerActions().add(nodeTriggerAction);
+		nodeTriggerAction.setNodeTrigger(this);
 
-		return nodeTriggerOccurAction;
+		return nodeTriggerAction;
 	}
 
-	public NodeTriggerOccurAction removeNodeTriggerOccurAction(NodeTriggerOccurAction nodeTriggerOccurAction)
+	public NodeTriggerAction removeNodeTriggerAction(NodeTriggerAction nodeTriggerAction)
 	{
-		getNodeTriggerOccurActions().remove(nodeTriggerOccurAction);
-		nodeTriggerOccurAction.setNodeTrigger(null);
+		getNodeTriggerActions().remove(nodeTriggerAction);
+		nodeTriggerAction.setNodeTrigger(null);
 
-		return nodeTriggerOccurAction;
-	}
-
-	public NodeTriggerRestoreAction addNodeTriggerRestoreAction(NodeTriggerRestoreAction nodeTriggerRestoreAction)
-	{
-		getNodeTriggerRestoreActions().add(nodeTriggerRestoreAction);
-		nodeTriggerRestoreAction.setNodeTrigger(this);
-
-		return nodeTriggerRestoreAction;
-	}
-
-	public NodeTriggerRestoreAction removeNodeTriggerOccurAction(NodeTriggerRestoreAction nodeTriggerRestoreAction)
-	{
-		getNodeTriggerRestoreActions().remove(nodeTriggerRestoreAction);
-		nodeTriggerRestoreAction.setNodeTrigger(null);
-
-		return nodeTriggerRestoreAction;
+		return nodeTriggerAction;
 	}
 }

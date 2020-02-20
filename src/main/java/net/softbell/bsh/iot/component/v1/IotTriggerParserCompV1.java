@@ -15,15 +15,16 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
+import net.softbell.bsh.domain.TriggerStatusRule;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
 import net.softbell.bsh.domain.entity.NodeTrigger;
-import net.softbell.bsh.domain.entity.NodeTriggerOccurAction;
-import net.softbell.bsh.domain.entity.NodeTriggerRestoreAction;
+import net.softbell.bsh.domain.entity.NodeTriggerAction;
 import net.softbell.bsh.domain.repository.NodeItemHistoryRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.domain.repository.NodeTriggerRepo;
+import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -108,7 +109,7 @@ public class IotTriggerParserCompV1
 	    }
 	}
 	
-	public List<NodeAction> getTriggerAction(NodeTrigger nodeTrigger, boolean isOccur)
+	public List<NodeAction> getTriggerAction(NodeTrigger nodeTrigger)
 	{
 		// Field
 		List<NodeAction> listNodeAction;
@@ -116,13 +117,33 @@ public class IotTriggerParserCompV1
 		// Init
 		listNodeAction = new ArrayList<NodeAction>();
 		
+		log.info(BellLog.getLogHead() + "트리거 액션 로드 (" + nodeTrigger.getLastStatus() + ") - " + nodeTrigger.getDescription());
+		
 		// Process
-		if (isOccur)
-			for (NodeTriggerOccurAction entity : nodeTrigger.getNodeTriggerOccurActions())
-				listNodeAction.add(entity.getNodeAction());
-		else
-			for (NodeTriggerRestoreAction entity : nodeTrigger.getNodeTriggerRestoreActions())
-				listNodeAction.add(entity.getNodeAction());
+		for (NodeTriggerAction entity : nodeTrigger.getNodeTriggerActions())
+			switch (nodeTrigger.getLastStatus())
+			{
+				case OCCUR:
+					if (entity.getTriggerStatus() != TriggerStatusRule.ERROR &&
+							entity.getTriggerStatus() != TriggerStatusRule.RESTORE)
+						listNodeAction.add(entity.getNodeAction());
+					break;
+					
+				case RESTORE:
+					if (entity.getTriggerStatus() != TriggerStatusRule.ERROR &&
+					entity.getTriggerStatus() != TriggerStatusRule.OCCUR)
+						listNodeAction.add(entity.getNodeAction());
+					break;
+					
+				case ERROR:
+					if (entity.getTriggerStatus() == TriggerStatusRule.ALL ||
+					entity.getTriggerStatus() == TriggerStatusRule.ERROR)
+						listNodeAction.add(entity.getNodeAction());
+					break;
+					
+				default:
+					break;
+			}
 
 		// Return
 		return listNodeAction;
@@ -162,7 +183,7 @@ public class IotTriggerParserCompV1
 		rawExpression = nodeTrigger.getExpression();
 		resultExpression = rawExpression;
 		
-		log.info("표현식 분석 시작: " + rawExpression);
+//		log.info("표현식 분석 시작: " + rawExpression);
 		
 		// Process - []
 		while (intParentCount-- > 0)
@@ -199,7 +220,7 @@ public class IotTriggerParserCompV1
 				break;
 		}
 		
-		log.info("표현식 분석 끝: " + resultExpression); // TODO
+//		log.info("표현식 분석 끝: " + resultExpression); // TODO
 		
 		// Return
 		if (resultExpression.equals("1")) // 트리거 활성화
@@ -371,6 +392,10 @@ public class IotTriggerParserCompV1
 			else
 			{
 				// Process - Other
+				// Exception
+				if (listNodeItemHistory.size() < 2)
+					return null;
+				
 				// Field
 				double lastStatus;
 				double beforeStatus;

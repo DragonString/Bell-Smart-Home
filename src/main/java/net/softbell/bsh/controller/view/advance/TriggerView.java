@@ -1,5 +1,6 @@
 package net.softbell.bsh.controller.view.advance;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.core.Authentication;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeTrigger;
+import net.softbell.bsh.domain.entity.NodeTriggerAction;
 import net.softbell.bsh.dto.request.IotTriggerDto;
 import net.softbell.bsh.dto.view.advance.TriggerInfoCardDto;
+import net.softbell.bsh.dto.view.general.ActionSummaryCardDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1;
@@ -74,22 +77,123 @@ public class TriggerView
 	{
 		// Field
 		NodeTrigger nodeTrigger;
-		List<NodeAction> listNodeAction;
+		List<ActionSummaryCardDto> listCardActionsAll;
+		List<ActionSummaryCardDto> listCardActionsOccurAndRestore;
+		List<ActionSummaryCardDto> listCardActionsOccur;
+		List<ActionSummaryCardDto> listCardActionsRestore;
+		List<ActionSummaryCardDto> listCardActionsError;
 		
 		// Init
 		nodeTrigger = iotTriggerService.getTrigger(auth, triggerId);
-		listNodeAction = iotActionService.getAllNodeActions(auth);
+		listCardActionsAll = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsOccurAndRestore = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsOccur = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsRestore = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsError = new ArrayList<ActionSummaryCardDto>();
 		
 		// Exception
 		if (nodeTrigger == null)
 			return "redirect:/trigger?err";
 		
+		for (NodeTriggerAction entity : nodeTrigger.getNodeTriggerActions())
+		{
+			switch (entity.getTriggerStatus())
+			{
+				case ALL:
+					listCardActionsAll.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case OCCUR_AND_RESTORE:
+					listCardActionsOccurAndRestore.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case OCCUR:
+					listCardActionsOccur.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case RESTORE:
+					listCardActionsRestore.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case ERROR:
+					listCardActionsError.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+			}
+		}
+		
 		// Process
 		model.addAttribute("cardTriggerInfo", new TriggerInfoCardDto(nodeTrigger));
-//		model.addAttribute("listCardOccurActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
-//		model.addAttribute("listCardRestoreActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
+		model.addAttribute("listCardActionsAll", listCardActionsAll);
+		model.addAttribute("listCardActionsOccurAndRestore", listCardActionsOccurAndRestore);
+		model.addAttribute("listCardActionsOccur", listCardActionsOccur);
+		model.addAttribute("listCardActionsRestore", listCardActionsRestore);
+		model.addAttribute("listCardActionsError", listCardActionsError);
+		
+		// Return
+		return G_BASE_PATH + "/TriggerInfo";
+	}
+	
+	@GetMapping("/modify/{id}")
+	public String dispTriggerModify(Model model, Authentication auth, @PathVariable("id") Long triggerId)
+	{
+		// Field
+		NodeTrigger nodeTrigger;
+		List<NodeAction> listNodeAction;
+		List<ActionSummaryCardDto> listCardActionsAll;
+		List<ActionSummaryCardDto> listCardActionsOccurAndRestore;
+		List<ActionSummaryCardDto> listCardActionsOccur;
+		List<ActionSummaryCardDto> listCardActionsRestore;
+		List<ActionSummaryCardDto> listCardActionsError;
+		
+		// Init
+		nodeTrigger = iotTriggerService.getTrigger(auth, triggerId);
+		listNodeAction = iotActionService.getAllNodeActions(auth);
+		listCardActionsAll = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsOccurAndRestore = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsOccur = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsRestore = new ArrayList<ActionSummaryCardDto>();
+		listCardActionsError = new ArrayList<ActionSummaryCardDto>();
+		
+		// Exception
+		if (nodeTrigger == null)
+			return "redirect:/trigger?err";
+		
+		for (NodeTriggerAction entity : nodeTrigger.getNodeTriggerActions())
+		{
+			switch (entity.getTriggerStatus())
+			{
+				case ALL:
+					listCardActionsAll.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case OCCUR_AND_RESTORE:
+					listCardActionsOccurAndRestore.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case OCCUR:
+					listCardActionsOccur.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case RESTORE:
+					listCardActionsRestore.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+					
+				case ERROR:
+					listCardActionsError.add(new ActionSummaryCardDto(entity.getNodeAction()));
+					break;
+			}
+			
+			listNodeAction.remove(entity.getNodeAction());
+		}
+		
+		// Process
+		model.addAttribute("cardTriggerInfo", new TriggerInfoCardDto(nodeTrigger));
+		model.addAttribute("listCardActionsAll", listCardActionsAll);
+		model.addAttribute("listCardActionsOccurAndRestore", listCardActionsOccurAndRestore);
+		model.addAttribute("listCardActionsOccur", listCardActionsOccur);
+		model.addAttribute("listCardActionsRestore", listCardActionsRestore);
+		model.addAttribute("listCardActionsError", listCardActionsError);
 		model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction));
-		//model.addAttribute("listCardNodeItems", viewDtoConverterService.convTriggerItemCards(iotNodeService.getAllNodeItems(auth)));
 		
 		// Return
 		return G_BASE_PATH + "/TriggerModify";

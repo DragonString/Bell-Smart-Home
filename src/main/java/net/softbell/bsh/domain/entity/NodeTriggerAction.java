@@ -18,11 +18,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.TriggerStatusRule;
 
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 노드 트리거 복구 액션 엔티티
+ * @Description : 노드 트리거 액션 엔티티
  */
 @Builder
 @AllArgsConstructor
@@ -30,9 +31,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="node_trigger_restore_action")
-@NamedQuery(name="NodeTriggerRestoreAction.findAll", query="SELECT n FROM NodeTriggerRestoreAction n")
-public class NodeTriggerRestoreAction implements Serializable
+@Table(name="node_trigger_action")
+@NamedQuery(name="NodeTriggerAction.findAll", query="SELECT n FROM NodeTriggerAction n")
+public class NodeTriggerAction implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -40,6 +41,9 @@ public class NodeTriggerRestoreAction implements Serializable
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_action_id", unique=true, nullable=false)
 	private Long triggerActionId;
+	
+	@Column(name="trigger_status", nullable=false)
+	private TriggerStatusRule triggerStatus;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="trigger_id", nullable=false)

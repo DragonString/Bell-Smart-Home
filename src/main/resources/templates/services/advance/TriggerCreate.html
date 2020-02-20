@@ -65,6 +65,7 @@
 							<table class="table table-bordered dataTable" width="100%" cellspacing="0">
 								<thead>
 									<tr>
+										<th class="align-middle text-center">에러 발생</th>
 										<th class="align-middle text-center">트리거 발생</th>
 										<th class="align-middle text-center">트리거 복구</th>
 										<th class="align-middle text-center w-75">액션 설명</th>
@@ -72,15 +73,17 @@
 								</thead>
 								<tfoot>
 									<tr>
+										<th class="align-middle text-center">에러 발생</th>
 										<th class="align-middle text-center">트리거 발생</th>
 										<th class="align-middle text-center">트리거 복구</th>
 										<th class="align-middle text-center w-75">액션 설명</th>
 									</tr>
 								</tfoot>
 								<tbody>
-									<tr th:if="${not #lists.isEmpty(listCardActions)}" th:each="value,index : ${listCardActions}">
-										<td class="align-middle text-center"><input name="occurActionId" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
-										<td class="align-middle text-center"><input name="restoreActionId" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
+									<tr th:if="${not #lists.isEmpty(listCardActions)}" th:each="value : ${listCardActions}">
+										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].eventError|" value="true" type="checkbox" data-toggle="toggle" data-size="sm"></td>
+										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].eventOccur|" value="true" type="checkbox" data-toggle="toggle" data-size="sm"></td>
+										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].eventRestore|" value="true" type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
 									</tr>
 								</tbody>

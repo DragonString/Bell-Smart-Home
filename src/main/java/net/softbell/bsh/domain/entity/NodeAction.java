@@ -61,10 +61,7 @@ public class NodeAction implements Serializable
 	private List<NodeReservAction> nodeReservActions;
 
 	@OneToMany(mappedBy="nodeAction")
-	private List<NodeTriggerOccurAction> nodeTriggerOccurActions;
-
-	@OneToMany(mappedBy="nodeAction")
-	private List<NodeTriggerRestoreAction> nodeTriggerRestoreActions;
+	private List<NodeTriggerAction> nodeTriggerActions;
 
 	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
 	{
@@ -98,35 +95,19 @@ public class NodeAction implements Serializable
 		return nodeReservAction;
 	}
 
-	public NodeTriggerOccurAction addNodeTriggerOccurActions(NodeTriggerOccurAction nodeTriggerOccurActions)
+	public NodeTriggerAction addNodeTriggerActions(NodeTriggerAction nodeTriggerActions)
 	{
-		getNodeTriggerOccurActions().add(nodeTriggerOccurActions);
-		nodeTriggerOccurActions.setNodeAction(this);
+		getNodeTriggerActions().add(nodeTriggerActions);
+		nodeTriggerActions.setNodeAction(this);
 
-		return nodeTriggerOccurActions;
+		return nodeTriggerActions;
 	}
 
-	public NodeTriggerOccurAction removeNodeTriggerOccurActions(NodeTriggerOccurAction nodeTriggerActionsOccur)
+	public NodeTriggerAction removeNodeTriggerActions(NodeTriggerAction nodeTriggerActions)
 	{
-		getNodeTriggerOccurActions().remove(nodeTriggerActionsOccur);
-		nodeTriggerActionsOccur.setNodeAction(null);
+		getNodeTriggerActions().remove(nodeTriggerActions);
+		nodeTriggerActions.setNodeAction(null);
 
-		return nodeTriggerActionsOccur;
-	}
-
-	public NodeTriggerRestoreAction addNodeTriggerRestoreActions(NodeTriggerRestoreAction nodeTriggerActionsRestore)
-	{
-		getNodeTriggerRestoreActions().add(nodeTriggerActionsRestore);
-		nodeTriggerActionsRestore.setNodeAction(this);
-
-		return nodeTriggerActionsRestore;
-	}
-
-	public NodeTriggerRestoreAction removeNodeTriggerRestoreActions(NodeTriggerRestoreAction nodeTriggerActionsRestore)
-	{
-		getNodeTriggerRestoreActions().remove(nodeTriggerActionsRestore);
-		nodeTriggerActionsRestore.setNodeAction(null);
-
-		return nodeTriggerActionsRestore;
+		return nodeTriggerActions;
 	}
 }

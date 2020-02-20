@@ -1,28 +1,23 @@
 package net.softbell.bsh.dto.request;
 
-import java.util.HashMap;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 트리거정보 DTO
+ * @Description : 트리거 이벤트 액션 DTO
  */
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IotTriggerDto
+public class IotTriggerActionDto
 {
-    private boolean enableStatus;
-    private String description;
-    private String expression;
-    private HashMap<Long, IotTriggerActionDto> mapAction;
+	private boolean eventError;
+	private boolean eventOccur;
+	private boolean eventRestore;
 }
