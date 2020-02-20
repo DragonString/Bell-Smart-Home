@@ -20,7 +20,4 @@ public class CardDashboardDto
 	private String cardTopic;
 	@NonNull
 	private String cardLast;
-	
-	@NonNull
-	private List<CardItemDto> cardItems;
 }

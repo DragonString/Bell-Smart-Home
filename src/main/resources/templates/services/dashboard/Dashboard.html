@@ -20,6 +20,36 @@
 			<!-- Home Alert Row Start -->
 			<div class="row">
 				<!-- Home Alert Card Start -->
+				<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCardHumidityAlerts)}" th:each="value : ${listCardHumidityAlerts}">
+					<div class="card shadow">
+						<div class="card-header bg-danger"><i class="fas fa-exclamation-triangle"></i> 습도 경고</div>
+						<div class="card-body text-dark">
+							<div class="card-text">현재 <strong th:text="${value.alias}"></strong> 평균 습도가 <strong class="text-danger" th:text="|${#numbers.formatDecimal(value.avgStatus == null ? 0 : value.avgStatus, 0, 2)}%|"></strong>로 매우 낮습니다.</div>
+						</div>
+						<div class="card-footer">
+							<small class="text-muted">최근 5분 평균</small>
+						</div>
+					</div>
+				</div>
+				<!-- Home Alert Card End -->
+			</div>
+			<!-- Home Alert Row End -->
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			<hr class="bg-white"/>
+			<h1>Dummy Data</h1>
+			
+			<!-- Home Alert Row Start -->
+			<div class="row">
+				<!-- Home Alert Card Start -->
 				<div class="col-xl-3 col-md-6 mb-4">
 					<div class="card shadow">
 						<div class="card-header bg-danger"><i class="fas fa-exclamation-triangle"></i> 경고</div>

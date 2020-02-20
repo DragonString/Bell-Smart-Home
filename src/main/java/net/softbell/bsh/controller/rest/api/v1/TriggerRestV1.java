@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import net.softbell.bsh.domain.entity.NodeTrigger;
 import net.softbell.bsh.dto.response.ResultDto;
 import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1;
 import net.softbell.bsh.service.ResponseService;
