@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+	<!-- Home Status Card Row Start -->
+	<div class="row" th:fragment="Status">
+		<!-- Indoor Humidity Status Card Start -->
+		<th:block th:replace="services/dashboard/DashboardStatus :: StatusCard ('실내 평균 습도 (Dummy)', '15%', 20)"></th:block>
+		<!-- Indoor Humidity Status Card End -->
+		<!-- Indoor Temperature Status Card Start -->
+		<th:block th:replace="services/dashboard/DashboardStatus :: StatusCard ('실내 평균 온도 (Dummy)', '25℃', 50)"></th:block>
+		<!-- Indoor Temperature Status Card End -->
+		
+		<!-- Outdoor Humidity Status Card Start -->
+		<th:block th:replace="services/dashboard/DashboardStatus :: StatusCard ('실외 평균 습도 (Dummy)', '20%', 30)"></th:block>
+		<!-- Outdoor Humidity Status Card End -->
+		<!-- Outdoor Temperature Status Card Start -->
+		<th:block th:replace="services/dashboard/DashboardStatus :: StatusCard ('실외 평균 온도 (Dummy)', '2℃', 10)"></th:block>
+		<!-- Outdoor Temperature Status Card End -->
+		
+		
+		<!-- Indoor Light Status Card Start -->
+		<th:block th:replace="services/dashboard/DashboardStatus :: StatusCard ('실내 켜진 전등 (Dummy)', '8/10', 80)"></th:block>
+		<!-- Indoor Light Status Card End -->
+		
+		<!-- Window Status Card Start -->
+		<th:block th:replace="services/dashboard/DashboardStatus :: StatusCard ('열린 창문 (Dummy)', '1/10', 10)"></th:block>
+		<!-- Window Status Card End -->
+	</div>
+	<!-- Home Status Card Row End -->
+	
+	
+	
+	
+	<!-- Home Status Card Start -->
+	<div class="col-xl-3 col-md-6 mb-4" th:fragment="StatusCard (title, status, progPercent)">
+		<div class="card border-left-primary shadow h-100 py-2">
+			<div class="card-body">
+				<div class="row no-gutters align-items-center">
+					<div class="col mr-2">
+						<div class="text-xs font-weight-bold text-primary text-uppercase mb-1" th:text="${title}"></div>
+						<div class="progress mb-4">
+							<div th:if="${progPercent} < 50" th:text="${status}" th:style="|width: ${progPercent}%|" th:classappend="${(progPercent < 30 ? 'bg-primary' : 'bg-success') + (progPercent < 5 ? ' text-dark' : '')}" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+							<div th:if="${progPercent} >= 50" th:text="${status}" th:style="|width: ${progPercent}%|" th:classappend="${progPercent} > 60 ? 'bg-danger' : 'bg-success'" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+						</div>
+					</div>
+					<div class="col-auto">
+						<i class="fas fa-info fa-2x text-gray-300"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- Home Status Card End -->
+</html>

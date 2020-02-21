@@ -16,6 +16,7 @@ public class MonitorCardItemDto
 	private String alias;
 	private Double lastStatus;
 	private Integer widthPercent;
+	private Boolean isDigital;
 	
 	public MonitorCardItemDto(NodeItem entity, NodeItemHistory lastHistory)
 	{
@@ -29,6 +30,7 @@ public class MonitorCardItemDto
 		switch (entity.getItemMode())
 		{
 			case DIGITAL:
+				isDigital = true;
 				if (this.lastStatus == 0)
 					this.widthPercent = 0;
 				else
@@ -37,7 +39,27 @@ public class MonitorCardItemDto
 				break;
 				
 			case ANALOG:
-				this.widthPercent = (int) (this.lastStatus / 10);
+				isDigital = false;
+				switch (entity.getItemType())
+				{
+					case SENSOR_HUMIDITY:
+						this.widthPercent = this.lastStatus.intValue(); // 습도는 0~100%
+						break;
+						
+					case SENSOR_TEMPERATURE:
+						this.widthPercent = (int) (this.lastStatus + 20); // 온도는 -20~40
+						break;
+						
+					case READER_RFID:
+						if (this.lastStatus != 0)
+							this.widthPercent = 100; // RFID는 탐지 여부로 판정
+						else
+							this.widthPercent = 0;
+						break;
+						
+					default:
+						this.widthPercent = (int) (this.lastStatus / 10);
+				}
 					
 				break;
 				
