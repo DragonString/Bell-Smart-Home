@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -33,7 +34,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name="node_item_history")
+@Table(name="node_item_history",
+		indexes = {
+		    @Index(name = "IDX_PERIOD_DATE", columnList = "receive_date") // 수신 시간으로 조회하는 구문이 있으므로 인덱싱 필요 (안하면 데이터 많아졌을때 풀스캔돌려서 조회시간 미침)
+	})
 @NamedQuery(name="NodeItemHistory.findAll", query="SELECT n FROM NodeItemHistory n")
 public class NodeItemHistory implements Serializable
 {
@@ -42,10 +46,10 @@ public class NodeItemHistory implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="item_history_id", unique=true, nullable=false)
-	private long itemHistoryId;
+	private Long itemHistoryId;
 
 	@Column(name="item_status", nullable=false)
-	private long itemStatus;
+	private Double itemStatus;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="receive_date", nullable=false)

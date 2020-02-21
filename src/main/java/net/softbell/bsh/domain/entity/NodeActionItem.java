@@ -43,10 +43,10 @@ public class NodeActionItem implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="action_item_id", unique=true, nullable=false)
-	private long actionItemId;
+	private Long actionItemId;
 
 	@Column(name="item_status", nullable=false)
-	private long itemStatus;
+	private Double itemStatus;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="item_id", nullable=false)

@@ -13,7 +13,7 @@ import net.softbell.bsh.domain.entity.Node;
 @Setter
 public class NodeManageSummaryCardDto
 {
-	private long nodeId;
+	private Long nodeId;
 	private String uid;
 	private String alias;
 	private EnableStatusRule enableStatus;

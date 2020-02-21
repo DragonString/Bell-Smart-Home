@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+	<!-- Home Alert Row Start -->
+	<div class="row" th:fragment="Alert">
+		<!-- Humidity Warn Card Start -->
+		<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCardHumidityWarns)}" th:each="value : ${listCardHumidityWarns}">
+			<div class="card shadow">
+				<div class="card-header bg-warning"><i class="fas fa-exclamation"></i> 습도 주의</div>
+				<div class="card-body text-dark">
+					<div class="card-text" th:if="${value.avgStatus} > 50">현재 <strong th:text="${value.alias}"></strong> 평균 습도가 <strong class="text-danger" th:text="|${#numbers.formatDecimal(value.avgStatus == null ? 0 : value.avgStatus, 0, 2)}%|"></strong> 로 높습니다.</div>
+					<div class="card-text" th:unless="${value.avgStatus} > 50">현재 <strong th:text="${value.alias}"></strong> 평균 습도가 <strong class="text-primary" th:text="|${#numbers.formatDecimal(value.avgStatus == null ? 0 : value.avgStatus, 0, 2)}%|"></strong> 로 낮습니다.</div>
+				</div>
+				<div class="card-footer">
+					<small class="text-muted">최근 5분 평균</small>
+				</div>
+			</div>
+		</div>
+		<!-- Humidity Warn Card End -->
+		
+		<!-- Temperature Warn Card Start -->
+		<div class="col-xl-3 col-md-6 mb-4" th:if="${not #lists.isEmpty(listCardTemperatureWarns)}" th:each="value : ${listCardTemperatureWarns}">
+			<div class="card shadow">
+				<div class="card-header bg-warning"><i class="fas fa-exclamation"></i> 온도 주의</div>
+				<div class="card-body text-dark">
+					<div class="card-text" th:if="${value.avgStatus} > 20">현재 <strong th:text="${value.alias}"></strong> 평균 온도가 <strong class="text-danger" th:text="|${#numbers.formatDecimal(value.avgStatus == null ? 0 : value.avgStatus, 0, 2)}℃|"></strong> 로 높습니다.</div>
+					<div class="card-text" th:unless="${value.avgStatus} > 20">현재 <strong th:text="${value.alias}"></strong> 평균 온도가 <strong th:class="text-primary" th:text="|${#numbers.formatDecimal(value.avgStatus == null ? 0 : value.avgStatus, 0, 2)}℃|"></strong> 로 낮습니다.</div>
+				</div>
+				<div class="card-footer">
+					<small class="text-muted">최근 5분 평균</small>
+				</div>
+			</div>
+		</div>
+		<!-- Temperature Warn Card End -->
+	</div>
+	<!-- Home Alert Row End -->
+</html>

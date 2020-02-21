@@ -83,6 +83,6 @@ public class NodeView
 		model.addAttribute("cardNodeItemHistory", new NodeItemHistoryCardDto(nodeItem, listNodeItemHistory));
 		
 		// Return
-        return G_BASE_PATH + "/nodeItemInfo";
+        return G_BASE_PATH + "/NodeItemInfo";
     }
 }

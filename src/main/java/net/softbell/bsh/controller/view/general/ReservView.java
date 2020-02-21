@@ -54,6 +54,23 @@ public class ReservView
 	{
 		// Field
 		NodeReserv nodeReserv;
+		
+		// Init
+		nodeReserv = iotReservService.getReserv(auth, reservId);
+		
+		// Process
+		model.addAttribute("cardReservInfo", new ReservInfoCardDto(nodeReserv));
+		model.addAttribute("listCardActionActives", viewDtoConverterService.convReservActionCards(nodeReserv.getNodeReservActions()));
+		
+		// Return
+        return G_BASE_PATH + "/ReservInfo";
+    }
+	
+	@GetMapping("/modify/{id}")
+    public String dispReservModify(Model model, Authentication auth, @PathVariable("id") long reservId)
+	{
+		// Field
+		NodeReserv nodeReserv;
 		List<NodeAction> listNodeAction;
 		
 		// Init

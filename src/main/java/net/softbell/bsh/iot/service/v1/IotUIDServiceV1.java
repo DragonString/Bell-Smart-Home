@@ -52,7 +52,7 @@ public class IotUIDServiceV1
 							.alias(nodeInfo.getNodeName())
 							.version(nodeInfo.getVersion())
 							.registerDate(new Date())
-//							.enableStatus(EnableStatusRule.ENABLE) // ############## TODO 개발중 인증패스
+							.enableStatus(EnableStatusRule.WAIT)
 							.build();
 		
 		// DB - Save

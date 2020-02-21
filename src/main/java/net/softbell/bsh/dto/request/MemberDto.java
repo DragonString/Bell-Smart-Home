@@ -24,16 +24,16 @@ import net.softbell.bsh.domain.entity.Member;
 @Builder
 public class MemberDto
 {
-    private long memberId;
-    private int ban;
+    private Long memberId;
+    private Integer ban;
 	private Date banDate;
 	private Date changePasswdDate;
 	private String email;
 	private Date lastLogin;
-	private int loginFailcount;
+	private Integer loginFailcount;
 	private String nickname;
 	private String password;
-	private int permission;
+	private Integer permission;
 	private Date registerDate;
 	private String userId;
 	private String username;

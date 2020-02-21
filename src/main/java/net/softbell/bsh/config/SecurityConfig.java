@@ -69,15 +69,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and()
     		.authorizeRequests() // 페이지 권한 설정
-				.antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN")
 				.antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup", // 계정 인증
 							"/api/rest/exception/**", // 권한 예외
 							"/api/rest/*/auth/**", // API 인증
 							"/api/rest/*/status/**", // 서버 Status
 							"/api/rest/*/iot/auth/**", // IoT API 인증
 							"/api/rest/*/ifttt/**" // IFTTT Webhook
-							).permitAll()
-				.antMatchers("/denied").authenticated()
+							).permitAll() // 누구나 접근 가능
+				.antMatchers("/denied").authenticated() // 접근제한 페이지 인증
+				.antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // 관리자 페이지 인증
 				.antMatchers("/ws/**").hasRole("NODE") // WebSocket 인증
 				.anyRequest().hasAnyRole("MEMBER", "ADMIN", "SUPERADMIN") // 기타 모든 페이지는 Member 권한 보유자만 가능
 		.and()

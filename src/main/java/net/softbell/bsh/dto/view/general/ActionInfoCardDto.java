@@ -13,7 +13,7 @@ import net.softbell.bsh.domain.entity.NodeAction;
 @Setter
 public class ActionInfoCardDto
 {
-	private long actionId;
+	private Long actionId;
 	private boolean enableStatus;
 	private String description;
 	

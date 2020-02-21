@@ -18,6 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.softbell.bsh.domain.TriggerStatusRule;
 
 
 /**
@@ -39,17 +40,16 @@ public class NodeTriggerAction implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_action_id", unique=true, nullable=false)
-	private long triggerActionId;
+	private Long triggerActionId;
+	
+	@Column(name="trigger_status", nullable=false)
+	private TriggerStatusRule triggerStatus;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="trigger_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="trigger_id", nullable=false)
 	private NodeTrigger nodeTrigger;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="action_id_occur")
-	private NodeAction nodeActionOccur;
-
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="action_id_restore")
-	private NodeAction nodeActionRestore;
+	@JoinColumn(name="action_id", nullable=false)
+	private NodeAction nodeAction;
 }

@@ -46,7 +46,7 @@ public class NodeTrigger implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="trigger_id", unique=true, nullable=false)
-	private long triggerId;
+	private Long triggerId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="change_date")
@@ -71,9 +71,6 @@ public class NodeTrigger implements Serializable
 	@OneToMany(mappedBy="nodeTrigger")
 	private List<NodeTriggerAction> nodeTriggerActions;
 
-	@OneToMany(mappedBy="nodeTrigger")
-	private List<NodeTriggerItem> nodeTriggerItems;
-
 	public NodeTriggerAction addNodeTriggerAction(NodeTriggerAction nodeTriggerAction)
 	{
 		getNodeTriggerActions().add(nodeTriggerAction);
@@ -88,21 +85,5 @@ public class NodeTrigger implements Serializable
 		nodeTriggerAction.setNodeTrigger(null);
 
 		return nodeTriggerAction;
-	}
-
-	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().add(nodeTriggerItem);
-		nodeTriggerItem.setNodeTrigger(this);
-
-		return nodeTriggerItem;
-	}
-
-	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().remove(nodeTriggerItem);
-		nodeTriggerItem.setNodeTrigger(null);
-
-		return nodeTriggerItem;
 	}
 }

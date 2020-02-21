@@ -13,12 +13,12 @@ import net.softbell.bsh.domain.entity.NodeItem;
 @Setter
 public class ActionItemCardDto
 {
-	private long itemId;
-	private long nodeId;
+	private Long itemId;
+	private Long nodeId;
 	private String nodeAlias;
 	private String itemAlias;
-	private long pinStatus;
-	private long pinMin, pinMax;
+	private Double pinStatus;
+	private Long pinMin, pinMax;
 	
 	public ActionItemCardDto(NodeItem entity)
 	{
@@ -31,8 +31,8 @@ public class ActionItemCardDto
 		this.nodeId = entity.getNode().getNodeId();
 		this.nodeAlias = entity.getNode().getAlias();
 		this.itemAlias = entity.getAlias();
-		this.pinMin = 0;
-		this.pinMax = 1024; // TODO 핀 타입에 따라 맥스값 지정해주기
+		this.pinMin = 0L;
+		this.pinMax = 1024L; // TODO 핀 타입에 따라 맥스값 지정해주기
 	}
 	
 	public ActionItemCardDto(NodeActionItem entity)
@@ -47,7 +47,7 @@ public class ActionItemCardDto
 		this.nodeAlias = entity.getNodeItem().getNode().getAlias();
 		this.itemAlias = entity.getNodeItem().getAlias();
 		this.pinStatus = entity.getItemStatus();
-		this.pinMin = 0;
-		this.pinMax = 1024;
+		this.pinMin = 0L;
+		this.pinMax = 1024L;
 	}
 }

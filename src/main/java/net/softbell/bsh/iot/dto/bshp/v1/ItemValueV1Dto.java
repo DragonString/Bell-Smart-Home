@@ -17,6 +17,6 @@ import lombok.Setter;
 @Setter
 public class ItemValueV1Dto
 {
-	private byte itemIndex;
-	private long itemStatus;
+	private Byte itemIndex;
+	private Double itemStatus;
 }

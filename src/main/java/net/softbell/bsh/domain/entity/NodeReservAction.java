@@ -39,7 +39,7 @@ public class NodeReservAction implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="reserv_action_id", unique=true, nullable=false)
-	private long reservActionId;
+	private Long reservActionId;
 
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="reserv_id", nullable=false)

@@ -13,7 +13,7 @@ import net.softbell.bsh.domain.entity.NodeReserv;
 @Setter
 public class ReservInfoCardDto
 {
-	private long reservId;
+	private Long reservId;
 	private boolean enableStatus;
 	private String description;
 	private String expression;

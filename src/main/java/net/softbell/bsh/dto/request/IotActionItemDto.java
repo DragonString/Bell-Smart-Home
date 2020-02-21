@@ -19,7 +19,7 @@ import lombok.ToString;
 @Builder
 public class IotActionItemDto
 {
-	private long actionItemId;
-	private long itemId;
-    private short itemStatus;
+	private Long actionItemId;
+	private Long itemId;
+    private Double itemStatus;
 }

@@ -42,7 +42,7 @@ public class NodeAction implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="action_id", unique=true, nullable=false)
-	private long actionId;
+	private Long actionId;
 
 	@Column(nullable=false, length=50)
 	private String description;
@@ -60,11 +60,8 @@ public class NodeAction implements Serializable
 	@OneToMany(mappedBy="nodeAction")
 	private List<NodeReservAction> nodeReservActions;
 
-	@OneToMany(mappedBy="nodeActionOccur")
-	private List<NodeTriggerAction> nodeTriggerActionsOccur;
-
-	@OneToMany(mappedBy="nodeActionRestore")
-	private List<NodeTriggerAction> nodeTriggerActionsRestore;
+	@OneToMany(mappedBy="nodeAction")
+	private List<NodeTriggerAction> nodeTriggerActions;
 
 	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
 	{
@@ -98,35 +95,19 @@ public class NodeAction implements Serializable
 		return nodeReservAction;
 	}
 
-	public NodeTriggerAction addNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur)
+	public NodeTriggerAction addNodeTriggerActions(NodeTriggerAction nodeTriggerActions)
 	{
-		getNodeTriggerActionsOccur().add(nodeTriggerActionsOccur);
-		nodeTriggerActionsOccur.setNodeActionOccur(this);
+		getNodeTriggerActions().add(nodeTriggerActions);
+		nodeTriggerActions.setNodeAction(this);
 
-		return nodeTriggerActionsOccur;
+		return nodeTriggerActions;
 	}
 
-	public NodeTriggerAction removeNodeTriggerActions1(NodeTriggerAction nodeTriggerActionsOccur)
+	public NodeTriggerAction removeNodeTriggerActions(NodeTriggerAction nodeTriggerActions)
 	{
-		getNodeTriggerActionsOccur().remove(nodeTriggerActionsOccur);
-		nodeTriggerActionsOccur.setNodeActionOccur(null);
+		getNodeTriggerActions().remove(nodeTriggerActions);
+		nodeTriggerActions.setNodeAction(null);
 
-		return nodeTriggerActionsOccur;
-	}
-
-	public NodeTriggerAction addNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore)
-	{
-		getNodeTriggerActionsRestore().add(nodeTriggerActionsRestore);
-		nodeTriggerActionsRestore.setNodeActionRestore(this);
-
-		return nodeTriggerActionsRestore;
-	}
-
-	public NodeTriggerAction removeNodeTriggerActions2(NodeTriggerAction nodeTriggerActionsRestore)
-	{
-		getNodeTriggerActionsRestore().remove(nodeTriggerActionsRestore);
-		nodeTriggerActionsRestore.setNodeActionRestore(null);
-
-		return nodeTriggerActionsRestore;
+		return nodeTriggerActions;
 	}
 }

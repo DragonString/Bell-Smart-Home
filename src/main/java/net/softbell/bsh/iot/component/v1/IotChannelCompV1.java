@@ -27,7 +27,7 @@ public class IotChannelCompV1
 	public void sendDataUID(BaseV1Dto data)
 	{
 		// Log
-		log.info(BellLog.getLogHead() + "IoT 메시지 전송 (UID: " + data.getTarget() + ")"); // TODO 나중에 제거
+//		log.info(BellLog.getLogHead() + "IoT 메시지 전송 (UID: " + data.getTarget() + ")"); // TODO 나중에 제거
 		
 		// Process
 		template.convertAndSend(G_UID_URL + data.getTarget(), data);
@@ -36,7 +36,7 @@ public class IotChannelCompV1
 	public void sendDataToken(BaseV1Dto data)
 	{
 		// Log
-		log.info(BellLog.getLogHead() + "IoT 메시지 전송 (Token: " + data.getTarget() + ")"); // TODO 나중에 제거
+//		log.info(BellLog.getLogHead() + "IoT 메시지 전송 (Token: " + data.getTarget() + ")"); // TODO 나중에 제거
 		
 		// Process
 		template.convertAndSend(G_TOKEN_URL + data.getTarget(), data);

@@ -16,7 +16,7 @@ import net.softbell.bsh.domain.entity.Member;
 @Setter
 public class MemberSummaryCardDto
 {
-	private long memberId;
+	private Long memberId;
 	private String userId;
 	private String username;
 	private Date registerDate;

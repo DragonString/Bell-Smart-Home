@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>트리거 정보</title>
+		<th:block layout:fragment="pageCss">
+			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Trigger Modify</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<!-- Trigger Info Create Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">트리거 정보</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Trigger Info Create Table Start -->
+						<table class="table table-bordered" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center w-25">이름</th>
+									<th class="align-middle text-center">값</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="align-middle text-center">활성화 상태</td>
+									<td class="align-middle text-center text-success" th:if="${cardTriggerInfo.enableStatus}">활성화</td>
+									<td class="align-middle text-center text-danger" th:unless="${cardTriggerInfo.enableStatus}">비활성화</td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">설명</td>
+									<td class="align-middle text-center" th:text="${cardTriggerInfo.description}"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">표현식</td>
+									<td class="align-middle text-center" th:text="${cardTriggerInfo.expression}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Trigger Info Create Table End -->
+					</div>
+				</div>
+			</div>
+			<!-- Trigger Info Create Card End -->
+			<!-- Trigger Action Info Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">트리거 액션</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Trigger Action Info Table Start -->
+						<table class="table table-bordered dataTable" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center">에러 발생</th>
+									<th class="align-middle text-center">트리거 발생</th>
+									<th class="align-middle text-center">트리거 복구</th>
+									<th class="align-middle text-center w-75">액션 설명</th>
+								</tr>
+							</thead>
+							<tfoot>
+								<tr>
+									<th class="align-middle text-center">에러 발생</th>
+									<th class="align-middle text-center">트리거 발생</th>
+									<th class="align-middle text-center">트리거 복구</th>
+									<th class="align-middle text-center w-75">액션 설명</th>
+								</tr>
+							</tfoot>
+							<tbody>
+								<tr th:if="${not #lists.isEmpty(listCardActionsAll)}" th:each="value : ${listCardActionsAll}">
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+								</tr>
+								<tr th:if="${not #lists.isEmpty(listCardActionsOccurAndRestore)}" th:each="value : ${listCardActionsOccurAndRestore}">
+									<td class="align-middle text-center">X</td>
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+								</tr>
+								<tr th:if="${not #lists.isEmpty(listCardActionsOccur)}" th:each="value : ${listCardActionsOccur}">
+									<td class="align-middle text-center">X</td>
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center">X</td>
+									<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+								</tr>
+								<tr th:if="${not #lists.isEmpty(listCardActionsRestore)}" th:each="value : ${listCardActionsRestore}">
+									<td class="align-middle text-center">X</td>
+									<td class="align-middle text-center">X</td>
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+								</tr>
+								<tr th:if="${not #lists.isEmpty(listCardActionsError)}" th:each="value : ${listCardActionsError}">
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center">X</td>
+									<td class="align-middle text-center">X</td>
+									<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Trigger Action Info Table End -->
+					</div>
+				</div>
+			</div>
+			<!-- Trigger Action Info Card End -->
+			<a class="form-control btn btn-warning" th:href="|/trigger/modify/${cardTriggerInfo.triggerId}|">수정</a>
+		</th:block>
+		
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/vendor/datatables/js/jquery.dataTables.min.js"></script>
+			<script src="/rss/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+			<script src="/rss/common/js/datatables-default.js"></script>
+		</th:block>
+	</body>
+</html>

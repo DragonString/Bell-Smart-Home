@@ -44,16 +44,16 @@ public class NodeItem implements Serializable
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="item_id", unique=true, nullable=false)
-	private long itemId;
+	private Long itemId;
 
 	@Column(nullable=false, length=50)
 	private String alias;
 
 	@Column(name="control_mode", nullable=false)
-	private byte controlMode;
+	private Byte controlMode;
 
 	@Column(name="item_index", nullable=false)
-	private byte itemIndex;
+	private Byte itemIndex;
 
 	@Column(name="item_mode", nullable=false)
 	private ItemModeRule itemMode;
@@ -74,12 +74,6 @@ public class NodeItem implements Serializable
 	@JoinColumn(name="node_id", nullable=false)
 	private Node node;
 
-	@OneToMany(mappedBy="nodeItem")
-	private List<NodeItemHistory> nodeItemHistories;
-
-	@OneToMany(mappedBy="nodeItem")
-	private List<NodeTriggerItem> nodeTriggerItems;
-
 	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
 	{
 		getNodeActionItems().add(nodeActionItem);
@@ -94,37 +88,5 @@ public class NodeItem implements Serializable
 		nodeActionItem.setNodeItem(null);
 
 		return nodeActionItem;
-	}
-
-	public NodeItemHistory addNodeItemHistory(NodeItemHistory nodeItemHistory)
-	{
-		getNodeItemHistories().add(nodeItemHistory);
-		nodeItemHistory.setNodeItem(this);
-
-		return nodeItemHistory;
-	}
-
-	public NodeItemHistory removeNodeItemHistory(NodeItemHistory nodeItemHistory)
-	{
-		getNodeItemHistories().remove(nodeItemHistory);
-		nodeItemHistory.setNodeItem(null);
-
-		return nodeItemHistory;
-	}
-
-	public NodeTriggerItem addNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().add(nodeTriggerItem);
-		nodeTriggerItem.setNodeItem(this);
-
-		return nodeTriggerItem;
-	}
-
-	public NodeTriggerItem removeNodeTriggerItem(NodeTriggerItem nodeTriggerItem)
-	{
-		getNodeTriggerItems().remove(nodeTriggerItem);
-		nodeTriggerItem.setNodeItem(null);
-
-		return nodeTriggerItem;
 	}
 }

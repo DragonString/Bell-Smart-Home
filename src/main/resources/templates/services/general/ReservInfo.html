@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>예약</title>
+		<th:block layout:fragment="pageCss">
+			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Reservation Modify</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<!-- Reservation Info Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">예약 정보</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Action Info Table Start -->
+						<table class="table table-bordered" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center w-25">이름</th>
+									<th class="align-middle text-center">값</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class="align-middle text-center">활성화 상태</td>
+									<td class="align-middle text-center text-success" th:if="${cardReservInfo.enableStatus}">활성화</td>
+									<td class="align-middle text-center text-danger" th:unless="${cardReservInfo.enableStatus}">비활성화</td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">설명</td>
+									<td class="align-middle text-center" th:text="${cardReservInfo.description}"></td>
+								</tr>
+								<tr>
+									<td class="align-middle text-center">표현식</td>
+									<td class="align-middle text-center" th:text="${cardReservInfo.expression}"></td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Action Info Table End -->
+					</div>
+				</div>
+			</div>
+			<!-- Reservation Info Card End -->
+			<!-- Reservation Action Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">예약 액션</h6>
+				</div>
+				<div class="card-body">
+					<div class="table-responsive">
+						<!-- Reservation Action Table Start -->
+						<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+							<thead>
+								<tr>
+									<th class="align-middle text-center w-25">사용 여부</th>
+									<th class="align-middle text-center">액션 설명</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:if="${not #lists.isEmpty(listCardActionActives)}" th:each="value : ${listCardActionActives}">
+									<td class="align-middle text-center">O</td>
+									<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+								</tr>
+							</tbody>
+						</table>
+						<!-- Reservation Action Table End -->
+					</div>
+				</div>
+			</div>
+			<!-- Reservation Action Card End -->
+			<a class="form-control btn btn-warning" th:href="|/reserv/modify/${cardReservInfo.reservId}|">수정</a>
+		</th:block>
+		
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/vendor/datatables/js/jquery.dataTables.min.js"></script>
+			<script src="/rss/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+			<script src="/rss/common/js/datatables-default.js"></script>
+		</th:block>
+	</body>
+</html>

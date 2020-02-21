@@ -12,7 +12,7 @@ import net.softbell.bsh.domain.entity.NodeAction;
 @Setter
 public class ReservActionCardDto
 {
-	private long actionId;
+	private Long actionId;
 	private String description;
 	
 	public ReservActionCardDto(NodeAction entity)
