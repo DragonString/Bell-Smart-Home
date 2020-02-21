@@ -2,6 +2,7 @@ package net.softbell.bsh;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -21,6 +22,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * 		!로컬에 있는 MySQL과 연결하려면 profile을 prod 로 설정한 후 환경변수에 DB 정보를 등록해야 합니다.
  */
 @SpringBootApplication
+@EnableScheduling
 public class BellsmarthomeApplication
 {
 	public static void main(String[] args)
