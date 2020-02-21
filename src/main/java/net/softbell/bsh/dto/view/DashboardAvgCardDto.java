@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class DashboardHumidityCardDto
+public class DashboardAvgCardDto
 {
 	private String alias;
 	private Double avgStatus;

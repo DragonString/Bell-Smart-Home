@@ -28,7 +28,8 @@ public class DashboardView
 		// Init
 		
 		// Process
-		model.addAttribute("listCardHumidityAlerts", dashboardService.getHumidityAlert());
+		model.addAttribute("listCardHumidityWarns", dashboardService.getHumidityWarn());
+		model.addAttribute("listCardTemperatureWarns", dashboardService.getTemperatureWarn());
 		
 		// Return
 		return "services/dashboard/Dashboard";
