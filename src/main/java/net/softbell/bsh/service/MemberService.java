@@ -68,6 +68,9 @@ public class MemberService implements UserDetailsService
 
 		// Process
 		memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword())); // 비밀번호 암호화
+		memberDto.setBan(BanRule.NORMAL.getCode());
+		memberDto.setLoginFailCount(0);
+		memberDto.setPermission(MemberRole.WAIT.getCode());
 
 		log.info(BellLog.getLogHead() + "가입완료"); // TEST #### TODO
 		return memberRepo.save(memberDto.toEntity()).getMemberId();

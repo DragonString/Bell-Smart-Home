@@ -30,7 +30,7 @@ public class MemberDto
 	private Date changePasswdDate;
 	private String email;
 	private Date lastLogin;
-	private Integer loginFailcount;
+	private Integer loginFailCount;
 	private String nickname;
 	private String password;
 	private Integer permission;
@@ -49,6 +49,7 @@ public class MemberDto
         		.nickname(nickname)
                 .registerDate(new Date())
                 .ban(BanRule.ofLegacyCode(ban))
+                .loginFailCount(loginFailCount)
                 .permission(MemberRole.ofLegacyCode(permission))
                 .build();
     }

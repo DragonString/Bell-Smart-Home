@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
+import net.softbell.bsh.domain.GroupRole;
+import net.softbell.bsh.domain.entity.GroupPermission;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberGroup;
 import net.softbell.bsh.domain.entity.MemberGroupItem;
@@ -23,7 +25,9 @@ import net.softbell.bsh.domain.repository.MemberGroupRepo;
 import net.softbell.bsh.domain.repository.NodeGroupItemRepo;
 import net.softbell.bsh.domain.repository.NodeGroupRepo;
 import net.softbell.bsh.dto.request.MemberGroupDto;
+import net.softbell.bsh.dto.request.MemberGroupPermissionDto;
 import net.softbell.bsh.dto.request.NodeGroupDto;
+import net.softbell.bsh.dto.request.NodeGroupPermissionDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 
 /**
@@ -133,6 +137,60 @@ public class PermissionService
 	}
 	
 	@Transactional
+	public boolean addMemberPermission(Long gid, MemberGroupPermissionDto memberGroupPermissionDto)
+	{
+		// Field
+		MemberGroup memberGroup;
+		NodeGroup nodeGroup;
+		GroupPermission groupPermission;
+		GroupRole groupRole;
+		
+		// Init
+		memberGroup = getMemberGroup(gid);
+		nodeGroup = getNodeGroup(memberGroupPermissionDto.getNodeGid());
+		groupRole = GroupRole.ofLegacyCode(memberGroupPermissionDto.getPermission());
+		
+		// Exception
+		if (memberGroup == null || nodeGroup == null)
+			return false;
+		// TODO 기존 권한이 있으면 생성 중단하는 코드 필요
+		
+		// Make
+		groupPermission = GroupPermission.builder()
+												.assignDate(new Date())
+												.memberGroup(memberGroup)
+												.nodeGroup(nodeGroup)
+												.groupPermission(groupRole)
+													.build();
+		
+		// DB - Save
+		groupPermissionRepo.save(groupPermission);
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean deleteGroupPermission(Long gid)
+	{
+		// Field
+		Optional<GroupPermission> optGroupPermission;
+		
+		// Init
+		optGroupPermission = groupPermissionRepo.findById(gid);
+		
+		// Exception
+		if (!optGroupPermission.isPresent())
+			return false;
+		
+		// DB - Save
+		groupPermissionRepo.delete(optGroupPermission.get());
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
 	public boolean createNodeGroup(NodeGroupDto nodeGroupDto)
 	{
 		// Field
@@ -172,6 +230,40 @@ public class PermissionService
 			// DB = Save
 			nodeGroupItemRepo.save(nodeGroupItem);
 		}
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean addNodePermission(Long gid, NodeGroupPermissionDto nodeGroupPermissionDto)
+	{
+		// Field
+		MemberGroup memberGroup;
+		NodeGroup nodeGroup;
+		GroupPermission groupPermission;
+		GroupRole groupRole;
+		
+		// Init
+		memberGroup = getMemberGroup(nodeGroupPermissionDto.getMemberGid());
+		nodeGroup = getNodeGroup(gid);
+		groupRole = GroupRole.ofLegacyCode(nodeGroupPermissionDto.getPermission());
+		
+		// Exception
+		if (memberGroup == null || nodeGroup == null)
+			return false;
+		// TODO 기존 권한이 있으면 생성 중단하는 코드 필요
+		
+		// Make
+		groupPermission = GroupPermission.builder()
+												.assignDate(new Date())
+												.memberGroup(memberGroup)
+												.nodeGroup(nodeGroup)
+												.groupPermission(groupRole)
+													.build();
+		
+		// DB - Save
+		groupPermissionRepo.save(groupPermission);
 		
 		// Return
 		return true;

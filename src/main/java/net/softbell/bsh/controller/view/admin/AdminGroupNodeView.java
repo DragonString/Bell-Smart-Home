@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.dto.request.NodeGroupDto;
+import net.softbell.bsh.dto.request.NodeGroupPermissionDto;
+import net.softbell.bsh.dto.view.admin.NodeGroupInfoCardDto;
+import net.softbell.bsh.dto.view.admin.NodeGroupPermissionCardDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.service.PermissionService;
@@ -65,6 +68,11 @@ public class AdminGroupNodeView
 	@GetMapping("{gid}")
 	public String dispGroup(Model model, @PathVariable("gid") Long gid)
 	{
+		// Field
+		
+		// Init
+		model.addAttribute("cardPermission", new NodeGroupPermissionCardDto(permissionService.getAllMemberGroup()));
+		model.addAttribute("cardGroup", new NodeGroupInfoCardDto(permissionService.getNodeGroup(gid)));
 		
 		// Return
 		return G_BASE_PATH + "/GroupNodeInfo";
@@ -129,5 +137,37 @@ public class AdminGroupNodeView
 		
 		// Return
 		return G_BASE_REDIRECT_URL;
+	}
+	
+	@PostMapping("permission/add/{gid}")
+	public String addPermission(@PathVariable("gid") Long gid, NodeGroupPermissionDto nodeGroupPermissionDto)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = permissionService.addNodePermission(gid, nodeGroupPermissionDto);
+		
+		// Return
+		if (isSuccess)
+			return G_BASE_REDIRECT_URL + "/" + gid;
+		else
+			return G_BASE_REDIRECT_URL + "/" + gid + "?err";
+	}
+	
+	@PostMapping("permission/delete/{gid}")
+	public String deletePermission(@PathVariable("gid") Long gid, @RequestParam("pid") Long pid)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = permissionService.deleteGroupPermission(pid);
+		
+		// Return
+		if (isSuccess)
+			return G_BASE_REDIRECT_URL + "/" + gid;
+		else
+			return G_BASE_REDIRECT_URL + "/" + gid + "?err";
 	}
 }

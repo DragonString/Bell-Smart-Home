@@ -37,7 +37,7 @@ import net.softbell.bsh.domain.GroupRole;
 @Entity
 @Table(name="group_permission",
 	uniqueConstraints={
-		@UniqueConstraint(columnNames={"node_group_id", "member_group_id"})
+		@UniqueConstraint(columnNames={"node_group_id", "member_group_id", "group_permission"})
 	})
 @NamedQuery(name="GroupPermission.findAll", query="SELECT g FROM GroupPermission g")
 public class GroupPermission implements Serializable
@@ -57,10 +57,10 @@ public class GroupPermission implements Serializable
 	private GroupRole groupPermission;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="node_group_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="node_group_id", nullable=false)
 	private NodeGroup nodeGroup;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="member_group_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="member_group_id", nullable=false)
 	private MemberGroup memberGroup;
 }
