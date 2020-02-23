@@ -2,7 +2,6 @@ package net.softbell.bsh.iot.service.v1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +22,6 @@ import net.softbell.bsh.domain.repository.NodeActionRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.dto.request.IotActionDto;
 import net.softbell.bsh.dto.request.IotActionItemDto;
-import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
-import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.util.BellLog;
 
@@ -40,8 +37,6 @@ public class IotActionServiceV1
 	// Global Field
 	private final MemberService memberService;
 	private final IotNodeServiceV1 iotNodeServiceV1;
-	private final IotChannelCompV1 iotChannelCompV1;
-	private final IotAuthCompV1 iotAuthCompV1;
 	private final NodeItemRepo nodeItemRepo;
 	private final NodeActionRepo nodeActionRepo;
 	private final NodeActionItemRepo nodeActionItemRepo;
@@ -123,7 +118,7 @@ public class IotActionServiceV1
 		{
 			mapActionItem.forEach((key, value) ->
 			{
-				if(value.getItemId() != 0)
+				if(value.getItemId() != null && value.getItemId() != 0)
 				{
 					// Field
 					Optional<NodeItem> optNodeItem;
@@ -207,7 +202,7 @@ public class IotActionServiceV1
 		{
 			mapActionItem.forEach((key, value) ->
 			{
-				if(value.getItemId() != 0)
+				if(value.getItemId() != null && value.getItemId() != 0)
 				{
 					// Field
 					Optional<NodeItem> optNodeItem;

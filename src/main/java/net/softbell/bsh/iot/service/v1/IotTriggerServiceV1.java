@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.TriggerLastStatusRule;
 import net.softbell.bsh.domain.TriggerStatusRule;
@@ -21,13 +20,10 @@ import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeTrigger;
 import net.softbell.bsh.domain.entity.NodeTriggerAction;
 import net.softbell.bsh.domain.repository.NodeActionRepo;
-import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.domain.repository.NodeTriggerActionRepo;
 import net.softbell.bsh.domain.repository.NodeTriggerRepo;
 import net.softbell.bsh.dto.request.IotTriggerActionDto;
 import net.softbell.bsh.dto.request.IotTriggerDto;
-import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
-import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.iot.component.v1.IotTriggerParserCompV1;
 import net.softbell.bsh.service.MemberService;
 
@@ -35,7 +31,6 @@ import net.softbell.bsh.service.MemberService;
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node Trigger 서비스
  */
-@Slf4j
 @AllArgsConstructor
 @Service
 public class IotTriggerServiceV1
@@ -45,13 +40,10 @@ public class IotTriggerServiceV1
 	private final IotActionServiceV1 iotActionService;
 	
 	private final IotTriggerParserCompV1 iotTriggerParserComp;
-	private final IotChannelCompV1 iotChannelCompV1;
-	private final IotAuthCompV1 iotAuthCompV1;
 	
 	private final NodeTriggerRepo nodeTriggerRepo;
 	private final NodeTriggerActionRepo nodeTriggerActionRepo;
 	private final NodeActionRepo nodeActionRepo;
-	private final NodeItemRepo nodeItemRepo;
 	
 	public List<NodeTrigger> getAllTriggers(Authentication auth)
 	{

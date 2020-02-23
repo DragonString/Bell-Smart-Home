@@ -53,10 +53,10 @@ public class NodeGroupItem implements Serializable
 	private Date assignDate;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="node_group_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="node_group_id", nullable=false)
 	private NodeGroup nodeGroup;
 
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="node_id", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="node_id", nullable=false)
 	private Node node;
 }

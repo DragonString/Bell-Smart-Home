@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
-import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -16,8 +15,6 @@ import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
 @RequestMapping("/api/rest/v1/iot")
 public class IotRestV1
 {
-	private final IotAuthCompV1 iotAuthComp;
-	
 	@GetMapping("/send")
 	public String procSend()
 	{

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>노드 그룹 생성</title>
+		<th:block layout:fragment="pageCss">
+			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+		</th:block>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Node Group Create</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<form onsubmit="return checkMemberManage();" method="POST">
+				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+				
+				<!-- Member Card Start -->
+				<div class="card shadow mb-4 text-dark">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">노드 그룹 정보</h6>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<!-- Group Info Create Table Start -->
+							<table class="table table-bordered" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th class="align-middle text-center w-25">이름</th>
+										<th class="align-middle text-center">값</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="align-middle text-center">활성화 상태</td>
+										<td class="align-middle text-center"><input name="enableStatus" type="checkbox" value="true" checked data-toggle="toggle" data-size="lg"></td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">그룹명</td>
+										<td class="align-middle text-center"><input type="text" name="name" class="form-control" placeholder="그룹명"></td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Group Info Create Table End -->
+						</div>
+					</div>
+				</div>
+				<!-- Group Info Card End -->
+				
+				<!-- Node Card Start -->
+				<div class="card shadow mb-4 text-dark">
+					<div class="card-header py-3">
+						<h6 class="m-0 font-weight-bold text-primary">노드</h6>
+					</div>
+					<div class="card-body">
+						<div class="table">
+							<!-- Node Table Start -->
+								<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+									<thead>
+										<tr>
+											<th class="align-middle text-center"></th>
+							 	 		   	<th class="align-middle text-center">노드 별칭</th>
+											<th class="align-middle text-center">노드 이름</th>
+							 	 		   	<th class="align-middle text-center">버전</th>
+						 	   			</tr>
+									</thead>
+									<tbody>
+										<tr th:if="${not #lists.isEmpty(listCardNodes)}" th:each="node : ${listCardNodes}">
+											<td class="align-middle text-center"><input type="checkbox" name="nodeId" th:value="${ node.nodeId }" /></td>
+											<td class="align-middle text-center" th:text="${ node.alias }"></td>
+											<td class="align-middle text-center" th:text="${ node.nodeName }"></td>
+											<td class="align-middle text-center" th:text="${ node.version }"></td>
+										</tr>
+									</tbody>
+								</table>
+							<!-- Node Table End -->
+						</div>
+					</div>
+				</div>
+				<!-- Node Card End -->
+				
+				<input class="form-control btn btn-primary" type="submit" value="등록">
+			</form>
+		</th:block>
+		<th:block layout:fragment="pageScript">
+			<script src="/rss/vendor/datatables/js/jquery.dataTables.min.js"></script>
+			<script src="/rss/vendor/datatables/js/dataTables.bootstrap4.min.js"></script>
+			<script src="/rss/common/js/datatables-default.js"></script>
+		</th:block>
+	</body>
+</html>

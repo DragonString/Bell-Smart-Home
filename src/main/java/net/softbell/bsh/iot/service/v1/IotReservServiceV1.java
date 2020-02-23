@@ -17,14 +17,11 @@ import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
-import net.softbell.bsh.domain.entity.NodeTrigger;
 import net.softbell.bsh.domain.repository.NodeActionRepo;
 import net.softbell.bsh.domain.repository.NodeReservActionRepo;
 import net.softbell.bsh.domain.repository.NodeReservRepo;
 import net.softbell.bsh.dto.request.IotActionDto;
 import net.softbell.bsh.dto.request.IotReservDto;
-import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
-import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.util.BellLog;
 
@@ -39,8 +36,6 @@ public class IotReservServiceV1
 {
 	// Global Field
 	private final MemberService memberService;
-	private final IotChannelCompV1 iotChannelCompV1;
-	private final IotAuthCompV1 iotAuthCompV1;
 	private final NodeReservRepo nodeReservRepo;
 	private final NodeReservActionRepo nodeReservActionRepo;
 	private final NodeActionRepo nodeActionRepo;

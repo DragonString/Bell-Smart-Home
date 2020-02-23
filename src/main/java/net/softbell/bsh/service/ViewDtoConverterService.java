@@ -8,16 +8,22 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import net.softbell.bsh.domain.entity.Member;
+import net.softbell.bsh.domain.entity.MemberGroup;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeActionItem;
+import net.softbell.bsh.domain.entity.NodeGroup;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
 import net.softbell.bsh.domain.entity.NodeTrigger;
 import net.softbell.bsh.dto.view.MemberActivityLogCardDto;
+import net.softbell.bsh.dto.view.admin.GroupMemberCardItemDto;
+import net.softbell.bsh.dto.view.admin.GroupNodeCardItemDto;
+import net.softbell.bsh.dto.view.admin.MemberGroupSummaryCardDto;
 import net.softbell.bsh.dto.view.admin.MemberSummaryCardDto;
+import net.softbell.bsh.dto.view.admin.NodeGroupSummaryCardDto;
 import net.softbell.bsh.dto.view.admin.NodeManageItemCardDto;
 import net.softbell.bsh.dto.view.admin.NodeManageSummaryCardDto;
 import net.softbell.bsh.dto.view.advance.NodeItemCardDto;
@@ -281,6 +287,74 @@ public class ViewDtoConverterService
 		// Process
 		for (NodeTrigger entity : listEntity)
 			listCards.add(new TriggerSummaryCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// Member Entity List to Group Member Card Item Dto List
+	public List<GroupMemberCardItemDto> convGroupMemberCardItems(Collection<Member> listEntity)
+	{
+		// Field
+		List<GroupMemberCardItemDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<GroupMemberCardItemDto>();
+		
+		// Process
+		for (Member entity : listEntity)
+			listCards.add(new GroupMemberCardItemDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// Node Entity List to Group Node Card Item Dto List
+	public List<GroupNodeCardItemDto> convGroupNodeCardItems(Collection<Node> listEntity)
+	{
+		// Field
+		List<GroupNodeCardItemDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<GroupNodeCardItemDto>();
+		
+		// Process
+		for (Node entity : listEntity)
+			listCards.add(new GroupNodeCardItemDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// NodeGroup Entity List to Node Group Summary Card Dto List
+	public List<NodeGroupSummaryCardDto> convNodeGroupSummaryCards(Collection<NodeGroup> listEntity)
+	{
+		// Field
+		List<NodeGroupSummaryCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<NodeGroupSummaryCardDto>();
+		
+		// Process
+		for (NodeGroup entity : listEntity)
+			listCards.add(new NodeGroupSummaryCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// MemberGroup Entity List to Member Group Summary Card Dto List
+	public List<MemberGroupSummaryCardDto> convMemberGroupSummaryCards(Collection<MemberGroup> listEntity)
+	{
+		// Field
+		List<MemberGroupSummaryCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<MemberGroupSummaryCardDto>();
+		
+		// Process
+		for (MemberGroup entity : listEntity)
+			listCards.add(new MemberGroupSummaryCardDto(entity));
 		
 		// Return
 		return listCards;

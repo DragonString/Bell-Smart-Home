@@ -75,7 +75,8 @@
 				<h6 class="collapse-header">보안 설정:</h6>
 				<a class="collapse-item" href="/admin/member" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/member')} ? 'active' : ''">회원</a>
 				<a class="collapse-item" href="/admin/node" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/node')} ? 'active' : ''">노드</a>
-				<a class="collapse-item" href="/admin/permission" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/permission')} ? 'active' : ''">권한</a>
+				<a class="collapse-item" href="/admin/group/member" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/group/member')} ? 'active' : ''">사용자 그룹</a>
+				<a class="collapse-item" href="/admin/group/node" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/group/node')} ? 'active' : ''">노드 그룹</a>
 				<div class="collapse-divider"></div>
 				<h6 class="collapse-header">센터 설정:</h6>
 				<a class="collapse-item" href="/admin/center" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/admin/center')} ? 'active' : ''">기본 규칙</a>

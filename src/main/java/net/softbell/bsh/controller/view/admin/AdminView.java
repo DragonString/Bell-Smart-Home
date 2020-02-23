@@ -15,6 +15,7 @@ import net.softbell.bsh.dto.view.admin.CenterSettingSummaryCardDto;
 import net.softbell.bsh.iot.service.v1.IotCenterServiceV1;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.MemberService;
+import net.softbell.bsh.service.PermissionService;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
@@ -30,6 +31,7 @@ public class AdminView
 	private final String G_BASE_PATH = "services/admin";
 	private final ViewDtoConverterService viewDtoConverterService;
 	private final MemberService memberService;
+	private final PermissionService permissionService;
 	private final IotNodeServiceV1 iotNodeService;
 	private final IotCenterServiceV1 iotCenterService;
 	
@@ -65,13 +67,28 @@ public class AdminView
 		// Process
 		model.addAttribute("listCardNodes", viewDtoConverterService.convNodeManageSummaryCards(pageNode.getContent()));
 		
+		// Return
         return G_BASE_PATH + "/Node";
     }
 
-	@GetMapping("/permission")
-    public String dispPermission(Model model)
+	@GetMapping("/group/member")
+    public String dispGroupMember(Model model)
 	{
-        return G_BASE_PATH + "/Permission";
+		// Load
+		model.addAttribute("listCardGroups", viewDtoConverterService.convMemberGroupSummaryCards(permissionService.getAllMemberGroup()));
+		
+		// Return
+        return G_BASE_PATH + "/GroupMember";
+    }
+
+	@GetMapping("/group/node")
+    public String dispGroupNode(Model model)
+	{
+		// Load
+		model.addAttribute("listCardGroups", viewDtoConverterService.convNodeGroupSummaryCards(permissionService.getAllNodeGroup()));
+		
+		// Return
+        return G_BASE_PATH + "/GroupNode";
     }
 
 	@GetMapping("/center")

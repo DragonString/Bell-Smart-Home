@@ -19,7 +19,6 @@ import net.softbell.bsh.dto.request.IotTriggerDto;
 import net.softbell.bsh.dto.view.advance.TriggerInfoCardDto;
 import net.softbell.bsh.dto.view.general.ActionSummaryCardDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
-import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
@@ -35,7 +34,6 @@ public class TriggerView
 	// Global Field
 	private final String G_BASE_PATH = "services/advance";
 	private final ViewDtoConverterService viewDtoConverterService;
-	private final IotNodeServiceV1 iotNodeService;
 	private final IotTriggerServiceV1 iotTriggerService;
 	private final IotActionServiceV1 iotActionService;
 	

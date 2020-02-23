@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
@@ -30,7 +29,6 @@ import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto;
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node 서비스
  */
-@Slf4j
 @AllArgsConstructor
 @Service
 public class IotNodeServiceV1
@@ -41,6 +39,11 @@ public class IotNodeServiceV1
 	private final NodeRepo nodeRepo;
 	private final NodeItemRepo nodeItemRepo;
 	private final NodeItemHistoryRepo nodeItemHistoryRepo;
+	
+	public List<Node> getAllNodes()
+	{
+		return nodeRepo.findAll();
+	}
 	
 	public Page<Node> getAllNodes(int intPage, int intCount)
 	{

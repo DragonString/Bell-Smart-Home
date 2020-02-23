@@ -72,6 +72,11 @@ public class MemberService implements UserDetailsService
 		log.info(BellLog.getLogHead() + "가입완료"); // TEST #### TODO
 		return memberRepo.save(memberDto.toEntity()).getMemberId();
 	}
+	
+	public List<Member> getAllMember()
+	{
+		return memberRepo.findAll();
+	}
 
 	public Member getMember(String userId)
 	{
