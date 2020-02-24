@@ -110,33 +110,48 @@ public class AdminGroupMemberView
 	public String procGroupEnable(Authentication auth, @RequestParam("gid") List<Long> listGid)
 	{
 		// Field
+		boolean isSuccess;
 		
 		// Init
+		isSuccess = permissionService.enableMemberGroup(listGid);
 		
 		// Return
-		return G_BASE_REDIRECT_URL;
+		if (isSuccess)
+			return G_BASE_REDIRECT_URL;
+		else
+			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
 	@PostMapping("disable")
 	public String procGroupDisable(Authentication auth, @RequestParam("gid") List<Long> listGid)
 	{
 		// Field
+		boolean isSuccess;
 		
 		// Init
+		isSuccess = permissionService.disableMemberGroup(listGid);
 		
 		// Return
-		return G_BASE_REDIRECT_URL;
+		if (isSuccess)
+			return G_BASE_REDIRECT_URL;
+		else
+			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
-	@PostMapping("remove")
-	public String procGroupRemove(Authentication auth, @RequestParam("gid") List<Long> listGid)
+	@PostMapping("delete")
+	public String procGroupDelete(Authentication auth, @RequestParam("gid") List<Long> listGid)
 	{
 		// Field
+		boolean isSuccess;
 		
 		// Init
+		isSuccess = permissionService.deleteMemberGroup(listGid);
 		
 		// Return
-		return G_BASE_REDIRECT_URL;
+		if (isSuccess)
+			return G_BASE_REDIRECT_URL;
+		else
+			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
 	@PostMapping("permission/add/{gid}")

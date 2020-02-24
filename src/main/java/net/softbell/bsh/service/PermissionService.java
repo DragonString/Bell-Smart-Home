@@ -137,6 +137,111 @@ public class PermissionService
 	}
 	
 	@Transactional
+	public boolean enableMemberGroup(List<Long> listGid)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = true;
+		
+		// Process
+		for (Long gid : listGid)
+		{
+			// Field
+			Optional<MemberGroup> optMemberGroup;
+			
+			// Init
+			optMemberGroup = memberGroupRepo.findById(gid);
+			
+			// Exception
+			if (!optMemberGroup.isPresent())
+			{
+				isSuccess = false;
+				continue;
+			}
+			
+			// DB - Update
+			optMemberGroup.get().setEnableStatus(EnableStatusRule.ENABLE);
+		}
+		
+		// Return
+		return isSuccess;
+	}
+	
+	@Transactional
+	public boolean disableMemberGroup(List<Long> listGid)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = true;
+		
+		// Process
+		for (Long gid : listGid)
+		{
+			// Field
+			Optional<MemberGroup> optMemberGroup;
+			
+			// Init
+			optMemberGroup = memberGroupRepo.findById(gid);
+			
+			// Exception
+			if (!optMemberGroup.isPresent())
+			{
+				isSuccess = false;
+				continue;
+			}
+			
+			// DB - Update
+			optMemberGroup.get().setEnableStatus(EnableStatusRule.DISABLE);
+		}
+		
+		// Return
+		return isSuccess;
+	}
+	
+	@Transactional
+	public boolean deleteMemberGroup(List<Long> listGid)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = true;
+		
+		// Process
+		for (Long gid : listGid)
+		{
+			// Field
+			Optional<MemberGroup> optMemberGroup;
+			MemberGroup memberGroup;
+			
+			// Init
+			optMemberGroup = memberGroupRepo.findById(gid);
+			
+			// Exception
+			if (!optMemberGroup.isPresent())
+			{
+				isSuccess = false;
+				continue;
+			}
+			
+			// Load
+			memberGroup = optMemberGroup.get();
+			
+			// DB - Delete
+			groupPermissionRepo.deleteAll(memberGroup.getGroupPermissions());
+			memberGroupItemRepo.deleteAll(memberGroup.getMemberGroupItems());
+			memberGroupRepo.delete(memberGroup);
+		}
+		
+		// Return
+		return isSuccess;
+	}
+	
+	@Transactional
 	public boolean addMemberPermission(Long gid, MemberGroupPermissionDto memberGroupPermissionDto)
 	{
 		// Field
@@ -165,26 +270,6 @@ public class PermissionService
 		
 		// DB - Save
 		groupPermissionRepo.save(groupPermission);
-		
-		// Return
-		return true;
-	}
-	
-	@Transactional
-	public boolean deleteGroupPermission(Long gid)
-	{
-		// Field
-		Optional<GroupPermission> optGroupPermission;
-		
-		// Init
-		optGroupPermission = groupPermissionRepo.findById(gid);
-		
-		// Exception
-		if (!optGroupPermission.isPresent())
-			return false;
-		
-		// DB - Save
-		groupPermissionRepo.delete(optGroupPermission.get());
 		
 		// Return
 		return true;
@@ -236,6 +321,111 @@ public class PermissionService
 	}
 	
 	@Transactional
+	public boolean enableNodeGroup(List<Long> listGid)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = true;
+		
+		// Process
+		for (Long gid : listGid)
+		{
+			// Field
+			Optional<NodeGroup> optNodeGroup;
+			
+			// Init
+			optNodeGroup = nodeGroupRepo.findById(gid);
+			
+			// Exception
+			if (!optNodeGroup.isPresent())
+			{
+				isSuccess = false;
+				continue;
+			}
+			
+			// DB - Update
+			optNodeGroup.get().setEnableStatus(EnableStatusRule.ENABLE);
+		}
+		
+		// Return
+		return isSuccess;
+	}
+	
+	@Transactional
+	public boolean disableNodeGroup(List<Long> listGid)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = true;
+		
+		// Process
+		for (Long gid : listGid)
+		{
+			// Field
+			Optional<NodeGroup> optNodeGroup;
+			
+			// Init
+			optNodeGroup = nodeGroupRepo.findById(gid);
+			
+			// Exception
+			if (!optNodeGroup.isPresent())
+			{
+				isSuccess = false;
+				continue;
+			}
+			
+			// DB - Update
+			optNodeGroup.get().setEnableStatus(EnableStatusRule.DISABLE);
+		}
+		
+		// Return
+		return isSuccess;
+	}
+	
+	@Transactional
+	public boolean deleteNodeGroup(List<Long> listGid)
+	{
+		// Field
+		boolean isSuccess;
+		
+		// Init
+		isSuccess = true;
+		
+		// Process
+		for (Long gid : listGid)
+		{
+			// Field
+			Optional<NodeGroup> optNodeGroup;
+			NodeGroup nodeGroup;
+			
+			// Init
+			optNodeGroup = nodeGroupRepo.findById(gid);
+			
+			// Exception
+			if (!optNodeGroup.isPresent())
+			{
+				isSuccess = false;
+				continue;
+			}
+			
+			// Load
+			nodeGroup = optNodeGroup.get();
+			
+			// DB - Delete
+			groupPermissionRepo.deleteAll(nodeGroup.getGroupPermissions());
+			nodeGroupItemRepo.deleteAll(nodeGroup.getNodeGroupItems());
+			nodeGroupRepo.delete(nodeGroup);
+		}
+		
+		// Return
+		return isSuccess;
+	}
+	
+	@Transactional
 	public boolean addNodePermission(Long gid, NodeGroupPermissionDto nodeGroupPermissionDto)
 	{
 		// Field
@@ -264,6 +454,26 @@ public class PermissionService
 		
 		// DB - Save
 		groupPermissionRepo.save(groupPermission);
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean deleteGroupPermission(Long gid)
+	{
+		// Field
+		Optional<GroupPermission> optGroupPermission;
+		
+		// Init
+		optGroupPermission = groupPermissionRepo.findById(gid);
+		
+		// Exception
+		if (!optGroupPermission.isPresent())
+			return false;
+		
+		// DB - Save
+		groupPermissionRepo.delete(optGroupPermission.get());
 		
 		// Return
 		return true;
