@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.softbell.bsh.domain.entity.Node;
+import net.softbell.bsh.domain.entity.NodeGroup;
+import net.softbell.bsh.domain.entity.NodeGroupItem;
 import net.softbell.bsh.dto.request.NodeGroupDto;
 import net.softbell.bsh.dto.request.NodeGroupPermissionDto;
-import net.softbell.bsh.dto.view.admin.NodeGroupInfoCardDto;
-import net.softbell.bsh.dto.view.admin.NodeGroupPermissionCardDto;
+import net.softbell.bsh.dto.view.admin.group.NodeGroupInfoCardDto;
+import net.softbell.bsh.dto.view.admin.group.NodeGroupPermissionCardDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.service.PermissionService;
@@ -65,12 +68,24 @@ public class AdminGroupNodeView
 		return G_BASE_PATH + "/NodeGroupCreate";
 	}
 	
-	@GetMapping("/modify")
-	public String dispGroupModify(Model model)
+	@GetMapping("/modify/{gid}")
+	public String dispGroupModify(Model model, @PathVariable("gid") Long gid)
 	{
 		// Field
+		List<Node> listNode;
+		NodeGroup nodeGroup;
 		
 		// Init
+		listNode = iotNodeService.getAllNodes();
+		nodeGroup = permissionService.getNodeGroup(gid);
+		
+		// Process
+		for (NodeGroupItem entity : nodeGroup.getNodeGroupItems())
+			listNode.remove(entity.getNode());
+		
+		// View
+		model.addAttribute("cardGroup", new NodeGroupInfoCardDto(permissionService.getNodeGroup(gid)));
+		model.addAttribute("listCardNodes", viewDtoConverterService.convGroupNodeCardItems(listNode));
 		
 		// Return
 		return G_BASE_PATH + "/NodeGroupModify";
@@ -106,15 +121,20 @@ public class AdminGroupNodeView
 			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
-	@PostMapping("/modify")
-	public String procGroupModify(Authentication auth)
+	@PostMapping("/modify/{gid}")
+	public String procGroupModify(Authentication auth, @PathVariable("gid") Long gid, NodeGroupDto nodeGroupDto)
 	{
 		// Field
+		boolean isSuccess;
 		
 		// Init
+		isSuccess = permissionService.modifyNodeGroup(gid, nodeGroupDto);
 		
 		// Return
-		return G_BASE_REDIRECT_URL;
+		if (isSuccess)
+			return G_BASE_REDIRECT_URL + "/" + gid;
+		else
+			return G_BASE_REDIRECT_URL + "/" + gid + "?err";
 	}
 	
 	@PostMapping("/enable")

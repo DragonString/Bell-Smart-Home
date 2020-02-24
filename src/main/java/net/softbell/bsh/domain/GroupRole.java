@@ -11,7 +11,6 @@ import lombok.Getter;
 @Getter
 public enum GroupRole
 {
-    REJECT("REJECT", -1), // 제한
 	MONITOR("MONITOR", 0), // 모니터링 기능 이용 가능
 	MANUAL_CONTROL("MANUAL_CONTROL", 1), // 컨트롤 패널에서 수동 조작만 가능
 	ACTION("ACTION", 2), // 액션 이용 가능

@@ -137,6 +137,63 @@ public class PermissionService
 	}
 	
 	@Transactional
+	public boolean modifyMemberGroup(Long gid, MemberGroupDto memberGroupDto)
+	{
+		// Field
+		Optional<MemberGroup> optMemberGroup;
+		MemberGroup memberGroup;
+		
+		// Init
+		optMemberGroup = memberGroupRepo.findById(gid);
+		
+		// Exception
+		if (!optMemberGroup.isPresent())
+			return false;
+		
+		// Parent Load
+		memberGroup = optMemberGroup.get();
+		
+		// DB - Update
+		memberGroup.setName(memberGroupDto.getName());
+		if (memberGroupDto.isEnableStatus())
+			memberGroup.setEnableStatus(EnableStatusRule.ENABLE);
+		else
+			memberGroup.setEnableStatus(EnableStatusRule.DISABLE);
+		
+		// DB - Delete
+		memberGroupItemRepo.deleteAll(memberGroup.getMemberGroupItems());
+		memberGroupItemRepo.flush();
+		
+		// Child Load
+		for (long memberId : memberGroupDto.getMemberId())
+		{
+			// Field
+			Member member;
+			MemberGroupItem memberGroupItem;
+			
+			// Init
+			member = memberService.getMember(memberId);
+			
+			// Exception
+			if (member == null)
+				continue;
+			
+			// Create
+			memberGroupItem = MemberGroupItem.builder()
+													.memberGroup(memberGroup)
+													.member(member)
+													.assignDate(new Date())
+														.build();
+			
+			// DB = Save
+			memberGroupItemRepo.save(memberGroupItem);
+		}
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
 	public boolean enableMemberGroup(List<Long> listGid)
 	{
 		// Field
@@ -290,6 +347,63 @@ public class PermissionService
 		
 		// DB - Save
 		nodeGroupRepo.save(nodeGroup);
+		
+		// Child Load
+		for (long nodeId : nodeGroupDto.getNodeId())
+		{
+			// Field
+			Node node;
+			NodeGroupItem nodeGroupItem;
+			
+			// Init
+			node = iotNodeService.getNode(nodeId);
+			
+			// Exception
+			if (node == null)
+				continue;
+			
+			// Create
+			nodeGroupItem = NodeGroupItem.builder()
+												.nodeGroup(nodeGroup)
+												.node(node)
+												.assignDate(new Date())
+													.build();
+			
+			// DB = Save
+			nodeGroupItemRepo.save(nodeGroupItem);
+		}
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
+	public boolean modifyNodeGroup(Long gid, NodeGroupDto nodeGroupDto)
+	{
+		// Field
+		Optional<NodeGroup> optNodeGroup;
+		NodeGroup nodeGroup;
+		
+		// Init
+		optNodeGroup = nodeGroupRepo.findById(gid);
+		
+		// Exception
+		if (!optNodeGroup.isPresent())
+			return false;
+		
+		// Parent Load
+		nodeGroup = optNodeGroup.get();
+		
+		// DB - Modify
+		nodeGroup.setName(nodeGroupDto.getName());
+		if (nodeGroupDto.isEnableStatus())
+			nodeGroup.setEnableStatus(EnableStatusRule.ENABLE);
+		else
+			nodeGroup.setEnableStatus(EnableStatusRule.DISABLE);
+		
+		// DB - Delete
+		nodeGroupItemRepo.deleteAll(nodeGroup.getNodeGroupItems());
+		nodeGroupItemRepo.flush();
 		
 		// Child Load
 		for (long nodeId : nodeGroupDto.getNodeId())

@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin.group;
 
 import java.util.ArrayList;
 import java.util.List;

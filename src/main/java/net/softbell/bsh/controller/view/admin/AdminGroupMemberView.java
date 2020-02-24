@@ -13,10 +13,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.softbell.bsh.domain.entity.Member;
+import net.softbell.bsh.domain.entity.MemberGroup;
+import net.softbell.bsh.domain.entity.MemberGroupItem;
 import net.softbell.bsh.dto.request.MemberGroupDto;
 import net.softbell.bsh.dto.request.MemberGroupPermissionDto;
-import net.softbell.bsh.dto.view.admin.MemberGroupInfoCardDto;
-import net.softbell.bsh.dto.view.admin.MemberGroupPermissionCardDto;
+import net.softbell.bsh.dto.view.admin.group.MemberGroupInfoCardDto;
+import net.softbell.bsh.dto.view.admin.group.MemberGroupPermissionCardDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.service.PermissionService;
@@ -65,12 +68,24 @@ public class AdminGroupMemberView
 		return G_BASE_PATH + "/MemberGroupCreate";
 	}
 	
-	@GetMapping("/modify")
-	public String dispGroupModify(Model model)
+	@GetMapping("/modify/{gid}")
+	public String dispGroupModify(Model model, @PathVariable("gid") Long gid)
 	{
 		// Field
+		List<Member> listMember;
+		MemberGroup memberGroup;
 		
 		// Init
+		listMember = memberService.getAllMember();
+		memberGroup = permissionService.getMemberGroup(gid);
+		
+		// Process
+		for (MemberGroupItem entity : memberGroup.getMemberGroupItems())
+			listMember.remove(entity.getMember());
+		
+		// View
+		model.addAttribute("cardGroup", new MemberGroupInfoCardDto(permissionService.getMemberGroup(gid)));
+		model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(listMember));
 		
 		// Return
 		return G_BASE_PATH + "/MemberGroupModify";
@@ -106,15 +121,20 @@ public class AdminGroupMemberView
 			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
-	@PostMapping("/modify")
-	public String procGroupModify(Authentication auth)
+	@PostMapping("/modify/{gid}")
+	public String procGroupModify(Authentication auth, @PathVariable("gid") Long gid, MemberGroupDto memberGroupDto)
 	{
 		// Field
+		boolean isSuccess;
 		
 		// Init
+		isSuccess = permissionService.modifyMemberGroup(gid, memberGroupDto);
 		
 		// Return
-		return G_BASE_REDIRECT_URL;
+		if (isSuccess)
+			return G_BASE_REDIRECT_URL + "/" + gid;
+		else
+			return G_BASE_REDIRECT_URL + "/" + gid + "?err";
 	}
 	
 	@PostMapping("/enable")

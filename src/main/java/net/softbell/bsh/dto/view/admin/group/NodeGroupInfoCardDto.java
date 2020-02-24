@@ -1,4 +1,4 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin.group;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,6 +55,7 @@ public class NodeGroupInfoCardDto
 		private String uid;
 		private String name;
 		private String alias;
+		private String version;
 		
 		public MemberGroupInfoCardNode(Node entity)
 		{
@@ -63,6 +64,7 @@ public class NodeGroupInfoCardDto
 			this.uid = entity.getUid();
 			this.name = entity.getNodeName();
 			this.alias = entity.getAlias();
+			this.version = entity.getVersion();
 		}
 	}
 	
