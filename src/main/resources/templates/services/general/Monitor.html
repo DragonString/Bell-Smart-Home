@@ -32,8 +32,13 @@
 								</div>
 							</div>
 						</div>
-						<div class="card-footer">
-							<small class="text-muted" th:text="|노드 제어 모드: ${cardValue.controlMode}|"></small>
+						<div class="card-footer" th:with="lastSec = ${cardValue.lastReceiveSecond}">
+							<small class="text-muted" th:if="${lastSec} < 60" 																												th:text="|마지막 수신: 1분 이내|" data-toggle="tooltip" data-placement="top" th:title="${#dates.format(cardValue.lastReceive, 'yyyy/MM/dd HH:mm:ss')}"></small>
+							<small class="text-muted" th:if="${lastSec} > 60 and ${lastSec} <= 60 * 60" 							th:with="lastTime = ${lastSec} / 60" 					th:text="|마지막 수신: ${#numbers.formatDecimal(lastTime, 0, 0)}분 전|" data-toggle="tooltip" data-placement="top" th:title="${#dates.format(cardValue.lastReceive, 'yyyy/MM/dd HH:mm:ss')}"></small>
+							<small class="text-muted" th:if="${lastSec} > 60 * 60 and ${lastSec} <= 60 * 60 * 24" 					th:with="lastTime = ${lastSec} / (60 * 60)" 			th:text="|마지막 수신: ${#numbers.formatDecimal(lastTime, 0, 0)}시간 전|" data-toggle="tooltip" data-placement="top" th:title="${#dates.format(cardValue.lastReceive, 'yyyy/MM/dd HH:mm:ss')}"></small>
+							<small class="text-muted" th:if="${lastSec} > 60 * 60 * 24 and ${lastSec} <= 60 * 60 * 24 * 30" 		th:with="lastTime = ${lastSec} / (60 * 60 * 24)" 		th:text="|마지막 수신: ${#numbers.formatDecimal(lastTime, 0, 0)}일 전|" data-toggle="tooltip" data-placement="top" th:title="${#dates.format(cardValue.lastReceive, 'yyyy/MM/dd HH:mm:ss')}"></small>
+							<small class="text-muted" th:if="${lastSec} > 60 * 60 * 24 * 30 and ${lastSec} <= 60 * 60 * 24 * 365" 	th:with="lastTime = ${lastSec} / (60 * 60 * 24 * 30)" 	th:text="|마지막 수신: ${#numbers.formatDecimal(lastTime, 0, 0)}달 전|" data-toggle="tooltip" data-placement="top" th:title="${#dates.format(cardValue.lastReceive, 'yyyy/MM/dd HH:mm:ss')}"></small>
+							<small class="text-muted" th:if="${lastSec} > 60 * 60 * 24 * 365" 										th:with="lastTime = ${lastSec} / (60 * 60 * 24 * 365)" 	th:text="|마지막 수신: ${#numbers.formatDecimal(lastTime, 0, 0)}년 전|" data-toggle="tooltip" data-placement="top" th:title="${#dates.format(cardValue.lastReceive, 'yyyy/MM/dd HH:mm:ss')}"></small>
 						</div>
 					</div>
 				</div>

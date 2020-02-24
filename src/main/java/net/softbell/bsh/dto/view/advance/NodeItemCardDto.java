@@ -1,5 +1,7 @@
 package net.softbell.bsh.dto.view.advance;
 
+import java.util.Date;
+
 import lombok.Getter;
 import lombok.Setter;
 import net.softbell.bsh.domain.ItemCategoryRule;
@@ -24,6 +26,7 @@ public class NodeItemCardDto
 	private ItemCategoryRule itemCategory;
 	private Byte controlMode;
 	private Double lastStatus;
+	private Date lastReceive;
 	
 	public NodeItemCardDto(NodeItem entity, NodeItemHistory lastHistory)
 	{
@@ -40,5 +43,6 @@ public class NodeItemCardDto
 		this.itemCategory = entity.getItemCategory();
 		this.controlMode = entity.getControlMode();
 		this.lastStatus = lastHistory.getItemStatus();
+		this.lastReceive = lastHistory.getReceiveDate();
 	}
 }

@@ -108,6 +108,7 @@
 									<th class="align-middle text-center">아이템 카테고리</th>
 									<th class="align-middle text-center">컨트롤 모드</th>
 									<th class="align-middle text-center">현재 상태</th>
+									<th class="align-middle text-center">마지막 수신</th>
 								</tr>
 							</thead>
 							<tfoot>
@@ -119,6 +120,7 @@
 									<th class="align-middle text-center">아이템 카테고리</th>
 									<th class="align-middle text-center">컨트롤 모드</th>
 									<th class="align-middle text-center">현재 상태</th>
+									<th class="align-middle text-center">마지막 수신</th>
 								</tr>
 							</tfoot>
 							<tbody>
@@ -130,6 +132,7 @@
 									<td class="align-middle text-center" th:text="${ cardValue.itemCategory }"></td>
 									<td class="align-middle text-center" th:text="${ cardValue.controlMode }"></td>
 									<td class="align-middle text-center"><input th:checked="${ cardValue.lastStatus == 1 }" th:disabled="${ cardValue.itemCategory != T(net.softbell.bsh.domain.ItemCategoryRule).CONTROL }" class="nodeItem" type="checkbox" data-toggle="toggle" data-size="lg" th:value="${cardValue.itemId}"></td>
+									<td class="align-middle text-center" th:text="${ #dates.format(cardValue.lastReceive, 'yyyy/MM/dd HH:mm:ss') }"></td>
 								</tr>
 							</tbody>
 						</table>

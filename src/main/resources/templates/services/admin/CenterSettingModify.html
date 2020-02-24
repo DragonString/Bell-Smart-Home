@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	layout:decorate="~{layout/PrimaryLayout}">
+	<head>
+		<title>센터 설정 수정</title>
+	</head>
+	<body>
+		<th:block layout:fragment="content">
+			<!-- Page Head Line Start -->
+			<div class="d-sm-flex align-items-center justify-content-between mb-4">
+				<h1 class="h3 mb-0">Center Setting Modify</h1>
+			</div>
+			<!-- Page Head Line End -->
+			
+			<!-- Center Setting Card Start -->
+			<div class="card shadow mb-4 text-dark">
+				<div class="card-header py-3">
+					<h6 class="m-0 font-weight-bold text-primary">센터 설정</h6>
+				</div>
+				<div class="card-body">
+					<form method="POST">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+						
+						<div class="table-responsive">
+							<!-- Center Setting Table Start -->
+							<table class="table table-bordered" width="100%" cellspacing="0">
+								<thead>
+									<tr>
+										<th class="align-middle text-center w-25">키</th>
+										<th class="align-middle text-center">값</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="align-middle text-center">활성화 상태</td>
+										<td class="align-middle text-center">
+											<input name="isEnabled" th:checked="${ cardCenterSetting.isEnabled }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">IoT Action</td>
+										<td class="align-middle text-center">
+											<input name="iotAction" th:checked="${ cardCenterSetting.iotAction }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">IoT Control</td>
+										<td class="align-middle text-center">
+											<input name="iotControl" th:checked="${ cardCenterSetting.iotControl }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">IoT Monitor</td>
+										<td class="align-middle text-center">
+											<input name="iotMonitor" th:checked="${ cardCenterSetting.iotMonitor }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">IoT Node</td>
+										<td class="align-middle text-center">
+											<input name="iotNode" th:checked="${ cardCenterSetting.iotNode }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">IoT Reserv</td>
+										<td class="align-middle text-center">
+											<input name="iotReserv" th:checked="${ cardCenterSetting.iotReserv }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">IoT Trigger</td>
+										<td class="align-middle text-center">
+											<input name="iotTrigger" th:checked="${ cardCenterSetting.iotTrigger }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">Web Auth Mode</td>
+										<td class="align-middle text-center">
+											<input name="webAuthMode" th:checked="${ cardCenterSetting.webAuthMode }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">Web Login Fail Ban Time</td>
+										<td class="align-middle text-center">
+											<input name="webLoginFailBanTime" th:value="${ cardCenterSetting.webLoginFailBanTime }" type="number" placeholder="연속 로그인 실패시 차단 시간(초)" class="form-control">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">Web Login Fail Check Time</td>
+										<td class="align-middle text-center">
+											<input name="webLoginFailCheckTime" th:value="${ cardCenterSetting.webLoginFailCheckTime }" type="number" placeholder="연속 로그인 실패 누적 시간(초)" class="form-control">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">Web Login Fail Max Count</td>
+										<td class="align-middle text-center">
+											<input name="webLoginFailMaxCount" th:value="${ cardCenterSetting.webLoginFailMaxCount }" type="number" placeholder="연속 로그인 실패 카운트(회)" class="form-control">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">Web Maintenance</td>
+										<td class="align-middle text-center">
+											<input name="webMaintenance" th:checked="${ cardCenterSetting.webMaintenance }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+									<tr>
+										<td class="align-middle text-center">Web Register</td>
+										<td class="align-middle text-center">
+											<input name="webRegister" th:checked="${ cardCenterSetting.webRegister }" type="checkbox" value="1" data-toggle="toggle" data-size="sm">
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<!-- Center Setting Table End -->
+							
+							<input type="submit" value="저장" class="form-control btn btn-warning">
+						</div>
+					</form>
+				</div>
+			</div>
+			<!-- Center Setting Card End -->
+		</th:block>
+	</body>
+</html>

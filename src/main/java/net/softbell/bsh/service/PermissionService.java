@@ -9,7 +9,6 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.GroupRole;
 import net.softbell.bsh.domain.entity.GroupPermission;
@@ -34,7 +33,6 @@ import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
  * @Author : Bell(bell@softbell.net)
  * @Description : 권한 서비스
  */
-@Slf4j
 @AllArgsConstructor
 @Service
 public class PermissionService

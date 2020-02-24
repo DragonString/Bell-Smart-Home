@@ -26,65 +26,81 @@
 							<thead>
 								<tr>
 									<th class="align-middle text-center w-25">키</th>
-									<th class="align-middle text-center">값</th>
+									<th class="align-middle text-center">설정 값</th>
+									<th class="align-middle text-center">운영 값</th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr>
 									<td class="align-middle text-center">활성화 상태</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.isEnabled }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.isEnabled } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.isEnabled } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Action</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotAction }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotAction } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.iotAction } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Control</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotControl }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotControl } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.iotControl } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Monitor</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotMonitor }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotMonitor } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.iotMonitor } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Node</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotNode }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotNode } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.iotNode } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Reserv</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotReserv }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotReserv } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.iotReserv } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Trigger</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotTrigger }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.iotTrigger } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.iotTrigger } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Auth Mode</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.webAuthMode }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webAuthMode } ? '인증 없음' : '이메일 인증'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.webAuthMode } ? '인증 없음' : '이메일 인증'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Login Fail Ban Time</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.webLoginFailBanTime }"></td>
+									<td class="align-middle text-center" th:text="|${ cardCenterSetting.webLoginFailBanTime }초|"></td>
+									<td class="align-middle text-center text-success" th:text="|${ cardCenterSettingDefault.webLoginFailBanTime }초|"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Login Fail Check Time</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.webLoginFailCheckTime }"></td>
+									<td class="align-middle text-center" th:text="|${ cardCenterSetting.webLoginFailCheckTime }초|"></td>
+									<td class="align-middle text-center text-success" th:text="|${ cardCenterSettingDefault.webLoginFailCheckTime }초|"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Login Fail Max Count</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.webLoginFailMaxCount }"></td>
+									<td class="align-middle text-center" th:text="|${ cardCenterSetting.webLoginFailMaxCount }회|"></td>
+									<td class="align-middle text-center text-success" th:text="|${ cardCenterSettingDefault.webLoginFailMaxCount }회|"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Maintenance</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.webMaintenance }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webMaintenance } ? '유지보수중' : '정상 운영'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.webMaintenance } ? '유지보수중' : '정상 운영'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">Web Register</td>
-									<td class="align-middle text-center" th:text="${ cardCenterSetting.webRegister }"></td>
+									<td class="align-middle text-center" th:text="${ cardCenterSetting.webRegister } ? '회원가입 가능' : '회원가입 불가능'"></td>
+									<td class="align-middle text-center text-success" th:text="${ cardCenterSettingDefault.webRegister } ? '회원가입 가능' : '회원가입 불가능'"></td>
 								</tr>
 							</tbody>
 						</table>
 						<!-- Center Setting Table End -->
+						
+						<a href="/admin/center/modify" class="form-control btn btn-warning">수정</a>
 					</div>
 				</div>
 			</div>

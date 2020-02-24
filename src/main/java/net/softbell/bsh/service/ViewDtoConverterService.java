@@ -2,6 +2,7 @@ package net.softbell.bsh.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeActionItem;
 import net.softbell.bsh.domain.entity.NodeGroup;
 import net.softbell.bsh.domain.entity.NodeItem;
+import net.softbell.bsh.domain.entity.NodeItemHistory;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
 import net.softbell.bsh.domain.entity.NodeTrigger;
@@ -64,14 +66,29 @@ public class ViewDtoConverterService
 			// Field
 			MonitorSummaryCardDto cardDto;
 			List<MonitorCardItemDto> listItems;
+			Date curDate, lastReceive;
 			
 			// Init
 			cardDto = new MonitorSummaryCardDto(entity);
 			listItems = new ArrayList<MonitorCardItemDto>();
+			curDate = new Date();
+			lastReceive = null;
 			
 			// Process
 			for (NodeItem nodeItem :  entity.getNodeItems())
+			{
+				// Field
+				NodeItemHistory lastHistory;
+				
+				// Init
 				listItems.add(new MonitorCardItemDto(nodeItem, iotNodeService.getLastNodeItemHistory(nodeItem)));
+				lastHistory = iotNodeService.getLastNodeItemHistory(nodeItem);
+				
+				if (lastReceive == null || lastHistory.getReceiveDate().compareTo(lastReceive) > 0)
+					lastReceive = lastHistory.getReceiveDate();
+			}
+			cardDto.setLastReceive(lastReceive);
+			cardDto.setLastReceiveSecond((curDate.getTime() - lastReceive.getTime()) / 1000);
 			
 			// Add
 			cardDto.setListItems(listItems);
