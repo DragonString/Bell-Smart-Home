@@ -29,11 +29,11 @@ import net.softbell.bsh.service.ViewDtoConverterService;
 @Slf4j
 @AllArgsConstructor
 @Controller
-@RequestMapping("/admin/group/member/")
+@RequestMapping("/admin/group/member")
 public class AdminGroupMemberView
 {
 	// Global Field
-	private final String G_BASE_PATH = "services/admin";
+	private final String G_BASE_PATH = "services/admin/group";
 	private final String G_BASE_REDIRECT_URL = "redirect:/admin/group/member";
 	private final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";
 	
@@ -41,8 +41,19 @@ public class AdminGroupMemberView
 	private final MemberService memberService;
 	private final PermissionService permissionService;
 	private final IotNodeServiceV1 iotNodeService;
+
 	
-	@GetMapping("create")
+	@GetMapping()
+    public String dispGroupMember(Model model)
+	{
+		// Load
+		model.addAttribute("listCardGroups", viewDtoConverterService.convMemberGroupSummaryCards(permissionService.getAllMemberGroup()));
+		
+		// Return
+        return G_BASE_PATH + "/MemberGroup";
+    }
+	
+	@GetMapping("/create")
 	public String dispGroupCreate(Model model)
 	{
 		// Field
@@ -51,10 +62,10 @@ public class AdminGroupMemberView
 		model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(memberService.getAllMember()));
 		
 		// Return
-		return G_BASE_PATH + "/GroupMemberCreate";
+		return G_BASE_PATH + "/MemberGroupCreate";
 	}
 	
-	@GetMapping("modify")
+	@GetMapping("/modify")
 	public String dispGroupModify(Model model)
 	{
 		// Field
@@ -62,10 +73,10 @@ public class AdminGroupMemberView
 		// Init
 		
 		// Return
-		return G_BASE_PATH + "/GroupMemberModify";
+		return G_BASE_PATH + "/MemberGroupModify";
 	}
 	
-	@GetMapping("{gid}")
+	@GetMapping("/{gid}")
 	public String dispGroup(Model model, @PathVariable("gid") Long gid)
 	{
 		// Field
@@ -75,11 +86,11 @@ public class AdminGroupMemberView
 		model.addAttribute("cardGroup", new MemberGroupInfoCardDto(permissionService.getMemberGroup(gid)));
 		
 		// Return
-		return G_BASE_PATH + "/GroupMemberInfo";
+		return G_BASE_PATH + "/MemberGroupInfo";
 	}
 	
     
-	@PostMapping("create")
+	@PostMapping("/create")
 	public String procGroupCreate(Authentication auth, MemberGroupDto memberGroupDto)
 	{
 		// Field
@@ -95,7 +106,7 @@ public class AdminGroupMemberView
 			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
-	@PostMapping("modify")
+	@PostMapping("/modify")
 	public String procGroupModify(Authentication auth)
 	{
 		// Field
@@ -106,7 +117,7 @@ public class AdminGroupMemberView
 		return G_BASE_REDIRECT_URL;
 	}
 	
-	@PostMapping("enable")
+	@PostMapping("/enable")
 	public String procGroupEnable(Authentication auth, @RequestParam("gid") List<Long> listGid)
 	{
 		// Field
@@ -122,7 +133,7 @@ public class AdminGroupMemberView
 			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
-	@PostMapping("disable")
+	@PostMapping("/disable")
 	public String procGroupDisable(Authentication auth, @RequestParam("gid") List<Long> listGid)
 	{
 		// Field
@@ -138,7 +149,7 @@ public class AdminGroupMemberView
 			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
-	@PostMapping("delete")
+	@PostMapping("/delete")
 	public String procGroupDelete(Authentication auth, @RequestParam("gid") List<Long> listGid)
 	{
 		// Field
@@ -154,7 +165,7 @@ public class AdminGroupMemberView
 			return G_BASE_REDIRECT_URL + "?err";
 	}
 	
-	@PostMapping("permission/add/{gid}")
+	@PostMapping("/permission/add/{gid}")
 	public String addPermission(@PathVariable("gid") Long gid, MemberGroupPermissionDto memberGroupPermissionDto)
 	{
 		// Field
@@ -170,7 +181,7 @@ public class AdminGroupMemberView
 			return G_BASE_REDIRECT_URL + "/" + gid + "?err";
 	}
 	
-	@PostMapping("permission/delete/{gid}")
+	@PostMapping("/permission/delete/{gid}")
 	public String deletePermission(@PathVariable("gid") Long gid, @RequestParam("pid") Long pid)
 	{
 		// Field
