@@ -17,6 +17,7 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
 import net.softbell.bsh.dto.view.advance.NodeInfoCardDto;
 import net.softbell.bsh.dto.view.advance.NodeItemHistoryCardDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
+import net.softbell.bsh.service.CenterService;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
@@ -30,14 +31,21 @@ public class NodeView
 {
 	// Global Field
 	private final String G_BASE_PATH = "services/advance";
+	private final String G_INDEX_REDIRECT_URL = "redirect:/";
+	
 	private final ViewDtoConverterService viewDtoConverterService;
 	private final IotNodeServiceV1 iotNodeService;
+	private final CenterService centerService;
 	
 	@GetMapping()
     public String dispIndex(Model model,
     						@RequestParam(value = "page", required = false, defaultValue = "1")int intPage,
     						@RequestParam(value = "count", required = false, defaultValue = "100")int intCount)
 	{
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		Page<Node> pageNode;
 		
@@ -54,6 +62,10 @@ public class NodeView
 	@GetMapping("/{id}")
     public String dispNode(Model model, @PathVariable("id")int intNodeId)
 	{
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		Node node;
 		
@@ -71,6 +83,10 @@ public class NodeView
 	@GetMapping("/item/{id}")
     public String dispNodeItemHistory(Model model, @PathVariable("id")int intNodeItemId)
 	{
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		NodeItem nodeItem;
 		List<NodeItemHistory> listNodeItemHistory;

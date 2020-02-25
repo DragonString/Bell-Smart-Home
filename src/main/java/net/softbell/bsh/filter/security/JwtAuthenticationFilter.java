@@ -39,6 +39,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean
         if (token != null && jwtTokenProvider.validateToken(token))
         {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
+            if (!jwtTokenProvider.checkMaintenanceLogin(auth))
+            {
+            	filterChain.doFilter(request, response);
+            	return;
+            }
             SecurityContextHolder.getContext().setAuthentication(auth);
             
             if (!jwtTokenProvider.isApiMode((HttpServletRequest)request)) // API 모드가 아니면

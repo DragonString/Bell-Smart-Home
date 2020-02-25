@@ -20,6 +20,7 @@ import net.softbell.bsh.dto.view.advance.TriggerInfoCardDto;
 import net.softbell.bsh.dto.view.general.ActionSummaryCardDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
 import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1;
+import net.softbell.bsh.service.CenterService;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
@@ -33,13 +34,20 @@ public class TriggerView
 {
 	// Global Field
 	private final String G_BASE_PATH = "services/advance";
+	private final String G_INDEX_REDIRECT_URL = "redirect:/";
+	
 	private final ViewDtoConverterService viewDtoConverterService;
 	private final IotTriggerServiceV1 iotTriggerService;
 	private final IotActionServiceV1 iotActionService;
+	private final CenterService centerService;
 	
 	@GetMapping()
     public String dispIndex(Model model, Authentication auth)
 	{
+		// Exception
+		if (centerService.getSetting().getIotTrigger() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		List<NodeTrigger> listTrigger;
 		
@@ -56,6 +64,10 @@ public class TriggerView
 	@GetMapping("/create")
 	public String dispCreate(Model model, Authentication auth)
 	{
+		// Exception
+		if (centerService.getSetting().getIotTrigger() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		List<NodeAction> listNodeAction;
 		
@@ -73,6 +85,10 @@ public class TriggerView
 	@GetMapping("/{id}")
 	public String dispTrigger(Model model, Authentication auth, @PathVariable("id") Long triggerId)
 	{
+		// Exception
+		if (centerService.getSetting().getIotTrigger() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		NodeTrigger nodeTrigger;
 		List<ActionSummaryCardDto> listCardActionsAll;
@@ -134,6 +150,10 @@ public class TriggerView
 	@GetMapping("/modify/{id}")
 	public String dispTriggerModify(Model model, Authentication auth, @PathVariable("id") Long triggerId)
 	{
+		// Exception
+		if (centerService.getSetting().getIotTrigger() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		NodeTrigger nodeTrigger;
 		List<NodeAction> listNodeAction;
@@ -200,6 +220,10 @@ public class TriggerView
 	@PostMapping("/create")
 	public String procCreate(Authentication auth, IotTriggerDto iotTriggerDto)
 	{
+		// Exception
+		if (centerService.getSetting().getIotTrigger() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		boolean isSuccess;
 		
@@ -216,6 +240,10 @@ public class TriggerView
 	@PostMapping("/modify/{id}")
 	public String procModify(Authentication auth, @PathVariable("id") Long triggerId, IotTriggerDto iotTriggerDto)
 	{
+		// Exception
+		if (centerService.getSetting().getIotTrigger() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		boolean isSuccess;
 		
@@ -232,6 +260,10 @@ public class TriggerView
 	@PostMapping("/delete/{id}")
 	public String procDelete(Authentication auth, @PathVariable("id") Long triggerId)
 	{
+		// Exception
+		if (centerService.getSetting().getIotTrigger() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		boolean isSuccess;
 		

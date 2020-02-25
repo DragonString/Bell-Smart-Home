@@ -17,6 +17,7 @@ import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.dto.request.IotActionDto;
 import net.softbell.bsh.dto.view.general.ActionInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
+import net.softbell.bsh.service.CenterService;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
 /**
@@ -30,12 +31,19 @@ public class ActionView
 {
 	// Global Field
 	private final String G_BASE_PATH = "services/general";
+	private final String G_INDEX_REDIRECT_URL = "redirect:/";
+	
 	private final ViewDtoConverterService viewDtoConverterService;
 	private final IotActionServiceV1 iotActionService;
+	private final CenterService centerService;
 	
 	@GetMapping()
     public String dispIndex(Model model, Authentication auth)
 	{
+		// Exception
+		if (centerService.getSetting().getIotAction() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		List<NodeAction> listNodeAction;
 		
@@ -52,6 +60,10 @@ public class ActionView
 	@GetMapping("/{id}")
     public String dispAction(Model model, Authentication auth, @PathVariable("id") long actionId)
 	{
+		// Exception
+		if (centerService.getSetting().getIotAction() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		NodeAction nodeAction;
 		List<NodeItem> listNodeItem;
@@ -75,6 +87,10 @@ public class ActionView
 	@GetMapping("/create")
     public String dispCreate(Model model, Authentication auth)
 	{
+		// Exception
+		if (centerService.getSetting().getIotAction() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		List<NodeItem> listNodeItem;
 		
@@ -92,6 +108,10 @@ public class ActionView
     public String procCreate(Model model, Authentication auth,
     						IotActionDto iotActionDto)
 	{
+		// Exception
+		if (centerService.getSetting().getIotAction() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		boolean isSuccess;
 		
@@ -110,6 +130,10 @@ public class ActionView
     						@PathVariable("id") long actionId,
     						IotActionDto iotActionDto)
 	{
+		// Exception
+		if (centerService.getSetting().getIotAction() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		boolean isSuccess;
 		
@@ -126,6 +150,10 @@ public class ActionView
 	@PostMapping("/delete/{id}")
     public String procDelete(Model model, Authentication auth, @PathVariable("id") long actionId)
 	{
+		// Exception
+		if (centerService.getSetting().getIotAction() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		boolean isSuccess;
 		

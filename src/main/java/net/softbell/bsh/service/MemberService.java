@@ -1,6 +1,7 @@
 package net.softbell.bsh.service;
 
 import java.security.Principal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +40,8 @@ import net.softbell.bsh.util.BellLog;
 public class MemberService implements UserDetailsService
 {
 	// Global Field
+	private final CenterService centerService;
+	
 	private final MemberRepo memberRepo;
 	private final MemberLoginLogRepo memberLoginLogRepo;
 	
@@ -69,7 +72,6 @@ public class MemberService implements UserDetailsService
 		// Process
 		memberDto.setPassword(passwordEncoder.encode(memberDto.getPassword())); // 비밀번호 암호화
 		memberDto.setBan(BanRule.NORMAL.getCode());
-		memberDto.setLoginFailCount(0);
 		memberDto.setPermission(MemberRole.WAIT.getCode());
 
 		log.info(BellLog.getLogHead() + "가입완료"); // TEST #### TODO
@@ -151,10 +153,40 @@ public class MemberService implements UserDetailsService
 		// Init
 		member = getMember(userId);
 		
+		// Exsist Check
+		if (member == null)
+			throw new UsernameNotFoundException("저장된 회원 없음");
+		
+		// Login Fail Check
+		if (isLoginCancel(member))
+		{
+			log.info("여기 와짐?");
+			throw new UsernameNotFoundException("loginFail");
+		}
+		
 		// Ban Check
-		if (member != null)
-			if (member.getBan() != BanRule.NORMAL)
-				member.setPermission(MemberRole.BAN);
+		if (isLoginBan(member))
+			member.setPermission(MemberRole.BAN);
+		
+		// Return
+		return member;
+	}
+	
+	public UserDetails tokenLoadUserByUsername(String userId) throws UsernameNotFoundException
+	{
+		// Field
+		Member member;
+		
+		// Init
+		member = getMember(userId);
+		
+		// Exsist Check
+		if (member == null)
+			throw new UsernameNotFoundException("저장된 회원 없음");
+		
+		// Ban Check
+		if (isLoginBan(member))
+			member.setPermission(MemberRole.BAN);
 		
 		// Return
 		return member;
@@ -181,15 +213,96 @@ public class MemberService implements UserDetailsService
 									.ipv4(loginIp)
 									.build();
 		if (isLogin)
+		{
 			memberLoginLog.setStatus(AuthStatusRule.SUCCESS);
+			member.setLoginFailBanStart(null);
+		}
 		else
+		{
+			// Field
+			Calendar start, end;
+			int maxFailCount, failCheckTime;
+			long fail;
+			
+			// Init
+			start = Calendar.getInstance();
+			end = Calendar.getInstance();
+			failCheckTime = centerService.getSetting().getWebLoginFailCheckTime();
+			maxFailCount = centerService.getSetting().getWebLoginFailMaxCount();
+			start.add(Calendar.SECOND, -failCheckTime);
 			memberLoginLog.setStatus(AuthStatusRule.FAIL);
+			fail = memberLoginLogRepo.countByMemberAndStatusAndRequestDateBetween(member, AuthStatusRule.FAIL, start.getTime(), end.getTime()) + 1;
+			
+			// Check
+			if (fail > maxFailCount)
+			{
+				member.setLoginFailBanStart(new Date());
+				log.info(failCheckTime + "초 내 로그인 " + fail + "회 실패로 임시 차단 (" + maxFailCount + "회 제한) : " + member.getUserId());
+			}
+		}
 
 		// Process - DB Save
 		memberLoginLogRepo.save(memberLoginLog);
 		
 		// Return
 		return true;
+	}
+	
+	public boolean isLoginBan(Member member)
+	{
+		// 1st Check
+		if (member.getBan() == BanRule.PERMANENT)
+			return true;
+		
+		// Field
+		Date now, ban;
+		
+		// Init
+		now = new Date();
+		ban = member.getBanDate();
+		
+		// 2st Check
+		if (member.getBan() == BanRule.TEMP)
+		{
+			// Exception
+			if (ban == null)
+				return false;
+			
+			// Check
+			if (now.compareTo(ban) > 0) // 차단 기한이 지났으면
+				return false;
+			else
+				return true;
+		}
+		
+		// Return
+		return false;
+	}
+	
+	public boolean isLoginCancel(Member member)
+	{
+		// Field
+		Calendar ban;
+		Date banStart;
+		
+		// Init
+		ban = Calendar.getInstance();
+		banStart = member.getLoginFailBanStart(); // 로그인 실패 시각 로드
+		
+		// Exception
+		if (banStart == null) // 차단되지 않았으면
+			return false;
+		
+		// Load
+		ban.setTime(member.getLoginFailBanStart());
+		ban.add(Calendar.SECOND, centerService.getSetting().getWebLoginFailBanTime()); // 차단 시각 추가
+		
+		// Check
+		if (ban.getTime().compareTo(new Date()) > 0) // 현재 시각이 차단기한보다 이전이면
+			return true; // 로그인 취소
+		
+		// Return
+		return false;
 	}
 
 	/*@Transactional

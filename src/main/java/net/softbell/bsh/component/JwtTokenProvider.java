@@ -13,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -22,6 +21,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import net.softbell.bsh.config.CustomConfig;
+import net.softbell.bsh.service.CenterService;
+import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.util.CookieUtil;
 
 /**
@@ -35,7 +36,8 @@ public class JwtTokenProvider
     @Value("${bsh.security.jwt.secret.key}")
     private String secretKey;
     private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
-    private final UserDetailsService userDetailsService;
+    private final MemberService memberService;
+    private final CenterService centerService;
 
     @PostConstruct
     protected void init()
@@ -102,8 +104,20 @@ public class JwtTokenProvider
     // Jwt 토큰으로 인증 정보를 조회
     public Authentication getAuthentication(String token)
     {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+        UserDetails userDetails = memberService.tokenLoadUserByUsername(this.getUserPk(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+    
+    public boolean checkMaintenanceLogin(Authentication auth)
+    {
+    	if (centerService.getSetting().getWebMaintenance() == 1)
+	        for (GrantedAuthority role : auth.getAuthorities())
+	        	if (!role.getAuthority().equals("ROLE_SUPERADMIN") &&
+	        			!role.getAuthority().equals("ROLE_ADMIN") &&
+	        			!role.getAuthority().equals("ROLE_NODE"))
+	        		return false;
+    	
+    	return true;
     }
 
     // Jwt 토큰에서 회원 구별 정보 추출

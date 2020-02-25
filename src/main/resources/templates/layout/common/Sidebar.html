@@ -22,7 +22,7 @@
 	<div class="sidebar-heading">일반</div>
 	
 	<!-- Nav Item - Monitor Start -->
-	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/monitor')} ? 'active' : ''">
+	<li class="nav-item" th:if="${setting.iotMonitor}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/monitor')} ? 'active' : ''">
 		<a class="nav-link" href="/monitor">
 			<i class="fas fa-fw fa-chart-area"></i> <span>모니터</span>
 		</a>
@@ -30,7 +30,7 @@
 	<!-- Nav Item - Monitor End -->
 	
 	<!-- Nav Item - Reservation Start -->
-	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/reserv')} ? 'active' : ''">
+	<li class="nav-item" th:if="${setting.iotReserv}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/reserv')} ? 'active' : ''">
 		<a class="nav-link" href="/reserv">
 			<i class="fas fa-fw fa-bell"></i> <span>예약</span>
 		</a>
@@ -38,7 +38,7 @@
 	<!-- Nav Item - Reservation End -->
 	
 	<!-- Nav Item - Action Start -->
-	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/action')} ? 'active' : ''">
+	<li class="nav-item" th:if="${setting.iotAction}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/action')} ? 'active' : ''">
 		<a class="nav-link" href="/action">
 			<i class="fas fa-fw fa-power-off"></i> <span>액션</span>
 		</a>
@@ -49,7 +49,7 @@
 	<div class="sidebar-heading">고급</div><!-- Heading -->
 	
 	<!-- Nav Item - Control Start -->
-	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/node')} ? 'active' : ''">
+	<li class="nav-item" th:if="${setting.iotControl}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/node')} ? 'active' : ''">
 		<a class="nav-link" href="/node">
 			<i class="fas fa-fw fa-cog"></i> <span>노드 제어</span>
 		</a>
@@ -57,7 +57,7 @@
 	<!-- Nav Item - Control End -->
 	
 	<!-- Nav Item - Trigger Start -->
-	<li class="nav-item" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/trigger')} ? 'active' : ''">
+	<li class="nav-item" th:if="${setting.iotTrigger}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/trigger')} ? 'active' : ''">
 		<a class="nav-link" href="/trigger">
 			<i class="fas fa-fw fa-joint"></i> <span>트리거</span>
 		</a>

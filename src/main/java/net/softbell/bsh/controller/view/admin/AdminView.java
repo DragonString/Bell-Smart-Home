@@ -13,8 +13,8 @@ import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.dto.request.CenterSettingDto;
 import net.softbell.bsh.dto.view.admin.CenterSettingSummaryCardDto;
-import net.softbell.bsh.iot.service.v1.IotCenterServiceV1;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
+import net.softbell.bsh.service.CenterService;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.service.ViewDtoConverterService;
 
@@ -30,10 +30,12 @@ public class AdminView
 	// Global Field
 	private final String G_BASE_PATH = "services/admin";
 	private final String G_BASE_REDIRECT_URL = "redirect:/admin";
+	private final String G_INDEX_REDIRECT_URL = "redirect:/";
+	
 	private final ViewDtoConverterService viewDtoConverterService;
 	private final MemberService memberService;
 	private final IotNodeServiceV1 iotNodeService;
-	private final IotCenterServiceV1 iotCenterService;
+	private final CenterService centerService;
 	
 	@GetMapping("/member")
     public String dispMember(Model model,
@@ -58,6 +60,10 @@ public class AdminView
     		@RequestParam(value = "page", required = false, defaultValue = "1") int intPage,
 			@RequestParam(value = "count", required = false, defaultValue = "100") int intCount)
 	{
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
 		// Field
 		Page<Node> pageNode;
 		
@@ -75,8 +81,8 @@ public class AdminView
     public String dispCenterSetting(Model model)
 	{
 		// Process
-		model.addAttribute("cardCenterSetting", new CenterSettingSummaryCardDto(iotCenterService.loadSetting()));
-		model.addAttribute("cardCenterSettingDefault", new CenterSettingSummaryCardDto(iotCenterService.getSetting()));
+		model.addAttribute("cardCenterSetting", new CenterSettingSummaryCardDto(centerService.loadSetting()));
+		model.addAttribute("cardCenterSettingDefault", new CenterSettingSummaryCardDto(centerService.getSetting()));
 		
 		// Return
         return G_BASE_PATH + "/CenterSetting";
@@ -86,7 +92,7 @@ public class AdminView
     public String dispCenterSettingModify(Model model)
 	{
 		// Process
-		model.addAttribute("cardCenterSetting", new CenterSettingSummaryCardDto(iotCenterService.loadSetting()));
+		model.addAttribute("cardCenterSetting", new CenterSettingSummaryCardDto(centerService.loadSetting()));
 		
 		// Return
         return G_BASE_PATH + "/CenterSettingModify";
@@ -99,7 +105,7 @@ public class AdminView
 		boolean isSuccess;
 		
 		// Init
-		isSuccess = iotCenterService.modifyCenterSetting(centerSettingDto);
+		isSuccess = centerService.modifyCenterSetting(centerSettingDto);
 		
 		// Return
 		if (isSuccess)

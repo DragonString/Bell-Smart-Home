@@ -1,4 +1,4 @@
-package net.softbell.bsh.iot.service.v1;
+package net.softbell.bsh.service;
 
 import java.util.List;
 
@@ -15,20 +15,24 @@ import net.softbell.bsh.dto.request.CenterSettingDto;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : IoT Center Setting 서비스
+ * @Description : Center Setting 서비스
  */
 @RequiredArgsConstructor
 @Service
-public class IotCenterServiceV1
+public class CenterService
 {
 	// Global Field
 	private final CenterSettingRepo centerSettingRepo;
 	@Getter
 	private CenterSetting setting;
 	
-	public CenterSetting createSetting()
+	public CenterSetting createSetting(boolean isEnabled)
 	{
-		return CenterSetting.builder()
+		// Field
+		CenterSetting centerSetting;
+		
+		// Init
+		centerSetting = CenterSetting.builder()
 								.isEnabled((byte) 0) // 센터 설정 오버라이드 사용 여부 (true[1]: 활성화, false[0]: 비활성화)
 								.iotAction((byte) 1) // IoT 액션 사용 여부 (0: 비활성화, 1: 활성화)
 								.iotControl((byte) 1) // IoT 제어 사용 여부 (0: 비활성화, 1: 활성화)
@@ -37,12 +41,19 @@ public class IotCenterServiceV1
 								.iotReserv((byte) 1) // IoT 예약 사용 여부 (0: 비활성화, 1: 활성화)
 								.iotTrigger((byte) 1) // IoT 트리거 사용 여부 (0: 비활성화, 1: 활성화)
 								.webAuthMode((byte) 0) // 웹 인증 모드(0: 인증 없음, 1: 이메일 인증)
-								.webLoginFailBanTime(60 * 10) // 연속 로그인 실패시 10분간 차단
-								.webLoginFailCheckTime(60 * 10) // 10분 안에 연속 로그인 실패시
+								.webLoginFailBanTime(60 * 5) // 연속 로그인 실패시 5분간 차단
+								.webLoginFailCheckTime(60 * 5) // 5분 안에 연속 로그인 실패시
 								.webLoginFailMaxCount((byte) 5) // 5회 이상 연속 로그인 실패시
 								.webMaintenance((byte) 0) // 웹 유지보수 모드 (0: 비활성화, 1: 활성화)
 								.webRegister((byte) 1) // 추가 회원가입 방지 여부 (0: 회원가입 불가능, 1: 회원가입 가능)
 									.build();
+		
+		// Check
+		if (isEnabled)
+			centerSetting.setIsEnabled((byte) 1);
+		
+		// Return
+		return centerSetting;
 	}
 	
 	@PostConstruct
@@ -54,6 +65,7 @@ public class IotCenterServiceV1
 		CenterSetting centerSetting;
 		
 		// Init
+		this.setting = null;
 		centerSetting = null;
 		listSetting = centerSettingRepo.findAll();
 		
@@ -70,12 +82,13 @@ public class IotCenterServiceV1
 		// Default Value Load
 		if (centerSetting == null)
 		{
-			centerSetting = createSetting();
-			this.setting = centerSetting;
+			centerSetting = createSetting(false);
 			
 			// DB - Save
 			centerSettingRepo.save(centerSetting);
 		}
+		if (this.setting == null)
+			this.setting = createSetting(true);
 		
 		// Return
 		return centerSetting;
