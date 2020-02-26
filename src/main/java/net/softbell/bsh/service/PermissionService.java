@@ -1,5 +1,6 @@
 package net.softbell.bsh.service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -9,8 +10,10 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import net.softbell.bsh.component.PermissionComp;
 import net.softbell.bsh.domain.EnableStatusRule;
 import net.softbell.bsh.domain.GroupRole;
+import net.softbell.bsh.domain.MemberRole;
 import net.softbell.bsh.domain.entity.GroupPermission;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberGroup;
@@ -23,11 +26,11 @@ import net.softbell.bsh.domain.repository.MemberGroupItemRepo;
 import net.softbell.bsh.domain.repository.MemberGroupRepo;
 import net.softbell.bsh.domain.repository.NodeGroupItemRepo;
 import net.softbell.bsh.domain.repository.NodeGroupRepo;
+import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.dto.request.MemberGroupDto;
 import net.softbell.bsh.dto.request.MemberGroupPermissionDto;
 import net.softbell.bsh.dto.request.NodeGroupDto;
 import net.softbell.bsh.dto.request.NodeGroupPermissionDto;
-import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -39,13 +42,15 @@ public class PermissionService
 {
 	// Global Field
 	private final MemberService memberService;
-	private final IotNodeServiceV1 iotNodeService;
+	
+	private final PermissionComp permissionComp;
 	
 	private final GroupPermissionRepo groupPermissionRepo;
 	private final NodeGroupRepo nodeGroupRepo;
 	private final NodeGroupItemRepo nodeGroupItemRepo;
 	private final MemberGroupRepo memberGroupRepo;
 	private final MemberGroupItemRepo memberGroupItemRepo;
+	private final NodeRepo nodeRepo;
 	
 	public List<MemberGroup> getAllMemberGroup()
 	{
@@ -87,6 +92,66 @@ public class PermissionService
 		
 		// Return
 		return optNodeGroup.get();
+	}
+	
+	/** @Description 특정 사용자가 해당 노드에 권한이 있는지 검증
+	 * 1. 사용자가 포함된 활성화된 사용자 그룹 리스트 검색
+	 * 2. 노드가 포함된 활성화된 노드 그룹 리스트 검색
+	 * 3. 사용자 그룹과 노드 그룹과 권한으로 그룹 권한이 있는지 검색
+	 * 4. 권한이 있으면 true
+	 */
+	public boolean isPrivilege(GroupRole role, Member member, Node node)
+	{
+		// Exception
+		if (member.getPermission() == MemberRole.ADMIN || member.getPermission() == MemberRole.SUPERADMIN)
+			return true; // 관리자는 모든 권한 통과
+		
+		// Field
+		List<MemberGroup> listMemberGroup;
+		List<NodeGroup> listNodeGroup;
+		List<GroupPermission> listGroupPermission;
+		
+		// Init
+		listMemberGroup = permissionComp.getEnableMemberGroup(member); // 권한 있는 사용자 그룹 로드
+		listNodeGroup = permissionComp.getEnableNodeGroup(node); // 권한 있는 노드 그룹 로드
+		listGroupPermission = permissionComp.getGroupPermission(role, listMemberGroup, listNodeGroup); // 요청한 권한 로드
+		
+		// Check
+		if (listGroupPermission.size() > 0)
+			return true;
+		
+		// Return
+		return false;
+	}
+	
+	/** @Description 특정 회원에게 특정 권한이 있는 노드 리스트 반환
+	 * 1. 사용자가 포함된 활성화된 사용자 그룹 리스트 검색
+	 * 2. 사용자 그룹과 권한으로 그룹 권한 검색
+	 * 3. 그룹 권한으로 활성화된 노드 그룹 리스트 검색
+	 * 4. 검색된 노드 그룹에 연결된 노드 그룹 아이템으로 노드 리스트 검색
+	 */
+	public List<NodeGroupItem> getPrivilegeNodeGroupItems(GroupRole role, Member member)
+	{
+		// Field
+		List<MemberGroup> listMemberGroup;
+		List<GroupPermission> listGroupPermission;
+		List<NodeGroup> listNodeGroup;
+    	List<NodeGroup> listPrivilegeNodeGroup;
+    	List<NodeGroupItem> listPrivilegeNodeGroupItem;
+    	
+		// Init
+		listMemberGroup = permissionComp.getEnableMemberGroup(member); // 권한 있는 사용자 그룹 로드
+		listGroupPermission = permissionComp.getMemberGroupPermission(role, listMemberGroup); // 요청한 권한 로드
+		listNodeGroup = permissionComp.getEnableNodeGroup(); // 활성화된 노드 그룹 로드
+		listPrivilegeNodeGroup = permissionComp.getPrivilegeNodeGroup(listNodeGroup, listGroupPermission); // 권한있는 노드 그룹 로드
+		listPrivilegeNodeGroupItem = new ArrayList<NodeGroupItem>();
+		
+		// Process
+		for (NodeGroup entity : listPrivilegeNodeGroup)
+			listPrivilegeNodeGroupItem.addAll(entity.getNodeGroupItems());
+		
+		// Return
+		return listPrivilegeNodeGroupItem;
 	}
 	
 	@Transactional
@@ -350,20 +415,20 @@ public class PermissionService
 		for (long nodeId : nodeGroupDto.getNodeId())
 		{
 			// Field
-			Node node;
+			Optional<Node> optNode;
 			NodeGroupItem nodeGroupItem;
 			
 			// Init
-			node = iotNodeService.getNode(nodeId);
+			optNode = nodeRepo.findById(nodeId);
 			
 			// Exception
-			if (node == null)
+			if (!optNode.isPresent())
 				continue;
 			
 			// Create
 			nodeGroupItem = NodeGroupItem.builder()
 												.nodeGroup(nodeGroup)
-												.node(node)
+												.node(optNode.get())
 												.assignDate(new Date())
 													.build();
 			
@@ -407,20 +472,20 @@ public class PermissionService
 		for (long nodeId : nodeGroupDto.getNodeId())
 		{
 			// Field
-			Node node;
+			Optional<Node> optNode;
 			NodeGroupItem nodeGroupItem;
 			
 			// Init
-			node = iotNodeService.getNode(nodeId);
+			optNode = nodeRepo.findById(nodeId);
 			
 			// Exception
-			if (node == null)
+			if (!optNode.isPresent())
 				continue;
 			
 			// Create
 			nodeGroupItem = NodeGroupItem.builder()
 												.nodeGroup(nodeGroup)
-												.node(node)
+												.node(optNode.get())
 												.assignDate(new Date())
 													.build();
 			

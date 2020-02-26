@@ -159,10 +159,11 @@ public class MemberService implements UserDetailsService
 		
 		// Login Fail Check
 		if (isLoginCancel(member))
-		{
-			log.info("여기 와짐?");
 			throw new UsernameNotFoundException("loginFail");
-		}
+		
+		// DB - Update
+		member.setLastLogin(new Date());
+		memberRepo.save(member);
 		
 		// Ban Check
 		if (isLoginBan(member))

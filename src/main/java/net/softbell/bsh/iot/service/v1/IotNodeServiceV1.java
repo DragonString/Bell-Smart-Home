@@ -24,6 +24,7 @@ import net.softbell.bsh.domain.repository.NodeRepo;
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto;
 import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto;
+import net.softbell.bsh.service.PermissionService;
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -35,16 +36,21 @@ public class IotNodeServiceV1
 {
 	// Global Field
 	private final IotMessageServiceV1 iotMessageService;
+	private final PermissionService permissionService;
+	
 	private final IotChannelCompV1 iotChannelCompV1;
+	
 	private final NodeRepo nodeRepo;
 	private final NodeItemRepo nodeItemRepo;
 	private final NodeItemHistoryRepo nodeItemHistoryRepo;
 	
+	@Deprecated
 	public List<Node> getAllNodes()
 	{
 		return nodeRepo.findAll();
 	}
 	
+	@Deprecated
 	public Page<Node> getAllNodes(int intPage, int intCount)
 	{
 		// Field
@@ -57,6 +63,7 @@ public class IotNodeServiceV1
 		return nodeRepo.findAll(curPage);
 	}
 
+	@Deprecated
 	public List<NodeItem> getAllNodeItems(Authentication auth)
 	{
 		// Field
