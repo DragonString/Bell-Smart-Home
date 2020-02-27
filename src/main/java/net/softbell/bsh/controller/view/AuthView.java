@@ -1,6 +1,7 @@
 package net.softbell.bsh.controller.view;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
+import net.softbell.bsh.dto.view.MemberActivityLogCardDto;
 import net.softbell.bsh.dto.view.MemberProfileCardDto;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.service.ViewDtoConverterService;
@@ -125,7 +127,9 @@ public class AuthView
     	pageMemberLoginLog = memberService.getLoginLog(principal, intPage, intCount);
     	
     	// Process
-    	model.addAttribute("listCardActivityLogs", viewDtoConverterService.convMemberActivityLogCards(pageMemberLoginLog.getContent()));
+    	List<MemberActivityLogCardDto> test = viewDtoConverterService.convMemberActivityLogCards(pageMemberLoginLog.getContent());
+    	
+    	model.addAttribute("listCardActivityLogs", test);
 //		model.addAttribute("logCurPage", intPage);
 //		model.addAttribute("logPageCount", intCount);
 //    	model.addAttribute("logMaxPage", memberService.getLoginLogMaxPage(principal, intCount));
