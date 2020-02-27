@@ -128,6 +128,9 @@ public class MemberService implements UserDetailsService
 	
 	public boolean isAdmin(Member member)
 	{
+		if (member == null)
+			return false;
+		
 		if (!(member.getPermission() == MemberRole.ADMIN || 
 				member.getPermission() == MemberRole.SUPERADMIN) || 
 				member.getBan() != BanRule.NORMAL) // 관리자가 아니거나 정지 회원이면 로그아웃처리
