@@ -74,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 							"/api/rest/*/auth/**", // API 인증
 							"/api/rest/*/status/**", // 서버 Status
 							"/api/rest/*/iot/auth/**", // IoT API 인증
-							"/api/rest/*/ifttt/**" // IFTTT Webhook
+							"/api/rest/*/interlock/**" // 연동 Webhook
 							).permitAll() // 누구나 접근 가능
 				.antMatchers("/denied").authenticated() // 접근제한 페이지 인증
 				.antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // 관리자 페이지 인증
