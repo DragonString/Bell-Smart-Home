@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.AllArgsConstructor;
 import net.softbell.bsh.dto.request.MemberDto;
+import net.softbell.bsh.service.CenterService;
 import net.softbell.bsh.service.MemberService;
 
 /**
@@ -25,6 +26,7 @@ public class DmzView
 	// Global Field
 	private final String G_BASE_PATH = "services/dmz";
     private final MemberService memberService;
+    private final CenterService centerService;
 
     // 회원가입 페이지
     @GetMapping("/signup")
@@ -37,6 +39,9 @@ public class DmzView
 		if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
 			return "redirect:/";
 		
+		// Process
+		model.addAttribute("register", centerService.getSetting().getWebRegister());
+		
     	// Return
         return G_BASE_PATH + "/Signup";
     }
@@ -47,6 +52,9 @@ public class DmzView
     {
     	// Field
     	long intResult;
+		
+		// Exception
+		if (centerService.getSetting().getWebRegister() == 0);
     	
     	// Init
     	intResult = memberService.joinUser(memberDTO);
@@ -68,6 +76,9 @@ public class DmzView
     	// Auth Check
 		if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
 			return "redirect:/";
+		
+		// Process
+		model.addAttribute("maintenance", centerService.getSetting().getWebMaintenance());
     	
     	// Return
         return G_BASE_PATH + "/Login";

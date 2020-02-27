@@ -1,5 +1,6 @@
 package net.softbell.bsh.iot.controller.rest.v1;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,13 +24,13 @@ public class IotActionRestV1
     private final IotActionServiceV1 iotActionService;
 	
 	@PostMapping("/exec/{id}")
-	public ResultDto execNodeAction(@PathVariable("id")long actionId)
+	public ResultDto execNodeAction(Authentication auth, @PathVariable("id")long actionId)
 	{
 		// Field
 		boolean isSuccess;
 		
 		// Init
-		isSuccess = iotActionService.execAction(actionId);
+		isSuccess = iotActionService.execAction(actionId, auth);
 		
 		// Return
 		if (isSuccess)

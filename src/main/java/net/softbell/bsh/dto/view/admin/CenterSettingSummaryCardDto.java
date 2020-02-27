@@ -6,7 +6,7 @@ import net.softbell.bsh.domain.entity.CenterSetting;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : 노드 관리뷰 리스트 카드정보 DTO
+ * @Description : 센터 설정 카드정보 DTO
  */
 @Getter
 @Setter

@@ -34,7 +34,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler
 					throws IOException, ServletException
 	{
 		// Field
-		String strUserId = request.getParameter("userid");
+		String strUserId = request.getParameter("userId");
 		
 		// Process
 		memberService.procLogin(strUserId, ClientData.getClientIP(request), false);

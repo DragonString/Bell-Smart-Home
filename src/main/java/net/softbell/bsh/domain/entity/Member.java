@@ -61,6 +61,10 @@ public class Member implements Serializable, UserDetails
 	private Date banDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="login_fail_ban_start")
+	private Date loginFailBanStart;
+
+	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="change_passwd_date")
 	private Date changePasswdDate;
 
@@ -70,9 +74,6 @@ public class Member implements Serializable, UserDetails
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="last_login")
 	private Date lastLogin;
-
-	@Column(name="login_fail_count", nullable=false)
-	private Integer loginFailCount;
 
 	@Column(nullable=false, length=40)
 	private String nickname;

@@ -19,6 +19,7 @@
 									<div class="p-5">
 										<div class="text-center">
 											<h1 class="h4 text-gray-900 mb-4 text-uppercase font-weight-bold">Bell Smart Home - Login</h1>
+											<div th:if="${maintenance} != 0" class="alert alert-danger" data-toggle="tooltip" data-placement="top" title="유지보수 모드 활성화 상태에서는 관리자만 로그인 가능">유지보수 모드 활성화</div>
 										</div>
 										<form class="user" method="POST" action="/login">
 											<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

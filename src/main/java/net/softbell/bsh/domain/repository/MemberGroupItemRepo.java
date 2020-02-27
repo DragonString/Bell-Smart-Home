@@ -1,8 +1,11 @@
 package net.softbell.bsh.domain.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberGroupItem;
 
 /**
@@ -12,5 +15,5 @@ import net.softbell.bsh.domain.entity.MemberGroupItem;
 @Repository
 public interface MemberGroupItemRepo extends JpaRepository<MemberGroupItem, Long>
 {
-	
+	List<MemberGroupItem> findByMember(Member member);
 }

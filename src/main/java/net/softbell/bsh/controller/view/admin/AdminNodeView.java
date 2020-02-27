@@ -17,6 +17,7 @@ import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.dto.view.admin.NodeManageInfoCardDto;
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
+import net.softbell.bsh.service.CenterService;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.service.ViewDtoConverterService;
 import net.softbell.bsh.util.BellLog;
@@ -35,14 +36,21 @@ public class AdminNodeView
 	private final String G_BASE_PATH = "services/admin";
 	private final String G_BASE_REDIRECT_URL = "redirect:/admin/node";
 	private final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";
+	private final String G_INDEX_REDIRECT_URL = "redirect:/";
+	
 	private final ViewDtoConverterService viewDtoConverterService;
 	private final MemberService memberService;
 	private final IotNodeServiceV1 iotNodeService;
+	private final CenterService centerService;
     
     // 노드 정보 수정페이지 출력
     @GetMapping("modify/{id}")
     public String dispNodeModify(Model model, Principal principal, @PathVariable("id") long nodeId)
     {
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
     	// Field
     	Member member = memberService.getAdminMember(principal.getName());
 		Node node;
@@ -67,6 +75,10 @@ public class AdminNodeView
     public String procNodeDisable(Model model, Principal principal,
     		@RequestParam("intNodeId") int intNodeId)
     {
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
     	// Field
     	Member member = memberService.getAdminMember(principal.getName());
     	
@@ -89,6 +101,10 @@ public class AdminNodeView
     public String procNodeEnable(Model model, Principal principal,
     		@RequestParam("intNodeId") int intNodeId)
     {
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
     	// Field
     	Member member = memberService.getAdminMember(principal.getName());
     	
@@ -111,6 +127,10 @@ public class AdminNodeView
     public String procNodeReject(Model model, Principal principal,
     		@RequestParam("intNodeId") int intNodeId)
     {
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
     	// Field
     	Member member = memberService.getAdminMember(principal.getName());
     	
@@ -133,6 +153,10 @@ public class AdminNodeView
     public String procNodeModify(Model model, Principal principal, @PathVariable("id") long nodeId,
     							@RequestParam("alias") String alias)
     {
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
     	// Field
     	Member member = memberService.getAdminMember(principal.getName());
     	
@@ -153,6 +177,10 @@ public class AdminNodeView
     							@RequestParam("id") long nodeId,
     							@RequestParam("alias") String alias)
     {
+		// Exception
+		if (centerService.getSetting().getIotNode() != 1)
+			return G_INDEX_REDIRECT_URL;
+		
     	// Field
     	Member member = memberService.getAdminMember(principal.getName());
     	

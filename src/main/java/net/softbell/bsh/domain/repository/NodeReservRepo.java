@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import net.softbell.bsh.domain.EnableStatusRule;
+import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.NodeReserv;
 
 /**
@@ -15,5 +16,6 @@ import net.softbell.bsh.domain.entity.NodeReserv;
 @Repository
 public interface NodeReservRepo extends JpaRepository<NodeReserv, Long>
 {
+	List<NodeReserv> findByMember(Member member);
 	List<NodeReserv> findByEnableStatus(EnableStatusRule enableStatus);
 }

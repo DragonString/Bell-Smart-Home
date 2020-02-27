@@ -16,6 +16,7 @@ public class ReservSummaryCardDto
 	private Long reservId;
 	private String description;
 	private boolean enableStatus;
+	private String creatorNickname;
 	
 	public ReservSummaryCardDto(NodeReserv entity)
 	{
@@ -31,5 +32,7 @@ public class ReservSummaryCardDto
 			this.enableStatus = true;
 		else
 			this.enableStatus = false;
+		
+		this.creatorNickname = entity.getMember().getNickname();
 	}
 }

@@ -29,13 +29,26 @@ public class IotAuthCompV1
 	private NodeRepo nodeRepo;
 	
 	
+	public String getRandomToken()
+	{
+		// Field
+		String token;
+		byte[] randomBytes = new byte[24];
+
+		// Generate
+		secureRandom.nextBytes(randomBytes);
+	    token = base64Encoder.encodeToString(randomBytes);
+		
+		// Return
+		return token;
+	}
+	
 	@Transactional
 	public String generateToken(String uid)
 	{
 		// Field
 		Node node;
 		String token;
-		byte[] randomBytes = new byte[24];
 		
 		// Init
 		node = nodeRepo.findByUid(uid);
@@ -45,8 +58,7 @@ public class IotAuthCompV1
 			return null;
 	    
 		// Generate
-		secureRandom.nextBytes(randomBytes);
-	    token = base64Encoder.encodeToString(randomBytes);
+	    token = getRandomToken();
 	    node.setToken(token);
 		
 		// DB - Save

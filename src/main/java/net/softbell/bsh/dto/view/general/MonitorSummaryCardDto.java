@@ -1,6 +1,7 @@
 package net.softbell.bsh.dto.view.general;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import lombok.Getter;
@@ -17,8 +18,8 @@ public class MonitorSummaryCardDto
 {
 	private String alias;
 	private List<MonitorCardItemDto> listItems;
-	private Byte controlMode;
-	// TODO 마지막 연결 시각
+	private Date lastReceive;
+	private Long lastReceiveSecond;
 	
 	public MonitorSummaryCardDto(Node entity)
 	{
@@ -31,6 +32,5 @@ public class MonitorSummaryCardDto
 		
 		// Convert
 		this.alias = entity.getAlias();
-		this.controlMode = entity.getControlMode();
 	}
 }

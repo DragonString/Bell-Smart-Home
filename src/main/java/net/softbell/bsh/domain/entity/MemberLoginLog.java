@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
@@ -34,7 +35,10 @@ import net.softbell.bsh.domain.AuthStatusRule;
 @Getter
 @Setter
 @Entity
-@Table(name="member_login_log")
+@Table(name="member_login_log",
+indexes = {
+	    @Index(name = "IDX_PERIOD_DATE", columnList = "request_date") // 수신 시간으로 조회하는 구문이 있으므로 인덱싱 필요 (안하면 데이터 많아졌을때 풀스캔돌려서 조회시간 미침)
+})
 @NamedQuery(name="MemberLoginLog.findAll", query="SELECT m FROM MemberLoginLog m")
 public class MemberLoginLog implements Serializable
 {

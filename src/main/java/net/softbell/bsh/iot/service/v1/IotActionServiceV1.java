@@ -2,7 +2,6 @@ package net.softbell.bsh.iot.service.v1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +13,8 @@ import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.softbell.bsh.domain.EnableStatusRule;
+import net.softbell.bsh.domain.GroupRole;
+import net.softbell.bsh.domain.ItemCategoryRule;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeActionItem;
@@ -23,8 +24,6 @@ import net.softbell.bsh.domain.repository.NodeActionRepo;
 import net.softbell.bsh.domain.repository.NodeItemRepo;
 import net.softbell.bsh.dto.request.IotActionDto;
 import net.softbell.bsh.dto.request.IotActionItemDto;
-import net.softbell.bsh.iot.component.v1.IotAuthCompV1;
-import net.softbell.bsh.iot.component.v1.IotChannelCompV1;
 import net.softbell.bsh.service.MemberService;
 import net.softbell.bsh.util.BellLog;
 
@@ -39,9 +38,8 @@ public class IotActionServiceV1
 {
 	// Global Field
 	private final MemberService memberService;
-	private final IotNodeServiceV1 iotNodeServiceV1;
-	private final IotChannelCompV1 iotChannelCompV1;
-	private final IotAuthCompV1 iotAuthCompV1;
+	private final IotNodeServiceV1 nodeService;
+	
 	private final NodeItemRepo nodeItemRepo;
 	private final NodeActionRepo nodeActionRepo;
 	private final NodeActionItemRepo nodeActionItemRepo;
@@ -51,9 +49,8 @@ public class IotActionServiceV1
 		// Field
 		List<NodeItem> listNodeItem;
 		
-		// TODO 계정에서 접근가능한 아이템만 반환하도록 추가해야됨.. 나중에... 언젠가는 추가하겠지...?
 		// Init
-		listNodeItem = nodeItemRepo.findAll();
+		listNodeItem = nodeService.getCategoryNodeItems(auth, GroupRole.ACTION, ItemCategoryRule.CONTROL);
 		
 		// Return
 		return listNodeItem;
@@ -62,7 +59,20 @@ public class IotActionServiceV1
 	public List<NodeAction> getAllNodeActions(Authentication auth)
 	{
 		// Field
-		return nodeActionRepo.findAll();
+		Member member;
+		List<NodeAction> listNodeAction;
+		
+		// Init
+		member = memberService.getMember(auth.getName());
+		
+		// Exception
+		if (memberService.isAdmin(member))
+			listNodeAction = nodeActionRepo.findAll();
+		else
+			listNodeAction = nodeActionRepo.findByMember(member);
+		
+		// Return
+		return listNodeAction;
 	}
 	
 	public NodeAction getNodeAction(Authentication auth, long actionId)
@@ -123,7 +133,7 @@ public class IotActionServiceV1
 		{
 			mapActionItem.forEach((key, value) ->
 			{
-				if(value.getItemId() != 0)
+				if(value.getItemId() != null && value.getItemId() != 0)
 				{
 					// Field
 					Optional<NodeItem> optNodeItem;
@@ -207,7 +217,7 @@ public class IotActionServiceV1
 		{
 			mapActionItem.forEach((key, value) ->
 			{
-				if(value.getItemId() != 0)
+				if(value.getItemId() != null && value.getItemId() != 0)
 				{
 					// Field
 					Optional<NodeItem> optNodeItem;
@@ -266,7 +276,7 @@ public class IotActionServiceV1
 		return true;
 	}
 	
-	public boolean execAction(long actionId)
+	public boolean execAction(long actionId, Member member)
 	{
 		// Field
 		Optional<NodeAction> optNodeAction;
@@ -280,13 +290,35 @@ public class IotActionServiceV1
 			return false;
 		
 		// Process
-		isSuccess = execAction(optNodeAction.get());
+		isSuccess = execAction(optNodeAction.get(), member);
 		
 		// Return
 		return isSuccess;
 	}
 	
-	public boolean execAction(NodeAction nodeAction)
+	public boolean execAction(long actionId, Authentication auth)
+	{
+		// Field
+		Member member;
+		Optional<NodeAction> optNodeAction;
+		boolean isSuccess = true;
+		
+		// Init
+		member = memberService.getMember(auth.getName());
+		optNodeAction = nodeActionRepo.findById(actionId);
+		
+		// Exception
+		if (!optNodeAction.isPresent())
+			return false;
+		
+		// Process
+		isSuccess = execAction(optNodeAction.get(), member);
+		
+		// Return
+		return isSuccess;
+	}
+	
+	public boolean execAction(NodeAction nodeAction, Member member)
 	{
 		// Field
 		List<NodeActionItem> listNodeActionItem;
@@ -296,12 +328,17 @@ public class IotActionServiceV1
 		if (nodeAction == null)
 			return false;
 		
+		// Permission
+		if (!memberService.isAdmin(member)) // 관리자가 아닌데
+			if (!nodeAction.getMember().equals(member)) // 액션 제작자가 아니면
+				return false; // 수행 중단
+		
 		// Load
 		listNodeActionItem = nodeAction.getNodeActionItems();
 		
 		// Process
 		for (NodeActionItem actionItem : listNodeActionItem)
-			if (!iotNodeServiceV1.setItemValue(actionItem.getNodeItem().getItemId(), actionItem.getItemStatus()))
+			if (!nodeService.setItemValue(actionItem.getNodeItem(), actionItem.getItemStatus()))
 				isSuccess = false;
 		
 		// Return

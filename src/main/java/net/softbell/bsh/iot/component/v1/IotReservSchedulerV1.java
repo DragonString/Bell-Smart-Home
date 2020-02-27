@@ -46,11 +46,11 @@ public class IotReservSchedulerV1
 			isSuccess = iotReservParser.parseEntity(nodeReserv);
 			
 			// Process
-			if (isSuccess == true)
+			if (isSuccess != null && isSuccess == true)
 			{
 				log.info("예약 실행 (" + nodeReserv.getDescription() + ")");
 				for (NodeAction nodeAction : iotReservParser.getReservAction(nodeReserv)) // Get Reserv Action
-					iotActionService.execAction(nodeAction); // Exec Action
+					iotActionService.execAction(nodeAction, nodeReserv.getMember()); // Exec Action
 			}
 		}
 	}

@@ -2,28 +2,39 @@ package net.softbell.bsh.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import net.softbell.bsh.domain.entity.Member;
+import net.softbell.bsh.domain.entity.MemberGroup;
+import net.softbell.bsh.domain.entity.MemberInterlockToken;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeAction;
 import net.softbell.bsh.domain.entity.NodeActionItem;
+import net.softbell.bsh.domain.entity.NodeGroup;
 import net.softbell.bsh.domain.entity.NodeItem;
+import net.softbell.bsh.domain.entity.NodeItemHistory;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
 import net.softbell.bsh.domain.entity.NodeTrigger;
+import net.softbell.bsh.dto.view.InterlockTokenCardDto;
 import net.softbell.bsh.dto.view.MemberActivityLogCardDto;
+import net.softbell.bsh.dto.view.admin.GroupMemberCardItemDto;
+import net.softbell.bsh.dto.view.admin.GroupNodeCardItemDto;
 import net.softbell.bsh.dto.view.admin.MemberSummaryCardDto;
 import net.softbell.bsh.dto.view.admin.NodeManageItemCardDto;
 import net.softbell.bsh.dto.view.admin.NodeManageSummaryCardDto;
+import net.softbell.bsh.dto.view.admin.group.MemberGroupSummaryCardDto;
+import net.softbell.bsh.dto.view.admin.group.NodeGroupSummaryCardDto;
 import net.softbell.bsh.dto.view.advance.NodeItemCardDto;
 import net.softbell.bsh.dto.view.advance.NodeSummaryCardDto;
 import net.softbell.bsh.dto.view.advance.TriggerItemCardDto;
 import net.softbell.bsh.dto.view.advance.TriggerSummaryCardDto;
+import net.softbell.bsh.dto.view.general.ActionInterlockCardDto;
 import net.softbell.bsh.dto.view.general.ActionItemCardDto;
 import net.softbell.bsh.dto.view.general.ActionSummaryCardDto;
 import net.softbell.bsh.dto.view.general.MonitorCardItemDto;
@@ -58,14 +69,29 @@ public class ViewDtoConverterService
 			// Field
 			MonitorSummaryCardDto cardDto;
 			List<MonitorCardItemDto> listItems;
+			Date curDate, lastReceive;
 			
 			// Init
 			cardDto = new MonitorSummaryCardDto(entity);
 			listItems = new ArrayList<MonitorCardItemDto>();
+			curDate = new Date();
+			lastReceive = null;
 			
 			// Process
 			for (NodeItem nodeItem :  entity.getNodeItems())
+			{
+				// Field
+				NodeItemHistory lastHistory;
+				
+				// Init
 				listItems.add(new MonitorCardItemDto(nodeItem, iotNodeService.getLastNodeItemHistory(nodeItem)));
+				lastHistory = iotNodeService.getLastNodeItemHistory(nodeItem);
+				
+				if (lastReceive == null || lastHistory.getReceiveDate().compareTo(lastReceive) > 0)
+					lastReceive = lastHistory.getReceiveDate();
+			}
+			cardDto.setLastReceive(lastReceive);
+			cardDto.setLastReceiveSecond((curDate.getTime() - lastReceive.getTime()) / 1000);
 			
 			// Add
 			cardDto.setListItems(listItems);
@@ -281,6 +307,108 @@ public class ViewDtoConverterService
 		// Process
 		for (NodeTrigger entity : listEntity)
 			listCards.add(new TriggerSummaryCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// Member Entity List to Group Member Card Item Dto List
+	public List<GroupMemberCardItemDto> convGroupMemberCardItems(Collection<Member> listEntity)
+	{
+		// Field
+		List<GroupMemberCardItemDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<GroupMemberCardItemDto>();
+		
+		// Process
+		for (Member entity : listEntity)
+			listCards.add(new GroupMemberCardItemDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// Node Entity List to Group Node Card Item Dto List
+	public List<GroupNodeCardItemDto> convGroupNodeCardItems(Collection<Node> listEntity)
+	{
+		// Field
+		List<GroupNodeCardItemDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<GroupNodeCardItemDto>();
+		
+		// Process
+		for (Node entity : listEntity)
+			listCards.add(new GroupNodeCardItemDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// NodeGroup Entity List to Node Group Summary Card Dto List
+	public List<NodeGroupSummaryCardDto> convNodeGroupSummaryCards(Collection<NodeGroup> listEntity)
+	{
+		// Field
+		List<NodeGroupSummaryCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<NodeGroupSummaryCardDto>();
+		
+		// Process
+		for (NodeGroup entity : listEntity)
+			listCards.add(new NodeGroupSummaryCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// MemberGroup Entity List to Member Group Summary Card Dto List
+	public List<MemberGroupSummaryCardDto> convMemberGroupSummaryCards(Collection<MemberGroup> listEntity)
+	{
+		// Field
+		List<MemberGroupSummaryCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<MemberGroupSummaryCardDto>();
+		
+		// Process
+		for (MemberGroup entity : listEntity)
+			listCards.add(new MemberGroupSummaryCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// MemberInterlockToken Entity List to Interlock Token Card Dto List
+	public List<InterlockTokenCardDto> convInterlockTokenCards(Collection<MemberInterlockToken> listEntity)
+	{
+		// Field
+		List<InterlockTokenCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<InterlockTokenCardDto>();
+		
+		// Process
+		for (MemberInterlockToken entity : listEntity)
+			listCards.add(new InterlockTokenCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// MemberInterlockToken Entity List to Action Interlock Token Card Dto List
+	public List<ActionInterlockCardDto> convActionInterlockTokenCards(Collection<MemberInterlockToken> listEntity)
+	{
+		// Field
+		List<ActionInterlockCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<ActionInterlockCardDto>();
+		
+		// Process
+		for (MemberInterlockToken entity : listEntity)
+			listCards.add(new ActionInterlockCardDto(entity));
 		
 		// Return
 		return listCards;

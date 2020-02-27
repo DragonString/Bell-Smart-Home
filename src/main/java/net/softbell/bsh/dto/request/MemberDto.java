@@ -30,7 +30,6 @@ public class MemberDto
 	private Date changePasswdDate;
 	private String email;
 	private Date lastLogin;
-	private Integer loginFailcount;
 	private String nickname;
 	private String password;
 	private Integer permission;

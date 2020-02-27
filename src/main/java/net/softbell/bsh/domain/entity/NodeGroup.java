@@ -18,7 +18,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.GroupTypeRule;
 
 
 /**
@@ -47,9 +46,6 @@ public class NodeGroup implements Serializable
 
 	@Column(nullable=false, length=50)
 	private String name;
-
-	@Column(nullable=false)
-	private GroupTypeRule type;
 
 	@OneToMany(mappedBy="nodeGroup")
 	private List<GroupPermission> groupPermissions;
