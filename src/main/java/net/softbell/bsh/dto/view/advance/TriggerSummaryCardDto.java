@@ -16,6 +16,7 @@ public class TriggerSummaryCardDto
 	private Long triggerId;
 	private String description;
 	private boolean enableStatus;
+	private String creatorNickname;
 	
 	public TriggerSummaryCardDto(NodeTrigger entity)
 	{
@@ -31,5 +32,6 @@ public class TriggerSummaryCardDto
 			this.enableStatus = true;
 		else
 			this.enableStatus = false;
+		this.creatorNickname = entity.getMember().getNickname();
 	}
 }

@@ -14,6 +14,7 @@ public class ActionSummaryCardDto
 {
 	private Long actionId;
 	private String description;
+	private String creatorNickname;
 	
 	public ActionSummaryCardDto(NodeAction entity)
 	{
@@ -24,5 +25,6 @@ public class ActionSummaryCardDto
 		// Convert
 		this.actionId = entity.getActionId();
 		this.description = entity.getDescription();
+		this.creatorNickname = entity.getMember().getNickname();
 	}
 }

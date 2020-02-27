@@ -120,11 +120,20 @@ public class MemberService implements UserDetailsService
     		return null;
     	
 		// Auth Check
-		if (!(member.getPermission() == MemberRole.ADMIN || member.getPermission() == MemberRole.SUPERADMIN) || 
-				member.getBan() != BanRule.NORMAL) // 관리자가 아니거나 정지 회원이면 로그아웃처리
+		if (!isAdmin(member)) // 관리자가 아니거나 정지 회원이면 로그아웃처리
 			return null;
 		
 		return member;
+	}
+	
+	public boolean isAdmin(Member member)
+	{
+		if (!(member.getPermission() == MemberRole.ADMIN || 
+				member.getPermission() == MemberRole.SUPERADMIN) || 
+				member.getBan() != BanRule.NORMAL) // 관리자가 아니거나 정지 회원이면 로그아웃처리
+			return false;
+		
+		return true;
 	}
 	
 	public Member loginMember(String id, String password)

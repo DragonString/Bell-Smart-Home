@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import net.softbell.bsh.domain.ItemCategoryRule;
 import net.softbell.bsh.domain.ItemTypeRule;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
@@ -16,6 +17,9 @@ import net.softbell.bsh.domain.entity.NodeItem;
 @Repository
 public interface NodeItemRepo extends JpaRepository<NodeItem, Long>
 {
+	List<NodeItem> findByNodeIn(List<Node> listNode);
+	List<NodeItem> findByItemCategory(ItemCategoryRule itemCategory);
+	List<NodeItem> findByNodeInAndItemCategory(List<Node> listNode, ItemCategoryRule itemCategory);
 	NodeItem findByNodeAndItemIndex(Node node, byte itemIndex);
 	List<NodeItem> findByItemType(ItemTypeRule itemType);
 }

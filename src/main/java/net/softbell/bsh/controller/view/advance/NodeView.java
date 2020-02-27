@@ -3,6 +3,7 @@ package net.softbell.bsh.controller.view.advance;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import lombok.AllArgsConstructor;
+import net.softbell.bsh.domain.GroupRole;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeItem;
 import net.softbell.bsh.domain.entity.NodeItemHistory;
@@ -38,7 +40,7 @@ public class NodeView
 	private final CenterService centerService;
 	
 	@GetMapping()
-    public String dispIndex(Model model,
+    public String dispIndex(Model model, Authentication auth,
     						@RequestParam(value = "page", required = false, defaultValue = "1")int intPage,
     						@RequestParam(value = "count", required = false, defaultValue = "100")int intCount)
 	{
@@ -47,13 +49,13 @@ public class NodeView
 			return G_INDEX_REDIRECT_URL;
 		
 		// Field
-		Page<Node> pageNode;
+		List<Node> listNode;
 		
 		// Init
-		pageNode = iotNodeService.getAllNodes(intPage, intCount);
+		listNode = iotNodeService.getAllNodes(auth, GroupRole.MANUAL_CONTROL);
 		
 		// Process
-		model.addAttribute("listCardNodes", viewDtoConverterService.convNodeSummaryCards(pageNode.getContent()));
+		model.addAttribute("listCardNodes", viewDtoConverterService.convNodeSummaryCards(listNode));
 		
 		// Return
         return G_BASE_PATH + "/NodeList";

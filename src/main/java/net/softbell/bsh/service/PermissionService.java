@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
@@ -94,6 +95,18 @@ public class PermissionService
 		return optNodeGroup.get();
 	}
 	
+	public boolean isPrivilege(GroupRole role, Authentication auth, Node node)
+	{
+		// Field
+		Member member;
+		
+		// Init
+		member = memberService.getMember(auth.getName());
+		
+		// Return
+		return isPrivilege(role, member, node);
+	}
+	
 	/** @Description 특정 사용자가 해당 노드에 권한이 있는지 검증
 	 * 1. 사용자가 포함된 활성화된 사용자 그룹 리스트 검색
 	 * 2. 노드가 포함된 활성화된 노드 그룹 리스트 검색
@@ -103,6 +116,8 @@ public class PermissionService
 	public boolean isPrivilege(GroupRole role, Member member, Node node)
 	{
 		// Exception
+		if (member == null) // 해당하는 회원이 없으면
+			return false; // 권한 없음
 		if (member.getPermission() == MemberRole.ADMIN || member.getPermission() == MemberRole.SUPERADMIN)
 			return true; // 관리자는 모든 권한 통과
 		
@@ -124,6 +139,18 @@ public class PermissionService
 		return false;
 	}
 	
+	public List<NodeGroupItem> getPrivilegeNodeGroupItems(GroupRole role, Authentication auth)
+	{
+		// Field
+		Member member;
+		
+		// Init
+		member = memberService.getMember(auth.getName());
+		
+		// Return
+		return getPrivilegeNodeGroupItems(role, member);
+	}
+	
 	/** @Description 특정 회원에게 특정 권한이 있는 노드 리스트 반환
 	 * 1. 사용자가 포함된 활성화된 사용자 그룹 리스트 검색
 	 * 2. 사용자 그룹과 권한으로 그룹 권한 검색
@@ -132,6 +159,10 @@ public class PermissionService
 	 */
 	public List<NodeGroupItem> getPrivilegeNodeGroupItems(GroupRole role, Member member)
 	{
+		// Exception
+		if (member == null)
+			return null;
+		
 		// Field
 		List<MemberGroup> listMemberGroup;
 		List<GroupPermission> listGroupPermission;

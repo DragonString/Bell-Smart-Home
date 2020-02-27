@@ -41,7 +41,7 @@ public class IotIftttRestV1
 		boolean isSuccess;
 		
 		// Init
-		isSuccess = iotActionService.execAction(actionId);
+		isSuccess = false;//iotActionService.execAction(actionId); // TODO TEMP #####################
 		
 		// Log
 		log.info("IFTTT Action 요청됨 (" + actionId + ")");

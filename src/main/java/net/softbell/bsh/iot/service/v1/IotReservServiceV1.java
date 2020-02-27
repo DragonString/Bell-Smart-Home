@@ -36,6 +36,7 @@ public class IotReservServiceV1
 {
 	// Global Field
 	private final MemberService memberService;
+	
 	private final NodeReservRepo nodeReservRepo;
 	private final NodeReservActionRepo nodeReservActionRepo;
 	private final NodeActionRepo nodeActionRepo;
@@ -43,11 +44,17 @@ public class IotReservServiceV1
 	public List<NodeAction> getAvailableAction(Authentication auth)
 	{
 		// Field
+		Member member;
 		List<NodeAction> listNodeAction;
 		
-		// TODO 계정에서 접근가능한 아이템만 반환하도록 추가해야됨.. 나중에... 언젠가는 추가하겠지...?
 		// Init
-		listNodeAction = nodeActionRepo.findAll();
+		member = memberService.getMember(auth.getName());
+		
+		// Process
+		if (memberService.isAdmin(member))
+			listNodeAction = nodeActionRepo.findAll();
+		else
+			listNodeAction = nodeActionRepo.findByMember(member);
 		
 		// Return
 		return listNodeAction;
@@ -56,7 +63,20 @@ public class IotReservServiceV1
 	public List<NodeReserv> getAllReservs(Authentication auth)
 	{
 		// Field
-		return nodeReservRepo.findAll();
+		Member member;
+		List<NodeReserv> listNodeReserv;
+		
+		// Init
+		member = memberService.getMember(auth.getName());
+		
+		// Process
+		if (memberService.isAdmin(member))
+			listNodeReserv = nodeReservRepo.findAll();
+		else
+			listNodeReserv = nodeReservRepo.findByMember(member);
+		
+		// Return
+		return listNodeReserv;
 	}
 	
 	public NodeReserv getReserv(Authentication auth, long reservId)

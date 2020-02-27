@@ -67,16 +67,19 @@
 									<tr>
 										<th class="align-middle text-center w-25">사용 여부</th>
 										<th class="align-middle text-center">액션 설명</th>
+										<th class="align-middle text-center">만든이</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:if="${not #lists.isEmpty(listCardActionActives)}" th:each="value : ${listCardActionActives}">
 										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" checked type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+										<td class="align-middle text-center" th:text="${value.creatorNickname}"></td>
 									</tr>
 									<tr th:if="${not #lists.isEmpty(listCardActions)}" th:each="value : ${listCardActions}">
 										<td class="align-middle text-center"><input th:name="|mapAction[${value.actionId}].actionId|" th:value="${value.actionId}" type="checkbox" data-toggle="toggle" data-size="sm"></td>
 										<td class="align-middle text-center"><a th:href="@{/action/} + ${value.actionId}" th:text="${value.description}" target="_blank"></a></td>
+										<td class="align-middle text-center" th:text="${value.creatorNickname}"></td>
 									</tr>
 								</tbody>
 							</table>

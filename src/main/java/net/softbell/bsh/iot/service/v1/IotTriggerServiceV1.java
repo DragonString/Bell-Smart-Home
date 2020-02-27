@@ -47,7 +47,21 @@ public class IotTriggerServiceV1
 	
 	public List<NodeTrigger> getAllTriggers(Authentication auth)
 	{
-		return nodeTriggerRepo.findAll();
+		// Field
+		Member member;
+		List<NodeTrigger> listNodeTrigger;
+		
+		// Init
+		member = memberService.getMember(auth.getName());
+		
+		// Load
+		if (memberService.isAdmin(member))
+			listNodeTrigger = nodeTriggerRepo.findAll();
+		else
+			listNodeTrigger = nodeTriggerRepo.findByMember(member);
+		
+		// Return
+		return listNodeTrigger;
 	}
 	
 	public NodeTrigger getTrigger(Authentication auth, long triggerId)
@@ -299,12 +313,10 @@ public class IotTriggerServiceV1
 		// Field
 		boolean isSuccess;
 		List<NodeTrigger> listNodeTrigger;
-		List<NodeAction> listNodeAction; 
 		
 		// Init
 		isSuccess = true;
 		listNodeTrigger = iotTriggerParserComp.convTrigger(nodeItem);
-		listNodeAction = new ArrayList<NodeAction>();
 		
 		// Process
 		for (NodeTrigger nodeTrigger : listNodeTrigger)
@@ -329,14 +341,11 @@ public class IotTriggerServiceV1
 			else
 				nodeTrigger.setLastStatus(TriggerLastStatusRule.RESTORE); // Restore
 			
-			// Load
-			listNodeAction.addAll(iotTriggerParserComp.getTriggerAction(nodeTrigger));
+			// Exec Action
+			for (NodeAction nodeAction : iotTriggerParserComp.getTriggerAction(nodeTrigger))
+				if (!iotActionService.execAction(nodeAction, nodeTrigger.getMember()))
+					isSuccess = false;
 		}
-		
-		// Exec Action
-		for (NodeAction nodeAction : listNodeAction)
-			if (!iotActionService.execAction(nodeAction))
-				isSuccess = false;
 		
 		// Return
 		return isSuccess;

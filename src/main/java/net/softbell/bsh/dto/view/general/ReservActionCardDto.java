@@ -14,6 +14,7 @@ public class ReservActionCardDto
 {
 	private Long actionId;
 	private String description;
+	private String creatorNickname;
 	
 	public ReservActionCardDto(NodeAction entity)
 	{
@@ -24,5 +25,6 @@ public class ReservActionCardDto
 		// Convert
 		this.actionId = entity.getActionId();
 		this.description = entity.getDescription();
+		this.creatorNickname = entity.getMember().getNickname();
 	}
 }
