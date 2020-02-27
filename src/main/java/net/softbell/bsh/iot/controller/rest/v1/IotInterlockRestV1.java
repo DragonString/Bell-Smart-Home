@@ -12,45 +12,54 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.dto.response.ResultDto;
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1;
+import net.softbell.bsh.service.InterlockService;
 import net.softbell.bsh.service.ResponseService;
 import net.softbell.bsh.util.BellLog;
 
 /**
  * @Author : Bell(bell@softbell.net)
- * @Description : IoT IFTTT REST API 컨트롤러 V1
+ * @Description : IoT 외부 연동 REST API 컨트롤러 V1
  */
 @Slf4j
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/rest/v1/ifttt")
-public class IotIftttRestV1
+@RequestMapping("/api/rest/v1/interlock")
+public class IotInterlockRestV1
 {
 	// Global Field
     private final ResponseService responseService;
     private final IotActionServiceV1 iotActionService;
+    private final InterlockService interlockService;
+    
 	public static final int PORT = 9;
 	
-	@PostMapping("/action/{id}")
-	public ResultDto execNodeAction(@PathVariable("id")long actionId/*,
+	@PostMapping("/{token}/action/{id}")
+	public ResultDto execNodeAction(@PathVariable("token")String token, @PathVariable("id")long actionId/*,
 									@RequestParam("id")String id,+
 									@RequestParam("password")String password*/)
 	{
 		// Field
 		boolean isSuccess;
+		Member member;
 		
 		// Init
-		isSuccess = false;//iotActionService.execAction(actionId); // TODO TEMP #####################
-		
-		// Log
-		log.info("IFTTT Action 요청됨 (" + actionId + ")");
+		member = interlockService.findEnableTokenToMember(token);
+		isSuccess = iotActionService.execAction(actionId, member);
 		
 		// Return
 		if (isSuccess)
+		{
+			log.info("연동 Action 수행 완료 (" + actionId + ")");
 			return responseService.getSuccessResult();
+		}
 		else
+		{
+			log.info("연동 Action 수행 실패 (" + actionId + ")");
 			return responseService.getFailResult(-10, "해당하는 아이템이 없음");
+		}
 	}
 	
 	@PostMapping("/wol")

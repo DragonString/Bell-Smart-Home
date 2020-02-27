@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberGroup;
+import net.softbell.bsh.domain.entity.MemberInterlockToken;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
 import net.softbell.bsh.domain.entity.Node;
 import net.softbell.bsh.domain.entity.NodeAction;
@@ -20,6 +21,7 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
 import net.softbell.bsh.domain.entity.NodeReserv;
 import net.softbell.bsh.domain.entity.NodeReservAction;
 import net.softbell.bsh.domain.entity.NodeTrigger;
+import net.softbell.bsh.dto.view.InterlockTokenCardDto;
 import net.softbell.bsh.dto.view.MemberActivityLogCardDto;
 import net.softbell.bsh.dto.view.admin.GroupMemberCardItemDto;
 import net.softbell.bsh.dto.view.admin.GroupNodeCardItemDto;
@@ -32,6 +34,7 @@ import net.softbell.bsh.dto.view.advance.NodeItemCardDto;
 import net.softbell.bsh.dto.view.advance.NodeSummaryCardDto;
 import net.softbell.bsh.dto.view.advance.TriggerItemCardDto;
 import net.softbell.bsh.dto.view.advance.TriggerSummaryCardDto;
+import net.softbell.bsh.dto.view.general.ActionInterlockCardDto;
 import net.softbell.bsh.dto.view.general.ActionItemCardDto;
 import net.softbell.bsh.dto.view.general.ActionSummaryCardDto;
 import net.softbell.bsh.dto.view.general.MonitorCardItemDto;
@@ -372,6 +375,40 @@ public class ViewDtoConverterService
 		// Process
 		for (MemberGroup entity : listEntity)
 			listCards.add(new MemberGroupSummaryCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// MemberInterlockToken Entity List to Interlock Token Card Dto List
+	public List<InterlockTokenCardDto> convInterlockTokenCards(Collection<MemberInterlockToken> listEntity)
+	{
+		// Field
+		List<InterlockTokenCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<InterlockTokenCardDto>();
+		
+		// Process
+		for (MemberInterlockToken entity : listEntity)
+			listCards.add(new InterlockTokenCardDto(entity));
+		
+		// Return
+		return listCards;
+	}
+
+	// MemberInterlockToken Entity List to Action Interlock Token Card Dto List
+	public List<ActionInterlockCardDto> convActionInterlockTokenCards(Collection<MemberInterlockToken> listEntity)
+	{
+		// Field
+		List<ActionInterlockCardDto> listCards;
+		
+		// Init
+		listCards = new ArrayList<ActionInterlockCardDto>();
+		
+		// Process
+		for (MemberInterlockToken entity : listEntity)
+			listCards.add(new ActionInterlockCardDto(entity));
 		
 		// Return
 		return listCards;

@@ -276,6 +276,26 @@ public class IotActionServiceV1
 		return true;
 	}
 	
+	public boolean execAction(long actionId, Member member)
+	{
+		// Field
+		Optional<NodeAction> optNodeAction;
+		boolean isSuccess = true;
+		
+		// Init
+		optNodeAction = nodeActionRepo.findById(actionId);
+		
+		// Exception
+		if (!optNodeAction.isPresent())
+			return false;
+		
+		// Process
+		isSuccess = execAction(optNodeAction.get(), member);
+		
+		// Return
+		return isSuccess;
+	}
+	
 	public boolean execAction(long actionId, Authentication auth)
 	{
 		// Field

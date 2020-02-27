@@ -4,7 +4,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
 	layout:decorate="~{layout/PrimaryLayout}">
 	<head>
-		<title>액션</title>
+		<title>액션 수정</title>
 		<th:block layout:fragment="pageCss">
 			<link href="/rss/vendor/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet">
 		</th:block>
@@ -19,14 +19,14 @@
 			
 			<form method="POST" th:action="@{/action/modify/} + ${cardActionInfo.actionId}">
 				<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-				<!-- Action Info Create Card Start -->
+				<!-- Action Info Modify Card Start -->
 				<div class="card shadow mb-4 text-dark">
 					<div class="card-header py-3">
 						<h6 class="m-0 font-weight-bold text-primary">액션 정보</h6>
 					</div>
 					<div class="card-body">
 						<div class="table-responsive">
-							<!-- Action Info Create Table Start -->
+							<!-- Action Info Modify Table Start -->
 							<table class="table table-bordered" width="100%" cellspacing="0">
 								<thead>
 									<tr>
@@ -45,19 +45,19 @@
 									</tr>
 								</tbody>
 							</table>
-							<!-- Action Info Create Table End -->
+							<!-- Action Info Modify Table End -->
 						</div>
 					</div>
 				</div>
-				<!-- Action Info Create Card End -->
-				<!-- Action Item Create Card Start -->
+				<!-- Action Info Modify Card End -->
+				<!-- Action Item Modify Card Start -->
 				<div class="card shadow mb-4 text-dark">
 					<div class="card-header py-3">
 						<h6 class="m-0 font-weight-bold text-primary">액션 아이템</h6>
 					</div>
 					<div class="card-body">
 						<div class="table-responsive">
-							<!-- Action Item Create Table Start -->
+							<!-- Action Item Modify Table Start -->
 							<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 								<thead>
 									<tr>
@@ -82,12 +82,12 @@
 									</tr>
 								</tbody>
 							</table>
-							<!-- Action Item Create Table End -->
+							<!-- Action Item Modify Table End -->
 						</div>
 					</div>
 				</div>
-				<!-- Action Item Create Card End -->
-				<input class="form-control btn btn-primary" type="submit" value="수정">
+				<!-- Action Item Modify Card End -->
+				<input class="form-control btn btn-warning" type="submit" value="수정">
 <!-- 				<input class="form-control btn btn-danger" type="submit" value="삭제" th:formaction="@{/action/delete/} + ${cardActionInfo.actionId}"> -->
 				<a class="form-control btn btn-danger" href="#" data-toggle="modal" data-target="#removeModal">삭제</a>
 			</form>
