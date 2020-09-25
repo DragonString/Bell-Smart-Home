@@ -1,28 +1,42 @@
 package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor
-import lombok.Getter
-import kotlin.Throws
-
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 활성화 상태 자료형
  */
-@AllArgsConstructor
-@Getter
 enum class EnableStatusRule {
-    WAIT("WAIT", 0),  // 인증 대기
-    DISABLE("DISABLE", 1),  // 비활성화
-    ENABLE("ENABLE", 2),  // 활성화
-    REJECT("REJECT", -1);
+    WAIT {  // 인증 대기
+        override val value: String
+            get() = "WAIT"
+        override val code: Int
+            get() = 0
+    },
+    DISABLE {  // 비활성화
+        override val value: String
+            get() = "DISABLE"
+        override val code: Int
+            get() = 1
+    },
+    ENABLE {  // 활성화
+        override val value: String
+            get() = "ENABLE"
+        override val code: Int
+            get() = 2
+    },
+    REJECT {
+        override val value: String
+            get() = "REJECT"
+        override val code: Int
+            get() = -1
+    };
 
     // 접근 제한
-    private val value: String? = null
-    private val code: Int? = null
+    abstract val value: String
+    abstract val code: Int
 
     companion object {
-        fun ofLegacyCode(legacyCode: Int?): EnableStatusRule? {
-            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+        fun ofLegacyCode(legacyCode: Int): EnableStatusRule? {
+            for (rule in values()) if (rule.code === legacyCode) return rule
             return null
         }
     }

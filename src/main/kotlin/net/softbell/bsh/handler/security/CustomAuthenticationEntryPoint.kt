@@ -1,8 +1,5 @@
 package net.softbell.bsh.handler.security
 
-import lombok.AllArgsConstructor
-import lombok.Builder
-import lombok.NoArgsConstructor
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.stereotype.Component
@@ -10,16 +7,12 @@ import java.io.IOException
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 인증 실패 핸들러
  */
 @Component
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 class CustomAuthenticationEntryPoint : AuthenticationEntryPoint {
     // Global Field
     private val G_API_URI: String? = null

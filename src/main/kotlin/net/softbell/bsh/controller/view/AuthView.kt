@@ -1,6 +1,5 @@
 package net.softbell.bsh.controller.view
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.MemberInterlockToken
@@ -10,29 +9,29 @@ import net.softbell.bsh.dto.view.MemberProfileCardDto
 import net.softbell.bsh.service.InterlockService
 import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.service.ViewDtoConverterService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.security.Principal
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 계정 인증 뷰 컨트롤러
  */
 @Controller
-@AllArgsConstructor
 @RequestMapping("/member")
 class AuthView constructor() {
     // Global Field
     private val G_BASE_PATH: String = "services/auth"
     private val G_BASE_REDIRECT_URL: String = "redirect:/member"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
-    private val viewDtoConverterService: ViewDtoConverterService? = null
-    private val memberService: MemberService? = null
-    private val interlockService: InterlockService? = null
+
+    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var interlockService: InterlockService
 
     // 내 정보 페이지
     @GetMapping("/profile")

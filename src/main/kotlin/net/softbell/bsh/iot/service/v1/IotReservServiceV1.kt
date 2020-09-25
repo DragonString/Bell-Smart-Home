@@ -1,7 +1,5 @@
 package net.softbell.bsh.iot.service.v1
 
-import lombok.AllArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.NodeAction
@@ -13,27 +11,25 @@ import net.softbell.bsh.domain.repository.NodeReservRepo
 import net.softbell.bsh.dto.request.IotActionDto
 import net.softbell.bsh.dto.request.IotReservDto
 import net.softbell.bsh.service.MemberService
-import net.softbell.bsh.util.BellLog
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.function.BiConsumer
 import javax.transaction.Transactional
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node Reservation 서비스
  */
-@Slf4j
-@AllArgsConstructor
 @Service
 class IotReservServiceV1 {
     // Global Field
-    private val memberService: MemberService? = null
-    private val nodeReservRepo: NodeReservRepo? = null
-    private val nodeReservActionRepo: NodeReservActionRepo? = null
-    private val nodeActionRepo: NodeActionRepo? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var nodeReservRepo: NodeReservRepo
+    @Autowired lateinit var nodeReservActionRepo: NodeReservActionRepo
+    @Autowired lateinit var nodeActionRepo: NodeActionRepo
+
     fun getAvailableAction(auth: Authentication): List<NodeAction?>? {
         // Field
         val member: Member?

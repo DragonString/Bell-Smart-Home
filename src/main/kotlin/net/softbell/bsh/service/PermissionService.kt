@@ -10,11 +10,11 @@ import net.softbell.bsh.dto.request.MemberGroupDto
 import net.softbell.bsh.dto.request.MemberGroupPermissionDto
 import net.softbell.bsh.dto.request.NodeGroupDto
 import net.softbell.bsh.dto.request.NodeGroupPermissionDto
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -24,14 +24,15 @@ import kotlin.Throws
 @Service
 class PermissionService constructor() {
     // Global Field
-    private val memberService: MemberService? = null
-    private val permissionComp: PermissionComp? = null
-    private val groupPermissionRepo: GroupPermissionRepo? = null
-    private val nodeGroupRepo: NodeGroupRepo? = null
-    private val nodeGroupItemRepo: NodeGroupItemRepo? = null
-    private val memberGroupRepo: MemberGroupRepo? = null
-    private val memberGroupItemRepo: MemberGroupItemRepo? = null
-    private val nodeRepo: NodeRepo? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var permissionComp: PermissionComp
+    @Autowired lateinit var groupPermissionRepo: GroupPermissionRepo
+    @Autowired lateinit var nodeGroupRepo: NodeGroupRepo
+    @Autowired lateinit var nodeGroupItemRepo: NodeGroupItemRepo
+    @Autowired lateinit var memberGroupRepo: MemberGroupRepo
+    @Autowired lateinit var memberGroupItemRepo: MemberGroupItemRepo
+    @Autowired lateinit var nodeRepo: NodeRepo
+
     val allMemberGroup: List<MemberGroup?>
         get() {
             return memberGroupRepo!!.findAll()

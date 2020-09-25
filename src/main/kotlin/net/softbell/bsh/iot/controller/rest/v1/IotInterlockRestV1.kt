@@ -1,32 +1,28 @@
 package net.softbell.bsh.iot.controller.rest.v1
 
-import lombok.AllArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.response.ResultDto
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1
 import net.softbell.bsh.service.InterlockService
 import net.softbell.bsh.service.ResponseService
-import net.softbell.bsh.util.BellLog
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT 외부 연동 REST API 컨트롤러 V1
  */
-@Slf4j
-@AllArgsConstructor
 @RestController
 @RequestMapping("/api/rest/v1/interlock")
 class IotInterlockRestV1 {
     // Global Field
-    private val responseService: ResponseService? = null
-    private val iotActionService: IotActionServiceV1? = null
-    private val interlockService: InterlockService? = null
+    @Autowired lateinit var responseService: ResponseService
+    @Autowired lateinit var iotActionService: IotActionServiceV1
+    @Autowired lateinit var interlockService: InterlockService
+
     @PostMapping("/{token}/action/{id}")
     fun execNodeAction(@PathVariable("token") token: String?, @PathVariable("id") actionId: Long /*,
 									@RequestParam("id")String id,+

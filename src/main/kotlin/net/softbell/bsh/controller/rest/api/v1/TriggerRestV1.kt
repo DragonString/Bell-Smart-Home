@@ -1,24 +1,23 @@
 package net.softbell.bsh.controller.rest.api.v1
 
-import lombok.RequiredArgsConstructor
 import net.softbell.bsh.dto.response.ResultDto
 import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1
 import net.softbell.bsh.service.ResponseService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 트리거 관련 REST API 컨트롤러 V1
  */
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/rest/v1/trigger")
 class TriggerRestV1 constructor() {
     // Global Field
-    private val responseService: ResponseService? = null
-    private val iotTriggerService: IotTriggerServiceV1? = null
+    @Autowired lateinit var responseService: ResponseService
+    @Autowired lateinit var iotTriggerService: IotTriggerServiceV1
+
     @PostMapping("/status/{id}")
     fun setTriggerStatus(auth: Authentication?, @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto? {
         // Field

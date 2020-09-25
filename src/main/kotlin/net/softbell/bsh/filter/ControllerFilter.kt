@@ -3,7 +3,6 @@ package net.softbell.bsh.filter
 import org.springframework.ui.Model
 import org.springframework.web.servlet.ModelAndView
 import java.security.Principal
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)

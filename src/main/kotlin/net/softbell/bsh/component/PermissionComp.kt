@@ -1,27 +1,27 @@
 package net.softbell.bsh.component
 
-import lombok.RequiredArgsConstructor
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.entity.*
 import net.softbell.bsh.domain.repository.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 권한 관련 컴포넌트
  */
-@RequiredArgsConstructor
 @Component
 class PermissionComp constructor() {
     // Global Field
-    private val groupPermissionRepo: GroupPermissionRepo? = null
-    private val memberGroupRepo: MemberGroupRepo? = null
-    private val memberGroupItemRepo: MemberGroupItemRepo? = null
-    private val nodeGroupRepo: NodeGroupRepo? = null
-    private val nodeGroupItemRepo: NodeGroupItemRepo? = null// Field
+    @Autowired lateinit var groupPermissionRepo: GroupPermissionRepo
+    @Autowired lateinit var memberGroupRepo: MemberGroupRepo
+    @Autowired lateinit var memberGroupItemRepo: MemberGroupItemRepo
+    @Autowired lateinit var nodeGroupRepo: NodeGroupRepo
+    @Autowired lateinit var nodeGroupItemRepo: NodeGroupItemRepo
+
+    // Field
 
     // Init
 
@@ -68,7 +68,7 @@ class PermissionComp constructor() {
         listMemberGroupId = ArrayList()
 
         // Load
-        for (entity: MemberGroup in listMemberGroup) listMemberGroupId.add(entity.getMemberGroupId())
+        for (entity: MemberGroup in listMemberGroup) listMemberGroupId.add(entity.memberGroupId!!) // TODO
 
         // Return
         return memberGroupRepo!!.findByMemberGroupIdInAndGroupPermissionsIn(listMemberGroupId, listGroupPermission)
@@ -113,7 +113,7 @@ class PermissionComp constructor() {
         listNodeGroupId = ArrayList()
 
         // Load
-        for (entity: NodeGroup? in listNodeGroup!!) listNodeGroupId.add(entity.getNodeGroupId())
+        for (entity: NodeGroup? in listNodeGroup!!) listNodeGroupId.add(entity!!.nodeGroupId!!) // TODO
 
         // Return
         return nodeGroupRepo!!.findByNodeGroupIdInAndGroupPermissionsIn(listNodeGroupId, listGroupPermission)

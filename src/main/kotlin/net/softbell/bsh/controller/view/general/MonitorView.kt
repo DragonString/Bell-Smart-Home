@@ -1,33 +1,33 @@
 package net.softbell.bsh.controller.view.general
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.ViewDtoConverterService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 모니터 뷰 컨트롤러
  */
-@AllArgsConstructor
 @Controller
 @RequestMapping("/monitor")
 class MonitorView constructor() {
     // Global Field
     private val G_BASE_PATH: String = "services/general"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
-    private val viewDtoConverterService: ViewDtoConverterService? = null
-    private val iotNodeService: IotNodeServiceV1? = null
-    private val centerService: CenterService? = null
+
+    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired lateinit var aiotNodeService: IotNodeServiceV1
+    @Autowired lateinit var centerService: CenterService
+
     @GetMapping
     fun dispIndex(model: Model, auth: Authentication,
                   @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,

@@ -12,12 +12,12 @@ import net.softbell.bsh.dto.request.IotTriggerActionDto
 import net.softbell.bsh.dto.request.IotTriggerDto
 import net.softbell.bsh.iot.component.v1.IotTriggerParserCompV1
 import net.softbell.bsh.service.MemberService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.function.BiConsumer
 import javax.transaction.Transactional
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -27,12 +27,13 @@ import kotlin.Throws
 @Service
 class IotTriggerServiceV1 {
     // Global Field
-    private val memberService: MemberService? = null
-    private val iotActionService: IotActionServiceV1? = null
-    private val iotTriggerParserComp: IotTriggerParserCompV1? = null
-    private val nodeTriggerRepo: NodeTriggerRepo? = null
-    private val nodeTriggerActionRepo: NodeTriggerActionRepo? = null
-    private val nodeActionRepo: NodeActionRepo? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var iotActionService: IotActionServiceV1
+    @Autowired lateinit var iotTriggerParserComp: IotTriggerParserCompV1
+    @Autowired lateinit var nodeTriggerRepo: NodeTriggerRepo
+    @Autowired lateinit var nodeTriggerActionRepo: NodeTriggerActionRepo
+    @Autowired lateinit var nodeActionRepo: NodeActionRepo
+
     fun getAllTriggers(auth: Authentication): List<NodeTrigger?>? {
         // Field
         val member: Member?

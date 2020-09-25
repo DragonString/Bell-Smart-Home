@@ -1,9 +1,9 @@
 package net.softbell.bsh.controller.view
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.dto.request.MemberDto
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.MemberService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,19 +11,18 @@ import org.springframework.web.bind.annotation.PostMapping
 import java.security.Principal
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 계정 비 인증 뷰 컨트롤러
  */
 @Controller
-@AllArgsConstructor
 class DmzView constructor() {
     // Global Field
     private val G_BASE_PATH: String = "services/dmz"
-    private val memberService: MemberService? = null
-    private val centerService: CenterService? = null
+
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var centerService: CenterService
 
     // 회원가입 페이지
     @GetMapping("/signup")

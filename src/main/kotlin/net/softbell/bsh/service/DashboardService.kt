@@ -1,27 +1,25 @@
 package net.softbell.bsh.service
 
-import lombok.RequiredArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.ItemTypeRule
 import net.softbell.bsh.domain.entity.NodeItem
 import net.softbell.bsh.domain.repository.NodeItemHistoryRepo
 import net.softbell.bsh.domain.repository.NodeItemRepo
 import net.softbell.bsh.dto.view.DashboardAvgCardDto
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 응답 메시지 처리 서비스
  */
-@Slf4j
-@RequiredArgsConstructor
 @Service
 class DashboardService constructor() {
     // Global Field
-    private val nodeItemRepo: NodeItemRepo? = null
-    private val nodeItemHistoryRepo: NodeItemHistoryRepo? = null//두 시간에 차 계산
+    @Autowired lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
+
+    //두 시간에 차 계산
 
     // Process
 

@@ -1,6 +1,5 @@
 package net.softbell.bsh.config
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.component.JwtTokenProvider
 import net.softbell.bsh.filter.security.JwtAuthenticationFilter
 import net.softbell.bsh.handler.security.LoginFailureHandler
@@ -24,7 +23,6 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -32,11 +30,11 @@ import kotlin.Throws
  */
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
 class SecurityConfig : WebSecurityConfigurerAdapter() {
-    private val memberService: MemberService? = null
-    private val env: Environment? = null
-    private val jwtTokenProvider: JwtTokenProvider? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var env: Environment
+    @Autowired lateinit var jwtTokenProvider: JwtTokenProvider
+
     private val isDevMode: Boolean
         private get() {
             val profile = if (env!!.activeProfiles.size > 0) env.activeProfiles[0] else "dev"

@@ -1,26 +1,21 @@
 package net.softbell.bsh.iot.component.v1
 
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.repository.NodeRepo
-import net.softbell.bsh.util.BellLog
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 import java.security.SecureRandom
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT 인증 컴포넌트 v1
  */
-@Slf4j
 @Component
 class IotAuthCompV1 {
-    @Autowired
-    private val nodeRepo: NodeRepo? = null
+    @Autowired lateinit var nodeRepo: NodeRepo
 
     // Field
     val randomToken: String

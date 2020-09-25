@@ -1,6 +1,5 @@
 package net.softbell.bsh.controller.view.general
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.entity.NodeReserv
 import net.softbell.bsh.domain.entity.NodeReservAction
@@ -9,6 +8,7 @@ import net.softbell.bsh.dto.view.general.ReservInfoCardDto
 import net.softbell.bsh.iot.service.v1.IotReservServiceV1
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.ViewDtoConverterService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -16,22 +16,22 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 예약 뷰 컨트롤러
  */
-@AllArgsConstructor
 @Controller
 @RequestMapping("/reserv")
 class ReservView constructor() {
     // Global Field
     private val G_BASE_PATH: String = "services/general"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
-    private val viewDtoConverterService: ViewDtoConverterService? = null
-    private val iotReservService: IotReservServiceV1? = null
-    private val centerService: CenterService? = null
+
+    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired lateinit var iotReservService: IotReservServiceV1
+    @Autowired lateinit var centerService: CenterService
+
     @GetMapping
     fun dispIndex(model: Model, auth: Authentication): String {
         // Exception

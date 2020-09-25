@@ -12,19 +12,17 @@ import java.io.IOException
 import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 로그인 성공 핸들러
  */
 class LoginSuccessHandler(defaultUrl: String?) : AuthenticationSuccessHandler {
-    @Autowired
-    private val memberService: MemberService? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var jwtTokenProvider: JwtTokenProvider
 
-    @Autowired
-    private val jwtTokenProvider: JwtTokenProvider? = null
     var defaultUrl: String? = null
+
     @Throws(IOException::class, ServletException::class)
     override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse,
                                          authentication: Authentication) {

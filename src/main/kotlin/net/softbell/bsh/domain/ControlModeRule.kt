@@ -1,24 +1,35 @@
 package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor
-import lombok.Getter
-import kotlin.Throws
-
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 제어 모드 비트플래그 자료형
  */
-@AllArgsConstructor
-@Getter
 enum class ControlModeRule {
-    INFO_SYNC_DISABLE("INFO_SYNC_DISABLE", 1.toByte()), AUTO_CONTROL_DISABLE("AUTO_CONTROL_DISABLE", 2.toByte()), MANUAL_CONTROL_DISABLE("MANUAL_CONTROL_DISABLE", 4.toByte());
+    INFO_SYNC_DISABLE {
+        override val value: String
+            get() = "INFO_SYNC_DISABLE"
+        override val code: Byte
+            get() = 1
+    },
+    AUTO_CONTROL_DISABLE {
+        override val value: String
+            get() = "AUTO_CONTROL_DISABLE"
+        override val code: Byte
+            get() = 2
+    },
+    MANUAL_CONTROL_DISABLE {
+        override val value: String
+            get() = "MANUAL_CONTROL_DISABLE"
+        override val code: Byte
+            get() = 4
+    };
 
-    private val value: String? = null
-    private val code: Byte? = null
+    abstract val value: String
+    abstract val code: Byte
 
     companion object {
-        fun ofLegacyCode(legacyCode: Byte?): ControlModeRule? {
-            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+        fun ofLegacyCode(legacyCode: Byte): ControlModeRule? {
+            for (rule in values()) if (rule.code === legacyCode) return rule
             return null
         }
     }

@@ -1,8 +1,5 @@
 package net.softbell.bsh.iot.component.v1
 
-import lombok.AllArgsConstructor
-import lombok.Getter
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.TriggerStatusRule
 import net.softbell.bsh.domain.entity.NodeAction
@@ -12,16 +9,12 @@ import net.softbell.bsh.domain.entity.NodeTrigger
 import net.softbell.bsh.domain.repository.NodeItemHistoryRepo
 import net.softbell.bsh.domain.repository.NodeItemRepo
 import net.softbell.bsh.domain.repository.NodeTriggerRepo
-import net.softbell.bsh.iot.component.v1.IotTriggerParserCompV1.BuiltInFunction
-import net.softbell.bsh.iot.component.v1.IotTriggerParserCompV1.LogicalOperatorType
-import net.softbell.bsh.iot.component.v1.IotTriggerParserCompV1.RelationalOperatorType
-import net.softbell.bsh.util.BellLog
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -29,17 +22,13 @@ import kotlin.Throws
  * 표현식: {아이템ID.내장함수(매개변수)}==값 and ~~
  * [1.last(0)==0 and 2.last(0)!=0] or 3.last(0)>0
  */
-@Slf4j
-@AllArgsConstructor
 @Component
 class IotTriggerParserCompV1 {
     // Global Field
-    private val nodeTriggerRepo: NodeTriggerRepo? = null
-    private val nodeItemRepo: NodeItemRepo? = null
-    private val nodeItemHistoryRepo: NodeItemHistoryRepo? = null
+    @Autowired lateinit var nodeTriggerRepo: NodeTriggerRepo
+    @Autowired lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
 
-    @AllArgsConstructor
-    @Getter
     internal enum class BuiltInFunction {
         LAST("last"),  // 마지막 값 조회
         MAX("max"),  // 최대 값 조회
@@ -61,8 +50,6 @@ class IotTriggerParserCompV1 {
         }
     }
 
-    @AllArgsConstructor
-    @Getter
     internal enum class RelationalOperatorType {
         EQ("=="),  // = : Equal
         NE("!="),  // != : Not Equal
@@ -82,8 +69,6 @@ class IotTriggerParserCompV1 {
         }
     }
 
-    @AllArgsConstructor
-    @Getter
     internal enum class LogicalOperatorType {
         AND("and"),  // &&
         OR("or");

@@ -1,20 +1,14 @@
 package net.softbell.bsh.dto.view.advance
 
-import lombok.Getter
-import lombok.Setter
 import net.softbell.bsh.domain.ItemCategoryRule
 import net.softbell.bsh.domain.ItemModeRule
 import net.softbell.bsh.domain.ItemTypeRule
-import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.entity.NodeItem
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 트리거 등록 및 수정뷰 노드 아이템 카드정보 DTO
  */
-@Getter
-@Setter
 class TriggerItemCardDto(entity: NodeItem?) {
     private val nodeId: Long
     private val nodeAlias: String

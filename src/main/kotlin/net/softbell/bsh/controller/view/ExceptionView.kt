@@ -1,7 +1,5 @@
 package net.softbell.bsh.controller.view
 
-import lombok.extern.slf4j.Slf4j
-import net.softbell.bsh.util.BellLog
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -12,13 +10,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import java.security.Principal
 import javax.servlet.RequestDispatcher
 import javax.servlet.http.HttpServletRequest
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 예외 페이지 컨트롤러
  */
-@Slf4j
 @Controller
 class ExceptionView constructor() : ErrorController {
     public override fun getErrorPath(): String {

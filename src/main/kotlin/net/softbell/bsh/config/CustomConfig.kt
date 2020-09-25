@@ -1,7 +1,5 @@
 package net.softbell.bsh.config
 
-import kotlin.Throws
-
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 커스텀 설정 정의

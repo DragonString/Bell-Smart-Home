@@ -1,6 +1,6 @@
 package net.softbell.bsh.controller.view.advance
 
-import lombok.AllArgsConstructor
+import net.softbell.bsh.domain.TriggerStatusRule
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.entity.NodeTrigger
 import net.softbell.bsh.domain.entity.NodeTriggerAction
@@ -11,6 +11,7 @@ import net.softbell.bsh.iot.service.v1.IotActionServiceV1
 import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.ViewDtoConverterService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -19,23 +20,23 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 트리거 뷰 컨트롤러
  */
-@AllArgsConstructor
 @Controller
 @RequestMapping("/trigger")
 class TriggerView constructor() {
     // Global Field
     private val G_BASE_PATH: String = "services/advance"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
-    private val viewDtoConverterService: ViewDtoConverterService? = null
-    private val iotTriggerService: IotTriggerServiceV1? = null
-    private val iotActionService: IotActionServiceV1? = null
-    private val centerService: CenterService? = null
+
+    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired lateinit var iotTriggerService: IotTriggerServiceV1
+    @Autowired lateinit var iotActionService: IotActionServiceV1
+    @Autowired lateinit var centerService: CenterService
+
     @GetMapping
     fun dispIndex(model: Model, auth: Authentication): String {
         // Exception
@@ -99,7 +100,7 @@ class TriggerView constructor() {
         for (entity: NodeTriggerAction in nodeTrigger.getNodeTriggerActions()) {
             when (entity.getTriggerStatus()) {
                 ALL -> listCardActionsAll.add(ActionSummaryCardDto(entity.getNodeAction()))
-                OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
+                TriggerStatusRule.OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
                 OCCUR -> listCardActionsOccur.add(ActionSummaryCardDto(entity.getNodeAction()))
                 RESTORE -> listCardActionsRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
                 ERROR -> listCardActionsError.add(ActionSummaryCardDto(entity.getNodeAction()))
@@ -146,7 +147,7 @@ class TriggerView constructor() {
         for (entity: NodeTriggerAction in nodeTrigger.getNodeTriggerActions()) {
             when (entity.getTriggerStatus()) {
                 ALL -> listCardActionsAll.add(ActionSummaryCardDto(entity.getNodeAction()))
-                OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
+                TriggerStatusRule.OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
                 OCCUR -> listCardActionsOccur.add(ActionSummaryCardDto(entity.getNodeAction()))
                 RESTORE -> listCardActionsRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
                 ERROR -> listCardActionsError.add(ActionSummaryCardDto(entity.getNodeAction()))

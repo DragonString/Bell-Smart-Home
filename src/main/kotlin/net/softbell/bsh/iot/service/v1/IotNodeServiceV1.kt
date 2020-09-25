@@ -1,6 +1,5 @@
 package net.softbell.bsh.iot.service.v1
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.ItemCategoryRule
@@ -16,6 +15,7 @@ import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto
 import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto
 import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.service.PermissionService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -23,23 +23,21 @@ import org.springframework.data.domain.Sort
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node 서비스
  */
-@AllArgsConstructor
 @Service
 class IotNodeServiceV1 {
     // Global Field
-    private val iotMessageService: IotMessageServiceV1? = null
-    private val permissionService: PermissionService? = null
-    private val memberService: MemberService? = null
-    private val iotChannelCompV1: IotChannelCompV1? = null
-    private val nodeRepo: NodeRepo? = null
-    private val nodeItemRepo: NodeItemRepo? = null
-    private val nodeItemHistoryRepo: NodeItemHistoryRepo? = null
+    @Autowired lateinit var iotMessageService: IotMessageServiceV1
+    @Autowired lateinit var permissionService: PermissionService
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var iotChannelCompV1: IotChannelCompV1
+    @Autowired lateinit var nodeRepo: NodeRepo
+    @Autowired lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
 
     @get:Deprecated("")
     val allNodes: MutableList<Node?>

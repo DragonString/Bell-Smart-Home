@@ -1,12 +1,9 @@
 package net.softbell.bsh.service
 
-import lombok.AllArgsConstructor
-import lombok.Getter
 import net.softbell.bsh.dto.response.ListResultDto
 import net.softbell.bsh.dto.response.ResultDto
 import net.softbell.bsh.dto.response.SingleResultDto
 import org.springframework.stereotype.Service
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -14,8 +11,6 @@ import kotlin.Throws
  */
 @Service
 class ResponseService {
-    @AllArgsConstructor
-    @Getter
     enum class CommonResponse {
         SUCCESS(0, "성공");
 

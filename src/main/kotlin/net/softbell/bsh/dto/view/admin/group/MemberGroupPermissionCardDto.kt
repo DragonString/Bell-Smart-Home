@@ -1,24 +1,16 @@
 package net.softbell.bsh.dto.view.admin.group
 
-import lombok.Getter
-import lombok.Setter
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.entity.NodeGroup
-import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 회원 그룹 정보 카드 DTO
  */
-@Getter
-@Setter
 class MemberGroupPermissionCardDto(entities: List<NodeGroup?>?) {
     private val listNodes: MutableList<MemberGroupNode>
     private val listPermissions: MutableList<MemberGroupPermission>
 
-    @Getter
-    @Setter
     inner class MemberGroupNode(entity: NodeGroup?) {
         private val gid: Long
         private val name: String
@@ -30,8 +22,6 @@ class MemberGroupPermissionCardDto(entities: List<NodeGroup?>?) {
         }
     }
 
-    @Getter
-    @Setter
     inner class MemberGroupPermission(role: GroupRole) {
         private val pid: Int
         private val name: String

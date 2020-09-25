@@ -1,7 +1,7 @@
 package net.softbell.bsh
 
-import org.springframework.boot.SpringApplication
-import kotlin.Throws
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -20,9 +20,9 @@ import kotlin.Throws
  *
  * !로컬에 있는 MySQL과 연결하려면 profile을 prod 로 설정한 후 환경변수에 DB 정보를 등록해야 합니다.
  */
-object BellsmarthomeApplication {
-    @JvmStatic
-    fun main(args: Array<String>) {
-        SpringApplication.run(BellsmarthomeApplication::class.java, *args)
-    }
+@SpringBootApplication
+open class BellsmarthomeApplication
+
+fun main(args: Array<String>) {
+    runApplication<BellsmarthomeApplication>(*args)
 }

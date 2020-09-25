@@ -1,27 +1,23 @@
 package net.softbell.bsh.iot.service.v1
 
-import lombok.AllArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.repository.NodeRepo
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto
-import net.softbell.bsh.util.BellLog
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT 구독 서비스
  */
-@Slf4j
-@AllArgsConstructor
 @Service
 class IotSubscribeServiceV1 {
     // Global Field
-    private val iotChannelCompV1: IotChannelCompV1? = null
-    private val nodeRepo: NodeRepo? = null
+    @Autowired lateinit var iotChannelCompV1: IotChannelCompV1
+    @Autowired lateinit var nodeRepo: NodeRepo
+
     fun procTopicSubscribe(): BaseV1Dto {
         // Field
         val data: BaseV1Dto

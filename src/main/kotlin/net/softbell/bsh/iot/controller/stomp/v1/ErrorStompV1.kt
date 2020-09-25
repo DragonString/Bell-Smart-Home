@@ -3,7 +3,6 @@ package net.softbell.bsh.iot.controller.stomp.v1
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler
 import org.springframework.messaging.simp.annotation.SendToUser
 import org.springframework.web.bind.annotation.RestController
-import kotlin.Throws
 
 /**
  * @author : Bell(bell@softbell.net)

@@ -1,16 +1,11 @@
 package net.softbell.bsh.dto.view.general
 
-import lombok.Getter
-import lombok.Setter
 import net.softbell.bsh.domain.entity.NodeReserv
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 예약뷰 카드정보 DTO
  */
-@Getter
-@Setter
 class ReservSummaryCardDto(entity: NodeReserv?) {
     private val reservId: Long
     private val description: String

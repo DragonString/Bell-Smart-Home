@@ -1,7 +1,5 @@
 package net.softbell.bsh.iot.service.v1
 
-import lombok.AllArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.ItemCategoryRule
@@ -15,28 +13,26 @@ import net.softbell.bsh.domain.repository.NodeItemRepo
 import net.softbell.bsh.dto.request.IotActionDto
 import net.softbell.bsh.dto.request.IotActionItemDto
 import net.softbell.bsh.service.MemberService
-import net.softbell.bsh.util.BellLog
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.function.BiConsumer
 import javax.transaction.Transactional
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node Action 서비스
  */
-@Slf4j
-@AllArgsConstructor
 @Service
 class IotActionServiceV1 {
     // Global Field
-    private val memberService: MemberService? = null
-    private val nodeService: IotNodeServiceV1? = null
-    private val nodeItemRepo: NodeItemRepo? = null
-    private val nodeActionRepo: NodeActionRepo? = null
-    private val nodeActionItemRepo: NodeActionItemRepo? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var nodeService: IotNodeServiceV1
+    @Autowired lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired lateinit var nodeActionRepo: NodeActionRepo
+    @Autowired lateinit var nodeActionItemRepo: NodeActionItemRepo
+
     fun getAvailableNodeItem(auth: Authentication): List<NodeItem?>? {
         // Field
         val listNodeItem: List<NodeItem?>?

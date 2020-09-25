@@ -1,27 +1,24 @@
 package net.softbell.bsh.service
 
-import lombok.Getter
-import lombok.RequiredArgsConstructor
+import jdk.nashorn.internal.objects.annotations.Getter
 import net.softbell.bsh.domain.entity.CenterSetting
 import net.softbell.bsh.domain.repository.CenterSettingRepo
 import net.softbell.bsh.dto.request.CenterSettingDto
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 import javax.transaction.Transactional
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : Center Setting 서비스
  */
-@RequiredArgsConstructor
 @Service
 class CenterService {
     // Global Field
-    private val centerSettingRepo: CenterSettingRepo? = null
-
-    @Getter
+    @Autowired lateinit var centerSettingRepo: CenterSettingRepo
     private var setting: CenterSetting? = null
+
     fun createSetting(isEnabled: Boolean): CenterSetting {
         // Field
         val centerSetting: CenterSetting
@@ -66,7 +63,7 @@ class CenterService {
         if (listSetting.isEmpty() || listSetting.size != 1) centerSettingRepo.deleteAll() // DB - Delete
         else {
             centerSetting = listSetting[0] // DB에 있는 센터설정값 로드
-            if (centerSetting.getIsEnabled() === 1 as kotlin.Byte) // 센터 설정이 사용중이면 그대로 반영
+            if (centerSetting?.isEnabled === 1 as kotlin.Byte) // 센터 설정이 사용중이면 그대로 반영
                 setting = centerSetting
         }
 

@@ -1,22 +1,21 @@
 package net.softbell.bsh.filter
 
-import lombok.RequiredArgsConstructor
 import net.softbell.bsh.service.CenterService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.io.IOException
 import javax.servlet.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 센터 설정 오버라이드 필터
  */
-@RequiredArgsConstructor
 @Component
 @Order(1)
 class CenterFilter : Filter {
-    private val centerService: CenterService? = null
+    @Autowired lateinit var centerService: CenterService
+
     @Throws(ServletException::class)
     override fun init(filterConfig: FilterConfig) {
     }

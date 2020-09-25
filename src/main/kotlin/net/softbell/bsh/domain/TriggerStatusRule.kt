@@ -1,29 +1,48 @@
 package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor
-import lombok.Getter
-import kotlin.Throws
-
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 트리거 상태 자료형
  */
-@AllArgsConstructor
-@Getter
 enum class TriggerStatusRule {
-    ALL("ALL", 0),  // 전체 0x0
-    ERROR("ERROR", 1),  // 에러시 0x1
-    OCCUR("OCCUR", 2),  // 트리거 발생 0x10
-    RESTORE("RESTORE", 4),  // 트리거 복구 0x100
-    OCCUR_AND_RESTORE("OCCUR_AND_RESTORE", 6);
+    ALL {  // 전체 0b0
+        override val value: String
+            get() = "ALL"
+        override val code: Int
+            get() = 0
+    },
+    ERROR {  // 에러시 0b0001
+        override val value: String
+            get() = "ERROR"
+        override val code: Int
+            get() = 1
+    },
+    OCCUR {  // 트리거 발생 0b0010
+        override val value: String
+            get() = "OCCUR"
+        override val code: Int
+            get() = 2
+    },
+    RESTORE {  // 트리거 복구 0b0100
+        override val value: String
+            get() = "RESTORE"
+        override val code: Int
+            get() = 4
+    },
+    OCCUR_AND_RESTORE {  // 트리거 발생 및 복구 0b0110
+        override val value: String
+            get() = "OCCUR_AND_RESTORE"
+        override val code: Int
+            get() = 6
+    };
 
-    // 트리거 발생 및 복구 0x110
-    private val value: String? = null
-    private val code: Int? = null
+
+    abstract val value: String
+    abstract val code: Int
 
     companion object {
-        fun ofLegacyCode(legacyCode: Int?): TriggerStatusRule? {
-            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+        fun ofLegacyCode(legacyCode: Int): TriggerStatusRule? {
+            for (rule in values()) if (rule.code === legacyCode) return rule
             return null
         }
     }

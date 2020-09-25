@@ -4,11 +4,11 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
-import lombok.RequiredArgsConstructor
 import net.softbell.bsh.config.CustomConfig
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.util.CookieUtil
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -19,20 +19,20 @@ import java.util.*
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 인증관련 JWT 토큰 생성 및 검증 컴포넌트
  */
-@RequiredArgsConstructor
 @Component
-class JwtTokenProvider constructor() {
+class JwtTokenProvider {
     @Value("\${bsh.security.jwt.secret.key}")
     private var secretKey: String? = null
     private val tokenValidMilisecond: Long = 1000L * 60 * 60 // 1시간만 토큰 유효
-    private val memberService: MemberService? = null
-    private val centerService: CenterService? = null
+
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var centerService: CenterService
+
     @PostConstruct
     protected fun init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey!!.toByteArray())

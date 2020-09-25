@@ -1,7 +1,6 @@
 package net.softbell.bsh.util
 
 import javax.servlet.http.HttpServletRequest
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)

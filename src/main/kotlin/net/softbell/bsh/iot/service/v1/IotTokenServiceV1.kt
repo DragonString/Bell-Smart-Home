@@ -1,7 +1,5 @@
 package net.softbell.bsh.iot.service.v1
 
-import lombok.AllArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.ItemCategoryRule
 import net.softbell.bsh.domain.ItemModeRule
 import net.softbell.bsh.domain.ItemTypeRule
@@ -17,27 +15,25 @@ import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto
 import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1Dto
 import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto
 import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto
-import net.softbell.bsh.util.BellLog
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Token 서비스
  */
-@Slf4j
-@AllArgsConstructor
 @Service
 class IotTokenServiceV1 {
     // Global Field
-    private val iotTriggerService: IotTriggerServiceV1? = null
-    private val iotChannelCompV1: IotChannelCompV1? = null
-    private val iotAuthCompV1: IotAuthCompV1? = null
-    private val nodeRepo: NodeRepo? = null
-    private val nodeItemRepo: NodeItemRepo? = null
-    private val nodeItemHistoryRepo: NodeItemHistoryRepo? = null
+    @Autowired lateinit var iotTriggerService: IotTriggerServiceV1
+    @Autowired lateinit var iotChannelCompV1: IotChannelCompV1
+    @Autowired lateinit var iotAuthCompV1: IotAuthCompV1
+    @Autowired lateinit var nodeRepo: NodeRepo
+    @Autowired lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
+
     private fun getNormalTokenNode(token: String): Node? {
         // Field
         val node: Node?

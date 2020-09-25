@@ -1,6 +1,5 @@
 package net.softbell.bsh.service
 
-import lombok.RequiredArgsConstructor
 import net.softbell.bsh.domain.entity.*
 import net.softbell.bsh.dto.view.InterlockTokenCardDto
 import net.softbell.bsh.dto.view.MemberActivityLogCardDto
@@ -13,19 +12,18 @@ import net.softbell.bsh.dto.view.advance.TriggerItemCardDto
 import net.softbell.bsh.dto.view.advance.TriggerSummaryCardDto
 import net.softbell.bsh.dto.view.general.*
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 엔티티 to 뷰 DTO 변환 서비스
  */
-@RequiredArgsConstructor
 @Service
 class ViewDtoConverterService constructor() {
     // Global Field
-    private val iotNodeService: IotNodeServiceV1? = null
+    @Autowired lateinit var iotNodeService: IotNodeServiceV1
 
     // Node Entity List to Monitor Card Dto List
     fun convMonitorSummaryCards(listEntity: Collection<Node?>?): List<MonitorSummaryCardDto> {

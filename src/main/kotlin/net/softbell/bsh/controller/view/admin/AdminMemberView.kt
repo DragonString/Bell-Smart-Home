@@ -1,28 +1,27 @@
 package net.softbell.bsh.controller.view.admin
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.service.MemberService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import java.security.Principal
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 관리자 회원 관리 뷰 컨트롤러
  */
-@AllArgsConstructor
 @Controller
 @RequestMapping("/admin/member/")
 class AdminMemberView constructor() {
     // Global Field
     private val G_BASE_REDIRECT_URL: String = "redirect:/admin/member"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
-    private val memberService: MemberService? = null
+
+    @Autowired lateinit var memberService: MemberService
 
     // 회원 승인 처리
     @PostMapping("approvalNode")

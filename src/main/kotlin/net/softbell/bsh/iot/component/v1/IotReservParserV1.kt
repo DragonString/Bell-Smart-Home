@@ -1,14 +1,13 @@
 package net.softbell.bsh.iot.component.v1
 
-import lombok.RequiredArgsConstructor
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.entity.NodeReserv
 import net.softbell.bsh.domain.entity.NodeReservAction
 import net.softbell.bsh.domain.repository.NodeReservRepo
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -24,11 +23,11 @@ import kotlin.Throws
  * * /15: 매 15분 마다 (중간에 띄어쓰기 없이)
  * 10/15: 10분 부터 매 15분 마다
  */
-@RequiredArgsConstructor
 @Component
 class IotReservParserV1 {
     // Global Field
-    private val nodeReservRepo: NodeReservRepo? = null
+    @Autowired lateinit var nodeReservRepo: NodeReservRepo
+
     fun getReservAction(nodeReserv: NodeReserv?): List<NodeAction> {
         // Field
         val listNodeReservAction: List<NodeReservAction>

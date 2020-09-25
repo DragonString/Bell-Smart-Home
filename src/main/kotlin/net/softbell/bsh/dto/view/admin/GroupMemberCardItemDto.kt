@@ -1,16 +1,9 @@
 package net.softbell.bsh.dto.view.admin
 
-import lombok.Getter
-import lombok.Setter
-import net.softbell.bsh.domain.entity.Member
-import kotlin.Throws
-
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 그룹 회원 카드 아이템 DTO
  */
-@Getter
-@Setter
 class GroupMemberCardItemDto(entity: Member?) {
     private val memberId: Long
     private val userId: String

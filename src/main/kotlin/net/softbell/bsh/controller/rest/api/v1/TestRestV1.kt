@@ -1,6 +1,5 @@
 package net.softbell.bsh.controller.rest.api.v1
 
-import lombok.RequiredArgsConstructor
 import net.softbell.bsh.component.PermissionComp
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.entity.GroupPermission
@@ -9,24 +8,24 @@ import net.softbell.bsh.domain.entity.MemberGroup
 import net.softbell.bsh.domain.entity.NodeGroup
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
 import net.softbell.bsh.service.MemberService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 테스트용 REST API 컨트롤러 V1
  */
-@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/rest/v1/test")
 class TestRestV1 constructor() {
     // Global Field
-    private val memberService: MemberService? = null
-    private val nodeService: IotNodeServiceV1? = null
-    private val permissionComp: PermissionComp? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var nodeService: IotNodeServiceV1
+    @Autowired lateinit var permissionComp: PermissionComp
+
     @GetMapping("/memberGroup")
     fun findMemberGroup(auth: Authentication): String {
         val member: Member? = memberService!!.getMember(auth.getName()) // 권한 체크할 사용자 불러옴

@@ -1,12 +1,11 @@
 package net.softbell.bsh.iot.controller.stomp.v1
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto
 import net.softbell.bsh.iot.service.v1.IotSubscribeServiceV1
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.simp.annotation.SubscribeMapping
 import org.springframework.web.bind.annotation.RestController
-import kotlin.Throws
 
 /**
  * @author : Bell(bell@softbell.net)
@@ -14,11 +13,11 @@ import kotlin.Throws
  * STOMP publish: /api/stomp/pub
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
-@AllArgsConstructor
 @RestController
 class SubscribeStompV1 {
     // Global Field
-    private val iotSubscribeServiceV1: IotSubscribeServiceV1? = null
+    @Autowired lateinit var iotSubscribeServiceV1: IotSubscribeServiceV1
+
     @SubscribeMapping("/iot/v1/node")
     fun NodeTopicSubscribeHandler(): BaseV1Dto? {
         return iotSubscribeServiceV1!!.procTopicSubscribe()

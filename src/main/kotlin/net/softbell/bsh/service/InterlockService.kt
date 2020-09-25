@@ -1,29 +1,28 @@
 package net.softbell.bsh.service
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.MemberInterlockToken
 import net.softbell.bsh.domain.repository.MemberInterlockTokenRepo
 import net.softbell.bsh.dto.request.InterlockTokenDto
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 연동 서비스
  */
-@AllArgsConstructor
 @Service
 class InterlockService constructor() {
     // Global Field
-    private val memberService: MemberService? = null
-    private val authComp: IotAuthCompV1? = null
-    private val memberInterlockTokenRepo: MemberInterlockTokenRepo? = null
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var authComp: IotAuthCompV1
+    @Autowired lateinit var memberInterlockTokenRepo: MemberInterlockTokenRepo
+
     fun getAllTokens(auth: Authentication): List<MemberInterlockToken?>? {
         // Field
         val member: Member?

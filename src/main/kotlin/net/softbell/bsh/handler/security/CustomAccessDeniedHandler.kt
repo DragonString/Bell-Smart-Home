@@ -1,28 +1,22 @@
 package net.softbell.bsh.handler.security
 
-import lombok.AllArgsConstructor
-import lombok.Builder
-import lombok.NoArgsConstructor
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.stereotype.Component
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 접근 제한 핸들러
  */
 @Component
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 class CustomAccessDeniedHandler : AccessDeniedHandler {
     // Global Field
     private val G_API_URI: String? = null
     private val G_VIEW_URI: String? = null
+
     @Throws(IOException::class)
     override fun handle(request: HttpServletRequest, response: HttpServletResponse, exception: AccessDeniedException) {
         // Field

@@ -1,16 +1,11 @@
 package net.softbell.bsh.dto.view.admin
 
-import lombok.Getter
-import lombok.Setter
 import net.softbell.bsh.domain.entity.CenterSetting
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 센터 설정 카드정보 DTO
  */
-@Getter
-@Setter
 class CenterSettingSummaryCardDto(entity: CenterSetting?) {
     private val isEnabled: Byte
     private val iotAction: Byte

@@ -1,7 +1,5 @@
 package net.softbell.bsh.controller.view.admin
 
-import lombok.AllArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.entity.NodeGroup
 import net.softbell.bsh.domain.entity.NodeGroupItem
@@ -13,18 +11,16 @@ import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
 import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.service.PermissionService
 import net.softbell.bsh.service.ViewDtoConverterService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 관리자 노드 그룹 관리 뷰 컨트롤러
  */
-@Slf4j
-@AllArgsConstructor
 @Controller
 @RequestMapping("/admin/group/node")
 class AdminGroupNodeView constructor() {
@@ -32,10 +28,12 @@ class AdminGroupNodeView constructor() {
     private val G_BASE_PATH: String = "services/admin/group"
     private val G_BASE_REDIRECT_URL: String = "redirect:/admin/group/node"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
-    private val viewDtoConverterService: ViewDtoConverterService? = null
-    private val memberService: MemberService? = null
-    private val permissionService: PermissionService? = null
-    private val iotNodeService: IotNodeServiceV1? = null
+
+    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired lateinit var memberService: MemberService
+    @Autowired lateinit var permissionService: PermissionService
+    @Autowired lateinit var iotNodeService: IotNodeServiceV1
+
     @GetMapping
     fun dispGroupNode(model: Model): String {
         // Load

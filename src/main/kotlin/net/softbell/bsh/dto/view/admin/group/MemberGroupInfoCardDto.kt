@@ -1,21 +1,14 @@
 package net.softbell.bsh.dto.view.admin.group
 
-import lombok.Getter
-import lombok.Setter
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.entity.GroupPermission
-import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.MemberGroup
-import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 회원 그룹 정보 카드 DTO
  */
-@Getter
-@Setter
 class MemberGroupInfoCardDto(entity: MemberGroup?) {
     private val gid: Long
     private val enableStatus: EnableStatusRule
@@ -23,8 +16,6 @@ class MemberGroupInfoCardDto(entity: MemberGroup?) {
     private val listMembers: MutableList<MemberGroupInfoCardMember>
     private val listPermissions: MutableList<MemberGroupInfoCardPermission>
 
-    @Getter
-    @Setter
     inner class MemberGroupInfoCardMember(entity: Member) {
         private val memberId: Long
         private val userId: String
@@ -42,8 +33,6 @@ class MemberGroupInfoCardDto(entity: MemberGroup?) {
         }
     }
 
-    @Getter
-    @Setter
     inner class MemberGroupInfoCardPermission(entity: GroupPermission) {
         private val pid: Long
         private val gid: Long

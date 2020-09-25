@@ -1,7 +1,7 @@
 package net.softbell.bsh.filter.security
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.component.JwtTokenProvider
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.GenericFilterBean
 import java.io.IOException
@@ -11,15 +11,14 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 인증 처리 필터
  */
-@AllArgsConstructor
 class JwtAuthenticationFilter : GenericFilterBean() {
-    private val jwtTokenProvider: JwtTokenProvider? = null
+    @Autowired lateinit var jwtTokenProvider: JwtTokenProvider
+
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, filterChain: FilterChain) {
         // Field

@@ -1,19 +1,12 @@
 package net.softbell.bsh.dto.view
 
-import lombok.Getter
-import lombok.Setter
 import net.softbell.bsh.domain.BanRule
 import net.softbell.bsh.domain.MemberRole
-import net.softbell.bsh.domain.entity.Member
-import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 회원 프로필뷰 카드정보 DTO
  */
-@Getter
-@Setter
 class MemberProfileCardDto(entity: Member?) {
     private val name: String
     private val nickname: String

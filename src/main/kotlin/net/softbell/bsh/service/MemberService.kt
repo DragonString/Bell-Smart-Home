@@ -1,5 +1,6 @@
 package net.softbell.bsh.service
 
+import groovy.util.logging.Slf4j
 import lombok.AllArgsConstructor
 import lombok.extern.slf4j.Slf4j
 import net.softbell.bsh.domain.AuthStatusRule
@@ -10,7 +11,7 @@ import net.softbell.bsh.domain.entity.MemberLoginLog
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.repository.*
 import net.softbell.bsh.dto.request.MemberDto
-import net.softbell.bsh.util.BellLog
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.security.Principal
 import java.util.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -34,17 +34,18 @@ import kotlin.Throws
 @Service
 class MemberService : UserDetailsService {
     // Global Field
-    private val centerService: CenterService? = null
-    private val memberRepo: MemberRepo? = null
-    private val memberLoginLogRepo: MemberLoginLogRepo? = null
-    private val memberInterlockTokenRepo: MemberInterlockTokenRepo? = null
-    private val memberGroupItemRepo: MemberGroupItemRepo? = null
-    private val nodeActionRepo: NodeActionRepo? = null
-    private val nodeActionItemRepo: NodeActionItemRepo? = null
-    private val nodeReservRepo: NodeReservRepo? = null
-    private val nodeReservActionRepo: NodeReservActionRepo? = null
-    private val nodeTriggerRepo: NodeTriggerRepo? = null
-    private val nodeTriggerActionRepo: NodeTriggerActionRepo? = null
+    @Autowired lateinit var centerService: CenterService
+    @Autowired lateinit var memberRepo: MemberRepo
+    @Autowired lateinit var  memberLoginLogRepo: MemberLoginLogRepo
+    @Autowired lateinit var memberInterlockTokenRepo: MemberInterlockTokenRepo
+    @Autowired lateinit var memberGroupItemRepo: MemberGroupItemRepo
+    @Autowired lateinit var nodeActionRepo: NodeActionRepo
+    @Autowired lateinit var nodeActionItemRepo: NodeActionItemRepo
+    @Autowired lateinit var nodeReservRepo: NodeReservRepo
+    @Autowired lateinit var nodeReservActionRepo: NodeReservActionRepo
+    @Autowired lateinit var nodeTriggerRepo: NodeTriggerRepo
+    @Autowired lateinit var nodeTriggerActionRepo: NodeTriggerActionRepo
+
     @Transactional
     fun joinUser(memberDto: MemberDto): Long {
         // Log

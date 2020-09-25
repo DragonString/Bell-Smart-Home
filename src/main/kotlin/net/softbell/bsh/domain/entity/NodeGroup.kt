@@ -1,24 +1,13 @@
 package net.softbell.bsh.domain.entity
 
-import lombok.AllArgsConstructor
-import lombok.Builder
-import lombok.Getter
-import lombok.NoArgsConstructor
-import lombok.Setter
 import net.softbell.bsh.domain.EnableStatusRule
 import java.io.Serializable
 import javax.persistence.*
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 노드 그룹 엔티티
  */
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
 @Entity
 @Table(name = "node_group")
 @NamedQuery(name = "NodeGroup.findAll", query = "SELECT n FROM NodeGroup n")
@@ -26,42 +15,44 @@ class NodeGroup : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "node_group_id", unique = true, nullable = false)
-    private val nodeGroupId: Long? = null
+    var nodeGroupId: Long? = null
 
     @Column(name = "enable_status", nullable = false)
-    private val enableStatus: EnableStatusRule? = null
+    var enableStatus: EnableStatusRule? = null
 
     @Column(nullable = false, length = 50)
-    private val name: String? = null
+    var name: String? = null
 
     @OneToMany(mappedBy = "nodeGroup")
-    private val groupPermissions: List<GroupPermission>? = null
+    var groupPermissions: List<GroupPermission>? = null
 
     @OneToMany(mappedBy = "nodeGroup")
-    private val nodeGroupItems: List<NodeGroupItem>? = null
-    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission {
-        getGroupPermissions().add(groupPermission)
-        groupPermission.setNodeGroup(this)
-        return groupPermission
-    }
+    var nodeGroupItems: List<NodeGroupItem>? = null
 
-    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission {
-        getGroupPermissions().remove(groupPermission)
-        groupPermission.setNodeGroup(null)
-        return groupPermission
-    }
 
-    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
-        getNodeGroupItems().add(nodeGroupItem)
-        nodeGroupItem.setNodeGroup(this)
-        return nodeGroupItem
-    }
-
-    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
-        getNodeGroupItems().remove(nodeGroupItem)
-        nodeGroupItem.setNodeGroup(null)
-        return nodeGroupItem
-    }
+//    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission {
+//        getGroupPermissions().add(groupPermission)
+//        groupPermission.setNodeGroup(this)
+//        return groupPermission
+//    }
+//
+//    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission {
+//        getGroupPermissions().remove(groupPermission)
+//        groupPermission.setNodeGroup(null)
+//        return groupPermission
+//    }
+//
+//    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
+//        getNodeGroupItems().add(nodeGroupItem)
+//        nodeGroupItem.setNodeGroup(this)
+//        return nodeGroupItem
+//    }
+//
+//    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
+//        getNodeGroupItems().remove(nodeGroupItem)
+//        nodeGroupItem.setNodeGroup(null)
+//        return nodeGroupItem
+//    }
 
     companion object {
         private const val serialVersionUID = 1L

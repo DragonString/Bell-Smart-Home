@@ -1,17 +1,12 @@
 package net.softbell.bsh.dto.view.general
 
-import lombok.Getter
-import lombok.Setter
 import net.softbell.bsh.domain.entity.NodeActionItem
 import net.softbell.bsh.domain.entity.NodeItem
-import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 예약 등록 및 수정뷰 액션 카드정보 DTO
  */
-@Getter
-@Setter
 class ActionItemCardDto {
     private var itemId: Long
     private var nodeId: Long

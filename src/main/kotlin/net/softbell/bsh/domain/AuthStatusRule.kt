@@ -1,27 +1,36 @@
 package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor
-import lombok.Getter
-import kotlin.Throws
-
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 인증 상태 자료형
  */
-@AllArgsConstructor
-@Getter
 enum class AuthStatusRule {
-    SUCCESS("SUCCESS", 0),  // 정상 인증
-    FAIL("FAIL", 1),  // 인증 실패
-    ERROR("ERROR", -1);
+    SUCCESS {  // 정상 인증
+        override val value: String
+            get() = "SUCCESS"
+        override val code: Int
+            get() = 0
+    },
+    FAIL{  // 인증 실패
+        override val value: String
+            get() = "FAIL"
+        override val code: Int
+            get() = 1
+    },
+    ERROR {  // 에러
+        override val value: String
+            get() = "ERROR"
+        override val code: Int
+            get() = -1
+    };
 
     // 에러
-    private val value: String? = null
-    private val code: Int? = null
+    abstract val value: String
+    abstract val code: Int
 
     companion object {
-        fun ofLegacyCode(legacyCode: Int?): AuthStatusRule? {
-            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+        fun ofLegacyCode(legacyCode: Int): AuthStatusRule? {
+            for (rule in values()) if (rule.code === legacyCode) return rule
             return null
         }
     }

@@ -1,14 +1,13 @@
 package net.softbell.bsh.iot.controller.stomp.v1
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.iot.dto.bshp.v1.ItemInfoV1Dto
 import net.softbell.bsh.iot.dto.bshp.v1.ItemValueV1Dto
 import net.softbell.bsh.iot.dto.bshp.v1.NodeInfoV1Dto
 import net.softbell.bsh.iot.service.v1.IotTokenServiceV1
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.web.bind.annotation.RestController
-import kotlin.Throws
 
 /**
  * @author : Bell(bell@softbell.net)
@@ -16,11 +15,11 @@ import kotlin.Throws
  * STOMP publish: /api/stomp/pub
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */
-@AllArgsConstructor
 @RestController
 class TokenStompV1 {
     // Global Field
-    private val iotTokenServiceV1: IotTokenServiceV1? = null
+    @Autowired lateinit var iotTokenServiceV1: IotTokenServiceV1
+
     @MessageMapping("/iot/v1/node/token/{token}/SET/INFO/NODE")
     fun NodeHandlerSetInfoNode(@DestinationVariable("token") token: String, nodeInfo: NodeInfoV1Dto) {
         iotTokenServiceV1!!.setNodeInfo(token, nodeInfo)
