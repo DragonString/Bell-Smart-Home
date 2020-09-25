@@ -19,10 +19,9 @@ build:
   only:
     - branches
     - tags
-  only:
     refs:
       - master
-      - dev_main
-      - review_main
+      - develop
+      - release/*
   retry: 2
       

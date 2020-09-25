@@ -1,16 +1,14 @@
 Bell Smart Home
 ====================
 - WeMos D1 Mini를 이용한 스마트홈 플랫폼 제어 서버  
-- 연관 프로젝트: https://git.softbell.net/Bell/BSHN  
+- 연관 프로젝트: https://git.bellsoft.net/Bell/BSHN  
 
 
 ## ※ Auto DevOps CI/CD Status
 - master : 
-[![pipeline status](https://git.softbell.net/Bell/BSH/badges/master/pipeline.svg)](https://git.softbell.net/BSP/BSNS/commits/master)
-- dev_main : 
-[![pipeline status](https://git.softbell.net/Bell/BSH/badges/dev_main/pipeline.svg)](https://git.softbell.net/BSP/BSNS/commits/dev_main)
-- review_main : 
-[![pipeline status](https://git.softbell.net/Bell/BSH/badges/review_main/pipeline.svg)](https://git.softbell.net/BSP/BSNS/commits/review_main)
+[![pipeline status](https://git.bellsoft.net/Bell/BSH/badges/master/pipeline.svg)](https://git.bellsoft.net/Bell/BSH/commits/master)
+- develop : 
+[![pipeline status](https://git.bellsoft.net/Bell/BSH/badges/develop/pipeline.svg)](https://git.bellsoft.net/Bell/BSH/commits/develop)
   
 ## ※ 질문 전 체크사항  
 #### Q. 프로젝트 클론했는데 컴파일에러가 오지게 뜹니다.
@@ -69,8 +67,8 @@ NTP
 
 
 ## ※ 이용 사이트  
-- BSN GitLab : https://git.softbell.net/  
-- Project Repository : https://git.softbell.net/Bell/BSH  
+- BSN GitLab : https://git.bellsoft.net/  
+- Project Repository : https://git.bellsoft.net/Bell/BSH  
 
 
 ## ※ 참고 사이트  

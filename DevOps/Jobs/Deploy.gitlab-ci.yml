@@ -21,7 +21,7 @@ review:
     paths: [environment_url.txt]
   only:
     refs:
-      - review_main
+      - release/*
     kubernetes: active
   except:
     variables:
@@ -43,7 +43,7 @@ emergency_stop_review:
   allow_failure: true
   only:
     refs:
-      - review_main
+      - release/*
     kubernetes: active
   except:
     variables:
@@ -65,7 +65,7 @@ stop_review:
   allow_failure: true
   only:
     refs:
-      - review_main
+      - release/*
     kubernetes: active
   except:
     variables:
