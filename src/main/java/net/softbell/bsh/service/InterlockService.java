@@ -52,6 +52,10 @@ public class InterlockService
 		// Init
 		memberInterlockToken = memberInterlockTokenRepo.findByEnableStatusAndToken(EnableStatusRule.ENABLE, token);
 		
+		// Exception
+		if (memberInterlockToken == null)
+			return null;
+		
 		// Return
 		return memberInterlockToken.getMember();
 	}

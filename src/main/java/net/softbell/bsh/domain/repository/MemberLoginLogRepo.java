@@ -5,7 +5,10 @@ import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import net.softbell.bsh.domain.AuthStatusRule;
 import net.softbell.bsh.domain.entity.Member;
@@ -21,4 +24,9 @@ public interface MemberLoginLogRepo extends JpaRepository<MemberLoginLog, Long>
 	Page<MemberLoginLog> findByMember(Member member, Pageable pageable);
 	long countByMember(Member member);
 	long countByMemberAndStatusAndRequestDateBetween(Member member, AuthStatusRule status, Date start, Date end);
+
+	@Transactional
+	@Modifying
+	@Query("DELETE FROM MemberLoginLog mll WHERE mll.member = ?1")
+	void deleteByMember(Member member);
 }

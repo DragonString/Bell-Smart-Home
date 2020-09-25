@@ -26,7 +26,7 @@
 										<div class="text-center">
 											<h1 class="h4 text-gray-900 mb-4">비밀번호 변경</h1>
 										</div>
-										<form onchange="checkPasswordValid('#modifyForm', false, true);" onsubmit="return checkPasswordValid('#modifyForm', false, true);" id="modifyForm"  class="user" method="POST" action="/modify">
+										<form onchange="checkPasswordValid('#modifyForm', false, true);" onsubmit="return checkPasswordValid('#modifyForm', false, true);" id="modifyForm"  class="user" method="POST" action="/member/modify">
 											<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 											<div class="form-group">
 												<input type="password" class="form-control form-control-user pass-cur" name="curPassword" placeholder="현재 비밀번호" autofocus>

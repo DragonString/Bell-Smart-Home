@@ -25,8 +25,17 @@ import net.softbell.bsh.domain.BanRule;
 import net.softbell.bsh.domain.MemberRole;
 import net.softbell.bsh.domain.entity.Member;
 import net.softbell.bsh.domain.entity.MemberLoginLog;
+import net.softbell.bsh.domain.entity.NodeAction;
+import net.softbell.bsh.domain.repository.MemberGroupItemRepo;
+import net.softbell.bsh.domain.repository.MemberInterlockTokenRepo;
 import net.softbell.bsh.domain.repository.MemberLoginLogRepo;
 import net.softbell.bsh.domain.repository.MemberRepo;
+import net.softbell.bsh.domain.repository.NodeActionItemRepo;
+import net.softbell.bsh.domain.repository.NodeActionRepo;
+import net.softbell.bsh.domain.repository.NodeReservActionRepo;
+import net.softbell.bsh.domain.repository.NodeReservRepo;
+import net.softbell.bsh.domain.repository.NodeTriggerActionRepo;
+import net.softbell.bsh.domain.repository.NodeTriggerRepo;
 import net.softbell.bsh.dto.request.MemberDto;
 import net.softbell.bsh.util.BellLog;
 
@@ -44,6 +53,16 @@ public class MemberService implements UserDetailsService
 	
 	private final MemberRepo memberRepo;
 	private final MemberLoginLogRepo memberLoginLogRepo;
+	private final MemberInterlockTokenRepo memberInterlockTokenRepo;
+	private final MemberGroupItemRepo memberGroupItemRepo;
+	
+	private final NodeActionRepo nodeActionRepo;
+	private final NodeActionItemRepo nodeActionItemRepo;
+	private final NodeReservRepo nodeReservRepo;
+	private final NodeReservActionRepo nodeReservActionRepo;
+	private final NodeTriggerRepo nodeTriggerRepo;
+	private final NodeTriggerActionRepo nodeTriggerActionRepo;
+	
 	
 	@Transactional
 	public long joinUser(MemberDto memberDto)
@@ -128,6 +147,9 @@ public class MemberService implements UserDetailsService
 	
 	public boolean isAdmin(Member member)
 	{
+		if (member == null)
+			return false;
+		
 		if (!(member.getPermission() == MemberRole.ADMIN || 
 				member.getPermission() == MemberRole.SUPERADMIN) || 
 				member.getBan() != BanRule.NORMAL) // 관리자가 아니거나 정지 회원이면 로그아웃처리
@@ -314,6 +336,41 @@ public class MemberService implements UserDetailsService
 		// Return
 		return false;
 	}
+	
+	/**
+	 * 한 회원에 대한 연관 데이터 전부 삭제
+	 * @param member
+	 * @return 성공 여부
+	 * 회원 탈퇴시 삭제해야될 데이터
+	 * member_interlock_token
+	 * member_login_log
+	 * member_group_item
+	 * node_action
+	 * node_action_item
+	 * node_reserv
+	 * node_reserv_action
+	 * node_trigger
+	 * node_trigger_item
+	 */
+	@Transactional
+	public boolean deleteMember(Member member)
+	{
+		// Exception
+		if (member == null)
+			return false;
+		
+		// Field
+		
+		
+		// Init
+		
+		
+		// Process
+		
+		
+		// Return
+		return true;
+	}
 
 	/*@Transactional
 	public boolean checkDelete(String userId) {
@@ -354,6 +411,41 @@ public class MemberService implements UserDetailsService
 	}*/
 	
 	@Transactional
+	public boolean deleteUser(Member member)
+	{
+		// Exception
+		if (member == null)
+			return false;
+		
+		// Field
+		List<NodeAction> listNodeAction;
+		
+		// Init
+		listNodeAction = member.getNodeActions();
+		
+		// DB - Node Action Child Delete
+		nodeReservActionRepo.deleteAllByNodeAction(listNodeAction);
+		nodeTriggerActionRepo.deleteAllByNodeAction(listNodeAction);
+		nodeActionItemRepo.deleteAllByNodeAction(listNodeAction);
+		
+		// DB - Node Delete
+		nodeReservRepo.deleteByMember(member);
+		nodeTriggerRepo.deleteByMember(member);
+		nodeActionRepo.deleteByMember(member);
+		
+		// DB - Member Delete
+		memberInterlockTokenRepo.deleteByMember(member);
+		memberLoginLogRepo.deleteByMember(member);
+		memberGroupItemRepo.deleteByMember(member);
+		
+		// DB - Post Delete
+		memberRepo.delete(member);
+		
+		// Return
+		return true;
+	}
+	
+	@Transactional
 	public boolean deleteUserList(Principal principal, List<Integer> listMemberId)
 	{
 		// Log
@@ -378,7 +470,7 @@ public class MemberService implements UserDetailsService
 				continue;
 	
 			// Process
-			memberRepo.delete(member);
+			deleteUser(member);
 		}
 		
 		return !isError;
