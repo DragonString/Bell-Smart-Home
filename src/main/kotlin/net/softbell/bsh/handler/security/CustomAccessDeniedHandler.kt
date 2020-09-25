@@ -1,17 +1,15 @@
-package net.softbell.bsh.handler.security;
+package net.softbell.bsh.handler.security
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.NoArgsConstructor
+import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.web.access.AccessDeniedHandler
+import org.springframework.stereotype.Component
+import java.io.IOException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -21,26 +19,19 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomAccessDeniedHandler implements AccessDeniedHandler
-{
-	// Global Field
-	private String G_API_URI, G_VIEW_URI;
-	
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException exception)
-    		throws IOException
-    {
-    	// Field
-    	boolean isAPI = false;
-    	
-    	// Init
-    	if (request.getRequestURI().startsWith("/api/"))
-    		isAPI = true;
-    	
-    	// Redirect
-    	if (isAPI)
-    		response.sendRedirect(G_API_URI);
-    	else
-    		response.sendRedirect(G_VIEW_URI);
+class CustomAccessDeniedHandler : AccessDeniedHandler {
+    // Global Field
+    private val G_API_URI: String? = null
+    private val G_VIEW_URI: String? = null
+    @Throws(IOException::class)
+    override fun handle(request: HttpServletRequest, response: HttpServletResponse, exception: AccessDeniedException) {
+        // Field
+        var isAPI = false
+
+        // Init
+        if (request.requestURI.startsWith("/api/")) isAPI = true
+
+        // Redirect
+        if (isAPI) response.sendRedirect(G_API_URI) else response.sendRedirect(G_VIEW_URI)
     }
 }

@@ -1,27 +1,14 @@
-package net.softbell.bsh.domain.entity;
+package net.softbell.bsh.domain.entity
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import java.io.Serializable
+import javax.persistence.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -33,81 +20,69 @@ import net.softbell.bsh.domain.EnableStatusRule;
 @Getter
 @Setter
 @Entity
-@Table(name="node_action")
-@NamedQuery(name="NodeAction.findAll", query="SELECT n FROM NodeAction n")
-public class NodeAction implements Serializable
-{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="action_id", unique=true, nullable=false)
-	private Long actionId;
+@Table(name = "node_action")
+@NamedQuery(name = "NodeAction.findAll", query = "SELECT n FROM NodeAction n")
+class NodeAction : Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "action_id", unique = true, nullable = false)
+    private val actionId: Long? = null
 
-	@Column(nullable=false, length=50)
-	private String description;
+    @Column(nullable = false, length = 50)
+    private val description: String? = null
 
-	@Column(name="enable_status", nullable=false)
-	private EnableStatusRule enableStatus;
+    @Column(name = "enable_status", nullable = false)
+    private val enableStatus: EnableStatusRule? = null
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="member_id")
-	private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private val member: Member? = null
 
-	@OneToMany(mappedBy="nodeAction")
-	private List<NodeActionItem> nodeActionItems;
+    @OneToMany(mappedBy = "nodeAction")
+    private val nodeActionItems: List<NodeActionItem>? = null
 
-	@OneToMany(mappedBy="nodeAction")
-	private List<NodeReservAction> nodeReservActions;
+    @OneToMany(mappedBy = "nodeAction")
+    private val nodeReservActions: List<NodeReservAction>? = null
 
-	@OneToMany(mappedBy="nodeAction")
-	private List<NodeTriggerAction> nodeTriggerActions;
+    @OneToMany(mappedBy = "nodeAction")
+    private val nodeTriggerActions: List<NodeTriggerAction>? = null
+    fun addNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem {
+        getNodeActionItems().add(nodeActionItem)
+        nodeActionItem.setNodeAction(this)
+        return nodeActionItem
+    }
 
-	public NodeActionItem addNodeActionItem(NodeActionItem nodeActionItem)
-	{
-		getNodeActionItems().add(nodeActionItem);
-		nodeActionItem.setNodeAction(this);
+    fun removeNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem {
+        getNodeActionItems().remove(nodeActionItem)
+        nodeActionItem.setNodeAction(null)
+        return nodeActionItem
+    }
 
-		return nodeActionItem;
-	}
+    fun addNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction {
+        getNodeReservActions().add(nodeReservAction)
+        nodeReservAction.setNodeAction(this)
+        return nodeReservAction
+    }
 
-	public NodeActionItem removeNodeActionItem(NodeActionItem nodeActionItem)
-	{
-		getNodeActionItems().remove(nodeActionItem);
-		nodeActionItem.setNodeAction(null);
+    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction {
+        getNodeReservActions().remove(nodeReservAction)
+        nodeReservAction.setNodeAction(null)
+        return nodeReservAction
+    }
 
-		return nodeActionItem;
-	}
+    fun addNodeTriggerActions(nodeTriggerActions: NodeTriggerAction): NodeTriggerAction {
+        getNodeTriggerActions().add(nodeTriggerActions)
+        nodeTriggerActions.setNodeAction(this)
+        return nodeTriggerActions
+    }
 
-	public NodeReservAction addNodeReservAction(NodeReservAction nodeReservAction)
-	{
-		getNodeReservActions().add(nodeReservAction);
-		nodeReservAction.setNodeAction(this);
+    fun removeNodeTriggerActions(nodeTriggerActions: NodeTriggerAction): NodeTriggerAction {
+        getNodeTriggerActions().remove(nodeTriggerActions)
+        nodeTriggerActions.setNodeAction(null)
+        return nodeTriggerActions
+    }
 
-		return nodeReservAction;
-	}
-
-	public NodeReservAction removeNodeReservAction(NodeReservAction nodeReservAction)
-	{
-		getNodeReservActions().remove(nodeReservAction);
-		nodeReservAction.setNodeAction(null);
-
-		return nodeReservAction;
-	}
-
-	public NodeTriggerAction addNodeTriggerActions(NodeTriggerAction nodeTriggerActions)
-	{
-		getNodeTriggerActions().add(nodeTriggerActions);
-		nodeTriggerActions.setNodeAction(this);
-
-		return nodeTriggerActions;
-	}
-
-	public NodeTriggerAction removeNodeTriggerActions(NodeTriggerAction nodeTriggerActions)
-	{
-		getNodeTriggerActions().remove(nodeTriggerActions);
-		nodeTriggerActions.setNodeAction(null);
-
-		return nodeTriggerActions;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

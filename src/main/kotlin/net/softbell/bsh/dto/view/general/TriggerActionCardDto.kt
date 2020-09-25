@@ -1,8 +1,9 @@
-package net.softbell.bsh.dto.view.general;
+package net.softbell.bsh.dto.view.general
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.entity.NodeAction;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.NodeAction
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -10,19 +11,16 @@ import net.softbell.bsh.domain.entity.NodeAction;
  */
 @Getter
 @Setter
-public class TriggerActionCardDto
-{
-	private Long actionId;
-	private String description;
-	
-	public TriggerActionCardDto(NodeAction entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.actionId = entity.getActionId();
-		this.description = entity.getDescription();
-	}
+class TriggerActionCardDto(entity: NodeAction?) {
+    private val actionId: Long
+    private val description: String
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        actionId = entity.getActionId()
+        description = entity.getDescription()
+    }
 }

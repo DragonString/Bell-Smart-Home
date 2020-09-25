@@ -1,10 +1,10 @@
-package net.softbell.bsh.iot.controller.rest.v1;
+package net.softbell.bsh.iot.controller.rest.v1
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.AllArgsConstructor;
+import lombok.AllArgsConstructor
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -13,15 +13,13 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/rest/v1/iot")
-public class IotRestV1
-{
-	@GetMapping("/send")
-	public String procSend()
-	{
-		// Field
-		
-		
-		// Finish
-		return "Success";
-	}
+class IotRestV1 {
+    @GetMapping("/send")
+    fun procSend(): String {
+        // Field
+
+
+        // Finish
+        return "Success"
+    }
 }

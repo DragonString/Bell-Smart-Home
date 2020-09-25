@@ -1,7 +1,8 @@
-package net.softbell.bsh.domain;
+package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.AllArgsConstructor
+import lombok.Getter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -9,21 +10,16 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum BanRule
-{
-	NORMAL("NORMAL", 0),
-    PERMANENT("PERMANENT", -1),
-    TEMP("TEMP", 1);
+enum class BanRule {
+    NORMAL("NORMAL", 0), PERMANENT("PERMANENT", -1), TEMP("TEMP", 1);
 
-	private String value;
-    private Integer code;
-    
-    public static BanRule ofLegacyCode(Integer legacyCode)
-    {
-    	for (BanRule authStatusRule : values())
-            if (authStatusRule.getCode() == legacyCode)
-                return authStatusRule;
-    	
-    	return null;
+    private val value: String? = null
+    private val code: Int? = null
+
+    companion object {
+        fun ofLegacyCode(legacyCode: Int?): BanRule? {
+            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+            return null
+        }
     }
 }

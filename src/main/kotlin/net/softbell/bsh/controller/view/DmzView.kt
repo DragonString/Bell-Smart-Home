@@ -1,19 +1,17 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view
 
-import java.security.Principal;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import lombok.AllArgsConstructor;
-import net.softbell.bsh.dto.request.MemberDto;
-import net.softbell.bsh.service.CenterService;
-import net.softbell.bsh.service.MemberService;
+import lombok.AllArgsConstructor
+import net.softbell.bsh.dto.request.MemberDto
+import net.softbell.bsh.service.CenterService
+import net.softbell.bsh.service.MemberService
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import java.security.Principal
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -21,66 +19,60 @@ import net.softbell.bsh.service.MemberService;
  */
 @Controller
 @AllArgsConstructor
-public class DmzView
-{
-	// Global Field
-	private final String G_BASE_PATH = "services/dmz";
-    private final MemberService memberService;
-    private final CenterService centerService;
+class DmzView constructor() {
+    // Global Field
+    private val G_BASE_PATH: String = "services/dmz"
+    private val memberService: MemberService? = null
+    private val centerService: CenterService? = null
 
     // 회원가입 페이지
     @GetMapping("/signup")
-    public String dispSignup(Model model, Principal principal)
-    {
-    	// Init
-    	//FilterModelPrincipal(model, principal);
+    fun dispSignup(model: Model, principal: Principal?): String {
+        // Init
+        //FilterModelPrincipal(model, principal);
 
-		// Auth Check
-		if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
-			return "redirect:/";
-		
-		// Process
-		model.addAttribute("register", centerService.getSetting().getWebRegister());
-		
-    	// Return
-        return G_BASE_PATH + "/Signup";
+        // Auth Check
+        if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
+            return "redirect:/"
+
+        // Process
+        model.addAttribute("register", centerService.getSetting().getWebRegister())
+
+        // Return
+        return G_BASE_PATH + "/Signup"
     }
 
     // 회원가입 처리
     @PostMapping("/signup")
-    public String execSignup(MemberDto memberDTO)
-    {
-    	// Field
-    	long intResult;
-		
-		// Exception
-		if (centerService.getSetting().getWebRegister() == 0);
-    	
-    	// Init
-    	intResult = memberService.joinUser(memberDTO);
-    	
-    	// Check
-        if (intResult == -1)
-        	return "redirect:/signup?error";
+    fun execSignup(memberDTO: MemberDto): String {
+        // Field
+        val intResult: Long
 
-        return "redirect:/login";
+        // Exception
+        if (centerService.getSetting().getWebRegister() === 0);
+
+        // Init
+        intResult = memberService!!.joinUser(memberDTO)
+
+        // Check
+        if (intResult == -1L) return "redirect:/signup?error"
+        return "redirect:/login"
     }
 
     // 로그인 페이지
     @GetMapping("/login")
-    public String dispLogin(Model model, Principal principal, HttpServletRequest request, HttpServletResponse response)
-    {
-    	// Init
-    	//FilterModelPrincipal(model, principal);
-    	
-    	// Auth Check
-		if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
-			return "redirect:/";
-		
-		// Process
-		model.addAttribute("maintenance", centerService.getSetting().getWebMaintenance());
-    	
-    	// Return
-        return G_BASE_PATH + "/Login";
+    fun dispLogin(model: Model, principal: Principal?, request: HttpServletRequest?, response: HttpServletResponse?): String {
+        // Init
+        //FilterModelPrincipal(model, principal);
+
+        // Auth Check
+        if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
+            return "redirect:/"
+
+        // Process
+        model.addAttribute("maintenance", centerService.getSetting().getWebMaintenance())
+
+        // Return
+        return G_BASE_PATH + "/Login"
     }
 }

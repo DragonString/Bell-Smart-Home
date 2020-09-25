@@ -1,11 +1,12 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.ItemCategoryRule;
-import net.softbell.bsh.domain.ItemModeRule;
-import net.softbell.bsh.domain.ItemTypeRule;
-import net.softbell.bsh.domain.entity.NodeItem;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.ItemCategoryRule
+import net.softbell.bsh.domain.ItemModeRule
+import net.softbell.bsh.domain.ItemTypeRule
+import net.softbell.bsh.domain.entity.NodeItem
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -13,29 +14,26 @@ import net.softbell.bsh.domain.entity.NodeItem;
  */
 @Getter
 @Setter
-public class NodeManageItemCardDto
-{
-	private Long itemId;
-	private String alias;
-	private String itemName;
-	private ItemModeRule itemMode;
-	private ItemTypeRule itemType;
-	private ItemCategoryRule itemCategory;
-	private Byte controlMode;
-	
-	public NodeManageItemCardDto(NodeItem entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.itemId = entity.getItemId();
-		this.alias = entity.getAlias();
-		this.itemName = entity.getItemName();
-		this.itemMode = entity.getItemMode();
-		this.itemType = entity.getItemType();
-		this.itemCategory = entity.getItemCategory();
-		this.controlMode = entity.getControlMode();
-	}
+class NodeManageItemCardDto(entity: NodeItem?) {
+    private val itemId: Long
+    private val alias: String
+    private val itemName: String
+    private val itemMode: ItemModeRule
+    private val itemType: ItemTypeRule
+    private val itemCategory: ItemCategoryRule
+    private val controlMode: Byte
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        itemId = entity.getItemId()
+        alias = entity.getAlias()
+        itemName = entity.getItemName()
+        itemMode = entity.getItemMode()
+        itemType = entity.getItemType()
+        itemCategory = entity.getItemCategory()
+        controlMode = entity.getControlMode()
+    }
 }

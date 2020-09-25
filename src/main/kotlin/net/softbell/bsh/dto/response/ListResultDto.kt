@@ -1,9 +1,8 @@
-package net.softbell.bsh.dto.response;
+package net.softbell.bsh.dto.response
 
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
+import lombok.Getter
+import lombok.Setter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -11,7 +10,6 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class ListResultDto<T> extends ResultDto
-{
-    private List<T> list;
+class ListResultDto<T> : ResultDto() {
+    private val list: List<T>? = null
 }

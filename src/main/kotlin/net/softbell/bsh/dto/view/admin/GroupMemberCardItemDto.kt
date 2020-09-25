@@ -1,8 +1,9 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.entity.Member;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.Member
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -10,25 +11,22 @@ import net.softbell.bsh.domain.entity.Member;
  */
 @Getter
 @Setter
-public class GroupMemberCardItemDto
-{
-	private Long memberId;
-	private String userId;
-	private String name;
-	private String nickname;
-	private String email;
-	
-	public GroupMemberCardItemDto(Member entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.memberId = entity.getMemberId();
-		this.userId = entity.getUserId();
-		this.name = entity.getName();
-		this.nickname = entity.getNickname();
-		this.email = entity.getEmail();
-	}
+class GroupMemberCardItemDto(entity: Member?) {
+    private val memberId: Long
+    private val userId: String
+    private val name: String
+    private val nickname: String
+    private val email: String
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        memberId = entity.getMemberId()
+        userId = entity.getUserId()
+        name = entity.getName()
+        nickname = entity.getNickname()
+        email = entity.getEmail()
+    }
 }

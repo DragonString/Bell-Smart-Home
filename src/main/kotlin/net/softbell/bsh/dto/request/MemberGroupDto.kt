@@ -1,13 +1,12 @@
-package net.softbell.bsh.dto.request;
+package net.softbell.bsh.dto.request
 
-import java.util.List;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import lombok.ToString
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -19,9 +18,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberGroupDto
-{
-    private boolean enableStatus;
-    private String name;
-    private List<Long> memberId;
+class MemberGroupDto {
+    private val enableStatus = false
+    private val name: String? = null
+    private val memberId: List<Long>? = null
 }

@@ -1,9 +1,10 @@
-package net.softbell.bsh.dto.view.general;
+package net.softbell.bsh.dto.view.general
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.entity.NodeActionItem;
-import net.softbell.bsh.domain.entity.NodeItem;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.NodeActionItem
+import net.softbell.bsh.domain.entity.NodeItem
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -11,43 +12,39 @@ import net.softbell.bsh.domain.entity.NodeItem;
  */
 @Getter
 @Setter
-public class ActionItemCardDto
-{
-	private Long itemId;
-	private Long nodeId;
-	private String nodeAlias;
-	private String itemAlias;
-	private Double pinStatus;
-	private Long pinMin, pinMax;
-	
-	public ActionItemCardDto(NodeItem entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.itemId = entity.getItemId();
-		this.nodeId = entity.getNode().getNodeId();
-		this.nodeAlias = entity.getNode().getAlias();
-		this.itemAlias = entity.getAlias();
-		this.pinMin = 0L;
-		this.pinMax = 1024L; // TODO 핀 타입에 따라 맥스값 지정해주기
-	}
-	
-	public ActionItemCardDto(NodeActionItem entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.itemId = entity.getNodeItem().getItemId();
-		this.nodeId = entity.getNodeItem().getNode().getNodeId();
-		this.nodeAlias = entity.getNodeItem().getNode().getAlias();
-		this.itemAlias = entity.getNodeItem().getAlias();
-		this.pinStatus = entity.getItemStatus();
-		this.pinMin = 0L;
-		this.pinMax = 1024L;
-	}
+class ActionItemCardDto {
+    private var itemId: Long
+    private var nodeId: Long
+    private var nodeAlias: String
+    private var itemAlias: String
+    private var pinStatus: Double? = null
+    private var pinMin: Long
+    private var pinMax: Long
+
+    constructor(entity: NodeItem?) {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        itemId = entity.getItemId()
+        nodeId = entity.getNode().getNodeId()
+        nodeAlias = entity.getNode().getAlias()
+        itemAlias = entity.getAlias()
+        pinMin = 0L
+        pinMax = 1024L // TODO 핀 타입에 따라 맥스값 지정해주기
+    }
+
+    constructor(entity: NodeActionItem?) {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        itemId = entity.getNodeItem().getItemId()
+        nodeId = entity.getNodeItem().getNode().getNodeId()
+        nodeAlias = entity.getNodeItem().getNode().getAlias()
+        itemAlias = entity.getNodeItem().getAlias()
+        pinStatus = entity.getItemStatus()
+        pinMin = 0L
+        pinMax = 1024L
+    }
 }

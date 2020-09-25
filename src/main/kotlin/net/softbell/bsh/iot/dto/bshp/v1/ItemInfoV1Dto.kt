@@ -1,9 +1,10 @@
-package net.softbell.bsh.iot.dto.bshp.v1;
+package net.softbell.bsh.iot.dto.bshp.v1
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.AllArgsConstructor
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -13,12 +14,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ItemInfoV1Dto
-{
-	private Byte controlMode;
-	private Byte itemIndex;
-	private Integer itemMode;
-	private Integer itemCategory;
-	private Integer itemType;
-	private String itemName;
+class ItemInfoV1Dto {
+    private val controlMode: Byte? = null
+    private val itemIndex: Byte? = null
+    private val itemMode: Int? = null
+    private val itemCategory: Int? = null
+    private val itemType: Int? = null
+    private val itemName: String? = null
 }

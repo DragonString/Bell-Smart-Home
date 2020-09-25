@@ -1,12 +1,12 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin
 
-import java.util.Date;
-
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.BanRule;
-import net.softbell.bsh.domain.MemberRole;
-import net.softbell.bsh.domain.entity.Member;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.BanRule
+import net.softbell.bsh.domain.MemberRole
+import net.softbell.bsh.domain.entity.Member
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -14,27 +14,24 @@ import net.softbell.bsh.domain.entity.Member;
  */
 @Getter
 @Setter
-public class MemberSummaryCardDto
-{
-	private Long memberId;
-	private String userId;
-	private String username;
-	private Date registerDate;
-	private BanRule ban;
-	private MemberRole permission;
-	
-	public MemberSummaryCardDto(Member entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.memberId = entity.getMemberId();
-		this.userId = entity.getUserId();
-		this.username = entity.getUsername();
-		this.registerDate = entity.getRegisterDate();
-		this.ban = entity.getBan();
-		this.permission = entity.getPermission();
-	}
+class MemberSummaryCardDto(entity: Member?) {
+    private val memberId: Long
+    private val userId: String
+    private val username: String?
+    private val registerDate: Date
+    private val ban: BanRule
+    private val permission: MemberRole
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        memberId = entity.getMemberId()
+        userId = entity.getUserId()
+        username = entity!!.username
+        registerDate = entity.getRegisterDate()
+        ban = entity.getBan()
+        permission = entity.getPermission()
+    }
 }

@@ -1,25 +1,13 @@
-package net.softbell.bsh.component;
+package net.softbell.bsh.component
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-
-import lombok.RequiredArgsConstructor;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.GroupRole;
-import net.softbell.bsh.domain.entity.GroupPermission;
-import net.softbell.bsh.domain.entity.Member;
-import net.softbell.bsh.domain.entity.MemberGroup;
-import net.softbell.bsh.domain.entity.MemberGroupItem;
-import net.softbell.bsh.domain.entity.Node;
-import net.softbell.bsh.domain.entity.NodeGroup;
-import net.softbell.bsh.domain.entity.NodeGroupItem;
-import net.softbell.bsh.domain.repository.GroupPermissionRepo;
-import net.softbell.bsh.domain.repository.MemberGroupItemRepo;
-import net.softbell.bsh.domain.repository.MemberGroupRepo;
-import net.softbell.bsh.domain.repository.NodeGroupItemRepo;
-import net.softbell.bsh.domain.repository.NodeGroupRepo;
+import lombok.RequiredArgsConstructor
+import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.GroupRole
+import net.softbell.bsh.domain.entity.*
+import net.softbell.bsh.domain.repository.*
+import org.springframework.stereotype.Component
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -27,149 +15,143 @@ import net.softbell.bsh.domain.repository.NodeGroupRepo;
  */
 @RequiredArgsConstructor
 @Component
-public class PermissionComp
-{
-	// Global Field
-	private final GroupPermissionRepo groupPermissionRepo;
-	private final MemberGroupRepo memberGroupRepo;
-	private final MemberGroupItemRepo memberGroupItemRepo;
-	private final NodeGroupRepo nodeGroupRepo;
-	private final NodeGroupItemRepo nodeGroupItemRepo;
-	
-	// 활성화된 사용자 그룹 반환
-	public List<MemberGroup> getEnableMemberGroup()
-	{
-		// Field
-		List<MemberGroup> listMemberGroup;
-		
-		// Init
-		listMemberGroup = memberGroupRepo.findByEnableStatus(EnableStatusRule.ENABLE);
-		
-		// Return
-		return listMemberGroup;
-	}
-	
-	// 사용자가 포함된 활성화된 사용자 그룹 반환
-	public List<MemberGroup> getEnableMemberGroup(Member member)
-	{
-		// Field
-		List<MemberGroupItem> listMemberGroupItem;
-		List<MemberGroup> listMemberGroup;
-		
-		// Init
-		listMemberGroupItem = memberGroupItemRepo.findByMember(member);
-		listMemberGroup = memberGroupRepo.findByMemberGroupItemsInAndEnableStatus(listMemberGroupItem, EnableStatusRule.ENABLE);
-		
-		// Return
-		return listMemberGroup;
-	}
-	
-	// 권한이 있는 사용자 그룹 반환
-	public List<MemberGroup> getPrivilegeMemberGroup(List<GroupPermission> listGroupPermission)
-	{
-		// Return
-		return memberGroupRepo.findByGroupPermissionsIn(listGroupPermission);
-	}
-	
-	// 권한이 있는 사용자 그룹 반환
-	public List<MemberGroup> getPrivilegeMemberGroup(List<MemberGroup> listMemberGroup, List<GroupPermission> listGroupPermission)
-	{
-		// Field
-		List<Long> listMemberGroupId;
-		
-		// Init
-		listMemberGroupId = new ArrayList<Long>();
-		
-		// Load
-		for (MemberGroup entity : listMemberGroup)
-			listMemberGroupId.add(entity.getMemberGroupId());
-		
-		// Return
-		return memberGroupRepo.findByMemberGroupIdInAndGroupPermissionsIn(listMemberGroupId, listGroupPermission);
-	}
-	
-	// 활성화된 노드 그룹 반환
-	public List<NodeGroup> getEnableNodeGroup()
-	{
-		// Field
-		List<NodeGroup> listNodeGroup;
-		
-		// Init
-		listNodeGroup = nodeGroupRepo.findByEnableStatus(EnableStatusRule.ENABLE);
-		
-		// Return
-		return listNodeGroup;
-	}
-	
-	// 노드가 포함된 활성화된 노드 그룹 반환
-	public List<NodeGroup> getEnableNodeGroup(Node node)
-	{
-		// Field
-		List<NodeGroupItem> listNodeGroupItem;
-		List<NodeGroup> listNodeGroup;
-		
-		// Init
-		listNodeGroupItem = nodeGroupItemRepo.findByNode(node);
-		listNodeGroup = nodeGroupRepo.findByNodeGroupItemsInAndEnableStatus(listNodeGroupItem, EnableStatusRule.ENABLE);
-		
-		// Return
-		return listNodeGroup;
-	}
-	
-	// 권한이 있는 사용자 그룹 반환
-	public List<NodeGroup> getPrivilegeNodeGroup(List<NodeGroup> listNodeGroup, List<GroupPermission> listGroupPermission)
-	{
-		// Field
-		List<Long> listNodeGroupId;
-		
-		// Init
-		listNodeGroupId = new ArrayList<Long>();
-		
-		// Load
-		for (NodeGroup entity : listNodeGroup)
-			listNodeGroupId.add(entity.getNodeGroupId());
-		
-		// Return
-		return nodeGroupRepo.findByNodeGroupIdInAndGroupPermissionsIn(listNodeGroupId, listGroupPermission);
-	}
-	
-	
-	// 사용자 그룹으로 특정 권한이 포함된 그룹 권한 반환
-	public List<GroupPermission> getMemberGroupPermission(GroupRole role, List<MemberGroup> listMemberGroup)
-	{
-		// Field
-		List<GroupPermission> listGroupPermission;
-		
-		// Init
-		listGroupPermission = groupPermissionRepo.findByGroupPermissionAndMemberGroupIn(role, listMemberGroup);
-		
-		// Return
-		return listGroupPermission;
-	}
-	
-	// 노드 그룹으로 특정 권한이 포함된 그룹 권한 반환
-	public List<GroupPermission> getNodeGroupPermission(GroupRole role, List<NodeGroup> listNodeGroup)
-	{
-		// Field
-		List<GroupPermission> listGroupPermission;
-		
-		// Init
-		listGroupPermission = groupPermissionRepo.findByGroupPermissionAndNodeGroupIn(role, listNodeGroup);
-		
-		// Return
-		return listGroupPermission;
-	}
-	
-	// 노드 그룹과 사용자 그룹으로 특정 권한이 포함된 그룹 권한 반환
-	public List<GroupPermission> getGroupPermission(GroupRole role, List<MemberGroup> listMemberGroup, List<NodeGroup> listNodeGroup)
-	{
-		// Field
-		List<GroupPermission> listGroupPermission;
-		
-		// Init
-		listGroupPermission = groupPermissionRepo.findByGroupPermissionAndMemberGroupInAndNodeGroupIn(role, listMemberGroup, listNodeGroup);
-		
-		// Return
-		return listGroupPermission;
-	}
+class PermissionComp constructor() {
+    // Global Field
+    private val groupPermissionRepo: GroupPermissionRepo? = null
+    private val memberGroupRepo: MemberGroupRepo? = null
+    private val memberGroupItemRepo: MemberGroupItemRepo? = null
+    private val nodeGroupRepo: NodeGroupRepo? = null
+    private val nodeGroupItemRepo: NodeGroupItemRepo? = null// Field
+
+    // Init
+
+    // Return
+    // 활성화된 사용자 그룹 반환
+    val enableMemberGroup: List<MemberGroup?>?
+        get() {
+            // Field
+            val listMemberGroup: List<MemberGroup?>?
+
+            // Init
+            listMemberGroup = memberGroupRepo!!.findByEnableStatus(EnableStatusRule.ENABLE)
+
+            // Return
+            return listMemberGroup
+        }
+
+    // 사용자가 포함된 활성화된 사용자 그룹 반환
+    fun getEnableMemberGroup(member: Member?): List<MemberGroup?>? {
+        // Field
+        val listMemberGroupItem: List<MemberGroupItem?>?
+        val listMemberGroup: List<MemberGroup?>?
+
+        // Init
+        listMemberGroupItem = memberGroupItemRepo!!.findByMember(member)
+        listMemberGroup = memberGroupRepo!!.findByMemberGroupItemsInAndEnableStatus(listMemberGroupItem, EnableStatusRule.ENABLE)
+
+        // Return
+        return listMemberGroup
+    }
+
+    // 권한이 있는 사용자 그룹 반환
+    fun getPrivilegeMemberGroup(listGroupPermission: List<GroupPermission?>?): List<MemberGroup?>? {
+        // Return
+        return memberGroupRepo!!.findByGroupPermissionsIn(listGroupPermission)
+    }
+
+    // 권한이 있는 사용자 그룹 반환
+    fun getPrivilegeMemberGroup(listMemberGroup: List<MemberGroup>, listGroupPermission: List<GroupPermission?>?): List<MemberGroup?>? {
+        // Field
+        val listMemberGroupId: MutableList<Long>
+
+        // Init
+        listMemberGroupId = ArrayList()
+
+        // Load
+        for (entity: MemberGroup in listMemberGroup) listMemberGroupId.add(entity.getMemberGroupId())
+
+        // Return
+        return memberGroupRepo!!.findByMemberGroupIdInAndGroupPermissionsIn(listMemberGroupId, listGroupPermission)
+    }// Field
+
+    // Init
+
+    // Return
+    // 활성화된 노드 그룹 반환
+    val enableNodeGroup: List<NodeGroup?>?
+        get() {
+            // Field
+            val listNodeGroup: List<NodeGroup?>?
+
+            // Init
+            listNodeGroup = nodeGroupRepo!!.findByEnableStatus(EnableStatusRule.ENABLE)
+
+            // Return
+            return listNodeGroup
+        }
+
+    // 노드가 포함된 활성화된 노드 그룹 반환
+    fun getEnableNodeGroup(node: Node?): List<NodeGroup?>? {
+        // Field
+        val listNodeGroupItem: List<NodeGroupItem?>?
+        val listNodeGroup: List<NodeGroup?>?
+
+        // Init
+        listNodeGroupItem = nodeGroupItemRepo!!.findByNode(node)
+        listNodeGroup = nodeGroupRepo!!.findByNodeGroupItemsInAndEnableStatus(listNodeGroupItem, EnableStatusRule.ENABLE)
+
+        // Return
+        return listNodeGroup
+    }
+
+    // 권한이 있는 사용자 그룹 반환
+    fun getPrivilegeNodeGroup(listNodeGroup: List<NodeGroup?>?, listGroupPermission: List<GroupPermission?>?): List<NodeGroup?>? {
+        // Field
+        val listNodeGroupId: MutableList<Long>
+
+        // Init
+        listNodeGroupId = ArrayList()
+
+        // Load
+        for (entity: NodeGroup? in listNodeGroup!!) listNodeGroupId.add(entity.getNodeGroupId())
+
+        // Return
+        return nodeGroupRepo!!.findByNodeGroupIdInAndGroupPermissionsIn(listNodeGroupId, listGroupPermission)
+    }
+
+    // 사용자 그룹으로 특정 권한이 포함된 그룹 권한 반환
+    fun getMemberGroupPermission(role: GroupRole?, listMemberGroup: List<MemberGroup?>?): List<GroupPermission?>? {
+        // Field
+        val listGroupPermission: List<GroupPermission?>?
+
+        // Init
+        listGroupPermission = groupPermissionRepo!!.findByGroupPermissionAndMemberGroupIn(role, listMemberGroup)
+
+        // Return
+        return listGroupPermission
+    }
+
+    // 노드 그룹으로 특정 권한이 포함된 그룹 권한 반환
+    fun getNodeGroupPermission(role: GroupRole?, listNodeGroup: List<NodeGroup?>?): List<GroupPermission?>? {
+        // Field
+        val listGroupPermission: List<GroupPermission?>?
+
+        // Init
+        listGroupPermission = groupPermissionRepo!!.findByGroupPermissionAndNodeGroupIn(role, listNodeGroup)
+
+        // Return
+        return listGroupPermission
+    }
+
+    // 노드 그룹과 사용자 그룹으로 특정 권한이 포함된 그룹 권한 반환
+    fun getGroupPermission(role: GroupRole?, listMemberGroup: List<MemberGroup?>?, listNodeGroup: List<NodeGroup?>?): List<GroupPermission?>? {
+        // Field
+        val listGroupPermission: List<GroupPermission?>?
+
+        // Init
+        listGroupPermission = groupPermissionRepo!!.findByGroupPermissionAndMemberGroupInAndNodeGroupIn(role, listMemberGroup, listNodeGroup)
+
+        // Return
+        return listGroupPermission
+    }
 }

@@ -1,24 +1,14 @@
-package net.softbell.bsh.domain.entity;
+package net.softbell.bsh.domain.entity
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import java.io.Serializable
+import javax.persistence.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -30,58 +20,50 @@ import net.softbell.bsh.domain.EnableStatusRule;
 @Getter
 @Setter
 @Entity
-@Table(name="member_group")
-@NamedQuery(name="MemberGroup.findAll", query="SELECT m FROM MemberGroup m")
-public class MemberGroup implements Serializable
-{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="member_group_id", unique=true, nullable=false)
-	private Long memberGroupId;
+@Table(name = "member_group")
+@NamedQuery(name = "MemberGroup.findAll", query = "SELECT m FROM MemberGroup m")
+class MemberGroup : Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_group_id", unique = true, nullable = false)
+    private val memberGroupId: Long? = null
 
-	@Column(name="enable_status", nullable=false)
-	private EnableStatusRule enableStatus;
+    @Column(name = "enable_status", nullable = false)
+    private val enableStatus: EnableStatusRule? = null
 
-	@Column(nullable=false, length=50)
-	private String name;
+    @Column(nullable = false, length = 50)
+    private val name: String? = null
 
-	@OneToMany(mappedBy="memberGroup")
-	private List<GroupPermission> groupPermissions;
+    @OneToMany(mappedBy = "memberGroup")
+    private val groupPermissions: List<GroupPermission>? = null
 
-	@OneToMany(mappedBy="memberGroup")
-	private List<MemberGroupItem> memberGroupItems;
+    @OneToMany(mappedBy = "memberGroup")
+    private val memberGroupItems: List<MemberGroupItem>? = null
+    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission {
+        getGroupPermissions().add(groupPermission)
+        groupPermission.setMemberGroup(this)
+        return groupPermission
+    }
 
-	public GroupPermission addGroupPermission(GroupPermission groupPermission)
-	{
-		getGroupPermissions().add(groupPermission);
-		groupPermission.setMemberGroup(this);
+    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission {
+        getGroupPermissions().remove(groupPermission)
+        groupPermission.setMemberGroup(null)
+        return groupPermission
+    }
 
-		return groupPermission;
-	}
+    fun addMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
+        getMemberGroupItems().add(memberGroupItem)
+        memberGroupItem.setMemberGroup(this)
+        return memberGroupItem
+    }
 
-	public GroupPermission removeGroupPermission(GroupPermission groupPermission)
-	{
-		getGroupPermissions().remove(groupPermission);
-		groupPermission.setMemberGroup(null);
+    fun removeMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
+        getMemberGroupItems().remove(memberGroupItem)
+        memberGroupItem.setMemberGroup(null)
+        return memberGroupItem
+    }
 
-		return groupPermission;
-	}
-
-	public MemberGroupItem addMemberGroupItem(MemberGroupItem memberGroupItem)
-	{
-		getMemberGroupItems().add(memberGroupItem);
-		memberGroupItem.setMemberGroup(this);
-
-		return memberGroupItem;
-	}
-
-	public MemberGroupItem removeMemberGroupItem(MemberGroupItem memberGroupItem)
-	{
-		getMemberGroupItems().remove(memberGroupItem);
-		memberGroupItem.setMemberGroup(null);
-
-		return memberGroupItem;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

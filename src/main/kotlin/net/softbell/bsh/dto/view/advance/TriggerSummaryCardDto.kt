@@ -1,9 +1,9 @@
-package net.softbell.bsh.dto.view.advance;
+package net.softbell.bsh.dto.view.advance
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.entity.NodeTrigger;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.NodeTrigger
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -11,27 +11,20 @@ import net.softbell.bsh.domain.entity.NodeTrigger;
  */
 @Getter
 @Setter
-public class TriggerSummaryCardDto
-{
-	private Long triggerId;
-	private String description;
-	private boolean enableStatus;
-	private String creatorNickname;
-	
-	public TriggerSummaryCardDto(NodeTrigger entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.triggerId = entity.getTriggerId();
-		this.description = entity.getDescription();
-		
-		if (entity.getEnableStatus() == EnableStatusRule.ENABLE)
-			this.enableStatus = true;
-		else
-			this.enableStatus = false;
-		this.creatorNickname = entity.getMember().getNickname();
-	}
+class TriggerSummaryCardDto(entity: NodeTrigger?) {
+    private val triggerId: Long
+    private val description: String
+    private var enableStatus = false
+    private val creatorNickname: String
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        triggerId = entity.getTriggerId()
+        description = entity.getDescription()
+        if (entity.getEnableStatus() === EnableStatusRule.ENABLE) enableStatus = true else enableStatus = false
+        creatorNickname = entity.getMember().getNickname()
+    }
 }

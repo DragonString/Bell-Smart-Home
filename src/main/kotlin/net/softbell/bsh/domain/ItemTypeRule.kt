@@ -1,7 +1,8 @@
-package net.softbell.bsh.domain;
+package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.AllArgsConstructor
+import lombok.Getter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -14,64 +15,40 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum ItemTypeRule
-{
-	ERROR							("ERROR", -1),
-	
-	// ### USER REGION START ###
-	USER_BUTTON						("USER_BUTTON", 0),
-	USER_SWITCH						("USER_SWITCH", 1),
-	// ### USER REGION END ###
-	
-	// ### CONTROL REGION START ###
-	// ## LED CONTROL REGION START ##
-	CONTROL_INDICATOR_LED			("CONTROL_INDICATOR_LED", 1000),
-    CONTROL_LED						("CONTROL_LED", 1001),
-    CONTROL_LIGHT					("CONTROL_LIGHT", 1002),
-    // ## LED CONTROL REGION END ##
+enum class ItemTypeRule {
+    ERROR("ERROR", -1),  // ### USER REGION START ###
+    USER_BUTTON("USER_BUTTON", 0), USER_SWITCH("USER_SWITCH", 1),  // ### USER REGION END ###
+
+    // ### CONTROL REGION START ###
+    // ## LED CONTROL REGION START ##
+    CONTROL_INDICATOR_LED("CONTROL_INDICATOR_LED", 1000), CONTROL_LED("CONTROL_LED", 1001), CONTROL_LIGHT("CONTROL_LIGHT", 1002),  // ## LED CONTROL REGION END ##
 
     // ## ACTIVE CONTROL REGION START ##
-    CONTROL_DOOR					("CONTROL_DOOR", 1100),
-    CONTROL_CURTAIN					("CONTROL_CURTAIN", 1101),
-    // ## ACTIVE CONTROL REGION END ##
-    
+    CONTROL_DOOR("CONTROL_DOOR", 1100), CONTROL_CURTAIN("CONTROL_CURTAIN", 1101),  // ## ACTIVE CONTROL REGION END ##
+
     // ## SOUND CONTROL REGION START ##
-    CONTROL_ACTIVE_BUZZER			("CONTROL_ACTIVE_BUZZER", 1900),
-    CONTROL_PASSIVE_BUZZER			("CONTROL_PASSIVE_BUZZER", 1901),
-    CONTROL_SPEAKER					("CONTROL_SPEAKER", 1902),
-    // ## SOUND CONTROL REGION END ##
+    CONTROL_ACTIVE_BUZZER("CONTROL_ACTIVE_BUZZER", 1900), CONTROL_PASSIVE_BUZZER("CONTROL_PASSIVE_BUZZER", 1901), CONTROL_SPEAKER("CONTROL_SPEAKER", 1902),  // ## SOUND CONTROL REGION END ##
+
     // ### CONTROL REGION END ###
-    
     // ### SENSOR REGION START ###
     // ## MEASUREMENT SENSOR REGION START ##
-    SENSOR_HUMIDITY					("SENSOR_HUMIDITY", 2000),
-    SENSOR_TEMPERATURE				("SENSOR_TEMPERATURE", 2001),
-    SENSOR_AIR_QUALITY				("SENSOR_AIR_QUALITY", 2010),
-    SENSOR_GAS						("SENSOR_GAS", 2011),
-    SENSOR_SOUND					("SENSOR_SOUND", 2090),
-    // ## MEASUREMENT SENSOR REGION END ##
-    
-    // ## STATUS SENSOR REGION START ##
-    SENSOR_DOOR						("SENSOR_DOOR", 2100),
-    SENSOR_IR						("SENSOR_IR", 2101),
-    SENSOR_KNOCK					("SENSOR_KNOCK", 2102),
-    // ## STATUS SENSOR REGION END ##
-	// ### SENSOR REGION END ###
-	
-	// ### READER REGION START ###
-	READER_RFID						("READER_RFID", 3000),
-	READER_FINGERPRINT				("READER_FINGERPRINT", 3001);
-	// ### READER REGION END ###
+    SENSOR_HUMIDITY("SENSOR_HUMIDITY", 2000), SENSOR_TEMPERATURE("SENSOR_TEMPERATURE", 2001), SENSOR_AIR_QUALITY("SENSOR_AIR_QUALITY", 2010), SENSOR_GAS("SENSOR_GAS", 2011), SENSOR_SOUND("SENSOR_SOUND", 2090),  // ## MEASUREMENT SENSOR REGION END ##
 
-	private String value;
-    private Integer code;
-    
-    public static ItemTypeRule ofLegacyCode(Integer legacyCode)
-    {
-    	for (ItemTypeRule authStatusRule : values())
-            if (authStatusRule.getCode().equals(legacyCode))
-                return authStatusRule;
-    	
-    	return null;
+    // ## STATUS SENSOR REGION START ##
+    SENSOR_DOOR("SENSOR_DOOR", 2100), SENSOR_IR("SENSOR_IR", 2101), SENSOR_KNOCK("SENSOR_KNOCK", 2102),  // ## STATUS SENSOR REGION END ##
+
+    // ### SENSOR REGION END ###
+    // ### READER REGION START ###
+    READER_RFID("READER_RFID", 3000), READER_FINGERPRINT("READER_FINGERPRINT", 3001);
+
+    // ### READER REGION END ###
+    private val value: String? = null
+    private val code: Int? = null
+
+    companion object {
+        fun ofLegacyCode(legacyCode: Int?): ItemTypeRule? {
+            for (authStatusRule in values()) if (authStatusRule.getCode().equals(legacyCode)) return authStatusRule
+            return null
+        }
     }
 }

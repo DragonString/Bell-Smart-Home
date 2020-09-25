@@ -1,29 +1,21 @@
-package net.softbell.bsh.domain.converter;
+package net.softbell.bsh.domain.converter
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
-import net.softbell.bsh.domain.TriggerStatusRule;
+import net.softbell.bsh.domain.TriggerStatusRule
+import javax.persistence.AttributeConverter
+import javax.persistence.Converter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 인증 상태 자료형 DB 컨버터
  */
 @Converter(autoApply = true)
-public class TriggerStatusRuleConverter implements AttributeConverter<TriggerStatusRule, Integer>
-{
-	@Override
-	public Integer convertToDatabaseColumn(TriggerStatusRule triggerStatusRule)
-	{
-		if (triggerStatusRule == null)
-			return null;
-		
-		return triggerStatusRule.getCode();
-	}
+class TriggerStatusRuleConverter : AttributeConverter<TriggerStatusRule?, Int?> {
+    override fun convertToDatabaseColumn(triggerStatusRule: TriggerStatusRule?): Int? {
+        return triggerStatusRule?.getCode()
+    }
 
-	@Override
-	public TriggerStatusRule convertToEntityAttribute(Integer code)
-	{
-		return TriggerStatusRule.ofLegacyCode(code);
-	}
+    override fun convertToEntityAttribute(code: Int?): TriggerStatusRule? {
+        return TriggerStatusRule.Companion.ofLegacyCode(code)
+    }
 }

@@ -1,12 +1,11 @@
-package net.softbell.bsh.dto.view.admin.group;
+package net.softbell.bsh.dto.view.admin.group
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.GroupRole;
-import net.softbell.bsh.domain.entity.NodeGroup;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.GroupRole
+import net.softbell.bsh.domain.entity.NodeGroup
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -14,54 +13,45 @@ import net.softbell.bsh.domain.entity.NodeGroup;
  */
 @Getter
 @Setter
-public class MemberGroupPermissionCardDto
-{
-	private List<MemberGroupNode> listNodes;
-	private List<MemberGroupPermission> listPermissions;
-	
-	public MemberGroupPermissionCardDto(List<NodeGroup> entities)
-	{
-		// Exception
-		if (entities == null || entities.isEmpty())
-			return;
-		
-		// Init
-		listNodes = new ArrayList<MemberGroupNode>();
-		listPermissions = new ArrayList<MemberGroupPermission>();
-		
-		// Convert
-		for (NodeGroup entity : entities)
-			listNodes.add(new MemberGroupNode(entity));
-		for (GroupRole role : GroupRole.values())
-			listPermissions.add(new MemberGroupPermission(role));
-	}
-	
-	@Getter
-	@Setter
-	public class MemberGroupNode
-	{
-		private Long gid;
-		private String name;
-		
-		public MemberGroupNode(NodeGroup entity)
-		{
-			// Convert
-			this.gid = entity.getNodeGroupId();
-			this.name = entity.getName();
-		}
-	}
-	
-	@Getter
-	@Setter
-	public class MemberGroupPermission
-	{
-		private Integer pid;
-		private String name;
-		
-		public MemberGroupPermission(GroupRole role)
-		{
-			this.pid = role.getCode();
-			this.name = role.getValue();
-		}
-	}
+class MemberGroupPermissionCardDto(entities: List<NodeGroup?>?) {
+    private val listNodes: MutableList<MemberGroupNode>
+    private val listPermissions: MutableList<MemberGroupPermission>
+
+    @Getter
+    @Setter
+    inner class MemberGroupNode(entity: NodeGroup?) {
+        private val gid: Long
+        private val name: String
+
+        init {
+            // Convert
+            gid = entity.getNodeGroupId()
+            name = entity.getName()
+        }
+    }
+
+    @Getter
+    @Setter
+    inner class MemberGroupPermission(role: GroupRole) {
+        private val pid: Int
+        private val name: String
+
+        init {
+            pid = role.getCode()
+            name = role.getValue()
+        }
+    }
+
+    init {
+        // Exception
+        if (entities == null || entities.isEmpty()) return
+
+        // Init
+        listNodes = ArrayList()
+        listPermissions = ArrayList()
+
+        // Convert
+        for (entity in entities!!) listNodes.add(MemberGroupNode(entity))
+        for (role in GroupRole.values()) listPermissions.add(MemberGroupPermission(role))
+    }
 }

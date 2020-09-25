@@ -1,13 +1,11 @@
-package net.softbell.bsh.dto.view.advance;
+package net.softbell.bsh.dto.view.advance
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.entity.NodeItem;
-import net.softbell.bsh.domain.entity.NodeItemHistory;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.NodeItem
+import net.softbell.bsh.domain.entity.NodeItemHistory
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -15,42 +13,35 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
  */
 @Getter
 @Setter
-public class NodeItemHistoryCardDto
-{
-	private String alias;
-	private List<NodeItemHistoryCardItemDto> listItems;
-	
-	public NodeItemHistoryCardDto(NodeItem entity, List<NodeItemHistory> listNodeItemHistory)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Init
-		listItems = new ArrayList<NodeItemHistoryCardItemDto>();
-		
-		// Convert
-		this.alias = entity.getAlias();
-		for (NodeItemHistory nodeItem :  listNodeItemHistory)
-			listItems.add(new NodeItemHistoryCardItemDto(nodeItem));
-	}
-	
-	@Getter
-	@Setter
-	public class NodeItemHistoryCardItemDto
-	{
-		private Date receiveDate;
-		private Double pinStatus;
-		
-		public NodeItemHistoryCardItemDto(NodeItemHistory entity)
-		{
-			// Exception
-			if (entity == null)
-				return;
-			
-			// Convert
-			this.receiveDate = entity.getReceiveDate();
-			this.pinStatus = entity.getItemStatus();
-		}
-	}
+class NodeItemHistoryCardDto(entity: NodeItem?, listNodeItemHistory: List<NodeItemHistory?>?) {
+    private val alias: String
+    private val listItems: MutableList<NodeItemHistoryCardItemDto>
+
+    @Getter
+    @Setter
+    inner class NodeItemHistoryCardItemDto(entity: NodeItemHistory?) {
+        private val receiveDate: Date
+        private val pinStatus: Double
+
+        init {
+            // Exception
+            if (entity == null) return
+
+            // Convert
+            receiveDate = entity.getReceiveDate()
+            pinStatus = entity.getItemStatus()
+        }
+    }
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Init
+        listItems = ArrayList()
+
+        // Convert
+        alias = entity.getAlias()
+        for (nodeItem in listNodeItemHistory!!) listItems.add(NodeItemHistoryCardItemDto(nodeItem))
+    }
 }

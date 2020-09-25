@@ -1,18 +1,11 @@
-package net.softbell.bsh.filter;
+package net.softbell.bsh.filter
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-
-import lombok.AllArgsConstructor;
+import lombok.AllArgsConstructor
+import org.springframework.core.annotation.Order
+import org.springframework.stereotype.Component
+import java.io.IOException
+import javax.servlet.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -21,29 +14,19 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 @Component
 @Order(1)
-public class BaseFilter implements Filter
-{
-//	private final LocaleResolver localeResolver;
-
-	@Override
-    public void init(FilterConfig filterConfig) throws ServletException
-	{
-        
+class BaseFilter : Filter {
+    //	private final LocaleResolver localeResolver;
+    @Throws(ServletException::class)
+    override fun init(filterConfig: FilterConfig) {
     }
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-    		throws IOException, ServletException
-    {
-    	// Anything..
-    	
-    	// Next Filter
-    	filterChain.doFilter(servletRequest, servletResponse);
+    @Throws(IOException::class, ServletException::class)
+    override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
+        // Anything..
+
+        // Next Filter
+        filterChain.doFilter(servletRequest, servletResponse)
     }
 
-    @Override
-    public void destroy()
-    {
-    	
-    }
+    override fun destroy() {}
 }

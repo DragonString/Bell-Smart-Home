@@ -1,29 +1,15 @@
-package net.softbell.bsh.domain.entity;
+package net.softbell.bsh.domain.entity
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import java.io.Serializable
+import java.util.*
+import javax.persistence.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -35,34 +21,32 @@ import net.softbell.bsh.domain.EnableStatusRule;
 @Getter
 @Setter
 @Entity
-@Table(name="member_interlock_token",
-	uniqueConstraints={
-		@UniqueConstraint(columnNames={"token"})
-	})
-@NamedQuery(name="MemberInterlockToken.findAll", query="SELECT m FROM MemberInterlockToken m")
-public class MemberInterlockToken implements Serializable
-{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="member_interlock_id", unique=true, nullable=false)
-	private Long memberInterlockId;
-	
-	@Column(name="enable_status", nullable=false)
-	private EnableStatusRule enableStatus;
-	
-	@Column(name="token", nullable=false)
-	private String token;
-	
-	@Column(name="name", nullable=false)
-	private String name;
+@Table(name = "member_interlock_token", uniqueConstraints = [UniqueConstraint(columnNames = ["token"])])
+@NamedQuery(name = "MemberInterlockToken.findAll", query = "SELECT m FROM MemberInterlockToken m")
+class MemberInterlockToken : Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_interlock_id", unique = true, nullable = false)
+    private val memberInterlockId: Long? = null
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="register_date", nullable=false)
-	private Date registerDate;
+    @Column(name = "enable_status", nullable = false)
+    private val enableStatus: EnableStatusRule? = null
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="member_id", nullable=false)
-	private Member member;
+    @Column(name = "token", nullable = false)
+    private val token: String? = null
+
+    @Column(name = "name", nullable = false)
+    private val name: String? = null
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "register_date", nullable = false)
+    private val registerDate: Date? = null
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private val member: Member? = null
+
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

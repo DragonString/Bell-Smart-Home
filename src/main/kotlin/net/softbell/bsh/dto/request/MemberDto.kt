@@ -1,16 +1,16 @@
-package net.softbell.bsh.dto.request;
+package net.softbell.bsh.dto.request
 
-import java.util.Date;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import net.softbell.bsh.domain.BanRule;
-import net.softbell.bsh.domain.MemberRole;
-import net.softbell.bsh.domain.entity.Member;
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import lombok.ToString
+import net.softbell.bsh.domain.BanRule
+import net.softbell.bsh.domain.MemberRole
+import net.softbell.bsh.domain.entity.Member
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -22,33 +22,30 @@ import net.softbell.bsh.domain.entity.Member;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MemberDto
-{
-    private Long memberId;
-    private Integer ban;
-	private Date banDate;
-	private Date changePasswdDate;
-	private String email;
-	private Date lastLogin;
-	private String nickname;
-	private String password;
-	private Integer permission;
-	private Date registerDate;
-	private String userId;
-	private String username;
-
-    public Member toEntity()
-    {
-    	// Generate
-        return Member.builder()
+class MemberDto {
+    private val memberId: Long? = null
+    private val ban: Int? = null
+    private val banDate: Date? = null
+    private val changePasswdDate: Date? = null
+    private val email: String? = null
+    private val lastLogin: Date? = null
+    private val nickname: String? = null
+    private val password: String? = null
+    private val permission: Int? = null
+    private val registerDate: Date? = null
+    private val userId: String? = null
+    private val username: String? = null
+    fun toEntity(): Member {
+        // Generate
+        return builder()
                 .userId(userId)
-        		.email(email)
+                .email(email)
                 .password(password)
                 .name(username)
-        		.nickname(nickname)
-                .registerDate(new Date())
-                .ban(BanRule.ofLegacyCode(ban))
-                .permission(MemberRole.ofLegacyCode(permission))
-                .build();
+                .nickname(nickname)
+                .registerDate(Date())
+                .ban(BanRule.Companion.ofLegacyCode(ban))
+                .permission(MemberRole.Companion.ofLegacyCode(permission))
+                .build()
     }
 }

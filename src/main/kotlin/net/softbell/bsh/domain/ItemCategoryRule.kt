@@ -1,7 +1,8 @@
-package net.softbell.bsh.domain;
+package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.AllArgsConstructor
+import lombok.Getter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -10,23 +11,16 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum ItemCategoryRule
-{
-	ERROR("ERROR", -1),
-	USER("USER", 0),
-    CONTROL("CONTROL", 10),
-    SENSOR("SENSOR", 20),
-    READER("READER", 30);
+enum class ItemCategoryRule {
+    ERROR("ERROR", -1), USER("USER", 0), CONTROL("CONTROL", 10), SENSOR("SENSOR", 20), READER("READER", 30);
 
-	private String value;
-    private Integer code;
-    
-    public static ItemCategoryRule ofLegacyCode(Integer legacyCode)
-    {
-    	for (ItemCategoryRule authStatusRule : values())
-            if (authStatusRule.getCode() == legacyCode)
-                return authStatusRule;
-    	
-    	return null;
+    private val value: String? = null
+    private val code: Int? = null
+
+    companion object {
+        fun ofLegacyCode(legacyCode: Int?): ItemCategoryRule? {
+            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+            return null
+        }
     }
 }

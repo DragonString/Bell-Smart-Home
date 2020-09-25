@@ -1,31 +1,25 @@
-package net.softbell.bsh.util;
+package net.softbell.bsh.util
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 클라이언트 데이터 처리 라이브러리
  */
-public class ClientData
-{
-	public static String getClientIP(HttpServletRequest request)
-	{
-		// Field
-        String ip = request.getHeader("X-Forwarded-For");
-        
+object ClientData {
+    fun getClientIP(request: HttpServletRequest): String? {
+        // Field
+        var ip = request.getHeader("X-Forwarded-For")
+
         // Load
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-             ip = request.getHeader("Proxy-Client-IP");
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-             ip = request.getHeader("WL-Proxy-Client-IP");
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-             ip = request.getHeader("HTTP_CLIENT_IP");
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip))
-             ip = request.getRemoteAddr();
-         
-         // Return
-         return ip;
+        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("Proxy-Client-IP")
+        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("WL-Proxy-Client-IP")
+        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("HTTP_CLIENT_IP")
+        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("HTTP_X_FORWARDED_FOR")
+        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.remoteAddr
+
+        // Return
+        return ip
     }
 }

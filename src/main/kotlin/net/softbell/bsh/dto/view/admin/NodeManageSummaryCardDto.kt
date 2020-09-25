@@ -1,9 +1,10 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.entity.Node;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.entity.Node
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -11,23 +12,20 @@ import net.softbell.bsh.domain.entity.Node;
  */
 @Getter
 @Setter
-public class NodeManageSummaryCardDto
-{
-	private Long nodeId;
-	private String uid;
-	private String alias;
-	private EnableStatusRule enableStatus;
-	
-	public NodeManageSummaryCardDto(Node entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.nodeId = entity.getNodeId();
-		this.uid = entity.getUid();
-		this.alias = entity.getAlias();
-		this.enableStatus = entity.getEnableStatus();
-	}
+class NodeManageSummaryCardDto(entity: Node?) {
+    private val nodeId: Long
+    private val uid: String
+    private val alias: String
+    private val enableStatus: EnableStatusRule
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        nodeId = entity.getNodeId()
+        uid = entity.getUid()
+        alias = entity.getAlias()
+        enableStatus = entity.getEnableStatus()
+    }
 }

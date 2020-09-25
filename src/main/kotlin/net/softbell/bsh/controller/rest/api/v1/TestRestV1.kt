@@ -1,21 +1,19 @@
-package net.softbell.bsh.controller.rest.api.v1;
+package net.softbell.bsh.controller.rest.api.v1
 
-import java.util.List;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.RequiredArgsConstructor;
-import net.softbell.bsh.component.PermissionComp;
-import net.softbell.bsh.domain.GroupRole;
-import net.softbell.bsh.domain.entity.GroupPermission;
-import net.softbell.bsh.domain.entity.Member;
-import net.softbell.bsh.domain.entity.MemberGroup;
-import net.softbell.bsh.domain.entity.NodeGroup;
-import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
-import net.softbell.bsh.service.MemberService;
+import lombok.RequiredArgsConstructor
+import net.softbell.bsh.component.PermissionComp
+import net.softbell.bsh.domain.GroupRole
+import net.softbell.bsh.domain.entity.GroupPermission
+import net.softbell.bsh.domain.entity.Member
+import net.softbell.bsh.domain.entity.MemberGroup
+import net.softbell.bsh.domain.entity.NodeGroup
+import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
+import net.softbell.bsh.service.MemberService
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -24,28 +22,20 @@ import net.softbell.bsh.service.MemberService;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/rest/v1/test")
-public class TestRestV1
-{
-	// Global Field
-	private final MemberService memberService;
-	private final IotNodeServiceV1 nodeService;
-	private final PermissionComp permissionComp;
-    
+class TestRestV1 constructor() {
+    // Global Field
+    private val memberService: MemberService? = null
+    private val nodeService: IotNodeServiceV1? = null
+    private val permissionComp: PermissionComp? = null
     @GetMapping("/memberGroup")
-    public String findMemberGroup(Authentication auth)
-    {
-    	Member member = memberService.getMember(auth.getName()); // 권한 체크할 사용자 불러옴
-//    	Node node = nodeService.getNode(1);
-    	List<MemberGroup> listMemberGroup = permissionComp.getEnableMemberGroup(member); // 권한 있는 사용자 그룹 가져옴
-    	List<GroupPermission> listGroupPermission = permissionComp.getMemberGroupPermission(GroupRole.ACTION, listMemberGroup); // 액션 권한 가져옴
-    	List<NodeGroup> listNodeGroup = permissionComp.getEnableNodeGroup();
-    	
-    	List<NodeGroup> listPNG = permissionComp.getPrivilegeNodeGroup(listNodeGroup, listGroupPermission);
-    	
-    	for (NodeGroup entity : listPNG)
-    		System.out.println("권한있는 노드 그룹: " + entity.getName());
-    	
-    	return "Success";
+    fun findMemberGroup(auth: Authentication): String {
+        val member: Member? = memberService!!.getMember(auth.getName()) // 권한 체크할 사용자 불러옴
+        //    	Node node = nodeService.getNode(1);
+        val listMemberGroup: List<MemberGroup?>? = permissionComp!!.getEnableMemberGroup(member) // 권한 있는 사용자 그룹 가져옴
+        val listGroupPermission: List<GroupPermission?>? = permissionComp.getMemberGroupPermission(GroupRole.ACTION, listMemberGroup) // 액션 권한 가져옴
+        val listNodeGroup: List<NodeGroup?>? = permissionComp.getEnableNodeGroup()
+        val listPNG: List<NodeGroup?>? = permissionComp.getPrivilegeNodeGroup(listNodeGroup, listGroupPermission)
+        for (entity: NodeGroup? in listPNG!!) System.out.println("권한있는 노드 그룹: " + entity.getName())
+        return "Success"
     }
 }
-

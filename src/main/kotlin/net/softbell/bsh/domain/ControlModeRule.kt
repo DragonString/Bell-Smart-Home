@@ -1,7 +1,8 @@
-package net.softbell.bsh.domain;
+package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.AllArgsConstructor
+import lombok.Getter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -9,21 +10,16 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum ControlModeRule
-{
-	INFO_SYNC_DISABLE("INFO_SYNC_DISABLE", 				(byte)0b00000001),
-	AUTO_CONTROL_DISABLE("AUTO_CONTROL_DISABLE", 		(byte)0b00000010),
-	MANUAL_CONTROL_DISABLE("MANUAL_CONTROL_DISABLE", 	(byte)0b00000100);
+enum class ControlModeRule {
+    INFO_SYNC_DISABLE("INFO_SYNC_DISABLE", 1.toByte()), AUTO_CONTROL_DISABLE("AUTO_CONTROL_DISABLE", 2.toByte()), MANUAL_CONTROL_DISABLE("MANUAL_CONTROL_DISABLE", 4.toByte());
 
-	private String value;
-    private Byte code;
-    
-    public static ControlModeRule ofLegacyCode(Byte legacyCode)
-    {
-    	for (ControlModeRule authStatusRule : values())
-            if (authStatusRule.getCode() == legacyCode)
-                return authStatusRule;
-    	
-    	return null;
+    private val value: String? = null
+    private val code: Byte? = null
+
+    companion object {
+        fun ofLegacyCode(legacyCode: Byte?): ControlModeRule? {
+            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+            return null
+        }
     }
 }

@@ -1,73 +1,64 @@
-package net.softbell.bsh.service;
+package net.softbell.bsh.service
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import net.softbell.bsh.dto.response.ListResultDto;
-import net.softbell.bsh.dto.response.ResultDto;
-import net.softbell.bsh.dto.response.SingleResultDto;
+import lombok.AllArgsConstructor
+import lombok.Getter
+import net.softbell.bsh.dto.response.ListResultDto
+import net.softbell.bsh.dto.response.ResultDto
+import net.softbell.bsh.dto.response.SingleResultDto
+import org.springframework.stereotype.Service
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 응답 메시지 처리 서비스
  */
 @Service
-public class ResponseService
-{
-	@AllArgsConstructor
+class ResponseService {
+    @AllArgsConstructor
     @Getter
-    public enum CommonResponse
-    {
+    enum class CommonResponse {
         SUCCESS(0, "성공");
 
-        int code;
-        String msg;
+        var code = 0
+        var msg: String? = null
     }
-	
+
     // 단일건 결과를 처리하는 메소드
-    public <T> SingleResultDto<T> getSingleResult(T data)
-    {
-        SingleResultDto<T> result = new SingleResultDto<>();
-        result.setData(data);
-        setSuccessResult(result);
-        return result;
+    fun <T> getSingleResult(data: T): SingleResultDto<T> {
+        val result = SingleResultDto<T>()
+        result.setData(data)
+        successResult = result
+        return result
     }
-    
+
     // 다중건 결과를 처리하는 메소드
-    public <T> ListResultDto<T> getListResult(List<T> list)
-    {
-        ListResultDto<T> result = new ListResultDto<>();
-        result.setList(list);
-        setSuccessResult(result);
-        return result;
+    fun <T> getListResult(list: List<T>?): ListResultDto<T> {
+        val result = ListResultDto<T>()
+        result.setList(list)
+        successResult = result
+        return result
     }
-    
-    // 성공 결과만 처리하는 메소드
-    public ResultDto getSuccessResult()
-    {
-    	ResultDto result = new ResultDto();
-        setSuccessResult(result);
-        return result;
-    }
-    
-    // 실패 결과만 처리하는 메소드
-    public ResultDto getFailResult(int code, String msg)
-    {
-    	ResultDto result = new ResultDto();
-        result.setSuccess(false);
-        result.setCode(code);
-        result.setMessage(msg);
-        return result;
-    }
-    
+
     // 결과 모델에 api 요청 성공 데이터를 세팅해주는 메소드
-    private void setSuccessResult(ResultDto result)
-    {
-        result.setSuccess(true);
-        result.setCode(CommonResponse.SUCCESS.getCode());
-        result.setMessage(CommonResponse.SUCCESS.getMsg());
+    // 성공 결과만 처리하는 메소드
+    var successResult: ResultDto
+        get() {
+            val result = ResultDto()
+            successResult = result
+            return result
+        }
+        private set(result) {
+            result.setSuccess(true)
+            result.setCode(CommonResponse.SUCCESS.getCode())
+            result.setMessage(CommonResponse.SUCCESS.getMsg())
+        }
+
+    // 실패 결과만 처리하는 메소드
+    fun getFailResult(code: Int, msg: String?): ResultDto {
+        val result = ResultDto()
+        result.setSuccess(false)
+        result.setCode(code)
+        result.setMessage(msg)
+        return result
     }
 }

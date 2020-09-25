@@ -1,29 +1,21 @@
-package net.softbell.bsh.domain.converter;
+package net.softbell.bsh.domain.converter
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
-import net.softbell.bsh.domain.BanRule;
+import net.softbell.bsh.domain.BanRule
+import javax.persistence.AttributeConverter
+import javax.persistence.Converter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 차단 타입 자료형 DB 컨버터
  */
 @Converter(autoApply = true)
-public class BanRuleConverter implements AttributeConverter<BanRule, Integer>
-{
-	@Override
-	public Integer convertToDatabaseColumn(BanRule banRule)
-	{
-		if (banRule == null)
-			return null;
-		
-		return banRule.getCode();
-	}
+class BanRuleConverter : AttributeConverter<BanRule?, Int?> {
+    override fun convertToDatabaseColumn(banRule: BanRule?): Int? {
+        return banRule?.getCode()
+    }
 
-	@Override
-	public BanRule convertToEntityAttribute(Integer code)
-	{
-		return BanRule.ofLegacyCode(code);
-	}
+    override fun convertToEntityAttribute(code: Int?): BanRule? {
+        return BanRule.Companion.ofLegacyCode(code)
+    }
 }

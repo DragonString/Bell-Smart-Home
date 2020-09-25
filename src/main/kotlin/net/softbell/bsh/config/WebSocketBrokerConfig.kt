@@ -1,10 +1,11 @@
-package net.softbell.bsh.config;
+package net.softbell.bsh.config
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.context.annotation.Configuration
+import org.springframework.messaging.simp.config.MessageBrokerRegistry
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -12,24 +13,19 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
  */
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer
-{
-	@Override
-	public void configureMessageBroker(MessageBrokerRegistry registry)
-	{
-		registry.enableSimpleBroker("/api/stomp/topic", "/api/stomp/queue", "/api/stomp/pub");
-		registry.setApplicationDestinationPrefixes("/api/stomp/topic", "/api/stomp/queue", "/api/stomp/pub");
-		//registry.setUserDestinationPrefix("");
+class WebSocketBrokerConfig : WebSocketMessageBrokerConfigurer {
+    override fun configureMessageBroker(registry: MessageBrokerRegistry) {
+        registry.enableSimpleBroker("/api/stomp/topic", "/api/stomp/queue", "/api/stomp/pub")
+        registry.setApplicationDestinationPrefixes("/api/stomp/topic", "/api/stomp/queue", "/api/stomp/pub")
+        //registry.setUserDestinationPrefix("");
 //		registry.setApplicationDestinationPrefixes("/");
-	}
-	
-	@Override
-	public void registerStompEndpoints(StompEndpointRegistry registry)
-	{
-		registry.addEndpoint("/ws")
-				.setAllowedOrigins("*")
-				.withSockJS();
-				/*.setHandshakeHandler(new DefaultHandshakeHandler() {
+    }
+
+    override fun registerStompEndpoints(registry: StompEndpointRegistry) {
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("*")
+                .withSockJS()
+        /*.setHandshakeHandler(new DefaultHandshakeHandler() {
 					 
 				      public boolean beforeHandshake(
 				        ServerHttpRequest request, 
@@ -46,5 +42,5 @@ public class WebSocketBrokerConfig implements WebSocketMessageBrokerConfigurer
 				            }
 				                return true;
 				        }});*/
-	}
+    }
 }

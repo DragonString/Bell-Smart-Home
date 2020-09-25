@@ -1,20 +1,12 @@
-package net.softbell.bsh.filter;
+package net.softbell.bsh.filter
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
-import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
-
-import lombok.RequiredArgsConstructor;
-import net.softbell.bsh.service.CenterService;
-
+import lombok.RequiredArgsConstructor
+import net.softbell.bsh.service.CenterService
+import org.springframework.core.annotation.Order
+import org.springframework.stereotype.Component
+import java.io.IOException
+import javax.servlet.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -23,30 +15,20 @@ import net.softbell.bsh.service.CenterService;
 @RequiredArgsConstructor
 @Component
 @Order(1)
-public class CenterFilter implements Filter
-{
-	private final CenterService centerService;
-
-	@Override
-    public void init(FilterConfig filterConfig) throws ServletException
-	{
-        
+class CenterFilter : Filter {
+    private val centerService: CenterService? = null
+    @Throws(ServletException::class)
+    override fun init(filterConfig: FilterConfig) {
     }
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-    		throws IOException, ServletException
-    {
-    	// Anything..
-    	servletRequest.setAttribute("setting", centerService.getSetting());
-    	
-    	// Next Filter
-    	filterChain.doFilter(servletRequest, servletResponse);
+    @Throws(IOException::class, ServletException::class)
+    override fun doFilter(servletRequest: ServletRequest, servletResponse: ServletResponse, filterChain: FilterChain) {
+        // Anything..
+        servletRequest.setAttribute("setting", centerService.getSetting())
+
+        // Next Filter
+        filterChain.doFilter(servletRequest, servletResponse)
     }
 
-    @Override
-    public void destroy()
-    {
-    	
-    }
+    override fun destroy() {}
 }

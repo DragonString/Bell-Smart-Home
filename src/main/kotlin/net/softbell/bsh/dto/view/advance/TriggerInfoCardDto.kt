@@ -1,9 +1,9 @@
-package net.softbell.bsh.dto.view.advance;
+package net.softbell.bsh.dto.view.advance
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.entity.NodeTrigger;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.NodeTrigger
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -11,24 +11,20 @@ import net.softbell.bsh.domain.entity.NodeTrigger;
  */
 @Getter
 @Setter
-public class TriggerInfoCardDto
-{
-	private Long triggerId;
-	private boolean enableStatus;
-	private String description;
-	private String expression;
-	
-	public TriggerInfoCardDto(NodeTrigger entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.triggerId = entity.getTriggerId();
-		this.description = entity.getDescription();
-		this.expression = entity.getExpression();
-		if (entity.getEnableStatus() == EnableStatusRule.ENABLE)
-			enableStatus = true;
-	}
+class TriggerInfoCardDto(entity: NodeTrigger?) {
+    private val triggerId: Long
+    private var enableStatus = false
+    private val description: String
+    private val expression: String
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        triggerId = entity.getTriggerId()
+        description = entity.getDescription()
+        expression = entity.getExpression()
+        if (entity.getEnableStatus() === EnableStatusRule.ENABLE) enableStatus = true
+    }
 }

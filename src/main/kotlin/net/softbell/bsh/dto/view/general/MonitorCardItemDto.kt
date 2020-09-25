@@ -1,9 +1,10 @@
-package net.softbell.bsh.dto.view.general;
+package net.softbell.bsh.dto.view.general
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.entity.NodeItem;
-import net.softbell.bsh.domain.entity.NodeItemHistory;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.NodeItem
+import net.softbell.bsh.domain.entity.NodeItemHistory
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -11,62 +12,35 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
  */
 @Getter
 @Setter
-public class MonitorCardItemDto
-{
-	private String alias;
-	private Double lastStatus;
-	private Integer widthPercent;
-	private Boolean isDigital;
-	
-	public MonitorCardItemDto(NodeItem entity, NodeItemHistory lastHistory)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.alias = entity.getAlias();
-		this.lastStatus = lastHistory.getItemStatus();
-		switch (entity.getItemMode())
-		{
-			case DIGITAL:
-				isDigital = true;
-				if (this.lastStatus == 0)
-					this.widthPercent = 0;
-				else
-					this.widthPercent = 100;
-				
-				break;
-				
-			case ANALOG:
-				isDigital = false;
-				switch (entity.getItemType())
-				{
-					case SENSOR_HUMIDITY:
-						this.widthPercent = this.lastStatus.intValue(); // 습도는 0~100%
-						break;
-						
-					case SENSOR_TEMPERATURE:
-						this.widthPercent = (int) (this.lastStatus + 20); // 온도는 -20~40
-						break;
-						
-					case READER_RFID:
-						if (this.lastStatus != 0)
-							this.widthPercent = 100; // RFID는 탐지 여부로 판정
-						else
-							this.widthPercent = 0;
-						break;
-						
-					default:
-						this.widthPercent = (int) (this.lastStatus / 10);
-				}
-					
-				break;
-				
-			default:
-				this.widthPercent = 0;
-				
-				break;
-		}
-	}
+class MonitorCardItemDto(entity: NodeItem?, lastHistory: NodeItemHistory?) {
+    private val alias: String
+    private val lastStatus: Double
+    private var widthPercent: Int? = null
+    private var isDigital: Boolean? = null
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        alias = entity.getAlias()
+        lastStatus = lastHistory.getItemStatus()
+        when (entity.getItemMode()) {
+            DIGITAL -> {
+                isDigital = true
+                if (lastStatus == 0.0) widthPercent = 0 else widthPercent = 100
+            }
+            ANALOG -> {
+                isDigital = false
+                when (entity.getItemType()) {
+                    SENSOR_HUMIDITY -> widthPercent = lastStatus.toInt() // 습도는 0~100%
+                    SENSOR_TEMPERATURE -> widthPercent = (lastStatus + 20).toInt() // 온도는 -20~40
+                    READER_RFID -> if (lastStatus != 0.0) widthPercent = 100 // RFID는 탐지 여부로 판정
+                    else widthPercent = 0
+                    else -> widthPercent = (lastStatus / 10).toInt()
+                }
+            }
+            else -> widthPercent = 0
+        }
+    }
 }

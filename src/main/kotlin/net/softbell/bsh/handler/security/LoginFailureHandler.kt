@@ -1,55 +1,37 @@
-package net.softbell.bsh.handler.security;
+package net.softbell.bsh.handler.security
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
-import net.softbell.bsh.service.MemberService;
-import net.softbell.bsh.util.ClientData;
+import net.softbell.bsh.service.MemberService
+import net.softbell.bsh.util.ClientData
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.AuthenticationException
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
+import java.io.IOException
+import javax.servlet.ServletException
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 로그인 실패 핸들러
  */
-public class LoginFailureHandler implements AuthenticationFailureHandler
-{
-	@Autowired
-	private MemberService memberService;
-	
-	private String defaultUrl;
+class LoginFailureHandler(defaultUrl: String?) : AuthenticationFailureHandler {
+    @Autowired
+    private val memberService: MemberService? = null
+    var defaultUrl: String? = null
+    @Throws(IOException::class, ServletException::class)
+    override fun onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException) {
+        // Field
+        val strUserId = request.getParameter("userId")
 
-	public LoginFailureHandler(String defaultUrl)
-	{
-		setDefaultUrl(defaultUrl);
-	}
-	
-	@Override
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
-					throws IOException, ServletException
-	{
-		// Field
-		String strUserId = request.getParameter("userId");
-		
-		// Process
-		memberService.procLogin(strUserId, ClientData.getClientIP(request), false);
-		
-		// Redirect
-		response.sendRedirect(getDefaultUrl());
-	}
-	
-	public String getDefaultUrl()
-	{
-		return defaultUrl;
-	}
+        // Process
+        memberService!!.procLogin(strUserId, ClientData.getClientIP(request), false)
 
-	public void setDefaultUrl(String defaultUrl)
-	{
-		this.defaultUrl = defaultUrl;
-	}
+        // Redirect
+        response.sendRedirect(defaultUrl)
+    }
+
+    init {
+        defaultUrl = defaultUrl
+    }
 }

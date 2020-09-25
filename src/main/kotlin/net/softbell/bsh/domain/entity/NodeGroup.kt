@@ -1,24 +1,14 @@
-package net.softbell.bsh.domain.entity;
+package net.softbell.bsh.domain.entity
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import java.io.Serializable
+import javax.persistence.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -30,58 +20,50 @@ import net.softbell.bsh.domain.EnableStatusRule;
 @Getter
 @Setter
 @Entity
-@Table(name="node_group")
-@NamedQuery(name="NodeGroup.findAll", query="SELECT n FROM NodeGroup n")
-public class NodeGroup implements Serializable
-{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="node_group_id", unique=true, nullable=false)
-	private Long nodeGroupId;
+@Table(name = "node_group")
+@NamedQuery(name = "NodeGroup.findAll", query = "SELECT n FROM NodeGroup n")
+class NodeGroup : Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "node_group_id", unique = true, nullable = false)
+    private val nodeGroupId: Long? = null
 
-	@Column(name="enable_status", nullable=false)
-	private EnableStatusRule enableStatus;
+    @Column(name = "enable_status", nullable = false)
+    private val enableStatus: EnableStatusRule? = null
 
-	@Column(nullable=false, length=50)
-	private String name;
+    @Column(nullable = false, length = 50)
+    private val name: String? = null
 
-	@OneToMany(mappedBy="nodeGroup")
-	private List<GroupPermission> groupPermissions;
+    @OneToMany(mappedBy = "nodeGroup")
+    private val groupPermissions: List<GroupPermission>? = null
 
-	@OneToMany(mappedBy="nodeGroup")
-	private List<NodeGroupItem> nodeGroupItems;
+    @OneToMany(mappedBy = "nodeGroup")
+    private val nodeGroupItems: List<NodeGroupItem>? = null
+    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission {
+        getGroupPermissions().add(groupPermission)
+        groupPermission.setNodeGroup(this)
+        return groupPermission
+    }
 
-	public GroupPermission addGroupPermission(GroupPermission groupPermission)
-	{
-		getGroupPermissions().add(groupPermission);
-		groupPermission.setNodeGroup(this);
+    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission {
+        getGroupPermissions().remove(groupPermission)
+        groupPermission.setNodeGroup(null)
+        return groupPermission
+    }
 
-		return groupPermission;
-	}
+    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
+        getNodeGroupItems().add(nodeGroupItem)
+        nodeGroupItem.setNodeGroup(this)
+        return nodeGroupItem
+    }
 
-	public GroupPermission removeGroupPermission(GroupPermission groupPermission)
-	{
-		getGroupPermissions().remove(groupPermission);
-		groupPermission.setNodeGroup(null);
+    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
+        getNodeGroupItems().remove(nodeGroupItem)
+        nodeGroupItem.setNodeGroup(null)
+        return nodeGroupItem
+    }
 
-		return groupPermission;
-	}
-
-	public NodeGroupItem addNodeGroupItem(NodeGroupItem nodeGroupItem)
-	{
-		getNodeGroupItems().add(nodeGroupItem);
-		nodeGroupItem.setNodeGroup(this);
-
-		return nodeGroupItem;
-	}
-
-	public NodeGroupItem removeNodeGroupItem(NodeGroupItem nodeGroupItem)
-	{
-		getNodeGroupItems().remove(nodeGroupItem);
-		nodeGroupItem.setNodeGroup(null);
-
-		return nodeGroupItem;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

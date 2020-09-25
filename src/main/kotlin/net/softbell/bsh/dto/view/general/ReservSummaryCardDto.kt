@@ -1,9 +1,9 @@
-package net.softbell.bsh.dto.view.general;
+package net.softbell.bsh.dto.view.general
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.entity.NodeReserv;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.NodeReserv
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -11,28 +11,20 @@ import net.softbell.bsh.domain.entity.NodeReserv;
  */
 @Getter
 @Setter
-public class ReservSummaryCardDto
-{
-	private Long reservId;
-	private String description;
-	private boolean enableStatus;
-	private String creatorNickname;
-	
-	public ReservSummaryCardDto(NodeReserv entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.reservId = entity.getReservId();
-		this.description = entity.getDescription();
-		
-		if (entity.getEnableStatus() == EnableStatusRule.ENABLE)
-			this.enableStatus = true;
-		else
-			this.enableStatus = false;
-		
-		this.creatorNickname = entity.getMember().getNickname();
-	}
+class ReservSummaryCardDto(entity: NodeReserv?) {
+    private val reservId: Long
+    private val description: String
+    private var enableStatus = false
+    private val creatorNickname: String
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        reservId = entity.getReservId()
+        description = entity.getDescription()
+        if (entity.getEnableStatus() === EnableStatusRule.ENABLE) enableStatus = true else enableStatus = false
+        creatorNickname = entity.getMember().getNickname()
+    }
 }

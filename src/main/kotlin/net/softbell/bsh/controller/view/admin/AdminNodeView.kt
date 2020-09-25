@@ -1,26 +1,21 @@
-package net.softbell.bsh.controller.view.admin;
+package net.softbell.bsh.controller.view.admin
 
-import java.security.Principal;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.entity.Member;
-import net.softbell.bsh.domain.entity.Node;
-import net.softbell.bsh.dto.view.admin.NodeManageInfoCardDto;
-import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
-import net.softbell.bsh.service.CenterService;
-import net.softbell.bsh.service.MemberService;
-import net.softbell.bsh.service.ViewDtoConverterService;
-import net.softbell.bsh.util.BellLog;
+import lombok.AllArgsConstructor
+import lombok.extern.slf4j.Slf4j
+import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.entity.Member
+import net.softbell.bsh.domain.entity.Node
+import net.softbell.bsh.dto.view.admin.NodeManageInfoCardDto
+import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
+import net.softbell.bsh.service.CenterService
+import net.softbell.bsh.service.MemberService
+import net.softbell.bsh.service.ViewDtoConverterService
+import net.softbell.bsh.util.BellLog
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.*
+import java.security.Principal
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -30,168 +25,133 @@ import net.softbell.bsh.util.BellLog;
 @AllArgsConstructor
 @Controller
 @RequestMapping("/admin/node/")
-public class AdminNodeView
-{
-	// Global Field
-	private final String G_BASE_PATH = "services/admin";
-	private final String G_BASE_REDIRECT_URL = "redirect:/admin/node";
-	private final String G_LOGOUT_REDIRECT_URL = "redirect:/logout";
-	private final String G_INDEX_REDIRECT_URL = "redirect:/";
-	
-	private final ViewDtoConverterService viewDtoConverterService;
-	private final MemberService memberService;
-	private final IotNodeServiceV1 iotNodeService;
-	private final CenterService centerService;
-    
+class AdminNodeView constructor() {
+    // Global Field
+    private val G_BASE_PATH: String = "services/admin"
+    private val G_BASE_REDIRECT_URL: String = "redirect:/admin/node"
+    private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
+    private val G_INDEX_REDIRECT_URL: String = "redirect:/"
+    private val viewDtoConverterService: ViewDtoConverterService? = null
+    private val memberService: MemberService? = null
+    private val iotNodeService: IotNodeServiceV1? = null
+    private val centerService: CenterService? = null
+
     // 노드 정보 수정페이지 출력
     @GetMapping("modify/{id}")
-    public String dispNodeModify(Model model, Principal principal, @PathVariable("id") long nodeId)
-    {
-		// Exception
-		if (centerService.getSetting().getIotNode() != 1)
-			return G_INDEX_REDIRECT_URL;
-		
-    	// Field
-    	Member member = memberService.getAdminMember(principal.getName());
-		Node node;
-		
-		// Init
-		node = iotNodeService.getNode(nodeId);
-    	
-    	// Exception
-    	if (member == null)
-    		return G_LOGOUT_REDIRECT_URL;
-    	
-    	// Process
-		model.addAttribute("cardNodeInfo", new NodeManageInfoCardDto(node));
-		model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeManageItemCards(node.getNodeItems()));
-		
-		// Return
-        return G_BASE_PATH + "/NodeModify";
+    fun dispNodeModify(model: Model, principal: Principal, @PathVariable("id") nodeId: Long): String {
+        // Exception
+        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+
+        // Field
+        val member: Member? = memberService!!.getAdminMember(principal.getName())
+        val node: Node?
+
+        // Init
+        node = iotNodeService!!.getNode(nodeId)
+
+        // Exception
+        if (member == null) return G_LOGOUT_REDIRECT_URL
+
+        // Process
+        model.addAttribute("cardNodeInfo", NodeManageInfoCardDto(node))
+        model.addAttribute("listCardNodeItems", viewDtoConverterService!!.convNodeManageItemCards(node.getNodeItems()))
+
+        // Return
+        return G_BASE_PATH + "/NodeModify"
     }
-	
-	// 노드 비활성화 처리
+
+    // 노드 비활성화 처리
     @PostMapping("disable")
-    public String procNodeDisable(Model model, Principal principal,
-    		@RequestParam("intNodeId") int intNodeId)
-    {
-		// Exception
-		if (centerService.getSetting().getIotNode() != 1)
-			return G_INDEX_REDIRECT_URL;
-		
-    	// Field
-    	Member member = memberService.getAdminMember(principal.getName());
-    	
-    	// Exception
-    	if (member == null)
-    		return G_LOGOUT_REDIRECT_URL;
-    	
-    	// Log
-    	log.info(BellLog.getLogHead() + intNodeId + " 노드 비활성화 ");
-    	
-    	// Process
-    	if (iotNodeService.setNodeEnableStatus(intNodeId, EnableStatusRule.DISABLE))
-        	return G_BASE_REDIRECT_URL;
-    	else
-    		return G_BASE_REDIRECT_URL + "?error";
+    fun procNodeDisable(model: Model?, principal: Principal,
+                        @RequestParam("intNodeId") intNodeId: Int): String {
+        // Exception
+        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+
+        // Field
+        val member: Member? = memberService!!.getAdminMember(principal.getName())
+
+        // Exception
+        if (member == null) return G_LOGOUT_REDIRECT_URL
+
+        // Log
+        log.info(BellLog.getLogHead() + intNodeId + " 노드 비활성화 ")
+
+        // Process
+        if (iotNodeService!!.setNodeEnableStatus(intNodeId.toLong(), EnableStatusRule.DISABLE)) return G_BASE_REDIRECT_URL else return G_BASE_REDIRECT_URL + "?error"
     }
-    
-	// 노드 활성화 처리
+
+    // 노드 활성화 처리
     @PostMapping("enable")
-    public String procNodeEnable(Model model, Principal principal,
-    		@RequestParam("intNodeId") int intNodeId)
-    {
-		// Exception
-		if (centerService.getSetting().getIotNode() != 1)
-			return G_INDEX_REDIRECT_URL;
-		
-    	// Field
-    	Member member = memberService.getAdminMember(principal.getName());
-    	
-    	// Exception
-    	if (member == null)
-    		return G_LOGOUT_REDIRECT_URL;
-    	
-    	// Log
-    	log.info(BellLog.getLogHead() + intNodeId + " 노드 활성화 ");
-    	
-    	// Process
-    	if (iotNodeService.setNodeEnableStatus(intNodeId, EnableStatusRule.ENABLE))
-        	return G_BASE_REDIRECT_URL;
-    	else
-    		return G_BASE_REDIRECT_URL + "?error";
+    fun procNodeEnable(model: Model?, principal: Principal,
+                       @RequestParam("intNodeId") intNodeId: Int): String {
+        // Exception
+        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+
+        // Field
+        val member: Member? = memberService!!.getAdminMember(principal.getName())
+
+        // Exception
+        if (member == null) return G_LOGOUT_REDIRECT_URL
+
+        // Log
+        log.info(BellLog.getLogHead() + intNodeId + " 노드 활성화 ")
+
+        // Process
+        if (iotNodeService!!.setNodeEnableStatus(intNodeId.toLong(), EnableStatusRule.ENABLE)) return G_BASE_REDIRECT_URL else return G_BASE_REDIRECT_URL + "?error"
     }
-    
+
     // 노드 제한 처리
     @PostMapping("reject")
-    public String procNodeReject(Model model, Principal principal,
-    		@RequestParam("intNodeId") int intNodeId)
-    {
-		// Exception
-		if (centerService.getSetting().getIotNode() != 1)
-			return G_INDEX_REDIRECT_URL;
-		
-    	// Field
-    	Member member = memberService.getAdminMember(principal.getName());
-    	
-    	// Exception
-    	if (member == null)
-    		return G_LOGOUT_REDIRECT_URL;
-    	
-    	// Log
-    	log.info(BellLog.getLogHead() + intNodeId + " 노드 승인 거절 ");
-    	
-    	// Process
-    	if (iotNodeService.setNodeEnableStatus(intNodeId, EnableStatusRule.REJECT))
-        	return G_BASE_REDIRECT_URL;
-    	else
-    		return G_BASE_REDIRECT_URL + "?error";
+    fun procNodeReject(model: Model?, principal: Principal,
+                       @RequestParam("intNodeId") intNodeId: Int): String {
+        // Exception
+        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+
+        // Field
+        val member: Member? = memberService!!.getAdminMember(principal.getName())
+
+        // Exception
+        if (member == null) return G_LOGOUT_REDIRECT_URL
+
+        // Log
+        log.info(BellLog.getLogHead() + intNodeId + " 노드 승인 거절 ")
+
+        // Process
+        if (iotNodeService!!.setNodeEnableStatus(intNodeId.toLong(), EnableStatusRule.REJECT)) return G_BASE_REDIRECT_URL else return G_BASE_REDIRECT_URL + "?error"
     }
-    
+
     // 노드 정보 수정 프로세스 수행
     @PostMapping("modify/{id}")
-    public String procNodeModify(Model model, Principal principal, @PathVariable("id") long nodeId,
-    							@RequestParam("alias") String alias)
-    {
-		// Exception
-		if (centerService.getSetting().getIotNode() != 1)
-			return G_INDEX_REDIRECT_URL;
-		
-    	// Field
-    	Member member = memberService.getAdminMember(principal.getName());
-    	
-    	// Exception
-    	if (member == null)
-    		return G_LOGOUT_REDIRECT_URL;
-    	
-    	// Process
-    	if (iotNodeService.setNodeAlias(nodeId, alias))
-    		return G_BASE_REDIRECT_URL + "/modify/" + nodeId;
-    	else
-    		return G_BASE_REDIRECT_URL + "/modify/" + nodeId + "?error";
+    fun procNodeModify(model: Model?, principal: Principal, @PathVariable("id") nodeId: Long,
+                       @RequestParam("alias") alias: String?): String {
+        // Exception
+        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+
+        // Field
+        val member: Member? = memberService!!.getAdminMember(principal.getName())
+
+        // Exception
+        if (member == null) return G_LOGOUT_REDIRECT_URL
+
+        // Process
+        if (iotNodeService!!.setNodeAlias(nodeId, alias)) return G_BASE_REDIRECT_URL + "/modify/" + nodeId else return G_BASE_REDIRECT_URL + "/modify/" + nodeId + "?error"
     }
-    
+
     // 노드 정보 수정 프로세스 수행
     @PostMapping("modify/item/{id}")
-    public String procNodeItemModify(Model model, Principal principal, @PathVariable("id") long nodeItemId,
-    							@RequestParam("id") long nodeId,
-    							@RequestParam("alias") String alias)
-    {
-		// Exception
-		if (centerService.getSetting().getIotNode() != 1)
-			return G_INDEX_REDIRECT_URL;
-		
-    	// Field
-    	Member member = memberService.getAdminMember(principal.getName());
-    	
-    	// Exception
-    	if (member == null)
-    		return G_LOGOUT_REDIRECT_URL;
-    	
-    	// Process
-    	if (iotNodeService.setNodeItemAlias(nodeItemId, alias))
-    		return G_BASE_REDIRECT_URL + "/modify/" + nodeId;
-    	else
-    		return G_BASE_REDIRECT_URL + "/modify/" + nodeId + "?error";
+    fun procNodeItemModify(model: Model?, principal: Principal, @PathVariable("id") nodeItemId: Long,
+                           @RequestParam("id") nodeId: Long,
+                           @RequestParam("alias") alias: String?): String {
+        // Exception
+        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+
+        // Field
+        val member: Member? = memberService!!.getAdminMember(principal.getName())
+
+        // Exception
+        if (member == null) return G_LOGOUT_REDIRECT_URL
+
+        // Process
+        if (iotNodeService!!.setNodeItemAlias(nodeItemId, alias)) return G_BASE_REDIRECT_URL + "/modify/" + nodeId else return G_BASE_REDIRECT_URL + "/modify/" + nodeId + "?error"
     }
 }

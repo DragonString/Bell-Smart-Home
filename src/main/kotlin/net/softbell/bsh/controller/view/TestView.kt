@@ -1,10 +1,11 @@
-package net.softbell.bsh.controller.view;
+package net.softbell.bsh.controller.view
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -12,21 +13,17 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 @Controller
 @RequestMapping("/test/")
-public class TestView
-{
-	// Global Field
-	
-	@GetMapping("blank")
-	public String dispPage(Model model, @RequestParam(value = "value", required = false, defaultValue = "방울 소프트 네트워크 최고다!!")String value)
-	{
-		model.addAttribute("headInfo", value);
-		return "test/sbadmin/blank";
-	}
-	
-	@GetMapping("node")
-	public String dispNodeInfo(Model model)
-	{
+class TestView constructor() {
+    // Global Field
+    @GetMapping("blank")
+    fun dispPage(model: Model, @RequestParam(value = "value", required = false, defaultValue = "방울 소프트 네트워크 최고다!!") value: String?): String {
+        model.addAttribute("headInfo", value)
+        return "test/sbadmin/blank"
+    }
+
+    @GetMapping("node")
+    fun dispNodeInfo(model: Model?): String {
 //		model.addAttribute("headInfo", value);
-		return "test/sbadmin/NodeList";
-	}
+        return "test/sbadmin/NodeList"
+    }
 }

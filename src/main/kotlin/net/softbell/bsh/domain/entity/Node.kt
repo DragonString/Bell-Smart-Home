@@ -1,27 +1,15 @@
-package net.softbell.bsh.domain.entity;
+package net.softbell.bsh.domain.entity
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import java.io.Serializable
+import java.util.*
+import javax.persistence.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -33,100 +21,88 @@ import net.softbell.bsh.domain.EnableStatusRule;
 @Getter
 @Setter
 @Entity
-@Table(name="node")
-@NamedQuery(name="Node.findAll", query="SELECT n FROM Node n")
-public class Node implements Serializable
-{
-	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="node_id", unique=true, nullable=false)
-	private Long nodeId;
+@Table(name = "node")
+@NamedQuery(name = "Node.findAll", query = "SELECT n FROM Node n")
+class Node : Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "node_id", unique = true, nullable = false)
+    private val nodeId: Long? = null
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="approval_date")
-	private Date approvalDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "approval_date")
+    private val approvalDate: Date? = null
 
-	@Column(name="control_mode", nullable=false)
-	private Byte controlMode;
+    @Column(name = "control_mode", nullable = false)
+    private val controlMode: Byte? = null
 
-	@Column(name="enable_status", nullable=false)
-	private EnableStatusRule enableStatus;
-	
-	@Column(name="version", nullable=false)
-	private String version;
+    @Column(name = "enable_status", nullable = false)
+    private val enableStatus: EnableStatusRule? = null
 
-	@Column(name="node_name", nullable=false, length=50)
-	private String nodeName;
-	
-	@Column(name="alias", nullable=false, length=50)
-	private String alias;
+    @Column(name = "version", nullable = false)
+    private val version: String? = null
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="register_date", nullable=false)
-	private Date registerDate;
+    @Column(name = "node_name", nullable = false, length = 50)
+    private val nodeName: String? = null
 
-	@Column(length=64)
-	private String token;
+    @Column(name = "alias", nullable = false, length = 50)
+    private val alias: String? = null
 
-	@Column(nullable=false, length=50)
-	private String uid;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "register_date", nullable = false)
+    private val registerDate: Date? = null
 
-	@OneToMany(mappedBy="node")
-	private List<NodeConnectionLog> nodeConnectionLogs;
+    @Column(length = 64)
+    private val token: String? = null
 
-	@OneToMany(mappedBy="node")
-	private List<NodeGroupItem> nodeGroupItems;
+    @Column(nullable = false, length = 50)
+    private val uid: String? = null
 
-	@OneToMany(mappedBy="node")
-	private List<NodeItem> nodeItems;
+    @OneToMany(mappedBy = "node")
+    private val nodeConnectionLogs: List<NodeConnectionLog>? = null
 
-	public NodeConnectionLog addNodeConnectionLog(NodeConnectionLog nodeConnectionLog)
-	{
-		getNodeConnectionLogs().add(nodeConnectionLog);
-		nodeConnectionLog.setNode(this);
+    @OneToMany(mappedBy = "node")
+    private val nodeGroupItems: List<NodeGroupItem>? = null
 
-		return nodeConnectionLog;
-	}
+    @OneToMany(mappedBy = "node")
+    private val nodeItems: List<NodeItem>? = null
+    fun addNodeConnectionLog(nodeConnectionLog: NodeConnectionLog): NodeConnectionLog {
+        getNodeConnectionLogs().add(nodeConnectionLog)
+        nodeConnectionLog.setNode(this)
+        return nodeConnectionLog
+    }
 
-	public NodeConnectionLog removeNodeConnectionLog(NodeConnectionLog nodeConnectionLog)
-	{
-		getNodeConnectionLogs().remove(nodeConnectionLog);
-		nodeConnectionLog.setNode(null);
+    fun removeNodeConnectionLog(nodeConnectionLog: NodeConnectionLog): NodeConnectionLog {
+        getNodeConnectionLogs().remove(nodeConnectionLog)
+        nodeConnectionLog.setNode(null)
+        return nodeConnectionLog
+    }
 
-		return nodeConnectionLog;
-	}
+    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
+        getNodeGroupItems().add(nodeGroupItem)
+        nodeGroupItem.setNode(this)
+        return nodeGroupItem
+    }
 
-	public NodeGroupItem addNodeGroupItem(NodeGroupItem nodeGroupItem)
-	{
-		getNodeGroupItems().add(nodeGroupItem);
-		nodeGroupItem.setNode(this);
+    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
+        getNodeGroupItems().remove(nodeGroupItem)
+        nodeGroupItem.setNode(null)
+        return nodeGroupItem
+    }
 
-		return nodeGroupItem;
-	}
+    fun addNodeItem(nodeItem: NodeItem): NodeItem {
+        getNodeItems().add(nodeItem)
+        nodeItem.setNode(this)
+        return nodeItem
+    }
 
-	public NodeGroupItem removeNodeGroupItem(NodeGroupItem nodeGroupItem)
-	{
-		getNodeGroupItems().remove(nodeGroupItem);
-		nodeGroupItem.setNode(null);
+    fun removeNodeItem(nodeItem: NodeItem): NodeItem {
+        getNodeItems().remove(nodeItem)
+        nodeItem.setNode(null)
+        return nodeItem
+    }
 
-		return nodeGroupItem;
-	}
-
-	public NodeItem addNodeItem(NodeItem nodeItem)
-	{
-		getNodeItems().add(nodeItem);
-		nodeItem.setNode(this);
-
-		return nodeItem;
-	}
-
-	public NodeItem removeNodeItem(NodeItem nodeItem)
-	{
-		getNodeItems().remove(nodeItem);
-		nodeItem.setNode(null);
-
-		return nodeItem;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

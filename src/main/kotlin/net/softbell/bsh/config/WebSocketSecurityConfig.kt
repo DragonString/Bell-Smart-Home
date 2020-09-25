@@ -1,28 +1,24 @@
-package net.softbell.bsh.config;
+package net.softbell.bsh.config
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry;
-import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.web.messaging.MessageSecurityMetadataSourceRegistry
+import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 웹소켓 보안 설정
  */
 @Configuration
-public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer
-{
-    @Override
-    protected void configureInbound(MessageSecurityMetadataSourceRegistry messages)
-    {
+class WebSocketSecurityConfig : AbstractSecurityWebSocketMessageBrokerConfigurer() {
+    override fun configureInbound(messages: MessageSecurityMetadataSourceRegistry) {
 //        messages.simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.DISCONNECT, SimpMessageType.UNSUBSCRIBE).permitAll()
 //        		.simpSubscribeDestMatchers("/**").authenticated()
 //        		.simpDestMatchers("/**").authenticated()
 //    			.anyMessage().authenticated();
     }
-    
-    @Override
-    protected boolean sameOriginDisabled()
-    {
-        return true;
+
+    override fun sameOriginDisabled(): Boolean {
+        return true
     }
 }

@@ -1,13 +1,13 @@
-package net.softbell.bsh.dto.request;
+package net.softbell.bsh.dto.request
 
-import java.util.HashMap;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import lombok.ToString
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -19,10 +19,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IotTriggerDto
-{
-    private boolean enableStatus;
-    private String description;
-    private String expression;
-    private HashMap<Long, IotTriggerActionDto> mapAction;
+class IotTriggerDto {
+    private val enableStatus = false
+    private val description: String? = null
+    private val expression: String? = null
+    private val mapAction: HashMap<Long, IotTriggerActionDto>? = null
 }

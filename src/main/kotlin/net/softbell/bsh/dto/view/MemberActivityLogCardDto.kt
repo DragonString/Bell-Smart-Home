@@ -1,11 +1,11 @@
-package net.softbell.bsh.dto.view;
+package net.softbell.bsh.dto.view
 
-import java.util.Date;
-
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.AuthStatusRule;
-import net.softbell.bsh.domain.entity.MemberLoginLog;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.AuthStatusRule
+import net.softbell.bsh.domain.entity.MemberLoginLog
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -13,21 +13,18 @@ import net.softbell.bsh.domain.entity.MemberLoginLog;
  */
 @Getter
 @Setter
-public class MemberActivityLogCardDto
-{
-	private Date requestDate;
-	private String ipv4;
-	private AuthStatusRule status;
-	
-	public MemberActivityLogCardDto(MemberLoginLog entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.requestDate = entity.getRequestDate();
-		this.ipv4 = entity.getIpv4();
-		this.status = entity.getStatus();
-	}
+class MemberActivityLogCardDto(entity: MemberLoginLog?) {
+    private val requestDate: Date
+    private val ipv4: String
+    private val status: AuthStatusRule
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        requestDate = entity.getRequestDate()
+        ipv4 = entity.getIpv4()
+        status = entity.getStatus()
+    }
 }

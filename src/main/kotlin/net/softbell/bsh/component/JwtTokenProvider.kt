@@ -1,29 +1,25 @@
-package net.softbell.bsh.component;
+package net.softbell.bsh.component
 
-import java.util.Base64;
-import java.util.Collection;
-import java.util.Date;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.RequiredArgsConstructor;
-import net.softbell.bsh.config.CustomConfig;
-import net.softbell.bsh.service.CenterService;
-import net.softbell.bsh.service.MemberService;
-import net.softbell.bsh.util.CookieUtil;
+import io.jsonwebtoken.Claims
+import io.jsonwebtoken.Jws
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import lombok.RequiredArgsConstructor
+import net.softbell.bsh.config.CustomConfig
+import net.softbell.bsh.service.CenterService
+import net.softbell.bsh.service.MemberService
+import net.softbell.bsh.util.CookieUtil
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.stereotype.Component
+import java.util.*
+import javax.annotation.PostConstruct
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -31,135 +27,114 @@ import net.softbell.bsh.util.CookieUtil;
  */
 @RequiredArgsConstructor
 @Component
-public class JwtTokenProvider
-{
-    @Value("${bsh.security.jwt.secret.key}")
-    private String secretKey;
-    private long tokenValidMilisecond = 1000L * 60 * 60; // 1시간만 토큰 유효
-    private final MemberService memberService;
-    private final CenterService centerService;
-
+class JwtTokenProvider constructor() {
+    @Value("\${bsh.security.jwt.secret.key}")
+    private var secretKey: String? = null
+    private val tokenValidMilisecond: Long = 1000L * 60 * 60 // 1시간만 토큰 유효
+    private val memberService: MemberService? = null
+    private val centerService: CenterService? = null
     @PostConstruct
-    protected void init()
-    {
-        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+    protected fun init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey!!.toByteArray())
     }
-    
-    public void setCookieAuth(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-    {
-    	// Field
-    	int maxAge, multiple;
-    	String strAutoLogin;
-    	
-    	// Init
-    	maxAge = 60 * 60;
-    	multiple = 1;
-    	strAutoLogin = CookieUtil.getValue(request, CustomConfig.AUTO_LOGIN_COOKIE_NAME);
-    	
-    	// Check
-    	if (strAutoLogin != null && strAutoLogin.equalsIgnoreCase("1"))
-    		multiple = 24 * 7;
-    	maxAge *= multiple;
-    	
-    	// Create
-    	CookieUtil.create(response, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication, multiple), false, false, maxAge);
+
+    fun setCookieAuth(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
+        // Field
+        var maxAge: Int
+        var multiple: Int
+        val strAutoLogin: String?
+
+        // Init
+        maxAge = 60 * 60
+        multiple = 1
+        strAutoLogin = CookieUtil.getValue(request, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
+
+        // Check
+        if (strAutoLogin != null && strAutoLogin.equals("1", ignoreCase = true)) multiple = 24 * 7
+        maxAge *= multiple
+
+        // Create
+        create(response, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication, multiple), false, false, maxAge)
     }
 
     // Jwt 토큰 생성
-    public String createToken(String userPk, Collection<? extends GrantedAuthority> roles)
-    {
-        Claims claims = Jwts.claims().setSubject(userPk);
-        claims.put("roles", roles);
-        Date now = new Date();
+    fun createToken(userPk: String?, roles: Collection<GrantedAuthority?>?): String {
+        val claims: Claims = Jwts.claims().setSubject(userPk)
+        claims.put("roles", roles)
+        val now: Date = Date()
         return Jwts.builder()
                 .setClaims(claims) // 데이터
                 .setIssuedAt(now) // 토큰 발행일자
-                .setExpiration(new Date(now.getTime() + tokenValidMilisecond)) // set Expire Time
+                .setExpiration(Date(now.getTime() + tokenValidMilisecond)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
-                .compact();
+                .compact()
     }
-    
-    public String createToken(Authentication authentication, int multiple)
-    {
-    	// Field
-        Claims claims = Jwts.claims().setSubject(authentication.getName());
-        
+
+    fun createToken(authentication: Authentication?, multiple: Int): String {
+        // Field
+        var multiple: Int = multiple
+        val claims: Claims = Jwts.claims().setSubject(authentication!!.getName())
+
         // Init
-        claims.put("roles", authentication.getAuthorities());
-        Date now = new Date();
-        
+        claims.put("roles", authentication.getAuthorities())
+        val now: Date = Date()
+
         // Exception
-        if (multiple < 1)
-        	multiple = 1;
-        
+        if (multiple < 1) multiple = 1
+
         // Return
         return Jwts.builder()
                 .setClaims(claims) // 데이터
                 .setIssuedAt(now) // 토큰 발행일자
-                .setExpiration(new Date(now.getTime() + tokenValidMilisecond * multiple)) // set Expire Time
+                .setExpiration(Date(now.getTime() + tokenValidMilisecond * multiple)) // set Expire Time
                 .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화 알고리즘, secret값 세팅
-                .compact();
+                .compact()
     }
 
     // Jwt 토큰으로 인증 정보를 조회
-    public Authentication getAuthentication(String token)
-    {
-        UserDetails userDetails = memberService.tokenLoadUserByUsername(this.getUserPk(token));
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    fun getAuthentication(token: String?): Authentication {
+        val userDetails: UserDetails? = memberService!!.tokenLoadUserByUsername(getUserPk(token))
+        return UsernamePasswordAuthenticationToken(userDetails, "", userDetails!!.getAuthorities())
     }
-    
-    public boolean checkMaintenanceLogin(Authentication auth)
-    {
-    	if (centerService.getSetting().getWebMaintenance() == 1)
-	        for (GrantedAuthority role : auth.getAuthorities())
-	        	if (!role.getAuthority().equals("ROLE_SUPERADMIN") &&
-	        			!role.getAuthority().equals("ROLE_ADMIN") &&
-	        			!role.getAuthority().equals("ROLE_NODE"))
-	        		return false;
-    	
-    	return true;
+
+    fun checkMaintenanceLogin(auth: Authentication?): Boolean {
+        if (centerService.getSetting().getWebMaintenance() === 1) for (role: GrantedAuthority in auth!!.getAuthorities()) if ((!(role.getAuthority() == "ROLE_SUPERADMIN") &&
+                        !(role.getAuthority() == "ROLE_ADMIN") &&
+                        !(role.getAuthority() == "ROLE_NODE"))) return false
+        return true
     }
 
     // Jwt 토큰에서 회원 구별 정보 추출
-    public String getUserPk(String token)
-    {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    fun getUserPk(token: String?): String {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject()
     }
-    
-    public boolean isApiMode(HttpServletRequest request)
-    {
-    	if (request.getRequestURI().startsWith("/api/") || request.getRequestURI().startsWith("/ws/"))
-    		return true;
-    	return false;
+
+    fun isApiMode(request: HttpServletRequest): Boolean {
+        if (request.getRequestURI().startsWith("/api/") || request.getRequestURI().startsWith("/ws/")) return true
+        return false
     }
 
     // Request의 Header에서 token 파싱 : "X-AUTH-TOKEN: jwt토큰"
-    public String resolveToken(HttpServletRequest request)
-    {
-    	// Field
-    	String token;
-    	
-    	// Load
-    	if (isApiMode(request)) // API 및 웹소켓 경로면 헤더에서 인증정보 로드 (CSRF 미사용)
-    		token = request.getHeader(CustomConfig.SECURITY_HEADER_NAME);
-    	else // 일반 유저 경로면 쿠키에서 인증정보 로드 (CSRF 사용)
-    		token = CookieUtil.getValue(request, CustomConfig.SECURITY_COOKIE_NAME);
-    	
-    	// Return
-        return token;
+    fun resolveToken(request: HttpServletRequest): String? {
+        // Field
+        val token: String?
+
+        // Load
+        if (isApiMode(request)) // API 및 웹소켓 경로면 헤더에서 인증정보 로드 (CSRF 미사용)
+            token = request.getHeader(CustomConfig.SECURITY_HEADER_NAME) else  // 일반 유저 경로면 쿠키에서 인증정보 로드 (CSRF 사용)
+            token = CookieUtil.getValue(request, CustomConfig.SECURITY_COOKIE_NAME)
+
+        // Return
+        return token
     }
 
     // Jwt 토큰의 유효성 + 만료일자 확인
-    public boolean validateToken(String jwtToken)
-    {
-        try
-        {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
-            return !claims.getBody().getExpiration().before(new Date());
-        }
-        catch (Exception e)
-        {
-            return false;
+    fun validateToken(jwtToken: String?): Boolean {
+        try {
+            val claims: Jws<Claims> = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken)
+            return !claims.getBody().getExpiration().before(Date())
+        } catch (e: Exception) {
+            return false
         }
     }
 }

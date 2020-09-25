@@ -1,11 +1,12 @@
-package net.softbell.bsh.dto.request;
+package net.softbell.bsh.dto.request
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import lombok.ToString
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -17,8 +18,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class InterlockTokenDto
-{
-	private Long memberInterlockId;
-    private String name;
+class InterlockTokenDto {
+    private val memberInterlockId: Long? = null
+    private val name: String? = null
 }

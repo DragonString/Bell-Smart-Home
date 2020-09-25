@@ -1,12 +1,13 @@
-package net.softbell.bsh.config;
+package net.softbell.bsh.config
+
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 커스텀 설정 정의
  */
-public class CustomConfig
-{
-	public static final String SECURITY_HEADER_NAME = "X-AUTH-TOKEN";
-	public static final String SECURITY_COOKIE_NAME = "X-AUTH-TOKEN";
-	public static final String AUTO_LOGIN_COOKIE_NAME = "AutoLogin";
+object CustomConfig {
+    const val SECURITY_HEADER_NAME = "X-AUTH-TOKEN"
+    const val SECURITY_COOKIE_NAME = "X-AUTH-TOKEN"
+    const val AUTO_LOGIN_COOKIE_NAME = "AutoLogin"
 }

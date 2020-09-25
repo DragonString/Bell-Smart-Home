@@ -1,9 +1,10 @@
-package net.softbell.bsh.dto.view;
+package net.softbell.bsh.dto.view
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.Setter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -13,8 +14,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @Builder
-public class DashboardAvgCardDto
-{
-	private String alias;
-	private Double avgStatus;
+class DashboardAvgCardDto {
+    private val alias: String? = null
+    private val avgStatus: Double? = null
 }

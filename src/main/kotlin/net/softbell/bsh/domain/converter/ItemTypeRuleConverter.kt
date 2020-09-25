@@ -1,29 +1,21 @@
-package net.softbell.bsh.domain.converter;
+package net.softbell.bsh.domain.converter
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-
-import net.softbell.bsh.domain.ItemTypeRule;
+import net.softbell.bsh.domain.ItemTypeRule
+import javax.persistence.AttributeConverter
+import javax.persistence.Converter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT 아이템 타입 자료형 DB 컨버터
  */
 @Converter(autoApply = true)
-public class ItemTypeRuleConverter implements AttributeConverter<ItemTypeRule, Integer>
-{
-	@Override
-	public Integer convertToDatabaseColumn(ItemTypeRule pinTypeRule)
-	{
-		if (pinTypeRule == null)
-			return null;
-		
-		return pinTypeRule.getCode();
-	}
+class ItemTypeRuleConverter : AttributeConverter<ItemTypeRule?, Int?> {
+    override fun convertToDatabaseColumn(pinTypeRule: ItemTypeRule?): Int? {
+        return pinTypeRule?.getCode()
+    }
 
-	@Override
-	public ItemTypeRule convertToEntityAttribute(Integer code)
-	{
-		return ItemTypeRule.ofLegacyCode(code);
-	}
+    override fun convertToEntityAttribute(code: Int?): ItemTypeRule? {
+        return ItemTypeRule.Companion.ofLegacyCode(code)
+    }
 }

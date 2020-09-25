@@ -1,7 +1,8 @@
-package net.softbell.bsh.domain;
+package net.softbell.bsh.domain
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.AllArgsConstructor
+import lombok.Getter
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -10,22 +11,16 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum ItemModeRule
-{
-	ERROR("ERROR", -1),
-	
-	DIGITAL("DIGITAL", 0),
-	ANALOG("ANALOG", 1);
+enum class ItemModeRule {
+    ERROR("ERROR", -1), DIGITAL("DIGITAL", 0), ANALOG("ANALOG", 1);
 
-	private String value;
-    private Integer code;
-    
-    public static ItemModeRule ofLegacyCode(Integer legacyCode)
-    {
-    	for (ItemModeRule authStatusRule : values())
-            if (authStatusRule.getCode() == legacyCode)
-                return authStatusRule;
-    	
-    	return null;
+    private val value: String? = null
+    private val code: Int? = null
+
+    companion object {
+        fun ofLegacyCode(legacyCode: Int?): ItemModeRule? {
+            for (authStatusRule in values()) if (authStatusRule.getCode() === legacyCode) return authStatusRule
+            return null
+        }
     }
 }

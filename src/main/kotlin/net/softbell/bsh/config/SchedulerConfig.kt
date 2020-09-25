@@ -1,35 +1,32 @@
-package net.softbell.bsh.config;
+package net.softbell.bsh.config
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.context.annotation.Configuration
+import org.springframework.scheduling.annotation.SchedulingConfigurer
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
+import org.springframework.scheduling.config.ScheduledTaskRegistrar
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 스케줄러 설정
  */
 @Configuration
-public class SchedulerConfig implements SchedulingConfigurer
-{
-	// Global Field
-    private final int POOL_SIZE = 10;
+class SchedulerConfig : SchedulingConfigurer {
+    // Global Field
+    private val POOL_SIZE = 10
+    override fun configureTasks(scheduledTaskRegistrar: ScheduledTaskRegistrar) {
+        // Field
+        val threadPoolTaskScheduler: ThreadPoolTaskScheduler
 
-    @Override
-    public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar)
-    {
-    	// Field
-        ThreadPoolTaskScheduler threadPoolTaskScheduler;
-        
         // Init
-        threadPoolTaskScheduler = new ThreadPoolTaskScheduler();
-        
+        threadPoolTaskScheduler = ThreadPoolTaskScheduler()
+
         // Config
-        threadPoolTaskScheduler.setPoolSize(POOL_SIZE);
-        threadPoolTaskScheduler.setThreadNamePrefix("BSH-Task-Pool-");
-        threadPoolTaskScheduler.initialize();
-        
+        threadPoolTaskScheduler.poolSize = POOL_SIZE
+        threadPoolTaskScheduler.setThreadNamePrefix("BSH-Task-Pool-")
+        threadPoolTaskScheduler.initialize()
+
         // Set
-        scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler);
+        scheduledTaskRegistrar.setTaskScheduler(threadPoolTaskScheduler)
     }
 }

@@ -1,11 +1,11 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin
 
-import java.util.Date;
-
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.entity.Node;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.entity.Node
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -13,33 +13,30 @@ import net.softbell.bsh.domain.entity.Node;
  */
 @Getter
 @Setter
-public class NodeManageInfoCardDto
-{
-	private Long nodeId;
-	private EnableStatusRule enableStatus;
-	private String nodeName;
-	private String alias;
-	private String uid;
-	private String token;
-	private Byte controlMode;
-	private Date registerDate;
-	private Date approvalDate;
-	
-	public NodeManageInfoCardDto(Node entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.nodeId = entity.getNodeId();
-		this.enableStatus = entity.getEnableStatus();
-		this.nodeName = entity.getNodeName();
-		this.alias = entity.getAlias();
-		this.uid = entity.getUid();
-		this.token = entity.getToken();
-		this.controlMode = entity.getControlMode();
-		this.registerDate = entity.getRegisterDate();
-		this.approvalDate = entity.getApprovalDate();
-	}
+class NodeManageInfoCardDto(entity: Node?) {
+    private val nodeId: Long
+    private val enableStatus: EnableStatusRule
+    private val nodeName: String
+    private val alias: String
+    private val uid: String
+    private val token: String
+    private val controlMode: Byte
+    private val registerDate: Date
+    private val approvalDate: Date
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        nodeId = entity.getNodeId()
+        enableStatus = entity.getEnableStatus()
+        nodeName = entity.getNodeName()
+        alias = entity.getAlias()
+        uid = entity.getUid()
+        token = entity.getToken()
+        controlMode = entity.getControlMode()
+        registerDate = entity.getRegisterDate()
+        approvalDate = entity.getApprovalDate()
+    }
 }

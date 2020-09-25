@@ -1,8 +1,9 @@
-package net.softbell.bsh.dto.view.admin;
+package net.softbell.bsh.dto.view.admin
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.entity.CenterSetting;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.CenterSetting
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -10,41 +11,38 @@ import net.softbell.bsh.domain.entity.CenterSetting;
  */
 @Getter
 @Setter
-public class CenterSettingSummaryCardDto
-{
-	private Byte isEnabled;
-	private Byte iotAction;
-	private Byte iotControl;
-	private Byte iotMonitor;
-	private Byte iotNode;
-	private Byte iotReserv;
-	private Byte iotTrigger;
-	private Byte webAuthMode;
-	private Integer webLoginFailBanTime;
-	private Integer webLoginFailCheckTime;
-	private Byte webLoginFailMaxCount;
-	private Byte webMaintenance;
-	private Byte webRegister;
-	
-	public CenterSettingSummaryCardDto(CenterSetting entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.isEnabled = entity.getIsEnabled();
-		this.iotAction = entity.getIotAction();
-		this.iotControl = entity.getIotControl();
-		this.iotMonitor = entity.getIotMonitor();
-		this.iotNode = entity.getIotNode();
-		this.iotReserv = entity.getIotReserv();
-		this.iotTrigger = entity.getIotTrigger();
-		this.webAuthMode = entity.getWebAuthMode();
-		this.webLoginFailBanTime = entity.getWebLoginFailBanTime();
-		this.webLoginFailCheckTime = entity.getWebLoginFailCheckTime();
-		this.webLoginFailMaxCount = entity.getWebLoginFailMaxCount();
-		this.webMaintenance = entity.getWebMaintenance();
-		this.webRegister = entity.getWebRegister();
-	}
+class CenterSettingSummaryCardDto(entity: CenterSetting?) {
+    private val isEnabled: Byte
+    private val iotAction: Byte
+    private val iotControl: Byte
+    private val iotMonitor: Byte
+    private val iotNode: Byte
+    private val iotReserv: Byte
+    private val iotTrigger: Byte
+    private val webAuthMode: Byte
+    private val webLoginFailBanTime: Int
+    private val webLoginFailCheckTime: Int
+    private val webLoginFailMaxCount: Byte
+    private val webMaintenance: Byte
+    private val webRegister: Byte
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        isEnabled = entity.getIsEnabled()
+        iotAction = entity.getIotAction()
+        iotControl = entity.getIotControl()
+        iotMonitor = entity.getIotMonitor()
+        iotNode = entity.getIotNode()
+        iotReserv = entity.getIotReserv()
+        iotTrigger = entity.getIotTrigger()
+        webAuthMode = entity.getWebAuthMode()
+        webLoginFailBanTime = entity.getWebLoginFailBanTime()
+        webLoginFailCheckTime = entity.getWebLoginFailCheckTime()
+        webLoginFailMaxCount = entity.getWebLoginFailMaxCount()
+        webMaintenance = entity.getWebMaintenance()
+        webRegister = entity.getWebRegister()
+    }
 }

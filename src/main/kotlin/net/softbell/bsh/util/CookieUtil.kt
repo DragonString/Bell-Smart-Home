@@ -1,58 +1,45 @@
-package net.softbell.bsh.util;
+package net.softbell.bsh.util
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.util.WebUtils;
+import org.springframework.web.util.WebUtils
+import javax.servlet.http.Cookie
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 쿠키 제어 유틸리티
  */
-public class CookieUtil
-{
-	public static void create(HttpServletResponse httpServletResponse, String name, String value, Boolean httpOnly, Boolean secure, Integer maxAge, String domain)
-	{
-        Cookie cookie = new Cookie(name, value);
-        
-        cookie.setSecure(secure);
-        cookie.setHttpOnly(httpOnly);
-        cookie.setMaxAge(maxAge);
-        if (domain != null)
-        	cookie.setDomain(domain);
-        cookie.setPath("/");
-        
-        httpServletResponse.addCookie(cookie);
-    }
-	
-	public static void create(HttpServletResponse httpServletResponse, String name, String value, Boolean httpOnly, Boolean secure, Integer maxAge)
-	{
-        create(httpServletResponse, name, value, httpOnly, secure, maxAge, null);
-    }
-	
-	public static void create(HttpServletResponse httpServletResponse, String name, String value, Boolean secure, Integer maxAge)
-	{
-        create(httpServletResponse, name, value, true, secure, maxAge, null);
-    }
-	
-	public static void create(HttpServletResponse httpServletResponse, String name, String value, Integer maxAge)
-	{
-        create(httpServletResponse, name, value, true, false, maxAge, null);
+object CookieUtil {
+    @JvmOverloads
+    fun create(httpServletResponse: HttpServletResponse, name: String?, value: String?, httpOnly: Boolean?, secure: Boolean?, maxAge: Int?, domain: String? = null) {
+        val cookie = Cookie(name, value)
+        cookie.secure = secure!!
+        cookie.isHttpOnly = httpOnly!!
+        cookie.maxAge = maxAge!!
+        if (domain != null) cookie.domain = domain
+        cookie.path = "/"
+        httpServletResponse.addCookie(cookie)
     }
 
-    public static void clear(HttpServletResponse httpServletResponse, String name)
-    {
-        Cookie cookie = new Cookie(name, null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0);
-        httpServletResponse.addCookie(cookie);
+    fun create(httpServletResponse: HttpServletResponse, name: String?, value: String?, secure: Boolean?, maxAge: Int?) {
+        create(httpServletResponse, name, value, true, secure, maxAge, null)
     }
 
-    public static String getValue(HttpServletRequest httpServletRequest, String name)
-    {
-        Cookie cookie = WebUtils.getCookie(httpServletRequest, name);
-        return cookie != null ? cookie.getValue() : null;
+    fun create(httpServletResponse: HttpServletResponse, name: String?, value: String?, maxAge: Int?) {
+        create(httpServletResponse, name, value, true, false, maxAge, null)
+    }
+
+    fun clear(httpServletResponse: HttpServletResponse, name: String?) {
+        val cookie = Cookie(name, null)
+        cookie.path = "/"
+        cookie.isHttpOnly = true
+        cookie.maxAge = 0
+        httpServletResponse.addCookie(cookie)
+    }
+
+    fun getValue(httpServletRequest: HttpServletRequest?, name: String?): String? {
+        val cookie = WebUtils.getCookie(httpServletRequest!!, name!!)
+        return cookie?.value
     }
 }

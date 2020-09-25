@@ -1,11 +1,11 @@
-package net.softbell.bsh.dto.view;
+package net.softbell.bsh.dto.view
 
-import java.util.Date;
-
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.EnableStatusRule;
-import net.softbell.bsh.domain.entity.MemberInterlockToken;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.entity.MemberInterlockToken
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -13,25 +13,22 @@ import net.softbell.bsh.domain.entity.MemberInterlockToken;
  */
 @Getter
 @Setter
-public class InterlockTokenCardDto
-{
-	private Long tokenId;
-	private String name;
-	private String token;
-	private EnableStatusRule enableStatus;
-	private Date registerDate;
-	
-	public InterlockTokenCardDto(MemberInterlockToken entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.tokenId = entity.getMemberInterlockId();
-		this.name = entity.getName();
-		this.token = entity.getToken();
-		this.enableStatus = entity.getEnableStatus();
-		this.registerDate = entity.getRegisterDate();
-	}
+class InterlockTokenCardDto(entity: MemberInterlockToken?) {
+    private val tokenId: Long
+    private val name: String
+    private val token: String
+    private val enableStatus: EnableStatusRule
+    private val registerDate: Date
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        tokenId = entity.getMemberInterlockId()
+        name = entity.getName()
+        token = entity.getToken()
+        enableStatus = entity.getEnableStatus()
+        registerDate = entity.getRegisterDate()
+    }
 }

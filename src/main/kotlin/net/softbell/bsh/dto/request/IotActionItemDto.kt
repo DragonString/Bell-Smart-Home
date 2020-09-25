@@ -1,11 +1,12 @@
-package net.softbell.bsh.dto.request;
+package net.softbell.bsh.dto.request
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor
+import lombok.Builder
+import lombok.Getter
+import lombok.NoArgsConstructor
+import lombok.Setter
+import lombok.ToString
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -17,9 +18,8 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class IotActionItemDto
-{
-	private Long actionItemId;
-	private Long itemId;
-    private Double itemStatus;
+class IotActionItemDto {
+    private val actionItemId: Long? = null
+    private val itemId: Long? = null
+    private val itemStatus: Double? = null
 }

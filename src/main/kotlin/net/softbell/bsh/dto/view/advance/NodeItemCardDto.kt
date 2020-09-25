@@ -1,14 +1,14 @@
-package net.softbell.bsh.dto.view.advance;
+package net.softbell.bsh.dto.view.advance
 
-import java.util.Date;
-
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.ItemCategoryRule;
-import net.softbell.bsh.domain.ItemModeRule;
-import net.softbell.bsh.domain.ItemTypeRule;
-import net.softbell.bsh.domain.entity.NodeItem;
-import net.softbell.bsh.domain.entity.NodeItemHistory;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.ItemCategoryRule
+import net.softbell.bsh.domain.ItemModeRule
+import net.softbell.bsh.domain.ItemTypeRule
+import net.softbell.bsh.domain.entity.NodeItem
+import net.softbell.bsh.domain.entity.NodeItemHistory
+import java.util.*
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -16,33 +16,30 @@ import net.softbell.bsh.domain.entity.NodeItemHistory;
  */
 @Getter
 @Setter
-public class NodeItemCardDto
-{
-	private Long itemId;
-	private String alias;
-	private String itemName;
-	private ItemModeRule itemMode;
-	private ItemTypeRule itemType;
-	private ItemCategoryRule itemCategory;
-	private Byte controlMode;
-	private Double lastStatus;
-	private Date lastReceive;
-	
-	public NodeItemCardDto(NodeItem entity, NodeItemHistory lastHistory)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.itemId = entity.getItemId();
-		this.alias = entity.getAlias();
-		this.itemName = entity.getItemName();
-		this.itemMode = entity.getItemMode();
-		this.itemType = entity.getItemType();
-		this.itemCategory = entity.getItemCategory();
-		this.controlMode = entity.getControlMode();
-		this.lastStatus = lastHistory.getItemStatus();
-		this.lastReceive = lastHistory.getReceiveDate();
-	}
+class NodeItemCardDto(entity: NodeItem?, lastHistory: NodeItemHistory?) {
+    private val itemId: Long
+    private val alias: String
+    private val itemName: String
+    private val itemMode: ItemModeRule
+    private val itemType: ItemTypeRule
+    private val itemCategory: ItemCategoryRule
+    private val controlMode: Byte
+    private val lastStatus: Double
+    private val lastReceive: Date
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        itemId = entity.getItemId()
+        alias = entity.getAlias()
+        itemName = entity.getItemName()
+        itemMode = entity.getItemMode()
+        itemType = entity.getItemType()
+        itemCategory = entity.getItemCategory()
+        controlMode = entity.getControlMode()
+        lastStatus = lastHistory.getItemStatus()
+        lastReceive = lastHistory.getReceiveDate()
+    }
 }

@@ -1,8 +1,9 @@
-package net.softbell.bsh.dto.view.general;
+package net.softbell.bsh.dto.view.general
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.entity.MemberInterlockToken;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.entity.MemberInterlockToken
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -10,19 +11,16 @@ import net.softbell.bsh.domain.entity.MemberInterlockToken;
  */
 @Getter
 @Setter
-public class ActionInterlockCardDto
-{
-	private String name;
-	private String token;
-	
-	public ActionInterlockCardDto(MemberInterlockToken entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Convert
-		this.name = entity.getName();
-		this.token = entity.getToken();
-	}
+class ActionInterlockCardDto(entity: MemberInterlockToken?) {
+    private val name: String
+    private val token: String
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Convert
+        name = entity.getName()
+        token = entity.getToken()
+    }
 }

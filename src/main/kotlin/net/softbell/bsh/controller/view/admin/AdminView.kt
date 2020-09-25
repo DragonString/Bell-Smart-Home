@@ -1,22 +1,22 @@
-package net.softbell.bsh.controller.view.admin;
+package net.softbell.bsh.controller.view.admin
 
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import lombok.AllArgsConstructor;
-import net.softbell.bsh.domain.entity.Member;
-import net.softbell.bsh.domain.entity.Node;
-import net.softbell.bsh.dto.request.CenterSettingDto;
-import net.softbell.bsh.dto.view.admin.CenterSettingSummaryCardDto;
-import net.softbell.bsh.iot.service.v1.IotNodeServiceV1;
-import net.softbell.bsh.service.CenterService;
-import net.softbell.bsh.service.MemberService;
-import net.softbell.bsh.service.ViewDtoConverterService;
+import lombok.AllArgsConstructor
+import net.softbell.bsh.domain.entity.Member
+import net.softbell.bsh.domain.entity.Node
+import net.softbell.bsh.dto.request.CenterSettingDto
+import net.softbell.bsh.dto.view.admin.CenterSettingSummaryCardDto
+import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
+import net.softbell.bsh.service.CenterService
+import net.softbell.bsh.service.MemberService
+import net.softbell.bsh.service.ViewDtoConverterService
+import org.springframework.data.domain.Page
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -25,92 +25,80 @@ import net.softbell.bsh.service.ViewDtoConverterService;
 @AllArgsConstructor
 @Controller
 @RequestMapping("/admin")
-public class AdminView
-{
-	// Global Field
-	private final String G_BASE_PATH = "services/admin";
-	private final String G_BASE_REDIRECT_URL = "redirect:/admin";
-	private final String G_INDEX_REDIRECT_URL = "redirect:/";
-	
-	private final ViewDtoConverterService viewDtoConverterService;
-	private final MemberService memberService;
-	private final IotNodeServiceV1 iotNodeService;
-	private final CenterService centerService;
-	
-	@GetMapping("/member")
-    public String dispMember(Model model,
-    		@RequestParam(value = "page", required = false, defaultValue = "1") int intPage,
-			@RequestParam(value = "count", required = false, defaultValue = "100") int intCount)
-	{
-		// Field
-		Page<Member> pageMember;
-		
-		// Init
-		pageMember = memberService.getMemberList(intPage, intCount);
-		
-		// Load
-		model.addAttribute("listCardMembers", viewDtoConverterService.convMemberSummaryCards(pageMember.getContent()));
-		
-		// Return
-        return G_BASE_PATH + "/Member";
+class AdminView constructor() {
+    // Global Field
+    private val G_BASE_PATH: String = "services/admin"
+    private val G_BASE_REDIRECT_URL: String = "redirect:/admin"
+    private val G_INDEX_REDIRECT_URL: String = "redirect:/"
+    private val viewDtoConverterService: ViewDtoConverterService? = null
+    private val memberService: MemberService? = null
+    private val iotNodeService: IotNodeServiceV1? = null
+    private val centerService: CenterService? = null
+    @GetMapping("/member")
+    fun dispMember(model: Model,
+                   @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
+                   @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
+        // Field
+        val pageMember: Page<Member?>?
+
+        // Init
+        pageMember = memberService!!.getMemberList(intPage, intCount)
+
+        // Load
+        model.addAttribute("listCardMembers", viewDtoConverterService!!.convMemberSummaryCards(pageMember.getContent()))
+
+        // Return
+        return G_BASE_PATH + "/Member"
     }
 
-	@GetMapping("/node")
-    public String dispNode(Model model,
-    		@RequestParam(value = "page", required = false, defaultValue = "1") int intPage,
-			@RequestParam(value = "count", required = false, defaultValue = "100") int intCount)
-	{
-		// Exception
-		if (centerService.getSetting().getIotNode() != 1)
-			return G_INDEX_REDIRECT_URL;
-		
-		// Field
-		Page<Node> pageNode;
-		
-		// Init
-		pageNode = iotNodeService.getAllNodes(intPage, intCount);
-		
-		// Process
-		model.addAttribute("listCardNodes", viewDtoConverterService.convNodeManageSummaryCards(pageNode.getContent()));
-		
-		// Return
-        return G_BASE_PATH + "/Node";
+    @GetMapping("/node")
+    fun dispNode(model: Model,
+                 @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
+                 @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
+        // Exception
+        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+
+        // Field
+        val pageNode: Page<Node?>?
+
+        // Init
+        pageNode = iotNodeService!!.getAllNodes(intPage, intCount)
+
+        // Process
+        model.addAttribute("listCardNodes", viewDtoConverterService!!.convNodeManageSummaryCards(pageNode.getContent()))
+
+        // Return
+        return G_BASE_PATH + "/Node"
     }
 
-	@GetMapping("/center")
-    public String dispCenterSetting(Model model)
-	{
-		// Process
-		model.addAttribute("cardCenterSetting", new CenterSettingSummaryCardDto(centerService.loadSetting()));
-		model.addAttribute("cardCenterSettingDefault", new CenterSettingSummaryCardDto(centerService.getSetting()));
-		
-		// Return
-        return G_BASE_PATH + "/CenterSetting";
+    @GetMapping("/center")
+    fun dispCenterSetting(model: Model): String {
+        // Process
+        model.addAttribute("cardCenterSetting", CenterSettingSummaryCardDto(centerService!!.loadSetting()))
+        model.addAttribute("cardCenterSettingDefault", CenterSettingSummaryCardDto(centerService.getSetting()))
+
+        // Return
+        return G_BASE_PATH + "/CenterSetting"
     }
 
-	@GetMapping("/center/modify")
-    public String dispCenterSettingModify(Model model)
-	{
-		// Process
-		model.addAttribute("cardCenterSetting", new CenterSettingSummaryCardDto(centerService.loadSetting()));
-		
-		// Return
-        return G_BASE_PATH + "/CenterSettingModify";
+    @GetMapping("/center/modify")
+    fun dispCenterSettingModify(model: Model): String {
+        // Process
+        model.addAttribute("cardCenterSetting", CenterSettingSummaryCardDto(centerService!!.loadSetting()))
+
+        // Return
+        return G_BASE_PATH + "/CenterSettingModify"
     }
-	
-	@PostMapping("/center/modify")
-	public String modifyCenterSetting(Model model, CenterSettingDto centerSettingDto)
-	{
-		// Field
-		boolean isSuccess;
-		
-		// Init
-		isSuccess = centerService.modifyCenterSetting(centerSettingDto);
-		
-		// Return
-		if (isSuccess)
-			return G_BASE_REDIRECT_URL + "/center";
-		else
-			return G_BASE_REDIRECT_URL + "/center/modify?err";
-	}
+
+    @PostMapping("/center/modify")
+    fun modifyCenterSetting(model: Model?, centerSettingDto: CenterSettingDto): String {
+        // Field
+        val isSuccess: Boolean
+
+        // Init
+        isSuccess = centerService!!.modifyCenterSetting(centerSettingDto)
+
+        // Return
+        if (isSuccess) return G_BASE_REDIRECT_URL + "/center" else return G_BASE_REDIRECT_URL + "/center/modify?err"
+    }
 }

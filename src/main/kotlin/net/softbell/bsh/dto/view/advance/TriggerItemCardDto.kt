@@ -1,12 +1,13 @@
-package net.softbell.bsh.dto.view.advance;
+package net.softbell.bsh.dto.view.advance
 
-import lombok.Getter;
-import lombok.Setter;
-import net.softbell.bsh.domain.ItemCategoryRule;
-import net.softbell.bsh.domain.ItemModeRule;
-import net.softbell.bsh.domain.ItemTypeRule;
-import net.softbell.bsh.domain.entity.Node;
-import net.softbell.bsh.domain.entity.NodeItem;
+import lombok.Getter
+import lombok.Setter
+import net.softbell.bsh.domain.ItemCategoryRule
+import net.softbell.bsh.domain.ItemModeRule
+import net.softbell.bsh.domain.ItemTypeRule
+import net.softbell.bsh.domain.entity.Node
+import net.softbell.bsh.domain.entity.NodeItem
+import kotlin.Throws
 
 /**
  * @Author : Bell(bell@softbell.net)
@@ -14,35 +15,32 @@ import net.softbell.bsh.domain.entity.NodeItem;
  */
 @Getter
 @Setter
-public class TriggerItemCardDto
-{
-	private Long nodeId;
-	private String nodeAlias;
-	private Long itemId;
-	private String alias;
-	private ItemModeRule itemMode;
-	private ItemTypeRule itemType;
-	private ItemCategoryRule itemCategory;
-	
-	public TriggerItemCardDto(NodeItem entity)
-	{
-		// Exception
-		if (entity == null)
-			return;
-		
-		// Field
-		Node node;
-		
-		// Init
-		node = entity.getNode();
-		
-		// Convert
-		this.nodeId = node.getNodeId();
-		this.nodeAlias = node.getAlias();
-		this.itemId = entity.getItemId();
-		this.alias = entity.getAlias();
-		this.itemMode = entity.getItemMode();
-		this.itemType = entity.getItemType();
-		this.itemCategory = entity.getItemCategory();
-	}
+class TriggerItemCardDto(entity: NodeItem?) {
+    private val nodeId: Long
+    private val nodeAlias: String
+    private val itemId: Long
+    private val alias: String
+    private val itemMode: ItemModeRule
+    private val itemType: ItemTypeRule
+    private val itemCategory: ItemCategoryRule
+
+    init {
+        // Exception
+        if (entity == null) return
+
+        // Field
+        val node: Node
+
+        // Init
+        node = entity.getNode()
+
+        // Convert
+        nodeId = node.getNodeId()
+        nodeAlias = node.getAlias()
+        itemId = entity.getItemId()
+        alias = entity.getAlias()
+        itemMode = entity.getItemMode()
+        itemType = entity.getItemType()
+        itemCategory = entity.getItemCategory()
+    }
 }
