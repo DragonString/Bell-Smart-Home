@@ -7,12 +7,11 @@ test:
     - cp -R . /tmp/app
     - /bin/herokuish buildpack test
   only:
-    - branches
-    - tags
     refs:
       - master
       - develop
       - release/*
+      - tags
   except:
     variables:
       - $TEST_DISABLED

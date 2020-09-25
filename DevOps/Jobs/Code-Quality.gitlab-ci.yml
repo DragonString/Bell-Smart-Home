@@ -37,12 +37,11 @@ code_quality:
     expire_in: 1 week
   dependencies: []
   only:
-    - branches
-    - tags
     refs:
       - master
       - develop
       - release/*
+      - tags
   except:
     variables:
       - $CODE_QUALITY_DISABLED

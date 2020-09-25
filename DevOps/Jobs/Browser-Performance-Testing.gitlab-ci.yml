@@ -35,8 +35,6 @@ performance:
       - master
       - develop
       - release/*
-#      - branches
-#      - tags
     kubernetes: active
   except:
     variables:

@@ -17,11 +17,10 @@ build:
       fi
     - /build/build.sh
   only:
-    - branches
-    - tags
     refs:
       - master
       - develop
       - release/*
+      - tags
   retry: 2
       
