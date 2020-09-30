@@ -5,7 +5,7 @@ package net.softbell.bsh.dto.request
  * @Description : 트리거 이벤트 액션 DTO
  */
 data class IotTriggerActionDto (
-        val eventError: Boolean = false,
-        val eventOccur: Boolean = false,
-        val eventRestore: Boolean = false
+        var eventError: Boolean = false,
+        var eventOccur: Boolean = false,
+        var eventRestore: Boolean = false
 )

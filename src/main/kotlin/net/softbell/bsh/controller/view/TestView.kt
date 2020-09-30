@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RequestParam
  */
 @Controller
 @RequestMapping("/test/")
-class TestView constructor() {
-    // Global Field
+class TestView {
     @GetMapping("blank")
-    fun dispPage(model: Model, @RequestParam(value = "value", required = false, defaultValue = "방울 소프트 네트워크 최고다!!") value: String?): String {
+    fun dispPage(model: Model, @RequestParam(value = "value", required = false, defaultValue = "방울 소프트 네트워크 최고다!!") value: String): String {
         model.addAttribute("headInfo", value)
         return "test/sbadmin/blank"
     }
 
     @GetMapping("node")
-    fun dispNodeInfo(model: Model?): String {
+    fun dispNodeInfo(model: Model): String {
 //		model.addAttribute("headInfo", value);
         return "test/sbadmin/NodeList"
     }

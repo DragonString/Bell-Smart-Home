@@ -8,23 +8,23 @@ import net.softbell.bsh.domain.entity.NodeItem
  * @Description : 예약 등록 및 수정뷰 액션 카드정보 DTO
  */
 class ActionItemCardDto {
-    private var itemId: Long
-    private var nodeId: Long
-    private var nodeAlias: String
-    private var itemAlias: String
-    private var pinStatus: Double? = null
-    private var pinMin: Long
-    private var pinMax: Long
+    var itemId: Long? = null
+    var nodeId: Long? = null
+    var nodeAlias: String? = null
+    var itemAlias: String? = null
+    var pinStatus: Double? = null
+    var pinMin: Long = 0
+    var pinMax: Long = 0
 
     constructor(entity: NodeItem?) {
         // Exception
         if (entity == null) return
 
         // Convert
-        itemId = entity.getItemId()
-        nodeId = entity.getNode().getNodeId()
-        nodeAlias = entity.getNode().getAlias()
-        itemAlias = entity.getAlias()
+        itemId = entity.itemId
+        nodeId = entity.node!!.nodeId
+        nodeAlias = entity.node!!.alias
+        itemAlias = entity.alias
         pinMin = 0L
         pinMax = 1024L // TODO 핀 타입에 따라 맥스값 지정해주기
     }
@@ -34,11 +34,11 @@ class ActionItemCardDto {
         if (entity == null) return
 
         // Convert
-        itemId = entity.getNodeItem().getItemId()
-        nodeId = entity.getNodeItem().getNode().getNodeId()
-        nodeAlias = entity.getNodeItem().getNode().getAlias()
-        itemAlias = entity.getNodeItem().getAlias()
-        pinStatus = entity.getItemStatus()
+        itemId = entity.nodeItem!!.itemId
+        nodeId = entity.nodeItem!!.node!!.nodeId
+        nodeAlias = entity.nodeItem!!.node!!.alias
+        itemAlias = entity.nodeItem!!.alias
+        pinStatus = entity.itemStatus
         pinMin = 0L
         pinMax = 1024L
     }

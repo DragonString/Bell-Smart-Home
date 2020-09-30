@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class UidStompV1 {
     // Global Field
-    @Autowired lateinit var iotUIDServiceV1: IotUIDServiceV1
+    @Autowired private lateinit var iotUIDServiceV1: IotUIDServiceV1
 
     @MessageMapping("/iot/v1/node/uid/{uid}/SET/INFO/NODE")
-    fun NodeHandlerNewNode(@DestinationVariable("uid") uid: String?, nodeInfo: NodeInfoV1Dto) {
-        iotUIDServiceV1!!.setNewNodeInfo(uid, nodeInfo)
+    fun NodeHandlerNewNode(@DestinationVariable("uid") uid: String, nodeInfo: NodeInfoV1Dto) {
+        iotUIDServiceV1.setNewNodeInfo(uid, nodeInfo)
     }
 
     @MessageMapping("/iot/v1/node/uid/{uid}/GET/INFO/TOKEN")
     fun NodeHandlerRegister(@DestinationVariable("uid") uid: String) {
-        iotUIDServiceV1!!.generateToken(uid)
+        iotUIDServiceV1.generateToken(uid)
     }
 }

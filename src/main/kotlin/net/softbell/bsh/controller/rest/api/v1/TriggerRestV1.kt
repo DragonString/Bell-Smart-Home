@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/api/rest/v1/trigger")
-class TriggerRestV1 constructor() {
+class TriggerRestV1 {
     // Global Field
-    @Autowired lateinit var responseService: ResponseService
-    @Autowired lateinit var iotTriggerService: IotTriggerServiceV1
+    @Autowired private lateinit var responseService: ResponseService
+    @Autowired private lateinit var iotTriggerService: IotTriggerServiceV1
 
     @PostMapping("/status/{id}")
-    fun setTriggerStatus(auth: Authentication?, @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto? {
+    fun setTriggerStatus(auth: Authentication, @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto? {
         // Field
         val isSuccess: Boolean
 
         // Init
-        isSuccess = iotTriggerService!!.setTriggerEnableStatus(auth, id, status)
+        isSuccess = iotTriggerService.setTriggerEnableStatus(auth, id, status)
 
         // Return
-        if (isSuccess) return responseService.getSuccessResult() else return responseService!!.getFailResult(-10, "해당하는 아이템이 없음")
+        return if (isSuccess) responseService.getSuccessResult() else responseService.getFailResult(-10, "해당하는 아이템이 없음")
     }
 }

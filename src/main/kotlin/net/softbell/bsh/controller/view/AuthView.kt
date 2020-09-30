@@ -23,28 +23,28 @@ import java.security.Principal
  */
 @Controller
 @RequestMapping("/member")
-class AuthView constructor() {
+class AuthView {
     // Global Field
     private val G_BASE_PATH: String = "services/auth"
     private val G_BASE_REDIRECT_URL: String = "redirect:/member"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
 
-    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
-    @Autowired lateinit var memberService: MemberService
-    @Autowired lateinit var interlockService: InterlockService
+    @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired private lateinit var memberService: MemberService
+    @Autowired private lateinit var interlockService: InterlockService
 
     // 내 정보 페이지
     @GetMapping("/profile")
-    fun dispMyInfo(model: Model, principal: Principal): String {
+    fun dispMyInfo(model: Model, principal: Principal): String? {
         // Auth Check
-        if (memberService!!.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
+        if (memberService.getMember(principal.name) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
             return G_LOGOUT_REDIRECT_URL
 
         // Field
         val member: Member?
 
         // Init
-        member = memberService.getMember(principal.getName())
+        member = memberService.getMember(principal.name)
 
         // Process
         model.addAttribute("cardMemberProfile", MemberProfileCardDto(member))
@@ -52,27 +52,25 @@ class AuthView constructor() {
 //    			model.addAttribute("checkDelete", "1");
 
         // Return
-        return G_BASE_PATH + "/Profile"
+        return "$G_BASE_PATH/Profile"
     }
 
     // 내 정보 수정 페이지
     @GetMapping("/modify")
-    fun dispMyInfoModify(model: Model?, principal: Principal): String {
+    fun dispMyInfoModify(model: Model, principal: Principal): String? {
         // Auth Check
-        if (memberService!!.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
-            return G_LOGOUT_REDIRECT_URL
+        return if (memberService.getMember(principal.name) == null) G_LOGOUT_REDIRECT_URL else "$G_BASE_PATH/Modify"
 
         // Return
-        return G_BASE_PATH + "/Modify"
     }
 
     // 내 정보 수정 처리
     @PostMapping("/modify")
-    fun procMyInfoModify(model: Model?, principal: Principal,
+    fun procMyInfoModify(model: Model, principal: Principal,
                          @RequestParam("curPassword") strCurPassword: String?,
-                         @RequestParam("modPassword") strModPassword: String?): String {
+                         @RequestParam("modPassword") strModPassword: String?): String? {
         // Auth Check
-        if (memberService!!.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
+        if (memberService.getMember(principal.name) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
             return G_LOGOUT_REDIRECT_URL
 
         // Field
@@ -82,10 +80,9 @@ class AuthView constructor() {
         member = memberService.modifyInfo(principal, strCurPassword, strModPassword)
 
         // Process
-        if (member == null) return "redirect:/member/modify?error"
+        return if (member == null) "redirect:/member/modify?error" else G_LOGOUT_REDIRECT_URL
 
         // Return
-        return G_LOGOUT_REDIRECT_URL
     }
 
     /*
@@ -104,93 +101,93 @@ class AuthView constructor() {
     @GetMapping("/log")
     fun dispLoginLog(model: Model, principal: Principal,
                      @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
-                     @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
+                     @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String? {
         // Auth Check
-        var intPage: Int = intPage
-        var intCount: Int = intCount
-        if (memberService!!.getMember(principal.getName()) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
+        var page = intPage
+        var count = intCount
+        if (memberService.getMember(principal.name) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
             return G_LOGOUT_REDIRECT_URL
 
         // Exception
-        if (intPage < 1) intPage = 1
-        if (intCount < 1) intCount = 1
+        if (page < 1) page = 1
+        if (count < 1) count = 1
 
         // Field
         val pageMemberLoginLog: Page<MemberLoginLog?>?
 
         // Init
-        pageMemberLoginLog = memberService.getLoginLog(principal, intPage, intCount)
+        pageMemberLoginLog = memberService.getLoginLog(principal, page, count)
 
         // Process
-        model.addAttribute("listCardActivityLogs", viewDtoConverterService!!.convMemberActivityLogCards(pageMemberLoginLog!!.getContent()))
+        model.addAttribute("listCardActivityLogs", viewDtoConverterService.convMemberActivityLogCards(pageMemberLoginLog!!.content))
         //		model.addAttribute("logCurPage", intPage);
 //		model.addAttribute("logPageCount", intCount);
 //    	model.addAttribute("logMaxPage", memberService.getLoginLogMaxPage(principal, intCount));
 
         // Return
-        return G_BASE_PATH + "/LoginLog"
+        return "$G_BASE_PATH/LoginLog"
     }
 
     @GetMapping("/interlock")
-    fun dispInterlock(model: Model, auth: Authentication): String {
+    fun dispInterlock(model: Model, auth: Authentication): String? {
         // Field
         val listMemberInterlockToken: List<MemberInterlockToken?>?
 
         // Init
-        listMemberInterlockToken = interlockService!!.getAllTokens(auth)
+        listMemberInterlockToken = interlockService.getAllTokens(auth)
 
         // Process
-        model.addAttribute("listCardTokens", viewDtoConverterService!!.convInterlockTokenCards(listMemberInterlockToken))
+        model.addAttribute("listCardTokens", viewDtoConverterService.convInterlockTokenCards(listMemberInterlockToken!!))
 
         // Return
-        return G_BASE_PATH + "/Interlock"
+        return "$G_BASE_PATH/Interlock"
     }
 
     @PostMapping("/interlock/create")
-    fun createInterlock(auth: Authentication, interlockTokenDto: InterlockTokenDto): String {
+    fun createInterlock(auth: Authentication, interlockTokenDto: InterlockTokenDto): String? {
         // Field
         val isSuccess: Boolean
 
         // Process
-        isSuccess = interlockService!!.createToken(auth, interlockTokenDto)
+        isSuccess = interlockService.createToken(auth, interlockTokenDto)
 
         // Return
-        if (isSuccess) return G_BASE_REDIRECT_URL + "/interlock" else return G_BASE_REDIRECT_URL + "/interlock?err"
+        return if (isSuccess) "$G_BASE_REDIRECT_URL/interlock" else "$G_BASE_REDIRECT_URL/interlock?err"
     }
 
     @PostMapping("/interlock/enable/{id}")
-    fun enableToken(auth: Authentication, @PathVariable("id") tokenId: Long): String {
+    fun enableToken(auth: Authentication, @PathVariable("id") tokenId: Long): String? {
         // Field
         val isSuccess: Boolean
 
         // Process
-        isSuccess = interlockService!!.modifyToken(auth, tokenId, EnableStatusRule.ENABLE)
+        isSuccess = interlockService.modifyToken(auth, tokenId, EnableStatusRule.ENABLE)
 
         // Return
-        if (isSuccess) return G_BASE_REDIRECT_URL + "/interlock" else return G_BASE_REDIRECT_URL + "/interlock?err"
+        return if (isSuccess) "$G_BASE_REDIRECT_URL/interlock" else "$G_BASE_REDIRECT_URL/interlock?err"
     }
 
     @PostMapping("/interlock/disable/{id}")
-    fun disableToken(auth: Authentication, @PathVariable("id") tokenId: Long): String {
+    fun disableToken(auth: Authentication?, @PathVariable("id") tokenId: Long): String? {
         // Field
         val isSuccess: Boolean
 
         // Process
-        isSuccess = interlockService!!.modifyToken(auth, tokenId, EnableStatusRule.DISABLE)
+        isSuccess = interlockService.modifyToken(auth!!, tokenId, EnableStatusRule.DISABLE)
 
         // Return
-        if (isSuccess) return G_BASE_REDIRECT_URL + "/interlock" else return G_BASE_REDIRECT_URL + "/interlock?err"
+        return if (isSuccess) "$G_BASE_REDIRECT_URL/interlock" else "$G_BASE_REDIRECT_URL/interlock?err"
     }
 
     @PostMapping("/interlock/delete/{id}")
-    fun deleteToken(auth: Authentication, @PathVariable("id") tokenId: Long): String {
+    fun deleteToken(auth: Authentication?, @PathVariable("id") tokenId: Long): String? {
         // Field
         val isSuccess: Boolean
 
         // Process
-        isSuccess = interlockService!!.deleteToken(auth, tokenId)
+        isSuccess = interlockService.deleteToken(auth!!, tokenId)
 
         // Return
-        if (isSuccess) return G_BASE_REDIRECT_URL + "/interlock" else return G_BASE_REDIRECT_URL + "/interlock?err"
+        return if (isSuccess) "$G_BASE_REDIRECT_URL/interlock" else "$G_BASE_REDIRECT_URL/interlock?err"
     }
 }

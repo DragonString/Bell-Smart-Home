@@ -7,15 +7,15 @@ import net.softbell.bsh.domain.entity.MemberInterlockToken
  * @Description : 액션 연동 정보 카드정보 DTO
  */
 class ActionInterlockCardDto(entity: MemberInterlockToken?) {
-    private val name: String
-    private val token: String
+    var name: String?
+    var token: String?
 
     init {
         // Exception
-        if (entity == null) return
-
-        // Convert
-        name = entity.getName()
-        token = entity.getToken()
+        entity.let {
+            // Convert
+            name = entity!!.name
+            token = entity.token
+        }
     }
 }

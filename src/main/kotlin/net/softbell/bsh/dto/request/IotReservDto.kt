@@ -5,8 +5,8 @@ package net.softbell.bsh.dto.request
  * @Description : 예약정보 DTO
  */
 data class IotReservDto (
-        val enableStatus: Boolean = false,
-        val description: String? = null,
-        val expression: String? = null,
-        val mapAction: HashMap<Long, IotActionDto>? = null
+        var enableStatus: Boolean = false,
+        var description: String? = null,
+        var expression: String? = null,
+        var mapAction: HashMap<Long, IotActionDto>? = null
 )

@@ -2,6 +2,8 @@ package net.softbell.bsh.config
 
 import net.softbell.bsh.component.JwtTokenProvider
 import net.softbell.bsh.filter.security.JwtAuthenticationFilter
+import net.softbell.bsh.handler.security.CustomAccessDeniedHandler
+import net.softbell.bsh.handler.security.CustomAuthenticationEntryPoint
 import net.softbell.bsh.handler.security.LoginFailureHandler
 import net.softbell.bsh.handler.security.LoginSuccessHandler
 import net.softbell.bsh.service.MemberService
@@ -31,15 +33,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 @Configuration
 @EnableWebSecurity
 class SecurityConfig : WebSecurityConfigurerAdapter() {
-    @Autowired lateinit var memberService: MemberService
-    @Autowired lateinit var env: Environment
-    @Autowired lateinit var jwtTokenProvider: JwtTokenProvider
+    @Autowired private lateinit var memberService: MemberService
+    @Autowired private lateinit var env: Environment
+    @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
-    private val isDevMode: Boolean
-        private get() {
-            val profile = if (env!!.activeProfiles.size > 0) env.activeProfiles[0] else "dev"
-            return profile == "dev"
-        }
+
+    private fun isDevMode(): Boolean {
+        val profile = if (env.activeProfiles.isNotEmpty()) env.activeProfiles[0] else "dev"
+        return profile == "dev"
+    }
 
     @Bean
     fun passwordEncoder(): PasswordEncoder {
@@ -91,13 +93,13 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .deleteCookies(CustomConfig.SECURITY_COOKIE_NAME, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
                 .and()
                 .exceptionHandling() // 예외 핸들링
-                .accessDeniedHandler(builder().G_API_URI("/api/rest/exception/denied").G_VIEW_URI("/denied").build())
-                .authenticationEntryPoint(builder().G_API_URI("/api/rest/exception/entrypoint").G_VIEW_URI("/login").build())
+                .accessDeniedHandler(CustomAccessDeniedHandler("/api/rest/exception/denied", "/denied"))
+                .authenticationEntryPoint(CustomAuthenticationEntryPoint("/api/rest/exception/entrypoint", "/login"))
                 .and()
                 .addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java) // JWT Token 필터
 
         // Dev Mode
-        if (isDevMode) {
+        if (isDevMode()) {
             http.authorizeRequests() // 페이지 권한 설정
                     .antMatchers("/h2-console/**")
                     .permitAll()

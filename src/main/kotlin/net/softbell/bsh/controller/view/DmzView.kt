@@ -17,16 +17,16 @@ import javax.servlet.http.HttpServletResponse
  * @Description : 계정 비 인증 뷰 컨트롤러
  */
 @Controller
-class DmzView constructor() {
+class DmzView {
     // Global Field
     private val G_BASE_PATH: String = "services/dmz"
 
-    @Autowired lateinit var memberService: MemberService
-    @Autowired lateinit var centerService: CenterService
+    @Autowired private lateinit var memberService: MemberService
+    @Autowired private lateinit var centerService: CenterService
 
     // 회원가입 페이지
     @GetMapping("/signup")
-    fun dispSignup(model: Model, principal: Principal?): String {
+    fun dispSignup(model: Model, principal: Principal?): String? {
         // Init
         //FilterModelPrincipal(model, principal);
 
@@ -35,32 +35,31 @@ class DmzView constructor() {
             return "redirect:/"
 
         // Process
-        model.addAttribute("register", centerService.getSetting().getWebRegister())
+        model.addAttribute("register", centerService.getSetting().webRegister)
 
         // Return
-        return G_BASE_PATH + "/Signup"
+        return "$G_BASE_PATH/Signup"
     }
 
     // 회원가입 처리
     @PostMapping("/signup")
-    fun execSignup(memberDTO: MemberDto): String {
+    fun execSignup(memberDTO: MemberDto): String? {
         // Field
         val intResult: Long
 
         // Exception
-        if (centerService.getSetting().getWebRegister() === 0);
+        if (centerService.getSetting().webRegister!!.toInt() == 0);
 
         // Init
-        intResult = memberService!!.joinUser(memberDTO)
+        intResult = memberService.joinUser(memberDTO)
 
         // Check
-        if (intResult == -1L) return "redirect:/signup?error"
-        return "redirect:/login"
+        return if (intResult == -1L) "redirect:/signup?error" else "redirect:/login"
     }
 
     // 로그인 페이지
     @GetMapping("/login")
-    fun dispLogin(model: Model, principal: Principal?, request: HttpServletRequest?, response: HttpServletResponse?): String {
+    fun dispLogin(model: Model, principal: Principal?, request: HttpServletRequest?, response: HttpServletResponse?): String? {
         // Init
         //FilterModelPrincipal(model, principal);
 
@@ -69,9 +68,9 @@ class DmzView constructor() {
             return "redirect:/"
 
         // Process
-        model.addAttribute("maintenance", centerService.getSetting().getWebMaintenance())
+        model.addAttribute("maintenance", centerService.getSetting().webMaintenance)
 
         // Return
-        return G_BASE_PATH + "/Login"
+        return "$G_BASE_PATH/Login"
     }
 }

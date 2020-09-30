@@ -1,9 +1,9 @@
 package net.softbell.bsh.service
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.component.PermissionComp
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.GroupRole
+import net.softbell.bsh.domain.MemberRole
 import net.softbell.bsh.domain.entity.*
 import net.softbell.bsh.domain.repository.*
 import net.softbell.bsh.dto.request.MemberGroupDto
@@ -20,40 +20,37 @@ import javax.transaction.Transactional
  * @Author : Bell(bell@softbell.net)
  * @Description : 권한 서비스
  */
-@AllArgsConstructor
 @Service
-class PermissionService constructor() {
+class PermissionService {
     // Global Field
-    @Autowired lateinit var memberService: MemberService
-    @Autowired lateinit var permissionComp: PermissionComp
-    @Autowired lateinit var groupPermissionRepo: GroupPermissionRepo
-    @Autowired lateinit var nodeGroupRepo: NodeGroupRepo
-    @Autowired lateinit var nodeGroupItemRepo: NodeGroupItemRepo
-    @Autowired lateinit var memberGroupRepo: MemberGroupRepo
-    @Autowired lateinit var memberGroupItemRepo: MemberGroupItemRepo
-    @Autowired lateinit var nodeRepo: NodeRepo
+    @Autowired private lateinit var memberService: MemberService
+    @Autowired private lateinit var permissionComp: PermissionComp
+    @Autowired private lateinit var groupPermissionRepo: GroupPermissionRepo
+    @Autowired private lateinit var nodeGroupRepo: NodeGroupRepo
+    @Autowired private lateinit var nodeGroupItemRepo: NodeGroupItemRepo
+    @Autowired private lateinit var memberGroupRepo: MemberGroupRepo
+    @Autowired private lateinit var memberGroupItemRepo: MemberGroupItemRepo
+    @Autowired private lateinit var nodeRepo: NodeRepo
 
-    val allMemberGroup: List<MemberGroup?>
-        get() {
-            return memberGroupRepo!!.findAll()
-        }
-    val allNodeGroup: List<NodeGroup?>
-        get() {
-            return nodeGroupRepo!!.findAll()
-        }
+    fun getAllMemberGroup(): List<MemberGroup?> {
+        return memberGroupRepo.findAll()
+    }
+
+    fun getAllNodeGroup(): List<NodeGroup?> {
+        return nodeGroupRepo.findAll()
+    }
 
     fun getMemberGroup(gid: Long): MemberGroup? {
         // Field
         val optMemberGroup: Optional<MemberGroup?>
 
         // Init
-        optMemberGroup = memberGroupRepo!!.findById(gid)
+        optMemberGroup = memberGroupRepo.findById(gid)
 
         // Exception
-        if (!optMemberGroup.isPresent()) return null
+        return if (!optMemberGroup.isPresent) null else optMemberGroup.get()
 
         // Return
-        return optMemberGroup.get()
     }
 
     fun getNodeGroup(gid: Long): NodeGroup? {
@@ -61,13 +58,12 @@ class PermissionService constructor() {
         val optNodeGroup: Optional<NodeGroup?>
 
         // Init
-        optNodeGroup = nodeGroupRepo!!.findById(gid)
+        optNodeGroup = nodeGroupRepo.findById(gid)
 
         // Exception
-        if (!optNodeGroup.isPresent()) return null
+        return if (!optNodeGroup.isPresent) null else optNodeGroup.get()
 
         // Return
-        return optNodeGroup.get()
     }
 
     fun isPrivilege(role: GroupRole?, auth: Authentication, node: Node?): Boolean {
@@ -75,7 +71,7 @@ class PermissionService constructor() {
         val member: Member?
 
         // Init
-        member = memberService!!.getMember(auth.getName())
+        member = memberService.getMember(auth.name)
 
         // Return
         return isPrivilege(role, member, node)
@@ -91,7 +87,7 @@ class PermissionService constructor() {
         // Exception
         if (member == null) // 해당하는 회원이 없으면
             return false // 권한 없음
-        if (member.getPermission() === MemberRole.ADMIN || member.getPermission() === MemberRole.SUPERADMIN) return true // 관리자는 모든 권한 통과
+        if (member.permission === MemberRole.ADMIN || member.permission === MemberRole.SUPERADMIN) return true // 관리자는 모든 권한 통과
 
         // Field
         val listMemberGroup: List<MemberGroup?>?
@@ -99,23 +95,22 @@ class PermissionService constructor() {
         val listGroupPermission: List<GroupPermission?>?
 
         // Init
-        listMemberGroup = permissionComp!!.getEnableMemberGroup(member) // 권한 있는 사용자 그룹 로드
+        listMemberGroup = permissionComp.getEnableMemberGroup(member) // 권한 있는 사용자 그룹 로드
         listNodeGroup = permissionComp.getEnableNodeGroup(node) // 권한 있는 노드 그룹 로드
         listGroupPermission = permissionComp.getGroupPermission(role, listMemberGroup, listNodeGroup) // 요청한 권한 로드
 
         // Check
-        if (listGroupPermission!!.size > 0) return true
+        return if (listGroupPermission!!.size > 0) true else false
 
         // Return
-        return false
     }
 
-    fun getPrivilegeNodeGroupItems(role: GroupRole?, auth: Authentication): List<NodeGroupItem>? {
+    fun getPrivilegeNodeGroupItems(role: GroupRole?, auth: Authentication): List<NodeGroupItem?>? {
         // Field
         val member: Member?
 
         // Init
-        member = memberService!!.getMember(auth.getName())
+        member = memberService.getMember(auth.name)
 
         // Return
         return getPrivilegeNodeGroupItems(role, member)
@@ -127,26 +122,26 @@ class PermissionService constructor() {
      * 3. 그룹 권한으로 활성화된 노드 그룹 리스트 검색
      * 4. 검색된 노드 그룹에 연결된 노드 그룹 아이템으로 노드 리스트 검색
      */
-    fun getPrivilegeNodeGroupItems(role: GroupRole?, member: Member?): List<NodeGroupItem>? {
+    fun getPrivilegeNodeGroupItems(role: GroupRole?, member: Member?): List<NodeGroupItem?>? {
         // Exception
         if (member == null) return null
 
         // Field
         val listMemberGroup: List<MemberGroup?>?
         val listGroupPermission: List<GroupPermission?>?
-        val listNodeGroup: List<NodeGroup?>?
+        val listNodeGroup: List<NodeGroup>?
         val listPrivilegeNodeGroup: List<NodeGroup?>?
-        val listPrivilegeNodeGroupItem: MutableList<NodeGroupItem>
+        val listPrivilegeNodeGroupItem: List<NodeGroupItem?>
 
         // Init
-        listMemberGroup = permissionComp!!.getEnableMemberGroup(member) // 권한 있는 사용자 그룹 로드
+        listMemberGroup = permissionComp.getEnableMemberGroup(member) // 권한 있는 사용자 그룹 로드
         listGroupPermission = permissionComp.getMemberGroupPermission(role, listMemberGroup) // 요청한 권한 로드
         listNodeGroup = permissionComp.getEnableNodeGroup() // 활성화된 노드 그룹 로드
-        listPrivilegeNodeGroup = permissionComp.getPrivilegeNodeGroup(listNodeGroup, listGroupPermission) // 권한있는 노드 그룹 로드
+        listPrivilegeNodeGroup = permissionComp.getPrivilegeNodeGroup(listNodeGroup!!, listGroupPermission) // 권한있는 노드 그룹 로드
         listPrivilegeNodeGroupItem = ArrayList()
 
         // Process
-        for (entity: NodeGroup? in listPrivilegeNodeGroup!!) listPrivilegeNodeGroupItem.addAll(entity.getNodeGroupItems())
+        for (entity in listPrivilegeNodeGroup!!) listPrivilegeNodeGroupItem.addAll(entity!!.nodeGroupItems!!)
 
         // Return
         return listPrivilegeNodeGroupItem
@@ -158,80 +153,31 @@ class PermissionService constructor() {
         val memberGroup: MemberGroup
 
         // Parent Load
-        memberGroup = builder().name(memberGroupDto.getName()).build()
-        if (memberGroupDto.isEnableStatus()) memberGroup.setEnableStatus(EnableStatusRule.ENABLE) else memberGroup.setEnableStatus(EnableStatusRule.DISABLE)
+        memberGroup = MemberGroup()
+        memberGroup.name = memberGroupDto.name
+        if (memberGroupDto.enableStatus) memberGroup.enableStatus = EnableStatusRule.ENABLE else memberGroup.enableStatus = EnableStatusRule.DISABLE
 
         // DB - Save
-        memberGroupRepo!!.save(memberGroup)
+        memberGroupRepo.save(memberGroup)
 
         // Child Load
-        for (memberId: Long in memberGroupDto.getMemberId()) {
+        for (memberId in memberGroupDto.memberId!!) {
             // Field
             var member: Member?
             var memberGroupItem: MemberGroupItem
 
             // Init
-            member = memberService!!.getMember(memberId)
+            member = memberService.getMember(memberId)
 
             // Exception
             if (member == null) continue
 
             // Create
-            memberGroupItem = builder()
-                    .memberGroup(memberGroup)
-                    .member(member)
-                    .assignDate(Date())
-                    .build()
+            memberGroupItem = MemberGroupItem()
 
-            // DB = Save
-            memberGroupItemRepo!!.save(memberGroupItem)
-        }
-
-        // Return
-        return true
-    }
-
-    @Transactional
-    fun modifyMemberGroup(gid: Long, memberGroupDto: MemberGroupDto): Boolean {
-        // Field
-        val optMemberGroup: Optional<MemberGroup?>
-        val memberGroup: MemberGroup
-
-        // Init
-        optMemberGroup = memberGroupRepo!!.findById(gid)
-
-        // Exception
-        if (!optMemberGroup.isPresent()) return false
-
-        // Parent Load
-        memberGroup = optMemberGroup.get()
-
-        // DB - Update
-        memberGroup.setName(memberGroupDto.getName())
-        if (memberGroupDto.isEnableStatus()) memberGroup.setEnableStatus(EnableStatusRule.ENABLE) else memberGroup.setEnableStatus(EnableStatusRule.DISABLE)
-
-        // DB - Delete
-        memberGroupItemRepo!!.deleteAll(memberGroup.getMemberGroupItems())
-        memberGroupItemRepo.flush()
-
-        // Child Load
-        for (memberId: Long in memberGroupDto.getMemberId()) {
-            // Field
-            var member: Member?
-            var memberGroupItem: MemberGroupItem
-
-            // Init
-            member = memberService!!.getMember(memberId)
-
-            // Exception
-            if (member == null) continue
-
-            // Create
-            memberGroupItem = builder()
-                    .memberGroup(memberGroup)
-                    .member(member)
-                    .assignDate(Date())
-                    .build()
+            memberGroupItem.memberGroup = memberGroup
+            memberGroupItem.member = member
+            memberGroupItem.assignDate = Date()
 
             // DB = Save
             memberGroupItemRepo.save(memberGroupItem)
@@ -242,7 +188,57 @@ class PermissionService constructor() {
     }
 
     @Transactional
-    fun enableMemberGroup(listGid: List<Long>): Boolean {
+    fun modifyMemberGroup(gid: Long?, memberGroupDto: MemberGroupDto): Boolean {
+        // Field
+        val optMemberGroup: Optional<MemberGroup?>
+        val memberGroup: MemberGroup
+
+        // Init
+        optMemberGroup = memberGroupRepo.findById(gid!!)
+
+        // Exception
+        if (!optMemberGroup.isPresent) return false
+
+        // Parent Load
+        memberGroup = optMemberGroup.get()
+
+        // DB - Update
+        memberGroup.name = memberGroupDto.name
+        if (memberGroupDto.enableStatus) memberGroup.enableStatus = EnableStatusRule.ENABLE else memberGroup.enableStatus = EnableStatusRule.DISABLE
+
+        // DB - Delete
+        memberGroupItemRepo.deleteAll(memberGroup.memberGroupItems!!)
+        memberGroupItemRepo.flush()
+
+        // Child Load
+        for (memberId in memberGroupDto.memberId!!) {
+            // Field
+            var member: Member?
+            var memberGroupItem: MemberGroupItem
+
+            // Init
+            member = memberService.getMember(memberId)
+
+            // Exception
+            if (member == null) continue
+
+            // Create
+            memberGroupItem = MemberGroupItem()
+
+            memberGroupItem.memberGroup = memberGroup
+            memberGroupItem.member = member
+            memberGroupItem.assignDate = Date()
+
+            // DB = Save
+            memberGroupItemRepo.save(memberGroupItem)
+        }
+
+        // Return
+        return true
+    }
+
+    @Transactional
+    fun enableMemberGroup(listGid: List<Long?>): Boolean {
         // Field
         var isSuccess: Boolean
 
@@ -250,21 +246,21 @@ class PermissionService constructor() {
         isSuccess = true
 
         // Process
-        for (gid: Long in listGid) {
+        for (gid in listGid) {
             // Field
             var optMemberGroup: Optional<MemberGroup?>
 
             // Init
-            optMemberGroup = memberGroupRepo!!.findById(gid)
+            optMemberGroup = memberGroupRepo.findById(gid!!)
 
             // Exception
-            if (!optMemberGroup.isPresent()) {
+            if (!optMemberGroup.isPresent) {
                 isSuccess = false
                 continue
             }
 
             // DB - Update
-            optMemberGroup.get().setEnableStatus(EnableStatusRule.ENABLE)
+            optMemberGroup.get().enableStatus = EnableStatusRule.ENABLE
         }
 
         // Return
@@ -272,7 +268,7 @@ class PermissionService constructor() {
     }
 
     @Transactional
-    fun disableMemberGroup(listGid: List<Long>): Boolean {
+    fun disableMemberGroup(listGid: List<Long?>): Boolean {
         // Field
         var isSuccess: Boolean
 
@@ -280,21 +276,21 @@ class PermissionService constructor() {
         isSuccess = true
 
         // Process
-        for (gid: Long in listGid) {
+        for (gid in listGid) {
             // Field
             var optMemberGroup: Optional<MemberGroup?>
 
             // Init
-            optMemberGroup = memberGroupRepo!!.findById(gid)
+            optMemberGroup = memberGroupRepo.findById(gid!!)
 
             // Exception
-            if (!optMemberGroup.isPresent()) {
+            if (!optMemberGroup.isPresent) {
                 isSuccess = false
                 continue
             }
 
             // DB - Update
-            optMemberGroup.get().setEnableStatus(EnableStatusRule.DISABLE)
+            optMemberGroup.get().enableStatus = EnableStatusRule.DISABLE
         }
 
         // Return
@@ -302,7 +298,7 @@ class PermissionService constructor() {
     }
 
     @Transactional
-    fun deleteMemberGroup(listGid: List<Long>): Boolean {
+    fun deleteMemberGroup(listGid: List<Long?>): Boolean {
         // Field
         var isSuccess: Boolean
 
@@ -310,16 +306,16 @@ class PermissionService constructor() {
         isSuccess = true
 
         // Process
-        for (gid: Long in listGid) {
+        for (gid in listGid) {
             // Field
             var optMemberGroup: Optional<MemberGroup?>
             var memberGroup: MemberGroup
 
             // Init
-            optMemberGroup = memberGroupRepo!!.findById(gid)
+            optMemberGroup = memberGroupRepo.findById(gid!!)
 
             // Exception
-            if (!optMemberGroup.isPresent()) {
+            if (!optMemberGroup.isPresent) {
                 isSuccess = false
                 continue
             }
@@ -328,8 +324,8 @@ class PermissionService constructor() {
             memberGroup = optMemberGroup.get()
 
             // DB - Delete
-            groupPermissionRepo!!.deleteAll(memberGroup.getGroupPermissions())
-            memberGroupItemRepo!!.deleteAll(memberGroup.getMemberGroupItems())
+            groupPermissionRepo.deleteAll(memberGroup.groupPermissions!!)
+            memberGroupItemRepo.deleteAll(memberGroup.memberGroupItems!!)
             memberGroupRepo.delete(memberGroup)
         }
 
@@ -347,23 +343,23 @@ class PermissionService constructor() {
 
         // Init
         memberGroup = getMemberGroup(gid)
-        nodeGroup = getNodeGroup(memberGroupPermissionDto.getNodeGid())
-        groupRole = GroupRole.Companion.ofLegacyCode(memberGroupPermissionDto.getPermission())
+        nodeGroup = getNodeGroup(memberGroupPermissionDto.nodeGid!!)
+        groupRole = GroupRole.ofLegacyCode(memberGroupPermissionDto.permission!!)
 
         // Exception
         if (memberGroup == null || nodeGroup == null) return false
         // TODO 기존 권한이 있으면 생성 중단하는 코드 필요
 
         // Make
-        groupPermission = builder()
-                .assignDate(Date())
-                .memberGroup(memberGroup)
-                .nodeGroup(nodeGroup)
-                .groupPermission(groupRole)
-                .build()
+        groupPermission = GroupPermission()
+
+        groupPermission.assignDate = Date()
+        groupPermission.memberGroup = memberGroup
+        groupPermission.nodeGroup = nodeGroup
+        groupPermission.groupPermission = groupRole
 
         // DB - Save
-        groupPermissionRepo!!.save(groupPermission)
+        groupPermissionRepo.save(groupPermission)
 
         // Return
         return true
@@ -375,80 +371,32 @@ class PermissionService constructor() {
         val nodeGroup: NodeGroup
 
         // Parent Load
-        nodeGroup = builder().name(nodeGroupDto.getName()).build()
-        if (nodeGroupDto.isEnableStatus()) nodeGroup.setEnableStatus(EnableStatusRule.ENABLE) else nodeGroup.setEnableStatus(EnableStatusRule.DISABLE)
+        nodeGroup = NodeGroup()
+
+        nodeGroup.name = nodeGroupDto.name
+        if (nodeGroupDto.enableStatus) nodeGroup.enableStatus = EnableStatusRule.ENABLE else nodeGroup.enableStatus = EnableStatusRule.DISABLE
 
         // DB - Save
-        nodeGroupRepo!!.save(nodeGroup)
+        nodeGroupRepo.save(nodeGroup)
 
         // Child Load
-        for (nodeId: Long in nodeGroupDto.getNodeId()) {
+        for (nodeId in nodeGroupDto.nodeId!!) {
             // Field
             var optNode: Optional<Node?>
             var nodeGroupItem: NodeGroupItem
 
             // Init
-            optNode = nodeRepo!!.findById(nodeId)
+            optNode = nodeRepo.findById(nodeId)
 
             // Exception
-            if (!optNode.isPresent()) continue
+            if (!optNode.isPresent) continue
 
             // Create
-            nodeGroupItem = builder()
-                    .nodeGroup(nodeGroup)
-                    .node(optNode.get())
-                    .assignDate(Date())
-                    .build()
+            nodeGroupItem = NodeGroupItem()
 
-            // DB = Save
-            nodeGroupItemRepo!!.save(nodeGroupItem)
-        }
-
-        // Return
-        return true
-    }
-
-    @Transactional
-    fun modifyNodeGroup(gid: Long, nodeGroupDto: NodeGroupDto): Boolean {
-        // Field
-        val optNodeGroup: Optional<NodeGroup?>
-        val nodeGroup: NodeGroup
-
-        // Init
-        optNodeGroup = nodeGroupRepo!!.findById(gid)
-
-        // Exception
-        if (!optNodeGroup.isPresent()) return false
-
-        // Parent Load
-        nodeGroup = optNodeGroup.get()
-
-        // DB - Modify
-        nodeGroup.setName(nodeGroupDto.getName())
-        if (nodeGroupDto.isEnableStatus()) nodeGroup.setEnableStatus(EnableStatusRule.ENABLE) else nodeGroup.setEnableStatus(EnableStatusRule.DISABLE)
-
-        // DB - Delete
-        nodeGroupItemRepo!!.deleteAll(nodeGroup.getNodeGroupItems())
-        nodeGroupItemRepo.flush()
-
-        // Child Load
-        for (nodeId: Long in nodeGroupDto.getNodeId()) {
-            // Field
-            var optNode: Optional<Node?>
-            var nodeGroupItem: NodeGroupItem
-
-            // Init
-            optNode = nodeRepo!!.findById(nodeId)
-
-            // Exception
-            if (!optNode.isPresent()) continue
-
-            // Create
-            nodeGroupItem = builder()
-                    .nodeGroup(nodeGroup)
-                    .node(optNode.get())
-                    .assignDate(Date())
-                    .build()
+            nodeGroupItem.nodeGroup = nodeGroup
+            nodeGroupItem.node = optNode.get()
+            nodeGroupItem.assignDate = Date()
 
             // DB = Save
             nodeGroupItemRepo.save(nodeGroupItem)
@@ -459,7 +407,57 @@ class PermissionService constructor() {
     }
 
     @Transactional
-    fun enableNodeGroup(listGid: List<Long>): Boolean {
+    fun modifyNodeGroup(gid: Long?, nodeGroupDto: NodeGroupDto): Boolean {
+        // Field
+        val optNodeGroup: Optional<NodeGroup?>
+        val nodeGroup: NodeGroup
+
+        // Init
+        optNodeGroup = nodeGroupRepo.findById(gid!!)
+
+        // Exception
+        if (!optNodeGroup.isPresent) return false
+
+        // Parent Load
+        nodeGroup = optNodeGroup.get()
+
+        // DB - Modify
+        nodeGroup.name = nodeGroupDto.name
+        if (nodeGroupDto.enableStatus) nodeGroup.enableStatus = EnableStatusRule.ENABLE else nodeGroup.enableStatus = EnableStatusRule.DISABLE
+
+        // DB - Delete
+        nodeGroupItemRepo.deleteAll(nodeGroup.nodeGroupItems!!)
+        nodeGroupItemRepo.flush()
+
+        // Child Load
+        for (nodeId in nodeGroupDto.nodeId!!) {
+            // Field
+            var optNode: Optional<Node?>
+            var nodeGroupItem: NodeGroupItem
+
+            // Init
+            optNode = nodeRepo.findById(nodeId)
+
+            // Exception
+            if (!optNode.isPresent) continue
+
+            // Create
+            nodeGroupItem = NodeGroupItem()
+
+            nodeGroupItem.nodeGroup = nodeGroup
+            nodeGroupItem.node = optNode.get()
+            nodeGroupItem.assignDate = Date()
+
+            // DB = Save
+            nodeGroupItemRepo.save(nodeGroupItem)
+        }
+
+        // Return
+        return true
+    }
+
+    @Transactional
+    fun enableNodeGroup(listGid: List<Long?>): Boolean {
         // Field
         var isSuccess: Boolean
 
@@ -467,21 +465,21 @@ class PermissionService constructor() {
         isSuccess = true
 
         // Process
-        for (gid: Long in listGid) {
+        for (gid in listGid) {
             // Field
             var optNodeGroup: Optional<NodeGroup?>
 
             // Init
-            optNodeGroup = nodeGroupRepo!!.findById(gid)
+            optNodeGroup = nodeGroupRepo.findById(gid!!)
 
             // Exception
-            if (!optNodeGroup.isPresent()) {
+            if (!optNodeGroup.isPresent) {
                 isSuccess = false
                 continue
             }
 
             // DB - Update
-            optNodeGroup.get().setEnableStatus(EnableStatusRule.ENABLE)
+            optNodeGroup.get().enableStatus = EnableStatusRule.ENABLE
         }
 
         // Return
@@ -489,7 +487,7 @@ class PermissionService constructor() {
     }
 
     @Transactional
-    fun disableNodeGroup(listGid: List<Long>): Boolean {
+    fun disableNodeGroup(listGid: List<Long?>): Boolean {
         // Field
         var isSuccess: Boolean
 
@@ -497,21 +495,21 @@ class PermissionService constructor() {
         isSuccess = true
 
         // Process
-        for (gid: Long in listGid) {
+        for (gid in listGid) {
             // Field
             var optNodeGroup: Optional<NodeGroup?>
 
             // Init
-            optNodeGroup = nodeGroupRepo!!.findById(gid)
+            optNodeGroup = nodeGroupRepo.findById(gid!!)
 
             // Exception
-            if (!optNodeGroup.isPresent()) {
+            if (!optNodeGroup.isPresent) {
                 isSuccess = false
                 continue
             }
 
             // DB - Update
-            optNodeGroup.get().setEnableStatus(EnableStatusRule.DISABLE)
+            optNodeGroup.get().enableStatus = EnableStatusRule.DISABLE
         }
 
         // Return
@@ -519,7 +517,7 @@ class PermissionService constructor() {
     }
 
     @Transactional
-    fun deleteNodeGroup(listGid: List<Long>): Boolean {
+    fun deleteNodeGroup(listGid: List<Long?>): Boolean {
         // Field
         var isSuccess: Boolean
 
@@ -527,16 +525,16 @@ class PermissionService constructor() {
         isSuccess = true
 
         // Process
-        for (gid: Long in listGid) {
+        for (gid in listGid) {
             // Field
             var optNodeGroup: Optional<NodeGroup?>
             var nodeGroup: NodeGroup
 
             // Init
-            optNodeGroup = nodeGroupRepo!!.findById(gid)
+            optNodeGroup = nodeGroupRepo.findById(gid!!)
 
             // Exception
-            if (!optNodeGroup.isPresent()) {
+            if (!optNodeGroup.isPresent) {
                 isSuccess = false
                 continue
             }
@@ -545,8 +543,8 @@ class PermissionService constructor() {
             nodeGroup = optNodeGroup.get()
 
             // DB - Delete
-            groupPermissionRepo!!.deleteAll(nodeGroup.getGroupPermissions())
-            nodeGroupItemRepo!!.deleteAll(nodeGroup.getNodeGroupItems())
+            groupPermissionRepo.deleteAll(nodeGroup.groupPermissions!!)
+            nodeGroupItemRepo.deleteAll(nodeGroup.nodeGroupItems!!)
             nodeGroupRepo.delete(nodeGroup)
         }
 
@@ -563,39 +561,39 @@ class PermissionService constructor() {
         val groupRole: GroupRole?
 
         // Init
-        memberGroup = getMemberGroup(nodeGroupPermissionDto.getMemberGid())
+        memberGroup = getMemberGroup(nodeGroupPermissionDto.memberGid!!)
         nodeGroup = getNodeGroup(gid)
-        groupRole = GroupRole.Companion.ofLegacyCode(nodeGroupPermissionDto.getPermission())
+        groupRole = GroupRole.ofLegacyCode(nodeGroupPermissionDto.permission!!)
 
         // Exception
         if (memberGroup == null || nodeGroup == null) return false
         // TODO 기존 권한이 있으면 생성 중단하는 코드 필요
 
         // Make
-        groupPermission = builder()
-                .assignDate(Date())
-                .memberGroup(memberGroup)
-                .nodeGroup(nodeGroup)
-                .groupPermission(groupRole)
-                .build()
+        groupPermission = GroupPermission()
+
+        groupPermission.assignDate = Date()
+        groupPermission.memberGroup = memberGroup
+        groupPermission.nodeGroup = nodeGroup
+        groupPermission.groupPermission = groupRole
 
         // DB - Save
-        groupPermissionRepo!!.save(groupPermission)
+        groupPermissionRepo.save(groupPermission)
 
         // Return
         return true
     }
 
     @Transactional
-    fun deleteGroupPermission(gid: Long): Boolean {
+    fun deleteGroupPermission(gid: Long?): Boolean {
         // Field
         val optGroupPermission: Optional<GroupPermission?>
 
         // Init
-        optGroupPermission = groupPermissionRepo!!.findById(gid)
+        optGroupPermission = groupPermissionRepo.findById(gid!!)
 
         // Exception
-        if (!optGroupPermission.isPresent()) return false
+        if (!optGroupPermission.isPresent) return false
 
         // DB - Save
         groupPermissionRepo.delete(optGroupPermission.get())

@@ -1,5 +1,6 @@
 package net.softbell.bsh.iot.service.v1
 
+import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.ItemCategoryRule
@@ -27,33 +28,33 @@ import javax.transaction.Transactional
 @Service
 class IotActionServiceV1 {
     // Global Field
-    @Autowired lateinit var memberService: MemberService
-    @Autowired lateinit var nodeService: IotNodeServiceV1
-    @Autowired lateinit var nodeItemRepo: NodeItemRepo
-    @Autowired lateinit var nodeActionRepo: NodeActionRepo
-    @Autowired lateinit var nodeActionItemRepo: NodeActionItemRepo
+    @Autowired private lateinit var memberService: MemberService
+    @Autowired private lateinit var nodeService: IotNodeServiceV1
+    @Autowired private lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired private lateinit var nodeActionRepo: NodeActionRepo
+    @Autowired private lateinit var nodeActionItemRepo: NodeActionItemRepo
 
-    fun getAvailableNodeItem(auth: Authentication): List<NodeItem?>? {
+    fun getAvailableNodeItem(auth: Authentication?): List<NodeItem?> {
         // Field
-        val listNodeItem: List<NodeItem?>?
+        val listNodeItem: List<NodeItem?>
 
         // Init
-        listNodeItem = nodeService!!.getCategoryNodeItems(auth, GroupRole.ACTION, ItemCategoryRule.CONTROL)
+        listNodeItem = nodeService.getCategoryNodeItems(auth!!, GroupRole.ACTION, ItemCategoryRule.CONTROL)
 
         // Return
         return listNodeItem
     }
 
-    fun getAllNodeActions(auth: Authentication): List<NodeAction?>? {
+    fun getAllNodeActions(auth: Authentication): List<NodeAction?> {
         // Field
         val member: Member?
-        val listNodeAction: List<NodeAction?>?
+        val listNodeAction: List<NodeAction?>
 
         // Init
-        member = memberService!!.getMember(auth.name)
+        member = memberService.getMember(auth.name)
 
         // Exception
-        listNodeAction = if (memberService.isAdmin(member)) nodeActionRepo!!.findAll() else nodeActionRepo!!.findByMember(member)
+        listNodeAction = if (memberService.isAdmin(member)) nodeActionRepo.findAll() else nodeActionRepo.findByMember(member)
 
         // Return
         return listNodeAction
@@ -65,7 +66,7 @@ class IotActionServiceV1 {
         val nodeAction: NodeAction
 
         // Init
-        optNodeAction = nodeActionRepo!!.findById(actionId)
+        optNodeAction = nodeActionRepo.findById(actionId)
 
         // Exception
         if (!optNodeAction.isPresent) return null
@@ -80,7 +81,7 @@ class IotActionServiceV1 {
     @Transactional
     fun createAction(auth: Authentication, iotActionDto: IotActionDto): Boolean {
         // Log
-        log.info(BellLog.getLogHead() + "Creating Action (" + iotActionDto.getDescription() + ")")
+        logger.info("Creating Action (" + iotActionDto.description + ")")
 
         // Field
         val member: Member?
@@ -90,54 +91,54 @@ class IotActionServiceV1 {
         val enableStatus: EnableStatusRule
 
         // Init
-        member = memberService!!.getMember(auth.name)
+        member = memberService.getMember(auth.name)
         listNodeActionItem = ArrayList()
-        mapActionItem = iotActionDto.getMapActionItem()
-        enableStatus = if (iotActionDto.isEnableStatus()) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
+        mapActionItem = iotActionDto.mapActionItem
+        enableStatus = if (iotActionDto.enableStatus) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
 
         // Exception
         if (member == null) return false
 
         // Data Process - Action Info
-        nodeAction = builder()
-                .enableStatus(enableStatus)
-                .description(iotActionDto.getDescription())
-                .member(member)
-                .build()
+        nodeAction = NodeAction()
+
+        nodeAction.enableStatus = enableStatus
+        nodeAction.description = iotActionDto.description
+        nodeAction.member = member
 
         // Data Process - Action Item Info
         if (mapActionItem != null) {
-            mapActionItem.forEach(BiConsumer { key: Long?, value: IotActionItemDto ->
-                if (value.getItemId() != null && value.getItemId() !== 0) {
+            mapActionItem.forEach(BiConsumer { key: Long?, (_, itemId, itemStatus) ->
+                if (itemId != null && itemId != 0L) {
                     // Field
                     val optNodeItem: Optional<NodeItem?>
                     val nodeActionItem: NodeActionItem
 
                     // Init
-                    optNodeItem = nodeItemRepo!!.findById(value.getItemId())
+                    optNodeItem = nodeItemRepo.findById(itemId)
 
                     // Build
                     if (optNodeItem.isPresent) {
-                        nodeActionItem = builder()
-                                .nodeItem(optNodeItem.get())
-                                .itemStatus(value.getItemStatus())
-                                .nodeAction(nodeAction)
-                                .build()
+                        nodeActionItem = NodeActionItem()
+
+                        nodeActionItem.nodeItem = optNodeItem.get()
+                        nodeActionItem.itemStatus = itemStatus
+                        nodeActionItem.nodeAction = nodeAction
 
                         // List Add
                         listNodeActionItem.add(nodeActionItem)
                     }
                 }
             })
-            nodeAction.setNodeActionItems(listNodeActionItem)
+            nodeAction.nodeActionItems = listNodeActionItem
         }
 
         // DB - Save
-        nodeActionRepo!!.save(nodeAction)
-        nodeActionItemRepo!!.saveAll(listNodeActionItem)
+        nodeActionRepo.save(nodeAction)
+        nodeActionItemRepo.saveAll(listNodeActionItem)
 
         // Log
-        log.info(BellLog.getLogHead() + "Created Action (" + nodeAction.getActionId() + ", " + iotActionDto.getDescription() + ")")
+        logger.info("Created Action (" + nodeAction.actionId + ", " + iotActionDto.description + ")")
 
         // Return
         return true
@@ -153,10 +154,10 @@ class IotActionServiceV1 {
         val enableStatus: EnableStatusRule
 
         // Init
-        optNodeAction = nodeActionRepo!!.findById(actionId)
-        mapActionItem = iotActionDto.getMapActionItem()
+        optNodeAction = nodeActionRepo.findById(actionId)
+        mapActionItem = iotActionDto.mapActionItem
         listNodeActionItem = ArrayList()
-        enableStatus = if (iotActionDto.isEnableStatus()) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
+        enableStatus = if (iotActionDto.enableStatus) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
 
         // Exception
         if (!optNodeAction.isPresent) return false
@@ -166,45 +167,45 @@ class IotActionServiceV1 {
         //		listNodeActionItem = nodeAction.getNodeActionItems();
 
         // DB - Action Item Clear
-        nodeActionItemRepo!!.deleteAll(nodeAction.getNodeActionItems())
+        nodeActionItemRepo.deleteAll(nodeAction.nodeActionItems!!)
         nodeActionItemRepo.flush()
         //		nodeActionRepo.flush();
 //		for (NodeActionItem value : listNodeActionItem)
 //			nodeAction.removeNodeActionItem(value);
 
         // Data Process - Item Info
-        nodeAction.setNodeActionItems(null)
-        nodeAction.setEnableStatus(enableStatus)
-        nodeAction.setDescription(iotActionDto.getDescription())
+        nodeAction.nodeActionItems = null
+        nodeAction.enableStatus = enableStatus
+        nodeAction.description = iotActionDto.description
 
         // DB - Save
         nodeActionRepo.save(nodeAction)
 
         // Data Process - Action Item Info
         if (mapActionItem != null) {
-            mapActionItem.forEach(BiConsumer { key: Long?, value: IotActionItemDto ->
-                if (value.getItemId() != null && value.getItemId() !== 0) {
+            mapActionItem.forEach(BiConsumer { key: Long?, (_, itemId, itemStatus) ->
+                if (itemId != null && itemId != 0L) {
                     // Field
                     val optNodeItem: Optional<NodeItem?>
                     val nodeActionItem: NodeActionItem
 
                     // Init
-                    optNodeItem = nodeItemRepo!!.findById(value.getItemId())
+                    optNodeItem = nodeItemRepo.findById(itemId)
 
                     // Build
                     if (optNodeItem.isPresent) {
-                        nodeActionItem = builder()
-                                .nodeItem(optNodeItem.get())
-                                .itemStatus(value.getItemStatus())
-                                .nodeAction(nodeAction)
-                                .build()
+                        nodeActionItem = NodeActionItem()
+
+                        nodeActionItem.nodeItem = optNodeItem.get()
+                        nodeActionItem.itemStatus = itemStatus
+                        nodeActionItem.nodeAction = nodeAction
 
                         // List Add
                         listNodeActionItem.add(nodeActionItem)
                     }
                 }
             })
-            nodeAction.setNodeActionItems(listNodeActionItem)
+            nodeAction.nodeActionItems = listNodeActionItem
         }
 
         // DB - Update
@@ -222,7 +223,7 @@ class IotActionServiceV1 {
         val nodeAction: NodeAction
 
         // Init
-        optNodeAction = nodeActionRepo!!.findById(actionId)
+        optNodeAction = nodeActionRepo.findById(actionId)
 
         // Exception
         if (!optNodeAction.isPresent) return false
@@ -231,7 +232,7 @@ class IotActionServiceV1 {
         nodeAction = optNodeAction.get()
 
         // DB - Delete
-        nodeActionItemRepo!!.deleteAll(nodeAction.getNodeActionItems())
+        nodeActionItemRepo.deleteAll(nodeAction.nodeActionItems!!)
         nodeActionRepo.delete(nodeAction)
 
         // Return
@@ -244,7 +245,7 @@ class IotActionServiceV1 {
         var isSuccess = true
 
         // Init
-        optNodeAction = nodeActionRepo!!.findById(actionId)
+        optNodeAction = nodeActionRepo.findById(actionId)
 
         // Exception
         if (!optNodeAction.isPresent) return false
@@ -263,8 +264,8 @@ class IotActionServiceV1 {
         var isSuccess = true
 
         // Init
-        member = memberService!!.getMember(auth.name)
-        optNodeAction = nodeActionRepo!!.findById(actionId)
+        member = memberService.getMember(auth.name)
+        optNodeAction = nodeActionRepo.findById(actionId)
 
         // Exception
         if (!optNodeAction.isPresent) return false
@@ -278,24 +279,26 @@ class IotActionServiceV1 {
 
     fun execAction(nodeAction: NodeAction?, member: Member?): Boolean {
         // Field
-        val listNodeActionItem: List<NodeActionItem>
+        val listNodeActionItem: List<NodeActionItem>?
         var isSuccess = true
 
         // Exception
         if (nodeAction == null) return false
 
         // Permission
-        if (!memberService!!.isAdmin(member)) // 관리자가 아닌데
-            if (!nodeAction.getMember().equals(member)) // 액션 제작자가 아니면
+        if (!memberService.isAdmin(member)) // 관리자가 아닌데
+            if (nodeAction.member != member) // 액션 제작자가 아니면
                 return false // 수행 중단
 
         // Load
-        listNodeActionItem = nodeAction.getNodeActionItems()
+        listNodeActionItem = nodeAction.nodeActionItems
 
         // Process
-        for (actionItem in listNodeActionItem) if (!nodeService!!.setItemValue(actionItem.getNodeItem(), actionItem.getItemStatus())) isSuccess = false
+        for (actionItem in listNodeActionItem!!) if (!nodeService.setItemValue(actionItem.nodeItem, actionItem.itemStatus!!)) isSuccess = false
 
         // Return
         return isSuccess
     }
+
+    companion object : KLogging()
 }

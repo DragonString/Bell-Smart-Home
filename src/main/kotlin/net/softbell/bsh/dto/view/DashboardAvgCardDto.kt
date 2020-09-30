@@ -5,6 +5,6 @@ package net.softbell.bsh.dto.view
  * @Description : 대시보드 습도 정보 카드정보 DTO
  */
 data class DashboardAvgCardDto (
-        val alias: String? = null,
-        val avgStatus: Double? = null
+        var alias: String? = null,
+        var avgStatus: Double? = null
 )

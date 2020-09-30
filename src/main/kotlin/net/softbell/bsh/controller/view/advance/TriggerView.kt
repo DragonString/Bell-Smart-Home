@@ -3,7 +3,6 @@ package net.softbell.bsh.controller.view.advance
 import net.softbell.bsh.domain.TriggerStatusRule
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.entity.NodeTrigger
-import net.softbell.bsh.domain.entity.NodeTriggerAction
 import net.softbell.bsh.dto.request.IotTriggerDto
 import net.softbell.bsh.dto.view.advance.TriggerInfoCardDto
 import net.softbell.bsh.dto.view.general.ActionSummaryCardDto
@@ -27,57 +26,57 @@ import java.util.*
  */
 @Controller
 @RequestMapping("/trigger")
-class TriggerView constructor() {
+class TriggerView {
     // Global Field
     private val G_BASE_PATH: String = "services/advance"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
-    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
-    @Autowired lateinit var iotTriggerService: IotTriggerServiceV1
-    @Autowired lateinit var iotActionService: IotActionServiceV1
-    @Autowired lateinit var centerService: CenterService
+    @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired private lateinit var iotTriggerService: IotTriggerServiceV1
+    @Autowired private lateinit var iotActionService: IotActionServiceV1
+    @Autowired private lateinit var centerService: CenterService
 
     @GetMapping
-    fun dispIndex(model: Model, auth: Authentication): String {
+    fun dispIndex(model: Model, auth: Authentication): String? {
         // Exception
-        if (centerService.getSetting().getIotTrigger() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotTrigger!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val listTrigger: List<NodeTrigger?>?
 
         // Init
-        listTrigger = iotTriggerService!!.getAllTriggers(auth)
+        listTrigger = iotTriggerService.getAllTriggers(auth)
 
         // Process
-        model.addAttribute("listCardTriggers", viewDtoConverterService!!.convTriggerSummaryCards(listTrigger))
+        model.addAttribute("listCardTriggers", viewDtoConverterService.convTriggerSummaryCards(listTrigger!!))
 
         // Return
-        return G_BASE_PATH + "/Trigger"
+        return "$G_BASE_PATH/Trigger"
     }
 
     @GetMapping("/create")
-    fun dispCreate(model: Model, auth: Authentication): String {
+    fun dispCreate(model: Model, auth: Authentication): String? {
         // Exception
-        if (centerService.getSetting().getIotTrigger() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotTrigger!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val listNodeAction: List<NodeAction?>?
 
         // Init
-        listNodeAction = iotActionService!!.getAllNodeActions(auth)
+        listNodeAction = iotActionService.getAllNodeActions(auth)
 
         // Process
-        model.addAttribute("listCardActions", viewDtoConverterService!!.convActionSummaryCards(listNodeAction))
+        model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction!!))
         //model.addAttribute("listCardNodeItems", viewDtoConverterService.convTriggerItemCards(iotNodeService.getAllNodeItems(auth)));
 
         // Return
-        return G_BASE_PATH + "/TriggerCreate"
+        return "$G_BASE_PATH/TriggerCreate"
     }
 
     @GetMapping("/{id}")
-    fun dispTrigger(model: Model, auth: Authentication?, @PathVariable("id") triggerId: Long): String {
+    fun dispTrigger(model: Model, auth: Authentication, @PathVariable("id") triggerId: Long): String? {
         // Exception
-        if (centerService.getSetting().getIotTrigger() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotTrigger!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val nodeTrigger: NodeTrigger?
@@ -88,7 +87,7 @@ class TriggerView constructor() {
         val listCardActionsError: MutableList<ActionSummaryCardDto>
 
         // Init
-        nodeTrigger = iotTriggerService!!.getTrigger(auth, triggerId)
+        nodeTrigger = iotTriggerService.getTrigger(auth, triggerId)
         listCardActionsAll = ArrayList()
         listCardActionsOccurAndRestore = ArrayList()
         listCardActionsOccur = ArrayList()
@@ -97,13 +96,13 @@ class TriggerView constructor() {
 
         // Exception
         if (nodeTrigger == null) return "redirect:/trigger?err"
-        for (entity: NodeTriggerAction in nodeTrigger.getNodeTriggerActions()) {
-            when (entity.getTriggerStatus()) {
-                ALL -> listCardActionsAll.add(ActionSummaryCardDto(entity.getNodeAction()))
-                TriggerStatusRule.OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
-                OCCUR -> listCardActionsOccur.add(ActionSummaryCardDto(entity.getNodeAction()))
-                RESTORE -> listCardActionsRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
-                ERROR -> listCardActionsError.add(ActionSummaryCardDto(entity.getNodeAction()))
+        for (entity in nodeTrigger.nodeTriggerActions!!) {
+            when (entity.triggerStatus) {
+                TriggerStatusRule.ALL -> listCardActionsAll.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.OCCUR -> listCardActionsOccur.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.RESTORE -> listCardActionsRestore.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.ERROR -> listCardActionsError.add(ActionSummaryCardDto(entity.nodeAction))
             }
         }
 
@@ -116,17 +115,17 @@ class TriggerView constructor() {
         model.addAttribute("listCardActionsError", listCardActionsError)
 
         // Return
-        return G_BASE_PATH + "/TriggerInfo"
+        return "$G_BASE_PATH/TriggerInfo"
     }
 
     @GetMapping("/modify/{id}")
-    fun dispTriggerModify(model: Model, auth: Authentication, @PathVariable("id") triggerId: Long): String {
+    fun dispTriggerModify(model: Model, auth: Authentication, @PathVariable("id") triggerId: Long): String? {
         // Exception
-        if (centerService.getSetting().getIotTrigger() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotTrigger!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val nodeTrigger: NodeTrigger?
-        val listNodeAction: List<NodeAction?>?
+        val listNodeAction: MutableList<NodeAction?>
         val listCardActionsAll: MutableList<ActionSummaryCardDto>
         val listCardActionsOccurAndRestore: MutableList<ActionSummaryCardDto>
         val listCardActionsOccur: MutableList<ActionSummaryCardDto>
@@ -134,8 +133,8 @@ class TriggerView constructor() {
         val listCardActionsError: MutableList<ActionSummaryCardDto>
 
         // Init
-        nodeTrigger = iotTriggerService!!.getTrigger(auth, triggerId)
-        listNodeAction = iotActionService!!.getAllNodeActions(auth)
+        nodeTrigger = iotTriggerService.getTrigger(auth, triggerId)
+        listNodeAction = iotActionService.getAllNodeActions(auth) as MutableList<NodeAction?>
         listCardActionsAll = ArrayList()
         listCardActionsOccurAndRestore = ArrayList()
         listCardActionsOccur = ArrayList()
@@ -144,15 +143,15 @@ class TriggerView constructor() {
 
         // Exception
         if (nodeTrigger == null) return "redirect:/trigger?err"
-        for (entity: NodeTriggerAction in nodeTrigger.getNodeTriggerActions()) {
-            when (entity.getTriggerStatus()) {
-                ALL -> listCardActionsAll.add(ActionSummaryCardDto(entity.getNodeAction()))
-                TriggerStatusRule.OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
-                OCCUR -> listCardActionsOccur.add(ActionSummaryCardDto(entity.getNodeAction()))
-                RESTORE -> listCardActionsRestore.add(ActionSummaryCardDto(entity.getNodeAction()))
-                ERROR -> listCardActionsError.add(ActionSummaryCardDto(entity.getNodeAction()))
+        for (entity in nodeTrigger.nodeTriggerActions!!) {
+            when (entity.triggerStatus) {
+                TriggerStatusRule.ALL -> listCardActionsAll.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.OCCUR_AND_RESTORE -> listCardActionsOccurAndRestore.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.OCCUR -> listCardActionsOccur.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.RESTORE -> listCardActionsRestore.add(ActionSummaryCardDto(entity.nodeAction))
+                TriggerStatusRule.ERROR -> listCardActionsError.add(ActionSummaryCardDto(entity.nodeAction))
             }
-            listNodeAction.remove(entity.getNodeAction())
+            listNodeAction.remove(entity.nodeAction)
         }
 
         // Process
@@ -162,54 +161,54 @@ class TriggerView constructor() {
         model.addAttribute("listCardActionsOccur", listCardActionsOccur)
         model.addAttribute("listCardActionsRestore", listCardActionsRestore)
         model.addAttribute("listCardActionsError", listCardActionsError)
-        model.addAttribute("listCardActions", viewDtoConverterService!!.convActionSummaryCards(listNodeAction))
+        model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction))
 
         // Return
-        return G_BASE_PATH + "/TriggerModify"
+        return "$G_BASE_PATH/TriggerModify"
     }
 
     @PostMapping("/create")
-    fun procCreate(auth: Authentication, iotTriggerDto: IotTriggerDto?): String {
+    fun procCreate(auth: Authentication, iotTriggerDto: IotTriggerDto): String? {
         // Exception
-        if (centerService.getSetting().getIotTrigger() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotTrigger!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val isSuccess: Boolean
 
         // Process
-        isSuccess = iotTriggerService!!.createTrigger(auth, iotTriggerDto)
+        isSuccess = iotTriggerService.createTrigger(auth, iotTriggerDto)
 
         // Return
-        if (isSuccess) return "redirect:/trigger" else return "redirect:/trigger?err"
+        return if (isSuccess) "redirect:/trigger" else "redirect:/trigger?err"
     }
 
     @PostMapping("/modify/{id}")
-    fun procModify(auth: Authentication?, @PathVariable("id") triggerId: Long, iotTriggerDto: IotTriggerDto?): String {
+    fun procModify(auth: Authentication, @PathVariable("id") triggerId: Long, iotTriggerDto: IotTriggerDto): String? {
         // Exception
-        if (centerService.getSetting().getIotTrigger() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotTrigger!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val isSuccess: Boolean
 
         // Process
-        isSuccess = iotTriggerService!!.modifyTrigger(auth, triggerId, iotTriggerDto)
+        isSuccess = iotTriggerService.modifyTrigger(auth, triggerId, iotTriggerDto)
 
         // Return
-        if (isSuccess) return "redirect:/trigger/" + triggerId else return "redirect:/trigger/" + triggerId + "?err"
+        return if (isSuccess) "redirect:/trigger/$triggerId" else "redirect:/trigger/$triggerId?err"
     }
 
     @PostMapping("/delete/{id}")
-    fun procDelete(auth: Authentication?, @PathVariable("id") triggerId: Long): String {
+    fun procDelete(auth: Authentication, @PathVariable("id") triggerId: Long): String? {
         // Exception
-        if (centerService.getSetting().getIotTrigger() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotTrigger!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val isSuccess: Boolean
 
         // Process
-        isSuccess = iotTriggerService!!.deleteTrigger(auth, triggerId)
+        isSuccess = iotTriggerService.deleteTrigger(auth, triggerId)
 
         // Return
-        if (isSuccess) return "redirect:/trigger" else return "redirect:/trigger?err"
+        return if (isSuccess) "redirect:/trigger" else "redirect:/trigger?err"
     }
 }

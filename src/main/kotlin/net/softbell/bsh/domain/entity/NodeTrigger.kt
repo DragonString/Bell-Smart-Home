@@ -40,20 +40,20 @@ class NodeTrigger : Serializable {
     var member: Member? = null
 
     @OneToMany(mappedBy = "nodeTrigger")
-    var nodeTriggerActions: List<NodeTriggerAction>? = null
+    var nodeTriggerActions: MutableList<NodeTriggerAction>? = null
 
 
-//    fun addNodeTriggerAction(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction {
-//        getNodeTriggerActions().add(nodeTriggerAction)
-//        nodeTriggerAction.setNodeTrigger(this)
-//        return nodeTriggerAction
-//    }
-//
-//    fun removeNodeTriggerAction(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction {
-//        getNodeTriggerActions().remove(nodeTriggerAction)
-//        nodeTriggerAction.setNodeTrigger(null)
-//        return nodeTriggerAction
-//    }
+    fun addNodeTriggerAction(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction? {
+        nodeTriggerActions?.add(nodeTriggerAction)
+        nodeTriggerAction.nodeTrigger = this
+        return nodeTriggerAction
+    }
+
+    fun removeNodeTriggerAction(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction? {
+        nodeTriggerActions?.remove(nodeTriggerAction)
+        nodeTriggerAction.nodeTrigger = null
+        return nodeTriggerAction
+    }
 
     companion object {
         private const val serialVersionUID = 1L

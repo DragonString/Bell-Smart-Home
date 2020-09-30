@@ -9,7 +9,7 @@ import javax.persistence.*
  * @Description : 노드 아이템 기록 엔티티
  */
 @Entity
-@Table(name = "node_item_history", indexes = [Index(name = "IDX_PERIOD_DATE", columnList = "receive_date")])
+@Table(name = "node_item_history", indexes = [Index(name = "IDX_NODE_ITEM_HISTORY_RECEIVE_DATE", columnList = "receive_date")])
 @NamedQuery(name = "NodeItemHistory.findAll", query = "SELECT n FROM NodeItemHistory n")
 class NodeItemHistory : Serializable {
     @Id

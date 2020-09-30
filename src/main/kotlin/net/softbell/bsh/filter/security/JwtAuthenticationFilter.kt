@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletResponse
  * @Author : Bell(bell@softbell.net)
  * @Description : 인증 처리 필터
  */
-class JwtAuthenticationFilter : GenericFilterBean() {
-    @Autowired lateinit var jwtTokenProvider: JwtTokenProvider
+class JwtAuthenticationFilter(jwtTokenProvider: JwtTokenProvider) : GenericFilterBean() {
+    private val jwtTokenProvider: JwtTokenProvider = jwtTokenProvider
 
     @Throws(IOException::class, ServletException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, filterChain: FilterChain) {

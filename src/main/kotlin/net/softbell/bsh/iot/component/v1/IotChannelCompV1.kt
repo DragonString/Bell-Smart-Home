@@ -15,15 +15,16 @@ class IotChannelCompV1 {
     private val G_UID_URL = "/api/stomp/queue/iot/v1/node/uid/"
     private val G_TOKEN_URL = "/api/stomp/queue/iot/v1/node/token/"
 
-    @Autowired lateinit var template: SimpMessagingTemplate
+    @Autowired private lateinit var template: SimpMessagingTemplate
+
 
     fun sendDataUID(data: BaseV1Dto) {
         // Process
-        template!!.convertAndSend(G_UID_URL + data.getTarget(), data)
+        template!!.convertAndSend(G_UID_URL + data.target, data)
     }
 
-    fun sendDataToken(data: BaseV1Dto?) {
+    fun sendDataToken(data: BaseV1Dto) {
         // Process
-        template!!.convertAndSend(G_TOKEN_URL + data.getTarget(), data!!)
+        template!!.convertAndSend(G_TOKEN_URL + data.target, data)
     }
 }

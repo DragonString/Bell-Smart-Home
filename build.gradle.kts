@@ -61,7 +61,7 @@ dependencies {
 	implementation("io.github.microutils:kotlin-logging:2.0.3") // Kotlin Logging
 	developmentOnly("org.springframework.boot:spring-boot-devtools:2.3.4.RELEASE") // Devtools
 	testImplementation("org.springframework.boot:spring-boot-starter-test:2.3.4.RELEASE") {
-		exclude(group = "org.junit.vintage", module = "junit-vintage-engine") // Test
+//		exclude(group = "org.junit.vintage", module = "junit-vintage-engine") // Test
 	}
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2") // Jackson
 	implementation("com.google.code.gson:gson-parent:2.8.6") // Gson

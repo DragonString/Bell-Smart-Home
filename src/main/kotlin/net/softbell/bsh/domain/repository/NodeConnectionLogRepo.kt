@@ -9,4 +9,4 @@ import org.springframework.stereotype.Repository
  * @Description : 노드 연결 로그 리포지토리 인터페이스
  */
 @Repository
-interface NodeConnectionLogRepo : JpaRepository<NodeConnectionLog?, Long?>
+open interface NodeConnectionLogRepo : JpaRepository<NodeConnectionLog?, Long?>

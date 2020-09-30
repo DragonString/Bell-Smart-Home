@@ -5,6 +5,6 @@ package net.softbell.bsh.dto.request
  * @Description : 연동 토큰 DTO
  */
 data class InterlockTokenDto (
-        val memberInterlockId: Long? = null,
-        val name: String? = null
+        var memberInterlockId: Long? = null,
+        var name: String? = null
 )

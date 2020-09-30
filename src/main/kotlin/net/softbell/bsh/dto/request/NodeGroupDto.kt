@@ -5,7 +5,7 @@ package net.softbell.bsh.dto.request
  * @Description : 그룹 노드 정보 DTO
  */
 data class NodeGroupDto (
-        val enableStatus: Boolean = false,
-        val name: String? = null,
-        val nodeId: List<Long>? = null
+        var enableStatus: Boolean = false,
+        var name: String? = null,
+        var nodeId: List<Long>? = null
 )

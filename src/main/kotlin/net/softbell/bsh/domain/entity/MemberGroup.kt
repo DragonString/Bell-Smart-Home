@@ -24,35 +24,35 @@ class MemberGroup : Serializable {
     var name: String? = null
 
     @OneToMany(mappedBy = "memberGroup")
-    var groupPermissions: List<GroupPermission>? = null
+    var groupPermissions: MutableList<GroupPermission>? = null
 
     @OneToMany(mappedBy = "memberGroup")
-    var memberGroupItems: List<MemberGroupItem>? = null
-    
-    
-//    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission {
-//        getGroupPermissions().add(groupPermission)
-//        groupPermission.setMemberGroup(this)
-//        return groupPermission
-//    }
-//
-//    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission {
-//        getGroupPermissions().remove(groupPermission)
-//        groupPermission.setMemberGroup(null)
-//        return groupPermission
-//    }
-//
-//    fun addMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
-//        getMemberGroupItems().add(memberGroupItem)
-//        memberGroupItem.setMemberGroup(this)
-//        return memberGroupItem
-//    }
-//
-//    fun removeMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
-//        getMemberGroupItems().remove(memberGroupItem)
-//        memberGroupItem.setMemberGroup(null)
-//        return memberGroupItem
-//    }
+    var memberGroupItems: MutableList<MemberGroupItem>? = null
+
+
+    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission? {
+        groupPermissions?.add(groupPermission)
+        groupPermission.memberGroup = this
+        return groupPermission
+    }
+
+    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission? {
+        groupPermissions?.remove(groupPermission)
+        groupPermission.memberGroup = null
+        return groupPermission
+    }
+
+    fun addMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem? {
+        memberGroupItems?.add(memberGroupItem)
+        memberGroupItem.memberGroup = this
+        return memberGroupItem
+    }
+
+    fun removeMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem? {
+        memberGroupItems?.remove(memberGroupItem)
+        memberGroupItem.memberGroup = null
+        return memberGroupItem
+    }
 
     companion object {
         private const val serialVersionUID = 1L

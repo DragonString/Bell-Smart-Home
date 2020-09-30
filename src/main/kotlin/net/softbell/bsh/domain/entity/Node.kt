@@ -48,50 +48,50 @@ class Node : Serializable {
     var uid: String? = null
 
     @OneToMany(mappedBy = "node")
-    var nodeConnectionLogs: List<NodeConnectionLog>? = null
+    var nodeConnectionLogs: MutableList<NodeConnectionLog>? = null
 
     @OneToMany(mappedBy = "node")
-    var nodeGroupItems: List<NodeGroupItem>? = null
+    var nodeGroupItems: MutableList<NodeGroupItem>? = null
 
     @OneToMany(mappedBy = "node")
-    var nodeItems: List<NodeItem>? = null
+    var nodeItems: MutableList<NodeItem>? = null
 
 
-//    fun addNodeConnectionLog(nodeConnectionLog: NodeConnectionLog): NodeConnectionLog {
-//        getNodeConnectionLogs().add(nodeConnectionLog)
-//        nodeConnectionLog.setNode(this)
-//        return nodeConnectionLog
-//    }
-//
-//    fun removeNodeConnectionLog(nodeConnectionLog: NodeConnectionLog): NodeConnectionLog {
-//        getNodeConnectionLogs().remove(nodeConnectionLog)
-//        nodeConnectionLog.setNode(null)
-//        return nodeConnectionLog
-//    }
-//
-//    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
-//        getNodeGroupItems().add(nodeGroupItem)
-//        nodeGroupItem.setNode(this)
-//        return nodeGroupItem
-//    }
-//
-//    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
-//        getNodeGroupItems().remove(nodeGroupItem)
-//        nodeGroupItem.setNode(null)
-//        return nodeGroupItem
-//    }
-//
-//    fun addNodeItem(nodeItem: NodeItem): NodeItem {
-//        getNodeItems().add(nodeItem)
-//        nodeItem.setNode(this)
-//        return nodeItem
-//    }
-//
-//    fun removeNodeItem(nodeItem: NodeItem): NodeItem {
-//        getNodeItems().remove(nodeItem)
-//        nodeItem.setNode(null)
-//        return nodeItem
-//    }
+    fun addNodeConnectionLog(nodeConnectionLog: NodeConnectionLog): NodeConnectionLog? {
+        nodeConnectionLogs?.add(nodeConnectionLog)
+        nodeConnectionLog.node = this
+        return nodeConnectionLog
+    }
+
+    fun removeNodeConnectionLog(nodeConnectionLog: NodeConnectionLog): NodeConnectionLog? {
+        nodeConnectionLogs?.remove(nodeConnectionLog)
+        nodeConnectionLog.node = null
+        return nodeConnectionLog
+    }
+
+    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem? {
+        nodeGroupItems?.add(nodeGroupItem)
+        nodeGroupItem.node = this
+        return nodeGroupItem
+    }
+
+    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem? {
+        nodeGroupItems?.remove(nodeGroupItem)
+        nodeGroupItem.node = null
+        return nodeGroupItem
+    }
+
+    fun addNodeItem(nodeItem: NodeItem): NodeItem? {
+        nodeItems?.add(nodeItem)
+        nodeItem.node = this
+        return nodeItem
+    }
+
+    fun removeNodeItem(nodeItem: NodeItem): NodeItem? {
+        nodeItems?.remove(nodeItem)
+        nodeItem.node = null
+        return nodeItem
+    }
 
     companion object {
         private const val serialVersionUID = 1L

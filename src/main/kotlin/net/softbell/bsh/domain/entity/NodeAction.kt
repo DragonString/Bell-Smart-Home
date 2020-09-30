@@ -28,50 +28,50 @@ class NodeAction : Serializable {
     var member: Member? = null
 
     @OneToMany(mappedBy = "nodeAction")
-    var nodeActionItems: List<NodeActionItem>? = null
+    var nodeActionItems: MutableList<NodeActionItem>? = null
 
     @OneToMany(mappedBy = "nodeAction")
-    var nodeReservActions: List<NodeReservAction>? = null
+    var nodeReservActions: MutableList<NodeReservAction>? = null
 
     @OneToMany(mappedBy = "nodeAction")
-    var nodeTriggerActions: List<NodeTriggerAction>? = null
+    var nodeTriggerActions: MutableList<NodeTriggerAction>? = null
 
 
-//    fun addNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem {
-//        getNodeActionItems().add(nodeActionItem)
-//        nodeActionItem.setNodeAction(this)
-//        return nodeActionItem
-//    }
-//
-//    fun removeNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem {
-//        getNodeActionItems().remove(nodeActionItem)
-//        nodeActionItem.setNodeAction(null)
-//        return nodeActionItem
-//    }
-//
-//    fun addNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction {
-//        getNodeReservActions().add(nodeReservAction)
-//        nodeReservAction.setNodeAction(this)
-//        return nodeReservAction
-//    }
-//
-//    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction {
-//        getNodeReservActions().remove(nodeReservAction)
-//        nodeReservAction.setNodeAction(null)
-//        return nodeReservAction
-//    }
-//
-//    fun addNodeTriggerActions(nodeTriggerActions: NodeTriggerAction): NodeTriggerAction {
-//        getNodeTriggerActions().add(nodeTriggerActions)
-//        nodeTriggerActions.setNodeAction(this)
-//        return nodeTriggerActions
-//    }
-//
-//    fun removeNodeTriggerActions(nodeTriggerActions: NodeTriggerAction): NodeTriggerAction {
-//        getNodeTriggerActions().remove(nodeTriggerActions)
-//        nodeTriggerActions.setNodeAction(null)
-//        return nodeTriggerActions
-//    }
+    fun addNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem? {
+        nodeActionItems?.add(nodeActionItem)
+        nodeActionItem.nodeAction = this
+        return nodeActionItem
+    }
+
+    fun removeNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem? {
+        nodeActionItems?.remove(nodeActionItem)
+        nodeActionItem.nodeAction = null
+        return nodeActionItem
+    }
+
+    fun addNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
+        nodeReservActions?.add(nodeReservAction)
+        nodeReservAction.nodeAction = this
+        return nodeReservAction
+    }
+
+    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
+        nodeReservActions?.remove(nodeReservAction)
+        nodeReservAction.nodeAction = null
+        return nodeReservAction
+    }
+
+    fun addNodeTriggerActions(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction? {
+        nodeTriggerActions?.add(nodeTriggerAction)
+        nodeTriggerAction.nodeAction = this
+        return nodeTriggerAction
+    }
+
+    fun removeNodeTriggerActions(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction? {
+        nodeTriggerActions?.remove(nodeTriggerAction)
+        nodeTriggerAction.nodeAction = null
+        return nodeTriggerAction
+    }
 
     companion object {
         private const val serialVersionUID = 1L

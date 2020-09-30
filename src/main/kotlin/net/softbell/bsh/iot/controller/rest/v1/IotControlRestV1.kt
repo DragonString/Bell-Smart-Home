@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/rest/v1/iot/control")
 class IotControlRestV1 {
-    @Autowired lateinit var responseService: ResponseService
-    @Autowired lateinit var iotNodeService: IotNodeServiceV1
-    @Autowired lateinit var permissionService: PermissionService
+    @Autowired private lateinit var responseService: ResponseService
+    @Autowired private lateinit var iotNodeService: IotNodeServiceV1
+    @Autowired private lateinit var permissionService: PermissionService
 
     @PostMapping("/item/set/{id}")
-    fun setNodeItemValue(auth: Authentication,
+    fun setNodeItemValue(auth: Authentication?,
                          @PathVariable("id") id: Long, @RequestParam("value") value: Short): ResultDto? {
         // Field
         var isSuccess: Boolean
@@ -31,17 +31,19 @@ class IotControlRestV1 {
 
         // Init
         isSuccess = false
-        nodeItem = iotNodeService!!.getNodeItem(id)
+        nodeItem = iotNodeService.getNodeItem(id)
 
         // Process
-        if (nodeItem != null) if (permissionService!!.isPrivilege(GroupRole.MANUAL_CONTROL, auth, nodeItem.getNode())) isSuccess = iotNodeService.setItemValue(nodeItem, value.toDouble())
+        if (nodeItem != null)
+            if (permissionService.isPrivilege(GroupRole.MANUAL_CONTROL, auth!!, nodeItem.node))
+                isSuccess = iotNodeService.setItemValue(nodeItem, value.toDouble())
 
         // Return
-        return if (isSuccess) responseService.getSuccessResult() else responseService!!.getFailResult(-10, "해당하는 아이템이 없음")
+        return if (isSuccess) responseService.getSuccessResult() else responseService.getFailResult(-10, "해당하는 아이템이 없음")
     }
 
     @PostMapping("/node/restart/{id}")
-    fun restartNode(auth: Authentication,
+    fun restartNode(auth: Authentication?,
                     @PathVariable("id") id: Long): ResultDto? {
         // Field
         var isSuccess: Boolean
@@ -49,12 +51,12 @@ class IotControlRestV1 {
 
         // Init
         isSuccess = false
-        node = iotNodeService!!.getNode(id)
+        node = iotNodeService.getNode(id)
 
         // Process
-        if (node != null) if (permissionService!!.isPrivilege(GroupRole.MANUAL_CONTROL, auth, node)) isSuccess = iotNodeService.restartNode(node)
+        if (node != null) if (permissionService.isPrivilege(GroupRole.MANUAL_CONTROL, auth!!, node)) isSuccess = iotNodeService.restartNode(node)
 
         // Return
-        return if (isSuccess) responseService.getSuccessResult() else responseService!!.getFailResult(-10, "해당하는 아이템이 없음")
+        return if (isSuccess) responseService.getSuccessResult() else responseService.getFailResult(-10, "해당하는 아이템이 없음")
     }
 }

@@ -24,35 +24,35 @@ class NodeGroup : Serializable {
     var name: String? = null
 
     @OneToMany(mappedBy = "nodeGroup")
-    var groupPermissions: List<GroupPermission>? = null
+    var groupPermissions: MutableList<GroupPermission>? = null
 
     @OneToMany(mappedBy = "nodeGroup")
-    var nodeGroupItems: List<NodeGroupItem>? = null
+    var nodeGroupItems: MutableList<NodeGroupItem>? = null
 
 
-//    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission {
-//        getGroupPermissions().add(groupPermission)
-//        groupPermission.setNodeGroup(this)
-//        return groupPermission
-//    }
-//
-//    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission {
-//        getGroupPermissions().remove(groupPermission)
-//        groupPermission.setNodeGroup(null)
-//        return groupPermission
-//    }
-//
-//    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
-//        getNodeGroupItems().add(nodeGroupItem)
-//        nodeGroupItem.setNodeGroup(this)
-//        return nodeGroupItem
-//    }
-//
-//    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem {
-//        getNodeGroupItems().remove(nodeGroupItem)
-//        nodeGroupItem.setNodeGroup(null)
-//        return nodeGroupItem
-//    }
+    fun addGroupPermission(groupPermission: GroupPermission): GroupPermission? {
+        groupPermissions?.add(groupPermission)
+        groupPermission.nodeGroup = this
+        return groupPermission
+    }
+
+    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission? {
+        groupPermissions?.remove(groupPermission)
+        groupPermission.nodeGroup = null
+        return groupPermission
+    }
+
+    fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem? {
+        nodeGroupItems?.add(nodeGroupItem)
+        nodeGroupItem.nodeGroup = this
+        return nodeGroupItem
+    }
+
+    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem? {
+        nodeGroupItems?.remove(nodeGroupItem)
+        nodeGroupItem.nodeGroup = null
+        return nodeGroupItem
+    }
 
     companion object {
         private const val serialVersionUID = 1L

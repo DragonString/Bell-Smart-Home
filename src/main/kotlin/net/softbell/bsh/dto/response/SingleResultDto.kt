@@ -5,5 +5,5 @@ package net.softbell.bsh.dto.response
  * @Description : API 수행 결과 단건 DTO
  */
 class SingleResultDto<T> : ResultDto() {
-    private val data: T? = null
+    var data: T? = null
 }

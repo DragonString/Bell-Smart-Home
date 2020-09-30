@@ -19,32 +19,32 @@ import org.springframework.web.bind.annotation.RequestParam
  */
 @Controller
 @RequestMapping("/monitor")
-class MonitorView constructor() {
+class MonitorView {
     // Global Field
     private val G_BASE_PATH: String = "services/general"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
-    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
-    @Autowired lateinit var aiotNodeService: IotNodeServiceV1
-    @Autowired lateinit var centerService: CenterService
+    @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired private lateinit var iotNodeService: IotNodeServiceV1
+    @Autowired private lateinit var centerService: CenterService
 
     @GetMapping
     fun dispIndex(model: Model, auth: Authentication,
                   @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
-                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
+                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String? {
         // Exception
-        if (centerService.getSetting().getIotMonitor() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotMonitor!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
-        val listNode: List<Node?>?
+        val listNode: List<Node?>
 
         // Init
-        listNode = iotNodeService!!.getAllNodes(auth, GroupRole.MONITOR)
+        listNode = iotNodeService.getAllNodes(auth, GroupRole.MONITOR)
 
         // Process
-        model.addAttribute("listCardNodes", viewDtoConverterService!!.convMonitorSummaryCards(listNode))
+        model.addAttribute("listCardNodes", viewDtoConverterService.convMonitorSummaryCards(listNode))
 
         // Return
-        return G_BASE_PATH + "/Monitor"
+        return "$G_BASE_PATH/Monitor"
     }
 }

@@ -15,19 +15,21 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/rest/v1/iot/auth")
 class IotAuthRestV1 {
-    @Autowired lateinit var iotAuthComp: IotAuthCompV1
+    @Autowired private lateinit var iotAuthComp: IotAuthCompV1
 
     @GetMapping("/token/check")
     fun checkTokenAvailable(@RequestParam("token") token: String?): ResultDto {
         // Field
-        val message: ResultDto
-        val isAvailable: Boolean
+        val message: ResultDto = ResultDto()
 
         // Check
-        isAvailable = iotAuthComp!!.isTokenAvailable(token)
+        val isAvailable: Boolean = iotAuthComp.isTokenAvailable(token)
 
         // Message
-        message = if (isAvailable) builder().message("valid").build() else builder().message("invalid").build()
+        if (isAvailable)
+            message.message = "valid"
+        else
+            message.message = "invalid"
 
         // Return
         return message

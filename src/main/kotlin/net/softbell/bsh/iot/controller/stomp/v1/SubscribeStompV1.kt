@@ -16,20 +16,20 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SubscribeStompV1 {
     // Global Field
-    @Autowired lateinit var iotSubscribeServiceV1: IotSubscribeServiceV1
+    @Autowired private lateinit var iotSubscribeServiceV1: IotSubscribeServiceV1
 
     @SubscribeMapping("/iot/v1/node")
     fun NodeTopicSubscribeHandler(): BaseV1Dto? {
-        return iotSubscribeServiceV1!!.procTopicSubscribe()
+        return iotSubscribeServiceV1.procTopicSubscribe()
     }
 
     @SubscribeMapping("/iot/v1/node/uid/{uid}")
     fun NodeUIDSubscribeHandler(@DestinationVariable("uid") uid: String): BaseV1Dto? {
-        return iotSubscribeServiceV1!!.procUIDSubscribe(uid)
+        return iotSubscribeServiceV1.procUIDSubscribe(uid)
     }
 
     @SubscribeMapping("/iot/v1/node/token/{token}")
     fun NodeTokenSubscribeHandler(@DestinationVariable("token") token: String): BaseV1Dto? {
-        return iotSubscribeServiceV1!!.procTokenSubscribe(token)
+        return iotSubscribeServiceV1.procTokenSubscribe(token)
     }
 }

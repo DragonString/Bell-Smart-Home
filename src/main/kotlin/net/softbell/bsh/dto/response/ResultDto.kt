@@ -8,11 +8,11 @@ import io.swagger.annotations.ApiModelProperty
  */
 open class ResultDto {
     @ApiModelProperty(value = "응답 성공여부")
-    private val success = false
+    var success = false
 
     @ApiModelProperty(value = "응답 코드")
-    private val code = 0
+    var code = 0
 
     @ApiModelProperty(value = "응답 메시지")
-    private val message: String? = null
+    var message: String? = null
 }

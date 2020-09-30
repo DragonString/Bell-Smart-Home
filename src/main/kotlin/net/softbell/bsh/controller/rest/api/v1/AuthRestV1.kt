@@ -20,25 +20,21 @@ import org.springframework.web.bind.annotation.RestController
 @Api(tags = ["1. Auth"])
 @RestController
 @RequestMapping("/api/rest/v1/auth")
-class AuthRestV1 constructor() {
+class AuthRestV1 {
     // Global Field
-    @Autowired lateinit var userService: MemberService
-    @Autowired lateinit var responseService: ResponseService
-    @Autowired lateinit var jwtTokenProvider: JwtTokenProvider
+    @Autowired private lateinit var userService: MemberService
+    @Autowired private lateinit var responseService: ResponseService
+    @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @PostMapping("/login")
-    fun procLogin(@ApiParam(value = "회원ID : 이메일", required = true) @RequestParam id: String?,
-                  @ApiParam(value = "비밀번호", required = true) @RequestParam password: String?): ResultDto? {
-        // Field
-        val member: Member?
-
+    fun procLogin(@ApiParam(value = "회원ID : 이메일", required = true) @RequestParam id: String,
+                  @ApiParam(value = "비밀번호", required = true) @RequestParam password: String): ResultDto? {
         // Init
-        member = userService!!.loginMember(id, password)
+        val member: Member? = userService.loginMember(id, password)
 
         // Exception
-        if (member == null) return responseService!!.getFailResult(-100, "로그인 실패")
+        return if (member == null) responseService.getFailResult(-100, "로그인 실패") else responseService.getSingleResult(jwtTokenProvider.createToken(member.userId, member.authorities))
 
         // Return
-        return responseService!!.getSingleResult<T?>(jwtTokenProvider!!.createToken(member.userId, member.getAuthorities()))
     }
 }

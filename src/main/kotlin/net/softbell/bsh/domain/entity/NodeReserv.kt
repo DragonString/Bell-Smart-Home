@@ -27,24 +27,23 @@ class NodeReserv : Serializable {
     var expression: String? = null
 
     @OneToMany(mappedBy = "nodeReserv")
-    var nodeReservActions: List<NodeReservAction>? = null
+    var nodeReservActions: MutableList<NodeReservAction>? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     var member: Member? = null
 
+    fun addNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
+        nodeReservActions?.add(nodeReservAction)
+        nodeReservAction.nodeReserv = this
+        return nodeReservAction
+    }
 
-//    fun addNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction {
-//        getNodeReservActions().add(nodeReservAction)
-//        nodeReservAction.setNodeReserv(this)
-//        return nodeReservAction
-//    }
-//
-//    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction {
-//        getNodeReservActions().remove(nodeReservAction)
-//        nodeReservAction.setNodeReserv(null)
-//        return nodeReservAction
-//    }
+    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
+        nodeReservActions?.remove(nodeReservAction)
+        nodeReservAction.nodeReserv = null
+        return nodeReservAction
+    }
 
     companion object {
         private const val serialVersionUID = 1L

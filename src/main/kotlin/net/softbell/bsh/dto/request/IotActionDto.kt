@@ -5,8 +5,8 @@ package net.softbell.bsh.dto.request
  * @Description : 액션정보 DTO
  */
 data class IotActionDto (
-        val actionId: Long? = null,
-        val enableStatus: Boolean = false,
-        val description: String? = null,
-        val mapActionItem: HashMap<Long, IotActionItemDto>? = null
+        var actionId: Long? = null,
+        var enableStatus: Boolean = false,
+        var description: String? = null,
+        var mapActionItem: HashMap<Long, IotActionItemDto>? = null
 )

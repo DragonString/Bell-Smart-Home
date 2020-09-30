@@ -41,24 +41,24 @@ class NodeItem : Serializable {
     var itemType: ItemTypeRule? = null
 
     @OneToMany(mappedBy = "nodeItem")
-    var nodeActionItems: List<NodeActionItem>? = null
+    var nodeActionItems: MutableList<NodeActionItem>? = null
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "node_id", nullable = false)
     var node: Node? = null
 
 
-//    fun addNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem {
-//        getNodeActionItems().add(nodeActionItem)
-//        nodeActionItem.setNodeItem(this)
-//        return nodeActionItem
-//    }
-//
-//    fun removeNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem {
-//        getNodeActionItems().remove(nodeActionItem)
-//        nodeActionItem.setNodeItem(null)
-//        return nodeActionItem
-//    }
+    fun addNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem? {
+        nodeActionItems?.add(nodeActionItem)
+        nodeActionItem.nodeItem = this
+        return nodeActionItem
+    }
+
+    fun removeNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem? {
+        nodeActionItems?.remove(nodeActionItem)
+        nodeActionItem.nodeItem = null
+        return nodeActionItem
+    }
 
     companion object {
         private const val serialVersionUID = 1L

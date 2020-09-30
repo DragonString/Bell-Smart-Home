@@ -24,71 +24,71 @@ import org.springframework.web.bind.annotation.RequestParam
  */
 @Controller
 @RequestMapping("/node")
-class NodeView constructor() {
+class NodeView {
     // Global Field
     private val G_BASE_PATH: String = "services/advance"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
-    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
-    @Autowired lateinit var iotNodeService: IotNodeServiceV1
-    @Autowired lateinit var centerService: CenterService
+    @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired private lateinit var iotNodeService: IotNodeServiceV1
+    @Autowired private lateinit var centerService: CenterService
 
     @GetMapping
     fun dispIndex(model: Model, auth: Authentication,
                   @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
-                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
+                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String? {
         // Exception
-        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val listNode: List<Node?>?
 
         // Init
-        listNode = iotNodeService!!.getAllNodes(auth, GroupRole.MANUAL_CONTROL)
+        listNode = iotNodeService.getAllNodes(auth!!, GroupRole.MANUAL_CONTROL)
 
         // Process
-        model.addAttribute("listCardNodes", viewDtoConverterService!!.convNodeSummaryCards(listNode))
+        model.addAttribute("listCardNodes", viewDtoConverterService.convNodeSummaryCards(listNode!!))
 
         // Return
-        return G_BASE_PATH + "/NodeList"
+        return "$G_BASE_PATH/NodeList"
     }
 
     @GetMapping("/{id}")
-    fun dispNode(model: Model, @PathVariable("id") intNodeId: Int): String {
+    fun dispNode(model: Model, @PathVariable("id") intNodeId: Int): String? {
         // Exception
-        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val node: Node?
 
         // Init
-        node = iotNodeService!!.getNode(intNodeId.toLong())
+        node = iotNodeService.getNode(intNodeId.toLong())
 
         // Process
         model.addAttribute("cardNodeInfo", NodeInfoCardDto(node))
-        model.addAttribute("listCardNodeItems", viewDtoConverterService!!.convNodeItemCards(node.getNodeItems()))
+        model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeItemCards(node!!.nodeItems!!))
 
         // Return
-        return G_BASE_PATH + "/NodeInfo"
+        return "$G_BASE_PATH/NodeInfo"
     }
 
     @GetMapping("/item/{id}")
-    fun dispNodeItemHistory(model: Model, @PathVariable("id") intNodeItemId: Int): String {
+    fun dispNodeItemHistory(model: Model, @PathVariable("id") intNodeItemId: Int): String? {
         // Exception
-        if (centerService.getSetting().getIotNode() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val nodeItem: NodeItem?
         val listNodeItemHistory: List<NodeItemHistory?>?
 
         // Init
-        nodeItem = iotNodeService!!.getNodeItem(intNodeItemId.toLong())
+        nodeItem = iotNodeService.getNodeItem(intNodeItemId.toLong())
         listNodeItemHistory = iotNodeService.getNodeItemHistory(intNodeItemId.toLong())
 
         // Process
-        model.addAttribute("cardNodeItemHistory", NodeItemHistoryCardDto(nodeItem, listNodeItemHistory))
+        model.addAttribute("cardNodeItemHistory", NodeItemHistoryCardDto(nodeItem, listNodeItemHistory!!))
 
         // Return
-        return G_BASE_PATH + "/NodeItemInfo"
+        return "$G_BASE_PATH/NodeItemInfo"
     }
 }

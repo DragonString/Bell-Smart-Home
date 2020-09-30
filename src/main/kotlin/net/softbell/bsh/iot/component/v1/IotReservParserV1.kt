@@ -26,30 +26,31 @@ import java.util.*
 @Component
 class IotReservParserV1 {
     // Global Field
-    @Autowired lateinit var nodeReservRepo: NodeReservRepo
+    @Autowired private lateinit var nodeReservRepo: NodeReservRepo
 
-    fun getReservAction(nodeReserv: NodeReserv?): List<NodeAction> {
+
+    fun getReservAction(nodeReserv: NodeReserv): List<NodeAction?> {
         // Field
-        val listNodeReservAction: List<NodeReservAction>
-        val listNodeAction: MutableList<NodeAction>
+        val listNodeReservAction: List<NodeReservAction>?
+        val listNodeAction: MutableList<NodeAction?>
 
         // Init
-        listNodeReservAction = nodeReserv.getNodeReservActions()
+        listNodeReservAction = nodeReserv.nodeReservActions
         listNodeAction = ArrayList()
 
         // Process
-        for (entity in listNodeReservAction) listNodeAction.add(entity.getNodeAction())
+        for (entity in listNodeReservAction!!) listNodeAction.add(entity.nodeAction)
 
         // Return
         return listNodeAction
     }
 
-    // Return
-    val enableReserv: List<NodeReserv?>?
-        get() =// Return
-            nodeReservRepo!!.findByEnableStatus(EnableStatusRule.ENABLE)
+    fun getEnableReserv(): List<NodeReserv?>? {
+        // Return
+        return nodeReservRepo!!.findByEnableStatus(EnableStatusRule.ENABLE)
+    }
 
-    fun parseEntity(nodeReserv: NodeReserv?): Boolean? {
+    fun parseEntity(nodeReserv: NodeReserv): Boolean? {
         // Field
         var strNow: String
         val arrNow: Array<String>
@@ -61,10 +62,10 @@ class IotReservParserV1 {
         strNow = cal[Calendar.MINUTE].toString() + " " // 분
         strNow += cal[Calendar.HOUR_OF_DAY].toString() + " " // 시간
         strNow += cal[Calendar.DAY_OF_MONTH].toString() + " " // 일
-        strNow += cal[Calendar.MONTH] + 1 + " " // 월
-        strNow += cal[Calendar.DAY_OF_WEEK] - 1.toString() + "" // 요일
+        strNow += (cal[Calendar.MONTH] + 1).toString() + " " // 월
+        strNow += (cal[Calendar.DAY_OF_WEEK] - 1).toString() + "" // 요일
         arrNow = strNow.split(" ").toTypedArray()
-        arrExpression = nodeReserv.getExpression().split(" ")
+        arrExpression = nodeReserv.expression!!.split(" ").toTypedArray()
 
         // Exception
         if (arrExpression.size != 5) return null

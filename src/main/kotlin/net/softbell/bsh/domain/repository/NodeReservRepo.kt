@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
  * @Description : 노드 예약 리포지토리 인터페이스
  */
 @Repository
-interface NodeReservRepo : JpaRepository<NodeReserv?, Long?> {
+open interface NodeReservRepo : JpaRepository<NodeReserv?, Long?> {
     fun findByMember(member: Member?): List<NodeReserv?>?
     fun findByEnableStatus(enableStatus: EnableStatusRule?): List<NodeReserv?>?
 

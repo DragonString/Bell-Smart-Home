@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RestController
 @Api(tags = ["2. User"])
 @RestController
 @RequestMapping("/api/rest/v1/user")
-class UserRestV1 constructor() {
+class UserRestV1 {
     // Global Field
-    @Autowired lateinit var responseService: ResponseService
-    @Autowired lateinit var jwtTokenProvider: JwtTokenProvider
+    @Autowired private lateinit var responseService: ResponseService
+    @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
     @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "access_token", required = true, dataType = "String", paramType = "header")
     @ApiOperation(value = "인증 토큰 재발급", notes = "인증 토큰 만료기간 연장")
     @GetMapping(value = ["/regenToken"])
-    fun regenToken(auth: Authentication): SingleResultDto<String?>? {
-        return responseService!!.getSingleResult(jwtTokenProvider!!.createToken(auth.getName(), auth.getAuthorities()))
+    fun regenToken(auth: Authentication): SingleResultDto<String>? {
+        return responseService.getSingleResult(jwtTokenProvider.createToken(auth.name, auth.authorities))
     }
 }

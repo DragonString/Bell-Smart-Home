@@ -2,7 +2,6 @@ package net.softbell.bsh.controller.view.general
 
 import net.softbell.bsh.domain.entity.MemberInterlockToken
 import net.softbell.bsh.domain.entity.NodeAction
-import net.softbell.bsh.domain.entity.NodeActionItem
 import net.softbell.bsh.domain.entity.NodeItem
 import net.softbell.bsh.dto.request.IotActionDto
 import net.softbell.bsh.dto.view.general.ActionInfoCardDto
@@ -26,149 +25,149 @@ import javax.servlet.http.HttpServletRequest
  */
 @Controller
 @RequestMapping("/action")
-class ActionView constructor() {
+class ActionView {
     // Global Field
     private val G_BASE_PATH: String = "services/general"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
-    @Autowired lateinit var viewDtoConverterService: ViewDtoConverterService
-    @Autowired lateinit var iotActionService: IotActionServiceV1
-    @Autowired lateinit var centerService: CenterService
-    @Autowired lateinit var interlockService: InterlockService
+    @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
+    @Autowired private lateinit var iotActionService: IotActionServiceV1
+    @Autowired private lateinit var centerService: CenterService
+    @Autowired private lateinit var interlockService: InterlockService
 
     @GetMapping
-    fun dispIndex(model: Model, auth: Authentication): String {
+    fun dispIndex(model: Model, auth: Authentication): String? {
         // Exception
-        if (centerService.getSetting().getIotAction() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotAction!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
-        val listNodeAction: List<NodeAction?>?
+        val listNodeAction: List<NodeAction?>
 
         // Init
-        listNodeAction = iotActionService!!.getAllNodeActions(auth)
+        listNodeAction = iotActionService.getAllNodeActions(auth)
 
         // Process
-        model.addAttribute("listCardActions", viewDtoConverterService!!.convActionSummaryCards(listNodeAction))
+        model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction))
 
         // Return
-        return G_BASE_PATH + "/Action"
+        return "$G_BASE_PATH/Action"
     }
 
     @GetMapping("/{id}")
-    fun dispAction(model: Model, auth: Authentication, request: HttpServletRequest, @PathVariable("id") actionId: Long): String {
+    fun dispAction(model: Model, auth: Authentication, request: HttpServletRequest, @PathVariable("id") actionId: Long): String? {
         // Exception
-        if (centerService.getSetting().getIotAction() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotAction!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val nodeAction: NodeAction?
-        val listNodeItem: List<NodeItem?>?
+        val listNodeItem: MutableList<NodeItem?>
         val listMemberInterlockToken: List<MemberInterlockToken?>?
         var baseUrl: String
 
         // Init
-        nodeAction = iotActionService!!.getNodeAction(auth, actionId)
-        listNodeItem = iotActionService.getAvailableNodeItem(auth)
-        listMemberInterlockToken = interlockService!!.getAllTokens(auth)
-        baseUrl = request.getRequestURL().toString()
+        nodeAction = iotActionService.getNodeAction(auth, actionId)
+        listNodeItem = iotActionService.getAvailableNodeItem(auth) as MutableList<NodeItem?>
+        listMemberInterlockToken = interlockService.getAllTokens(auth)
+        baseUrl = request.requestURL.toString()
         baseUrl = baseUrl.substring(0, baseUrl.indexOf("/", 8))
-        for (actionItem: NodeActionItem in nodeAction.getNodeActionItems()) listNodeItem.remove(actionItem.getNodeItem())
+        for (actionItem in nodeAction!!.nodeActionItems!!) listNodeItem.remove(actionItem.nodeItem)
 
         // Process
         model.addAttribute("cardActionInfo", ActionInfoCardDto(nodeAction))
-        model.addAttribute("listCardInterlocks", viewDtoConverterService!!.convActionInterlockTokenCards(listMemberInterlockToken))
-        model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards<T>(nodeAction.getNodeActionItems()))
+        model.addAttribute("listCardInterlocks", viewDtoConverterService.convActionInterlockTokenCards(listMemberInterlockToken!!))
+        model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(nodeAction.nodeActionItems!!))
         model.addAttribute("baseURL", baseUrl)
 
         // Return
-        return G_BASE_PATH + "/ActionInfo"
+        return "$G_BASE_PATH/ActionInfo"
     }
 
     @GetMapping("/modify/{id}")
-    fun dispActionModify(model: Model, auth: Authentication, @PathVariable("id") actionId: Long): String {
+    fun dispActionModify(model: Model, auth: Authentication, @PathVariable("id") actionId: Long): String? {
         // Exception
-        if (centerService.getSetting().getIotAction() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotAction!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val nodeAction: NodeAction?
-        val listNodeItem: List<NodeItem?>?
+        val listNodeItem: MutableList<NodeItem?>
 
         // Init
-        nodeAction = iotActionService!!.getNodeAction(auth, actionId)
-        listNodeItem = iotActionService.getAvailableNodeItem(auth)
-        for (actionItem: NodeActionItem in nodeAction.getNodeActionItems()) listNodeItem.remove(actionItem.getNodeItem())
+        nodeAction = iotActionService.getNodeAction(auth, actionId)
+        listNodeItem = iotActionService.getAvailableNodeItem(auth) as MutableList<NodeItem?>
+        for (actionItem in nodeAction!!.nodeActionItems!!) listNodeItem.remove(actionItem.nodeItem)
 
         // Process
         model.addAttribute("cardActionInfo", ActionInfoCardDto(nodeAction))
-        model.addAttribute("listCardItemActives", viewDtoConverterService!!.convActionItemCards<T>(nodeAction.getNodeActionItems()))
-        model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem))
+        model.addAttribute("listCardItemActives", viewDtoConverterService.convActionItemCards(nodeAction.nodeActionItems!!))
+        model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem!!))
 
         // Return
-        return G_BASE_PATH + "/ActionModify"
+        return "$G_BASE_PATH/ActionModify"
     }
 
     @GetMapping("/create")
-    fun dispCreate(model: Model, auth: Authentication): String {
+    fun dispCreate(model: Model, auth: Authentication): String? {
         // Exception
-        if (centerService.getSetting().getIotAction() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotAction!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
-        val listNodeItem: List<NodeItem?>?
+        val listNodeItem: List<NodeItem?>
 
         // Init
-        listNodeItem = iotActionService!!.getAvailableNodeItem(auth)
+        listNodeItem = iotActionService.getAvailableNodeItem(auth)
 
         // Process
-        model.addAttribute("listCardItems", viewDtoConverterService!!.convActionItemCards(listNodeItem))
+        model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem))
 
         // Return
-        return G_BASE_PATH + "/ActionCreate"
+        return "$G_BASE_PATH/ActionCreate"
     }
 
     @PostMapping("/create")
-    fun procCreate(model: Model?, auth: Authentication,
-                   iotActionDto: IotActionDto): String {
+    fun procCreate(model: Model, auth: Authentication,
+                   iotActionDto: IotActionDto?): String? {
         // Exception
-        if (centerService.getSetting().getIotAction() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotAction!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val isSuccess: Boolean
 
         // Init
-        isSuccess = iotActionService!!.createAction(auth, iotActionDto)
+        isSuccess = iotActionService.createAction(auth, iotActionDto!!)
 
         // Return
-        if (isSuccess) return "redirect:/action" else return "redirect:/action?error"
+        return if (isSuccess) "redirect:/action" else "redirect:/action?error"
     }
 
     @PostMapping("/modify/{id}")
-    fun procModify(model: Model?, auth: Authentication?,
+    fun procModify(model: Model, auth: Authentication,
                    @PathVariable("id") actionId: Long,
-                   iotActionDto: IotActionDto): String {
+                   iotActionDto: IotActionDto): String? {
         // Exception
-        if (centerService.getSetting().getIotAction() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotAction!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val isSuccess: Boolean
 
         // Init
-        isSuccess = iotActionService!!.modifyAction(auth, actionId, iotActionDto)
+        isSuccess = iotActionService.modifyAction(auth, actionId, iotActionDto)
 
         // Return
-        if (isSuccess) return "redirect:/action" else return "redirect:/action/modify/" + actionId + "?error"
+        return if (isSuccess) "redirect:/action" else "redirect:/action/modify/$actionId?error"
     }
 
     @PostMapping("/delete/{id}")
-    fun procDelete(model: Model?, auth: Authentication?, @PathVariable("id") actionId: Long): String {
+    fun procDelete(model: Model, auth: Authentication, @PathVariable("id") actionId: Long): String? {
         // Exception
-        if (centerService.getSetting().getIotAction() !== 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotAction!!.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val isSuccess: Boolean
 
         // Init
-        isSuccess = iotActionService!!.deleteAction(auth, actionId)
+        isSuccess = iotActionService.deleteAction(auth, actionId)
 
         // Return
-        if (isSuccess) return "redirect:/action" else return "redirect:/action/modify/" + actionId + "?error"
+        return if (isSuccess) "redirect:/action" else "redirect:/action/modify/$actionId?error"
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
  * @Description : 노드 트리거 리포지토리 인터페이스
  */
 @Repository
-interface NodeTriggerRepo : JpaRepository<NodeTrigger?, Long?> {
+open interface NodeTriggerRepo : JpaRepository<NodeTrigger?, Long?> {
     fun findByMember(member: Member?): List<NodeTrigger?>?
     fun findByEnableStatusAndExpressionContaining(enableStatus: EnableStatusRule?, expression: String?): List<NodeTrigger?>?
 

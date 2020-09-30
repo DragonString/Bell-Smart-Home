@@ -1,23 +1,26 @@
 package net.softbell.bsh.dto.view.general
 
+import net.softbell.bsh.domain.entity.Node
+import java.util.*
+
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : 모니터뷰 카드정보 DTO
  */
 class MonitorSummaryCardDto(entity: Node?) {
-    private val alias: String
-    private val listItems: List<MonitorCardItemDto>
-    private val lastReceive: Date? = null
-    private val lastReceiveSecond: Long? = null
+    var alias: String?
+    var listItems: MutableList<MonitorCardItemDto>
+    var lastReceive: Date? = null
+    var lastReceiveSecond: Long? = null
 
     init {
         // Exception
-        if (entity == null) return
+        entity.let {
+            // Init
+            listItems = java.util.ArrayList()
 
-        // Init
-        listItems = ArrayList()
-
-        // Convert
-        alias = entity.getAlias()
+            // Convert
+            alias = entity!!.alias
+        }
     }
 }

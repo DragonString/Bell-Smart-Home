@@ -1,32 +1,22 @@
-package net.softbell.bsh;
+package net.softbell.bsh
 
-import static org.junit.Assert.assertEquals;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import net.softbell.bsh.util.BellLog;
+import mu.KLogging
+import org.assertj.core.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.springframework.boot.test.context.SpringBootTest
 
 /**
  * @Author : Bell(bell@softbell.net)
  * @Description : Spring Boot Test 진입지점
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest
-public class BellsmarthomeApplicationTests
-{
-	// Global Field
-	private final Logger log = LoggerFactory.getLogger(this.getClass());
+class BellsmarthomeApplicationTests {
+    @Test
+    fun `context Loads`() {
+        logger.info("Test Starting..")
+        assertThat(true).isEqualTo(true) // 두 값이 다르면 Test 스테이지가 중단됨.
+        logger.info("Test Complete!!")
+    }
 
-	@Test
-	public void contextLoads() throws Exception
-	{
-		log.info(BellLog.getLogHead() + "Test Starting..");
-		assertEquals(true, true); // 두 값이 다르면 Test 스테이지가 중단됨.
-		log.info(BellLog.getLogHead() + "Test Complete!!");
-	}
+    companion object : KLogging()
 }

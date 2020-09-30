@@ -10,7 +10,7 @@ import javax.persistence.*
  * @Description : 회원 로그인 로그 엔티티
  */
 @Entity
-@Table(name = "member_login_log", indexes = [Index(name = "IDX_PERIOD_DATE", columnList = "request_date")])
+@Table(name = "member_login_log", indexes = [Index(name = "IDX_MEMBER_LOGIN_LOG_REQUEST_DATE", columnList = "request_date")])
 @NamedQuery(name = "MemberLoginLog.findAll", query = "SELECT m FROM MemberLoginLog m")
 class MemberLoginLog : Serializable {
     @Id

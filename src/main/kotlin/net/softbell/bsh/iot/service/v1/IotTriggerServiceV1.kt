@@ -1,6 +1,5 @@
 package net.softbell.bsh.iot.service.v1
 
-import lombok.AllArgsConstructor
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.TriggerLastStatusRule
 import net.softbell.bsh.domain.TriggerStatusRule
@@ -23,16 +22,15 @@ import javax.transaction.Transactional
  * @Author : Bell(bell@softbell.net)
  * @Description : IoT Node Trigger 서비스
  */
-@AllArgsConstructor
 @Service
 class IotTriggerServiceV1 {
     // Global Field
-    @Autowired lateinit var memberService: MemberService
-    @Autowired lateinit var iotActionService: IotActionServiceV1
-    @Autowired lateinit var iotTriggerParserComp: IotTriggerParserCompV1
-    @Autowired lateinit var nodeTriggerRepo: NodeTriggerRepo
-    @Autowired lateinit var nodeTriggerActionRepo: NodeTriggerActionRepo
-    @Autowired lateinit var nodeActionRepo: NodeActionRepo
+    @Autowired private lateinit var memberService: MemberService
+    @Autowired private lateinit var iotActionService: IotActionServiceV1
+    @Autowired private lateinit var iotTriggerParserComp: IotTriggerParserCompV1
+    @Autowired private lateinit var nodeTriggerRepo: NodeTriggerRepo
+    @Autowired private lateinit var nodeTriggerActionRepo: NodeTriggerActionRepo
+    @Autowired private lateinit var nodeActionRepo: NodeActionRepo
 
     fun getAllTriggers(auth: Authentication): List<NodeTrigger?>? {
         // Field
@@ -40,10 +38,10 @@ class IotTriggerServiceV1 {
         val listNodeTrigger: List<NodeTrigger?>?
 
         // Init
-        member = memberService!!.getMember(auth.name)
+        member = memberService.getMember(auth.name)
 
         // Load
-        listNodeTrigger = if (memberService.isAdmin(member)) nodeTriggerRepo!!.findAll() else nodeTriggerRepo!!.findByMember(member)
+        listNodeTrigger = if (memberService.isAdmin(member)) nodeTriggerRepo.findAll() else nodeTriggerRepo.findByMember(member)
 
         // Return
         return listNodeTrigger
@@ -54,7 +52,7 @@ class IotTriggerServiceV1 {
         val optNodeTrigger: Optional<NodeTrigger?>
 
         // Init
-        optNodeTrigger = nodeTriggerRepo!!.findById(triggerId)
+        optNodeTrigger = nodeTriggerRepo.findById(triggerId)
 
         // Exception
         return if (!optNodeTrigger.isPresent) null else optNodeTrigger.get()
@@ -76,53 +74,63 @@ class IotTriggerServiceV1 {
 
         // Init
         listAction = ArrayList()
-        mapAction = iotTriggerDto.getMapAction()
-        member = memberService!!.getMember(auth.name)
-        enableStatus = if (iotTriggerDto.isEnableStatus()) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
+        mapAction = iotTriggerDto.mapAction
+        member = memberService.getMember(auth.name)
+        enableStatus = if (iotTriggerDto.enableStatus) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
 
         // Exception
         if (member == null) return false
 
         // Data Process - Node Trigger
-        nodeTrigger = builder()
-                .enableStatus(enableStatus)
-                .description(iotTriggerDto.getDescription())
-                .expression(iotTriggerDto.getExpression())
-                .member(member)
-                .lastStatus(TriggerLastStatusRule.WAIT)
-                .build()
+        nodeTrigger = NodeTrigger()
+
+        nodeTrigger.enableStatus = enableStatus
+        nodeTrigger.description = iotTriggerDto.description
+        nodeTrigger.expression = iotTriggerDto.expression
+        nodeTrigger.member = member
+        nodeTrigger.lastStatus = TriggerLastStatusRule.WAIT
 
         // DB - Node Trigger Save
-        nodeTriggerRepo!!.save(nodeTrigger)
+        nodeTriggerRepo.save(nodeTrigger)
 
 
         // Data Process - Node Trigger Action
         if (mapAction != null) {
-            mapAction.forEach(BiConsumer { key: Long, value: IotTriggerActionDto ->
+            mapAction.forEach(BiConsumer { key: Long?, value: IotTriggerActionDto ->
                 // Field
                 val optNodeAction: Optional<NodeAction?>
                 val nodeTriggerAction: NodeTriggerAction
 
                 // Init
-                optNodeAction = nodeActionRepo!!.findById(key)
+                optNodeAction = nodeActionRepo.findById(key!!)
 
                 // Build
                 if (optNodeAction.isPresent) {
-                    nodeTriggerAction = builder()
-                            .nodeTrigger(nodeTrigger)
-                            .nodeAction(optNodeAction.get())
-                            .build()
-                    if (value.isEventError() && value.isEventOccur() && value.isEventRestore()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.ALL) else if (value.isEventOccur() && value.isEventRestore()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.OCCUR_AND_RESTORE) else if (value.isEventError()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.ERROR) else if (value.isEventOccur()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.OCCUR) else if (value.isEventRestore()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.RESTORE)
+                    nodeTriggerAction = NodeTriggerAction()
+
+                    nodeTriggerAction.nodeTrigger = nodeTrigger
+                    nodeTriggerAction.nodeAction = optNodeAction.get()
+
+                    if (value.eventError && value.eventOccur && value.eventRestore)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.ALL
+                    else if (value.eventOccur && value.eventRestore)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.OCCUR_AND_RESTORE
+                    else if (value.eventError)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.ERROR
+                    else if (value.eventOccur)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.OCCUR
+                    else if (value.eventRestore)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.RESTORE
 
                     // List Add
                     listAction.add(nodeTriggerAction)
                 }
             })
-            nodeTrigger.setNodeTriggerActions(listAction)
+            nodeTrigger.nodeTriggerActions = listAction
         }
 
         // DB - Node Trigger Action Save
-        nodeTriggerActionRepo!!.saveAll(listAction)
+        nodeTriggerActionRepo.saveAll(listAction)
 
 
         // Return
@@ -144,10 +152,10 @@ class IotTriggerServiceV1 {
 
         // Init
         listAction = ArrayList()
-        mapAction = iotTriggerDto.getMapAction()
+        mapAction = iotTriggerDto.mapAction
         //		member = memberService.getMember(auth.getName());
-        optNodeTrigger = nodeTriggerRepo!!.findById(triggerId)
-        enableStatus = if (iotTriggerDto.isEnableStatus()) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
+        optNodeTrigger = nodeTriggerRepo.findById(triggerId)
+        enableStatus = if (iotTriggerDto.enableStatus) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
 
         // Exception
         if ( /*member == null || */!optNodeTrigger.isPresent) return false
@@ -156,12 +164,12 @@ class IotTriggerServiceV1 {
         nodeTrigger = optNodeTrigger.get()
 
         // DB - Trigger Action Clear
-        nodeTriggerActionRepo!!.deleteAll(nodeTrigger.getNodeTriggerActions())
+        nodeTriggerActionRepo.deleteAll(nodeTrigger.nodeTriggerActions!!)
 
         // Data Process - Node Trigger
-        nodeTrigger.setEnableStatus(enableStatus)
-        nodeTrigger.setDescription(iotTriggerDto.getDescription())
-        nodeTrigger.setExpression(iotTriggerDto.getExpression())
+        nodeTrigger.enableStatus = enableStatus
+        nodeTrigger.description = iotTriggerDto.description
+        nodeTrigger.expression = iotTriggerDto.expression
 
         // DB - Node Trigger Save
         nodeTriggerRepo.save(nodeTrigger)
@@ -169,27 +177,37 @@ class IotTriggerServiceV1 {
 
         // Data Process - Node Trigger Action
         if (mapAction != null) {
-            mapAction.forEach(BiConsumer { key: Long, value: IotTriggerActionDto ->
+            mapAction.forEach(BiConsumer { key: Long?, value: IotTriggerActionDto ->
                 // Field
                 val optNodeAction: Optional<NodeAction?>
                 val nodeTriggerAction: NodeTriggerAction
 
                 // Init
-                optNodeAction = nodeActionRepo!!.findById(key)
+                optNodeAction = nodeActionRepo.findById(key!!)
 
                 // Build
                 if (optNodeAction.isPresent) {
-                    nodeTriggerAction = builder()
-                            .nodeTrigger(nodeTrigger)
-                            .nodeAction(optNodeAction.get())
-                            .build()
-                    if (value.isEventError() && value.isEventOccur() && value.isEventRestore()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.ALL) else if (value.isEventOccur() && value.isEventRestore()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.OCCUR_AND_RESTORE) else if (value.isEventError()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.ERROR) else if (value.isEventOccur()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.OCCUR) else if (value.isEventRestore()) nodeTriggerAction.setTriggerStatus(TriggerStatusRule.RESTORE)
+                    nodeTriggerAction = NodeTriggerAction()
+
+                    nodeTriggerAction.nodeTrigger = nodeTrigger
+                    nodeTriggerAction.nodeAction = optNodeAction.get()
+
+                    if (value.eventError && value.eventOccur && value.eventRestore)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.ALL
+                    else if (value.eventOccur && value.eventRestore)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.OCCUR_AND_RESTORE
+                    else if (value.eventError)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.ERROR
+                    else if (value.eventOccur)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.OCCUR
+                    else if (value.eventRestore)
+                        nodeTriggerAction.triggerStatus = TriggerStatusRule.RESTORE
 
                     // List Add
                     listAction.add(nodeTriggerAction)
                 }
             })
-            nodeTrigger.setNodeTriggerActions(listAction)
+            nodeTrigger.nodeTriggerActions = listAction
         }
 
         // DB - Node Trigger Action Save
@@ -207,7 +225,7 @@ class IotTriggerServiceV1 {
         val nodeTrigger: NodeTrigger
 
         // Init
-        optNodeTrigger = nodeTriggerRepo!!.findById(triggerId)
+        optNodeTrigger = nodeTriggerRepo.findById(triggerId)
 
         // Exception
         if (!optNodeTrigger.isPresent) return false
@@ -216,7 +234,7 @@ class IotTriggerServiceV1 {
         nodeTrigger = optNodeTrigger.get()
 
         // DB - Update
-        if (status) nodeTrigger.setEnableStatus(EnableStatusRule.ENABLE) else nodeTrigger.setEnableStatus(EnableStatusRule.DISABLE)
+        if (status) nodeTrigger.enableStatus = EnableStatusRule.ENABLE else nodeTrigger.enableStatus = EnableStatusRule.DISABLE
 
         // Return
         return true
@@ -229,14 +247,14 @@ class IotTriggerServiceV1 {
         val nodeTrigger: NodeTrigger
 
         // Init
-        optNodeTrigger = nodeTriggerRepo!!.findById(triggerId)
+        optNodeTrigger = nodeTriggerRepo.findById(triggerId)
 
         // Exception
         if (!optNodeTrigger.isPresent) return false
         nodeTrigger = optNodeTrigger.get()
 
         // DB - Delete
-        for (entity in nodeTrigger.getNodeTriggerActions()) nodeTriggerActionRepo!!.delete(entity)
+        for (entity in nodeTrigger.nodeTriggerActions!!) nodeTriggerActionRepo.delete(entity)
         nodeTriggerRepo.delete(nodeTrigger)
 
         // Return
@@ -251,7 +269,7 @@ class IotTriggerServiceV1 {
 
         // Init
         isSuccess = true
-        listNodeTrigger = iotTriggerParserComp!!.convTrigger(nodeItem)
+        listNodeTrigger = iotTriggerParserComp.convTrigger(nodeItem)
 
         // Process
         for (nodeTrigger in listNodeTrigger!!) {
@@ -259,20 +277,20 @@ class IotTriggerServiceV1 {
             var isOccur: Boolean?
 
             // Init
-            isOccur = iotTriggerParserComp.parseEntity(nodeTrigger)
+            isOccur = iotTriggerParserComp.parseEntity(nodeTrigger!!)
 
             // Exception
-            if (nodeTrigger.getLastStatus() === TriggerLastStatusRule.ERROR && isOccur == null ||
-                    nodeTrigger.getLastStatus() === TriggerLastStatusRule.OCCUR && isOccur!! ||
-                    nodeTrigger.getLastStatus() === TriggerLastStatusRule.RESTORE && !isOccur!!) continue
+            if (nodeTrigger.lastStatus === TriggerLastStatusRule.ERROR && isOccur == null ||
+                    nodeTrigger.lastStatus === TriggerLastStatusRule.OCCUR && isOccur!! ||
+                    nodeTrigger.lastStatus === TriggerLastStatusRule.RESTORE && !isOccur!!) continue
 
             // DB - Update
-            if (isOccur == null) nodeTrigger.setLastStatus(TriggerLastStatusRule.ERROR) // DB Update - Error
-            else if (isOccur) nodeTrigger.setLastStatus(TriggerLastStatusRule.OCCUR) // Occur
-            else nodeTrigger.setLastStatus(TriggerLastStatusRule.RESTORE) // Restore
+            if (isOccur == null) nodeTrigger.lastStatus = TriggerLastStatusRule.ERROR // DB Update - Error
+            else if (isOccur) nodeTrigger.lastStatus = TriggerLastStatusRule.OCCUR // Occur
+            else nodeTrigger.lastStatus = TriggerLastStatusRule.RESTORE // Restore
 
             // Exec Action
-            for (nodeAction in iotTriggerParserComp.getTriggerAction(nodeTrigger)) if (!iotActionService!!.execAction(nodeAction, nodeTrigger.getMember())) isSuccess = false
+            for (nodeAction in iotTriggerParserComp.getTriggerAction(nodeTrigger)) if (!iotActionService.execAction(nodeAction, nodeTrigger.member)) isSuccess = false
         }
 
         // Return

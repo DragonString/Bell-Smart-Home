@@ -9,6 +9,6 @@ import org.springframework.stereotype.Repository
  * @Description : 회원 리포지토리 인터페이스
  */
 @Repository
-interface MemberRepo : JpaRepository<Member?, Long?> {
+open interface MemberRepo : JpaRepository<Member?, Long?> {
     fun findByUserId(userId: String?): Member?
 }

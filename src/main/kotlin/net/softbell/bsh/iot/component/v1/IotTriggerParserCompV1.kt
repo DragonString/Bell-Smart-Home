@@ -1,6 +1,9 @@
 package net.softbell.bsh.iot.component.v1
 
+import jdk.nashorn.internal.objects.annotations.Getter
+import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.TriggerLastStatusRule
 import net.softbell.bsh.domain.TriggerStatusRule
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.entity.NodeItem
@@ -25,81 +28,131 @@ import java.util.*
 @Component
 class IotTriggerParserCompV1 {
     // Global Field
-    @Autowired lateinit var nodeTriggerRepo: NodeTriggerRepo
-    @Autowired lateinit var nodeItemRepo: NodeItemRepo
-    @Autowired lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
+    @Autowired private lateinit var nodeTriggerRepo: NodeTriggerRepo
+    @Autowired private lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired private lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
+
 
     internal enum class BuiltInFunction {
-        LAST("last"),  // 마지막 값 조회
-        MAX("max"),  // 최대 값 조회
-        MIN("min"),  // 최소 값 조회
-        AVG("avg"),  // 평균 값 조회
-        DIFF("diff"),  // last(0)과 last(1)의 차이 여부(1 or 0)
-        CHANGE("change"),  // last(0) - last(1) 의 값
-        ABSCHANGE("abschange"),  // change의 절대값
-        DELTA("delta");
+        LAST { // 마지막 값 조회
+            override val value: String
+                get() = "last"
+        },
+        MAX { // 최대 값 조회
+            override val value: String
+                get() = "max"
+        },
+        MIN { // 최소 값 조회
+            override val value: String
+                get() = "min"
+        },
+        AVG { // 평균 값 조회
+            override val value: String
+                get() = "avg"
+        },
+        DIFF { // last(0)과 last(1)의 차이 여부(1 or 0)
+            override val value: String
+                get() = "diff"
+        },
+        CHANGE {// last(0) - last(1) 의 값
+            override val value: String
+                get() = "change"
+        },
+        ABSCHANGE { // change의 절대값
+            override val value: String
+            get() = "abschange"
+        },
+        DELTA { // 최근 n 초 간 max - min 값
+            override val value: String
+            get() = "delta"
+        };
 
-        // 최근 n 초 간 max - min 값
-        private val value: String? = null
+        abstract val value: String
 
         companion object {
             fun ofValue(value: String): BuiltInFunction? {
-                for (funcType in values()) if (funcType.value == value) return funcType
+                for (funcType in values())
+                    if (funcType.value == value) return funcType
                 return null
             }
         }
     }
 
     internal enum class RelationalOperatorType {
-        EQ("=="),  // = : Equal
-        NE("!="),  // != : Not Equal
-        GE(">="),  // >= : Greater Equal
-        GT(">"),  // > : Greater Then
-        LE("<="),  // <= : Little Equal
-        LT("<");
+        EQ { // = : Equal
+            override val value: String
+                get() = "=="
+        },
+        NE { // != : Not Equal
+            override val value: String
+                get() = "!="
+        },
+        GE { // >= : Greater Equal
+            override val value: String
+                get() = ">="
+        },
+        GT { // > : Greater Then
+            override val value: String
+                get() = ">"
+        },
+        LE { // <= : Little Equal
+            override val value: String
+                get() = "<="
+        },
+        LT { // < : Little Then
+            override val value: String
+                get() = "<"
+        };
 
-        // < : Little Then
-        val value: String? = null
+        abstract val value: String
 
         companion object {
             fun ofValue(value: String): RelationalOperatorType? {
-                for (opType in values()) if (opType.value == value) return opType
+                for (opType in values())
+                    if (opType.value == value) return opType
                 return null
             }
         }
     }
 
     internal enum class LogicalOperatorType {
-        AND("and"),  // &&
-        OR("or");
+        AND { // &&
+            override val value: String
+                get() = "and"
+        },
+        OR { // ||
+            override val value: String
+                get() = "or"
+        };
 
-        // ||
-        val value: String? = null
+        abstract val value: String
 
         companion object {
             fun ofValue(value: String): LogicalOperatorType? {
-                for (opType in values()) if (opType.value == value) return opType
+                for (opType in values())
+                    if (opType.value == value) return opType
                 return null
             }
         }
     }
 
-    fun getTriggerAction(nodeTrigger: NodeTrigger?): List<NodeAction> {
+
+    fun getTriggerAction(nodeTrigger: NodeTrigger): List<NodeAction?> {
         // Field
-        val listNodeAction: MutableList<NodeAction>
+        val listNodeAction: MutableList<NodeAction?>
 
         // Init
         listNodeAction = ArrayList()
-        log.info(BellLog.getLogHead() + "트리거 액션 로드 (" + nodeTrigger.getLastStatus() + ") - " + nodeTrigger.getDescription())
+        logger.info("트리거 액션 로드 (" + nodeTrigger.lastStatus + ") - " + nodeTrigger.description)
 
         // Process
-        for (entity in nodeTrigger.getNodeTriggerActions()) when (nodeTrigger.getLastStatus()) {
-            OCCUR -> if (entity.getTriggerStatus() !== TriggerStatusRule.ERROR &&
-                    entity.getTriggerStatus() !== TriggerStatusRule.RESTORE) listNodeAction.add(entity.getNodeAction())
-            RESTORE -> if (entity.getTriggerStatus() !== TriggerStatusRule.ERROR &&
-                    entity.getTriggerStatus() !== TriggerStatusRule.OCCUR) listNodeAction.add(entity.getNodeAction())
-            ERROR -> if (entity.getTriggerStatus() === TriggerStatusRule.ALL ||
-                    entity.getTriggerStatus() === TriggerStatusRule.ERROR) listNodeAction.add(entity.getNodeAction())
+        for (entity in nodeTrigger.nodeTriggerActions!!) when (nodeTrigger.lastStatus) {
+            TriggerLastStatusRule.OCCUR -> if (entity.triggerStatus !== TriggerStatusRule.ERROR &&
+                    entity.triggerStatus !== TriggerStatusRule.RESTORE) listNodeAction.add(entity.nodeAction)
+            TriggerLastStatusRule.RESTORE -> if (entity.triggerStatus !== TriggerStatusRule.ERROR &&
+                    entity.triggerStatus !== TriggerStatusRule.OCCUR) listNodeAction.add(entity.nodeAction)
+            TriggerLastStatusRule.ERROR -> if (entity.triggerStatus === TriggerStatusRule.ALL ||
+                    entity.triggerStatus === TriggerStatusRule.ERROR) listNodeAction.add(entity.nodeAction)
             else -> {
             }
         }
@@ -118,7 +171,7 @@ class IotTriggerParserCompV1 {
 
         // Init
         expression = "{"
-        expression += nodeItem.getItemId()
+        expression += nodeItem.itemId
         expression += "."
 
         // Process
@@ -128,21 +181,21 @@ class IotTriggerParserCompV1 {
         return listNodeTrigger
     }
 
-    fun parseEntity(nodeTrigger: NodeTrigger?): Boolean? {
+    fun parseEntity(nodeTrigger: NodeTrigger): Boolean? {
         // Field
         var intParentCount: Int
         val intLoopCount: Int
-        val rawExpression: String
+        val rawExpression: String?
         var parseExpression: String?
         var resultExpression: String?
 
         // Init
         intParentCount = 10 // 괄호 최대 10개로 제한
         intLoopCount = 10 // 괄호 내 아이템 최대 10개로 제한
-        rawExpression = nodeTrigger.getExpression()
+        rawExpression = nodeTrigger.expression
         resultExpression = rawExpression
 
-//		log.info("표현식 분석 시작: " + rawExpression);
+//		logger.info("표현식 분석 시작: " + rawExpression);
 
         // Process - []
         while (intParentCount-- > 0) {
@@ -165,13 +218,17 @@ class IotTriggerParserCompV1 {
             parseExpression = parseLogical(parseExpression) // 논리 연산자 계산
 
             // Replace
-            if (idxParentStart == -1) resultExpression = parseExpression else resultExpression = resultExpression.replace(resultExpression.substring(idxParentStart, idxParentEnd + 1), parseExpression)
+            if (idxParentStart == -1)
+                resultExpression = parseExpression
+            else
+                if (parseExpression != null)
+                    resultExpression = resultExpression.replace(resultExpression.substring(idxParentStart, idxParentEnd + 1), parseExpression)
 
             // Finish Check
             if (resultExpression!!.length <= 1) break
         }
 
-//		log.info("표현식 분석 끝: " + resultExpression); // TODO
+		logger.info("표현식 분석 끝: $resultExpression");
 
         // Return
         if (resultExpression == "1") // 트리거 활성화
@@ -241,7 +298,7 @@ class IotTriggerParserCompV1 {
                 relValue = java.lang.Double.valueOf(strRelValue)
                 funcType = BuiltInFunction.ofValue(strFunc)
             } catch (ex: Exception) {
-                log.error("무슨 에러? " + ex.message)
+                logger.error("무슨 에러? " + ex.message)
                 return null
             }
 
@@ -287,7 +344,7 @@ class IotTriggerParserCompV1 {
             try {
                 Integer.valueOf(param)
             } catch (ex: Exception) {
-                log.error("표현식 매개변수 정수 변환 에러: $param")
+                logger.error("표현식 매개변수 정수 변환 에러: $param")
                 return null
             }
         }
@@ -312,7 +369,7 @@ class IotTriggerParserCompV1 {
             listNodeItemHistory = pageNodeItemHistory.content
 
             // Process - Last
-            if (funcType == BuiltInFunction.LAST) result = listNodeItemHistory[0].getItemStatus() else {
+            if (funcType == BuiltInFunction.LAST) result = listNodeItemHistory[0]!!.itemStatus else {
                 // Process - Other
                 // Exception
                 if (listNodeItemHistory.size < 2) return null
@@ -322,11 +379,10 @@ class IotTriggerParserCompV1 {
                 val beforeStatus: Double
 
                 // Init
-                lastStatus = listNodeItemHistory[0].getItemStatus()
-                beforeStatus = listNodeItemHistory[1].getItemStatus()
+                lastStatus = listNodeItemHistory[0]!!.itemStatus!!
+                beforeStatus = listNodeItemHistory[1]!!.itemStatus!!
                 when (funcType) {
-                    BuiltInFunction.DIFF ->                        // TODO
-                        result = if (lastStatus != beforeStatus) 1.0 else 0.0
+                    BuiltInFunction.DIFF -> result = if (lastStatus != beforeStatus) 1.0 else 0.0 // TODO
                     BuiltInFunction.CHANGE -> result = lastStatus - beforeStatus
                     BuiltInFunction.ABSCHANGE -> result = Math.abs(lastStatus - beforeStatus)
                     else -> {
@@ -341,16 +397,16 @@ class IotTriggerParserCompV1 {
             calendar.add(Calendar.SECOND, intParam)
             dateStart = calendar.time
             when (funcType) {
-                BuiltInFunction.AVG -> result = nodeItemHistoryRepo!!.avgByNodeItem(nodeItem, dateStart)
-                BuiltInFunction.MIN -> result = nodeItemHistoryRepo!!.minByNodeItem(nodeItem, dateStart)
-                BuiltInFunction.MAX -> result = nodeItemHistoryRepo!!.maxByNodeItem(nodeItem, dateStart)
+                BuiltInFunction.AVG -> result = nodeItemHistoryRepo.avgByNodeItem(nodeItem, dateStart)
+                BuiltInFunction.MIN -> result = nodeItemHistoryRepo.minByNodeItem(nodeItem, dateStart)
+                BuiltInFunction.MAX -> result = nodeItemHistoryRepo.maxByNodeItem(nodeItem, dateStart)
                 BuiltInFunction.DELTA -> {
                     // Field
                     val itemMax: Double
                     val itemMin: Double
 
                     // Init
-                    itemMax = nodeItemHistoryRepo!!.maxByNodeItem(nodeItem, dateStart)!!
+                    itemMax = nodeItemHistoryRepo.maxByNodeItem(nodeItem, dateStart)!!
                     itemMin = nodeItemHistoryRepo.minByNodeItem(nodeItem, dateStart)!!
 
                     // Process
@@ -414,14 +470,14 @@ class IotTriggerParserCompV1 {
                     if (strVal1 == "1") val1 = true
                     if (strVal2 == "1") val2 = true
                 } catch (ex: Exception) {
-                    log.error("파싱 에러: " + ex.message)
+                    logger.error("파싱 에러: " + ex.message)
                     return null
                 }
                 isResult = when (opType) {
                     LogicalOperatorType.AND -> val1 && val2
                     LogicalOperatorType.OR -> val1 || val2
                     else -> {
-                        log.error("여기가 와지나?")
+                        logger.error("여기가 와지나?")
                         return null
                     }
                 }
@@ -435,4 +491,6 @@ class IotTriggerParserCompV1 {
         // Return
         return parseExpression
     }
+
+    companion object : KLogging()
 }

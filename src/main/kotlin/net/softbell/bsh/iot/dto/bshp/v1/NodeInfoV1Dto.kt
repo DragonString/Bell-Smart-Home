@@ -5,8 +5,8 @@ package net.softbell.bsh.iot.dto.bshp.v1
  * @Description : BSHPv1 전용 Node Info DTO
  */
 data class NodeInfoV1Dto (
-        val uid: String?,
-        val controlMode: Byte?,
-        val nodeName: String?,
-        val version: String?
+    var uid: String?,
+    var controlMode: Byte?,
+    var nodeName: String?,
+    var version: String?
 )

@@ -31,20 +31,21 @@ import java.util.*
 @Service
 class IotNodeServiceV1 {
     // Global Field
-    @Autowired lateinit var iotMessageService: IotMessageServiceV1
-    @Autowired lateinit var permissionService: PermissionService
-    @Autowired lateinit var memberService: MemberService
-    @Autowired lateinit var iotChannelCompV1: IotChannelCompV1
-    @Autowired lateinit var nodeRepo: NodeRepo
-    @Autowired lateinit var nodeItemRepo: NodeItemRepo
-    @Autowired lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
-
-    @get:Deprecated("")
-    val allNodes: MutableList<Node?>
-        get() = nodeRepo!!.findAll()
+    @Autowired private lateinit var iotMessageService: IotMessageServiceV1
+    @Autowired private lateinit var permissionService: PermissionService
+    @Autowired private lateinit var memberService: MemberService
+    @Autowired private lateinit var iotChannelCompV1: IotChannelCompV1
+    @Autowired private lateinit var nodeRepo: NodeRepo
+    @Autowired private lateinit var nodeItemRepo: NodeItemRepo
+    @Autowired private lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
 
     @Deprecated("")
-    fun getAllNodes(intPage: Int, intCount: Int): Page<Node?> {
+    fun getAllNodes(): List<Node?> {
+        return nodeRepo.findAll()
+    }
+
+    @Deprecated("")
+    fun getAllNodes(intPage: Int, intCount: Int): Page<Node?>? {
         // Field
         val curPage: Pageable
 
@@ -52,11 +53,11 @@ class IotNodeServiceV1 {
         curPage = PageRequest.of(intPage - 1, intCount)
 
         // Return
-        return nodeRepo!!.findAll(curPage)
+        return nodeRepo.findAll(curPage)
     }
 
     @Deprecated("")
-    fun getAllNodeItems(auth: Authentication?): List<NodeItem?> {
+    fun getAllNodeItems(auth: Authentication?): List<NodeItem?>? {
         // Field
         // TODO 회원 권한에 맞는 아이템만 조회하는 기능 추가 필요... 언젠가는... 하겠지.... 권한... 보안... 으어...
 
@@ -64,23 +65,23 @@ class IotNodeServiceV1 {
 
 
         // Return
-        return nodeItemRepo!!.findAll()
+        return nodeItemRepo.findAll()
     }
 
-    fun getAllNodes(auth: Authentication, role: GroupRole?): List<Node?>? {
+    fun getAllNodes(auth: Authentication, role: GroupRole?): List<Node?> {
         // Exception
-        if (memberService!!.getAdminMember(auth.name) != null) // 관리자면
-            return nodeRepo!!.findAll() // 모든 노드 반환
+        if (memberService.getAdminMember(auth.name) != null) // 관리자면
+            return nodeRepo.findAll() // 모든 노드 반환
 
         // Field
-        val listNode: List<Node?>?
+        val listNode: List<Node?>
         val listNodeGroupItem: List<NodeGroupItem?>?
 
         // Init
-        listNodeGroupItem = permissionService!!.getPrivilegeNodeGroupItems(role, auth)
+        listNodeGroupItem = permissionService.getPrivilegeNodeGroupItems(role, auth)
 
         // Process
-        listNode = nodeRepo!!.findByNodeGroupItemsIn(listNodeGroupItem)
+        listNode = nodeRepo.findByNodeGroupItemsIn(listNodeGroupItem)
 
         // Return
         return listNode
@@ -88,7 +89,7 @@ class IotNodeServiceV1 {
 
     fun getAllNodeItems(auth: Authentication, role: GroupRole?): List<NodeItem?>? {
         // Exception
-        if (memberService!!.getAdminMember(auth.name) != null) return nodeItemRepo!!.findAll()
+        if (memberService.getAdminMember(auth.name) != null) return nodeItemRepo.findAll()
 
         // Field
         val listNodeItem: List<NodeItem?>?
@@ -98,25 +99,25 @@ class IotNodeServiceV1 {
         listNode = getAllNodes(auth, role)
 
         // Process
-        listNodeItem = nodeItemRepo!!.findByNodeIn(listNode)
+        listNodeItem = nodeItemRepo.findByNodeIn(listNode)
 
         // Return
         return listNodeItem
     }
 
-    fun getCategoryNodeItems(auth: Authentication, role: GroupRole?, itemCategory: ItemCategoryRule?): List<NodeItem?>? {
+    fun getCategoryNodeItems(auth: Authentication, role: GroupRole?, itemCategory: ItemCategoryRule?): List<NodeItem?> {
         // Exception
-        if (memberService!!.getAdminMember(auth.name) != null) return nodeItemRepo!!.findByItemCategory(itemCategory)
+        if (memberService.getAdminMember(auth.name) != null) return nodeItemRepo.findByItemCategory(itemCategory)
 
         // Field
-        val listNodeItem: List<NodeItem?>?
-        val listNode: List<Node?>?
+        val listNodeItem: List<NodeItem?>
+        val listNode: List<Node?>
 
         // Init
         listNode = getAllNodes(auth, role)
 
         // Process
-        listNodeItem = nodeItemRepo!!.findByNodeInAndItemCategory(listNode, itemCategory)
+        listNodeItem = nodeItemRepo.findByNodeInAndItemCategory(listNode, itemCategory)
 
         // Return
         return listNodeItem
@@ -127,7 +128,7 @@ class IotNodeServiceV1 {
         val optNode: Optional<Node?>
 
         // Init
-        optNode = nodeRepo!!.findById(nodeId)
+        optNode = nodeRepo.findById(nodeId)
 
         // Return
         return if (optNode.isPresent) optNode.get() else null
@@ -138,7 +139,7 @@ class IotNodeServiceV1 {
         val optNodeItem: Optional<NodeItem?>
 
         // Init
-        optNodeItem = nodeItemRepo!!.findById(itemId)
+        optNodeItem = nodeItemRepo.findById(itemId)
 
         // Return
         return if (optNodeItem.isPresent) optNodeItem.get() else null
@@ -146,7 +147,7 @@ class IotNodeServiceV1 {
 
     fun getLastNodeItemHistory(nodeItem: NodeItem?): NodeItemHistory? {
         // Process
-        return nodeItemHistoryRepo!!.findFirstByNodeItemOrderByItemHistoryIdDesc(nodeItem)
+        return nodeItemHistoryRepo.findFirstByNodeItemOrderByItemHistoryIdDesc(nodeItem)
     }
 
     fun getLastNodeItemHistory(nodeItemId: Long): NodeItemHistory? {
@@ -154,10 +155,10 @@ class IotNodeServiceV1 {
         val optNodeItem: Optional<NodeItem?>
 
         // Init
-        optNodeItem = nodeItemRepo!!.findById(nodeItemId)
+        optNodeItem = nodeItemRepo.findById(nodeItemId)
 
         // Exception
-        return if (!optNodeItem.isPresent) null else nodeItemHistoryRepo!!.findFirstByNodeItemOrderByItemHistoryIdDesc(optNodeItem.get())
+        return if (!optNodeItem.isPresent) null else nodeItemHistoryRepo.findFirstByNodeItemOrderByItemHistoryIdDesc(optNodeItem.get())
 
         // Process
     }
@@ -169,14 +170,14 @@ class IotNodeServiceV1 {
         val optNodeItem: Optional<NodeItem?>
 
         // Init
-        optNodeItem = nodeItemRepo!!.findById(nodeItemId)
+        optNodeItem = nodeItemRepo.findById(nodeItemId)
 
         // Exception
         if (!optNodeItem.isPresent) return null
 
         // Process
-        curPage = PageRequest.of(0, 50, Sort(Sort.Direction.DESC, "itemHistoryId")) // TODO 임시로 50개 뽑게 설정함
-        listNodeItemHistory = nodeItemHistoryRepo!!.findByNodeItem(optNodeItem.get(), curPage)
+        curPage = PageRequest.of(0, 50, Sort.by(Sort.Direction.DESC, "itemHistoryId")) // TODO 임시로 50개 뽑게 설정함
+        listNodeItemHistory = nodeItemHistoryRepo.findByNodeItem(optNodeItem.get(), curPage)
         Collections.reverse(listNodeItemHistory)
 
         // Return
@@ -188,21 +189,25 @@ class IotNodeServiceV1 {
         val baseMessage: BaseV1Dto?
         //		BaseV1Dto getValueMessage;
         val itemValueData: ItemValueV1Dto
-        val token: String
+        val token: String?
         val pinId: Byte
 
         // Exception
         if (nodeItem == null) return false
 
         // Process
-        token = nodeItem.getNode().getToken()
-        pinId = nodeItem.getItemIndex()
-        itemValueData = builder().itemIndex(pinId).itemStatus(itemValue).build()
-        baseMessage = iotMessageService!!.getBaseMessage(token, "SET", "VALUE", "ITEM", itemValueData)
+        token = nodeItem.node!!.token
+        pinId = nodeItem.itemIndex!!
+        itemValueData = ItemValueV1Dto(
+                itemIndex = pinId,
+                itemStatus = itemValue
+        )
+
+        baseMessage = iotMessageService.getBaseMessage(token!!, "SET", "VALUE", "ITEM", itemValueData)
         //		getValueMessage = iotMessageService.getBaseMessage(token, "GET", "VALUE", "ITEM", pinId);
 
         // Send
-        iotChannelCompV1!!.sendDataToken(baseMessage)
+        iotChannelCompV1.sendDataToken(baseMessage!!)
         //		iotChannelCompV1.sendDataToken(getValueMessage);
 
         // Return
@@ -215,15 +220,15 @@ class IotNodeServiceV1 {
         val node: Node
 
         // Init
-        optNode = nodeRepo!!.findById(nodeId)
+        optNode = nodeRepo.findById(nodeId)
 
         // Exception
         node = if (!optNode.isPresent) return false else optNode.get()
-        if (node.getEnableStatus() === enableStatusRule) return false
+        if (node.enableStatus === enableStatusRule) return false
 
         // Process
-        if (node.getEnableStatus() === EnableStatusRule.WAIT && enableStatusRule != EnableStatusRule.REJECT) node.setApprovalDate(Date())
-        node.setEnableStatus(enableStatusRule)
+        if (node.enableStatus === EnableStatusRule.WAIT && enableStatusRule !== EnableStatusRule.REJECT) node.approvalDate = Date()
+        node.enableStatus = enableStatusRule
 
         // DB - Update
         nodeRepo.save(node)
@@ -243,10 +248,10 @@ class IotNodeServiceV1 {
         if (node == null) return false
 
         // Process
-        node.setAlias(alias)
+        node.alias = alias
 
         // DB - Update
-        nodeRepo!!.save(node)
+        nodeRepo.save(node)
 
         // Return
         return true
@@ -263,10 +268,10 @@ class IotNodeServiceV1 {
         if (nodeItem == null) return false
 
         // Process
-        nodeItem.setAlias(alias)
+        nodeItem.alias = alias
 
         // DB - Update
-        nodeItemRepo!!.save(nodeItem)
+        nodeItemRepo.save(nodeItem)
 
         // Return
         return true
@@ -275,17 +280,17 @@ class IotNodeServiceV1 {
     fun restartNode(node: Node?): Boolean {
         // Field
         val baseMessage: BaseV1Dto?
-        val token: String
+        val token: String?
 
         // Exception
         if (node == null) return false
 
         // Process
-        token = node.getToken()
-        baseMessage = iotMessageService!!.getBaseMessage(token, "ACT", "SYS", "RESTART", "NOW")
+        token = node.token
+        baseMessage = iotMessageService.getBaseMessage(token!!, "ACT", "SYS", "RESTART", "NOW")
 
         // Send
-        iotChannelCompV1!!.sendDataToken(baseMessage)
+        iotChannelCompV1.sendDataToken(baseMessage!!)
 
         // Return
         return true

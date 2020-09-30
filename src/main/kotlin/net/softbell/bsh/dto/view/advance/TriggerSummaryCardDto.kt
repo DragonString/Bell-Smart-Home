@@ -1,5 +1,6 @@
 package net.softbell.bsh.dto.view.advance
 
+import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.NodeTrigger
 
 /**
@@ -7,19 +8,19 @@ import net.softbell.bsh.domain.entity.NodeTrigger
  * @Description : 트리거뷰 카드정보 DTO
  */
 class TriggerSummaryCardDto(entity: NodeTrigger?) {
-    private val triggerId: Long
-    private val description: String
-    private var enableStatus = false
-    private val creatorNickname: String
+    var triggerId: Long?
+    var description: String?
+    var enableStatus = false
+    var creatorNickname: String?
 
     init {
         // Exception
-        if (entity == null) return
-
-        // Convert
-        triggerId = entity.getTriggerId()
-        description = entity.getDescription()
-        if (entity.getEnableStatus() === EnableStatusRule.ENABLE) enableStatus = true else enableStatus = false
-        creatorNickname = entity.getMember().getNickname()
+        entity.let {
+            // Convert
+            triggerId = entity!!.triggerId
+            description = entity.description
+            if (entity.enableStatus === EnableStatusRule.ENABLE) enableStatus = true else enableStatus = false
+            creatorNickname = entity.member!!.nickname
+        }
     }
 }

@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository
  * @Description : 노드 그룹 아이템 리포지토리 인터페이스
  */
 @Repository
-interface NodeGroupItemRepo : JpaRepository<NodeGroupItem?, Long?> {
+open interface NodeGroupItemRepo : JpaRepository<NodeGroupItem?, Long?> {
     fun findByNode(node: Node?): List<NodeGroupItem?>?
 }

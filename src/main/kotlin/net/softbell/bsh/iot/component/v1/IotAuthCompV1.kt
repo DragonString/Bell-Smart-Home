@@ -1,5 +1,6 @@
 package net.softbell.bsh.iot.component.v1
 
+import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.repository.NodeRepo
@@ -15,26 +16,21 @@ import java.util.*
  */
 @Component
 class IotAuthCompV1 {
-    @Autowired lateinit var nodeRepo: NodeRepo
+    @Autowired private lateinit var nodeRepo: NodeRepo
 
-    // Field
-    val randomToken: String
 
-    // Generate
+    fun getRandomToken(): String {
+        // Field
+        val token: String
+        val randomBytes = ByteArray(24)
+
+        // Generate
+        secureRandom.nextBytes(randomBytes)
+        token = base64Encoder.encodeToString(randomBytes)
 
         // Return
-        get() {
-            // Field
-            val token: String
-            val randomBytes = ByteArray(24)
-
-            // Generate
-            secureRandom.nextBytes(randomBytes)
-            token = base64Encoder.encodeToString(randomBytes)
-
-            // Return
-            return token
-        }
+        return token
+    }
 
     @Transactional
     fun generateToken(uid: String): String? {
@@ -49,14 +45,14 @@ class IotAuthCompV1 {
         if (node == null) return null
 
         // Generate
-        token = randomToken
-        node.setToken(token)
+        token = getRandomToken()
+        node.token = token
 
         // DB - Save
         nodeRepo.save(node)
 
         // Log
-        log.info(BellLog.getLogHead() + "보안 토큰 생성 (" + uid + "->" + token + ")")
+        logger.info("보안 토큰 생성 ($uid->$token)")
 
         // Return
         return token
@@ -73,15 +69,15 @@ class IotAuthCompV1 {
      */
     fun isApprovalNode(node: Node): Boolean {
         // Field
-        val enableStatus: EnableStatusRule = node.getEnableStatus()
+        val enableStatus = node.enableStatus
 
         // Process
-        return if (enableStatus == EnableStatusRule.WAIT || enableStatus == EnableStatusRule.REJECT) false else true
+        return if (enableStatus === EnableStatusRule.WAIT || enableStatus === EnableStatusRule.REJECT) false else true
     }
 
-    companion object {
+    companion object : KLogging() {
         // Global Field
-        private val secureRandom = SecureRandom() //threadsafe
-        private val base64Encoder = Base64.getUrlEncoder() //threadsafe
+        private val secureRandom = SecureRandom() // threadsafe
+        private val base64Encoder = Base64.getUrlEncoder() // threadsafe
     }
 }

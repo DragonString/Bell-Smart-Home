@@ -1,5 +1,6 @@
 package net.softbell.bsh.controller.view
 
+import mu.KLogging
 import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Controller
@@ -16,21 +17,21 @@ import javax.servlet.http.HttpServletRequest
  * @Description : 예외 페이지 컨트롤러
  */
 @Controller
-class ExceptionView constructor() : ErrorController {
-    public override fun getErrorPath(): String {
+class ExceptionView : ErrorController {
+    override fun getErrorPath(): String {
         return ERROR_PATH
     }
 
     @RequestMapping(ERROR_PATH)
-    fun handleError(request: HttpServletRequest, principal: Principal?, redirectAttributes: RedirectAttributes): String {
+    fun handleError(request: HttpServletRequest, principal: Principal?, redirectAttributes: RedirectAttributes): String? {
         // Field
-        val status: Any = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
-        val httpStatus: HttpStatus = HttpStatus.valueOf(Integer.valueOf(status.toString()))
-        val strCode: String = status.toString()
-        var strMessage: String? = httpStatus.getReasonPhrase()
+        val status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)
+        val httpStatus = HttpStatus.valueOf(Integer.valueOf(status.toString()))
+        val strCode = status.toString()
+        var strMessage = httpStatus.reasonPhrase
 
         // Log
-        log.warn(BellLog.getLogHead() + "에러 페이지 발생 (code: " + strCode + ")")
+        logger.warn("에러 페이지 발생 (code: $strCode)")
 
         // Init
         if (strCode.equals("400", ignoreCase = true)) strMessage = "비 정상적인 요청입니다." else if (strCode.equals("404", ignoreCase = true)) strMessage = "존재하지 않는 페이지 입니다."
@@ -40,21 +41,21 @@ class ExceptionView constructor() : ErrorController {
         redirectAttributes.addFlashAttribute("msg", strMessage)
 
         // Process
-        log.info(BellLog.getLogHead() + "httpStatus : " + httpStatus.toString())
+        logger.info("httpStatus : $httpStatus")
 
         // Return
         return "redirect:/err"
     }
 
     @RequestMapping("/err")
-    fun defaultError(): String {
+    fun defaultError(): String? {
         // Return
         return G_ERROR_DEFAULT_PATH + "Default"
     }
 
     // 접근 거부 페이지
     @GetMapping("/denied")
-    fun dispDenied(model: Model?, principal: Principal?): String {
+    fun dispDenied(model: Model?, principal: Principal?): String? {
         // Init
         //FilterModelPrincipal(model, principal);
 
@@ -62,9 +63,9 @@ class ExceptionView constructor() : ErrorController {
         return G_ERROR_DEFAULT_PATH + "/Denied"
     }
 
-    companion object {
+    companion object : KLogging() {
         // Global Field
-        val G_ERROR_DEFAULT_PATH: String = "services/error/"
-        private val ERROR_PATH: String = "/error"
+        private const val G_ERROR_DEFAULT_PATH: String = "services/error/"
+        private const val ERROR_PATH: String = "/error"
     }
 }

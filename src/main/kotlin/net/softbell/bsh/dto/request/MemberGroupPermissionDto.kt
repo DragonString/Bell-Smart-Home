@@ -5,6 +5,6 @@ package net.softbell.bsh.dto.request
  * @Description : 회원 그룹 권한 정보 DTO
  */
 data class MemberGroupPermissionDto (
-        val nodeGid: Long? = null,
-        val permission: Int? = null
+        var nodeGid: Long? = null,
+        var permission: Int? = null
 )

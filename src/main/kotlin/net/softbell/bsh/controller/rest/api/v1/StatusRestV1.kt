@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController
 @Api(tags = ["0. Status"])
 @RestController
 @RequestMapping("/api/rest/v1/status")
-class StatusRestV1 constructor() {
+class StatusRestV1 {
     // Global Field
-    @Autowired lateinit var responseService: ResponseService
+    @Autowired private lateinit var responseService: ResponseService
 
     @GetMapping("/server")
-    fun checkServer(): SingleResultDto<String?>? {
-        return responseService!!.getSingleResult<String>("normal")
+    fun checkServer(): SingleResultDto<String>? {
+        return responseService.getSingleResult("normal")
     }
 }

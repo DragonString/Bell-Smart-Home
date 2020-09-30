@@ -1,5 +1,6 @@
 package net.softbell.bsh.iot.controller.rest.v1
 
+import mu.KLogging
 import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.response.ResultDto
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1
@@ -19,9 +20,9 @@ import java.net.InetAddress
 @RequestMapping("/api/rest/v1/interlock")
 class IotInterlockRestV1 {
     // Global Field
-    @Autowired lateinit var responseService: ResponseService
-    @Autowired lateinit var iotActionService: IotActionServiceV1
-    @Autowired lateinit var interlockService: InterlockService
+    @Autowired private lateinit var responseService: ResponseService
+    @Autowired private lateinit var iotActionService: IotActionServiceV1
+    @Autowired private lateinit var interlockService: InterlockService
 
     @PostMapping("/{token}/action/{id}")
     fun execNodeAction(@PathVariable("token") token: String?, @PathVariable("id") actionId: Long /*,
@@ -32,16 +33,16 @@ class IotInterlockRestV1 {
         val member: Member?
 
         // Init
-        member = interlockService!!.findEnableTokenToMember(token)
-        isSuccess = iotActionService!!.execAction(actionId, member)
+        member = interlockService.findEnableTokenToMember(token)
+        isSuccess = iotActionService.execAction(actionId, member)
 
         // Return
         return if (isSuccess) {
-            log.info("연동 Action 수행 완료 ($actionId)")
+            logger.info("연동 Action 수행 완료 ($actionId)")
             responseService.getSuccessResult()
         } else {
-            log.info("연동 Action 수행 실패 ($actionId)")
-            responseService!!.getFailResult(-10, "해당하는 아이템이 없음")
+            logger.info("연동 Action 수행 실패 ($actionId)")
+            responseService.getFailResult(-10, "해당하는 아이템이 없음")
         }
     }
 
@@ -71,11 +72,11 @@ class IotInterlockRestV1 {
             val socket = DatagramSocket()
             socket.send(packet)
             socket.close()
-            log.info(BellLog.getLogHead() + "WoL Magic Packet Send (" + macStr + ")")
+            logger.info("WoL Magic Packet Send ($macStr)")
             responseService.getSuccessResult()
         } catch (e: Exception) {
-            log.info(BellLog.getLogHead() + "WoL Magic Packet Send Failed (" + macStr + ")")
-            responseService!!.getFailResult(-10, "해당하는 아이템이 없음")
+            logger.info("WoL Magic Packet Send Failed ($macStr)")
+            responseService.getFailResult(-10, "해당하는 아이템이 없음")
         }
     }
 
@@ -99,7 +100,7 @@ class IotInterlockRestV1 {
         return bytes
     }
 
-    companion object {
+    companion object : KLogging() {
         const val PORT = 9
     }
 }

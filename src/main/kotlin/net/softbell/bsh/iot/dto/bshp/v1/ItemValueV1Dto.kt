@@ -5,6 +5,6 @@ package net.softbell.bsh.iot.dto.bshp.v1
  * @Description : BSHPv1 전용 Item Value DTO
  */
 data class ItemValueV1Dto (
-        val itemIndex: Byte?,
-        val itemStatus: Double?
+    var itemIndex: Byte,
+    var itemStatus: Double
 )

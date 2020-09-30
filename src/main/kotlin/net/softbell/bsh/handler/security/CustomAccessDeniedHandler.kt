@@ -14,8 +14,18 @@ import javax.servlet.http.HttpServletResponse
 @Component
 class CustomAccessDeniedHandler : AccessDeniedHandler {
     // Global Field
-    private val G_API_URI: String? = null
-    private val G_VIEW_URI: String? = null
+    private val G_API_URI: String
+    private val G_VIEW_URI: String
+
+    constructor() {
+        this.G_API_URI = ""
+        this.G_VIEW_URI = ""
+    }
+
+    constructor(G_API_URI: String, G_VIEW_URI: String) {
+        this.G_API_URI = G_API_URI
+        this.G_VIEW_URI = G_VIEW_URI
+    }
 
     @Throws(IOException::class)
     override fun handle(request: HttpServletRequest, response: HttpServletResponse, exception: AccessDeniedException) {

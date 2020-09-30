@@ -11,22 +11,26 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping("/api/rest/exception")
-class ExceptionRest constructor() {
+class ExceptionRest {
     @GetMapping("/entrypoint")
     fun entrypointException(): ResultDto {
-        return builder()
-                .success(false)
-                .code(-200)
-                .message("인증실패")
-                .build()
+        var resultDto: ResultDto = ResultDto()
+
+        resultDto.success = false
+        resultDto.code = -200
+        resultDto.message = "인증실패"
+
+        return resultDto
     }
 
     @GetMapping("/denied")
     fun accessdeniedException(): ResultDto {
-        return builder()
-                .success(false)
-                .code(-201)
-                .message("권한부족")
-                .build()
+        var resultDto: ResultDto = ResultDto()
+
+        resultDto.success = false
+        resultDto.code = -201
+        resultDto.message = "권한부족"
+
+        return resultDto
     }
 }

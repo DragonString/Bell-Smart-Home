@@ -5,5 +5,5 @@ package net.softbell.bsh.dto.response
  * @Description : API 수행 결과 리스트 DTO
  */
 class ListResultDto<T> : ResultDto() {
-    private val list: List<T>? = null
+    var list: MutableList<T>? = null
 }

@@ -24,7 +24,6 @@ enum class AuthStatusRule {
             get() = -1
     };
 
-    // 에러
     abstract val value: String
     abstract val code: Int
 

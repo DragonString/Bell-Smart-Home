@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
  * @Description : 그룹 권한 리포지토리 인터페이스
  */
 @Repository
-interface GroupPermissionRepo : JpaRepository<GroupPermission?, Long?> {
+open interface GroupPermissionRepo : JpaRepository<GroupPermission?, Long?> {
     fun findByGroupPermissionAndMemberGroupIn(role: GroupRole?, listMemberGroup: List<MemberGroup?>?): List<GroupPermission?>?
     fun findByGroupPermissionAndNodeGroupIn(role: GroupRole?, listNodeGroup: List<NodeGroup?>?): List<GroupPermission?>?
     fun findByGroupPermissionAndMemberGroupInAndNodeGroupIn(role: GroupRole?, listMemberGroup: List<MemberGroup?>?, listNodeGroup: List<NodeGroup?>?): List<GroupPermission?>?

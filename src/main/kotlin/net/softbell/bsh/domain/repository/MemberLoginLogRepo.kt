@@ -17,7 +17,7 @@ import java.util.*
  * @Description : 회원 로그인 로그 리포지토리 인터페이스
  */
 @Repository
-interface MemberLoginLogRepo : JpaRepository<MemberLoginLog?, Long?> {
+open interface MemberLoginLogRepo : JpaRepository<MemberLoginLog?, Long?> {
     fun findByMember(member: Member?, pageable: Pageable?): Page<MemberLoginLog?>?
     fun countByMember(member: Member?): Long
     fun countByMemberAndStatusAndRequestDateBetween(member: Member?, status: AuthStatusRule?, start: Date?, end: Date?): Long

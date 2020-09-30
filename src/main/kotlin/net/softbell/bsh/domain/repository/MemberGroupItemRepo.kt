@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
  * @Description : 회원 그룹 아이템 리포지토리 인터페이스
  */
 @Repository
-interface MemberGroupItemRepo : JpaRepository<MemberGroupItem?, Long?> {
+open interface MemberGroupItemRepo : JpaRepository<MemberGroupItem?, Long?> {
     fun findByMember(member: Member?): List<MemberGroupItem?>?
 
     @Transactional

@@ -1,5 +1,6 @@
 package net.softbell.bsh.dto.view.general
 
+import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.NodeReserv
 
 /**
@@ -7,22 +8,22 @@ import net.softbell.bsh.domain.entity.NodeReserv
  * @Description : 예약 등록 및 수정뷰 정보 카드정보 DTO
  */
 class ReservInfoCardDto(entity: NodeReserv?) {
-    private val reservId: Long
-    private var enableStatus: Boolean
-    private val description: String
-    private val expression: String
+    var reservId: Long?
+    var enableStatus: Boolean
+    var description: String?
+    var expression: String?
 
     init {
         // Exception
-        if (entity == null) return
+        entity.let {
+            // Init
+            enableStatus = false
 
-        // Init
-        enableStatus = false
-
-        // Convert
-        reservId = entity.getReservId()
-        if (entity.getEnableStatus() === EnableStatusRule.ENABLE) enableStatus = true
-        description = entity.getDescription()
-        expression = entity.getExpression()
+            // Convert
+            reservId = entity!!.reservId
+            if (entity.enableStatus === EnableStatusRule.ENABLE) enableStatus = true
+            description = entity.description
+            expression = entity.expression
+        }
     }
 }

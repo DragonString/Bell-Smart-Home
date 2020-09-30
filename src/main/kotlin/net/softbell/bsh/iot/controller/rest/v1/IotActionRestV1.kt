@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/rest/v1/iot/action")
 class IotActionRestV1 {
-    @Autowired lateinit var responseService: ResponseService
-    @Autowired lateinit var iotActionService: IotActionServiceV1
+    @Autowired private lateinit var responseService: ResponseService
+    @Autowired private lateinit var iotActionService: IotActionServiceV1
 
     @PostMapping("/exec/{id}")
     fun execNodeAction(auth: Authentication, @PathVariable("id") actionId: Long): ResultDto? {
@@ -26,9 +26,9 @@ class IotActionRestV1 {
         val isSuccess: Boolean
 
         // Init
-        isSuccess = iotActionService!!.execAction(actionId, auth)
+        isSuccess = iotActionService.execAction(actionId, auth)
 
         // Return
-        return if (isSuccess) responseService.getSuccessResult() else responseService!!.getFailResult(-10, "해당하는 아이템이 없음")
+        return if (isSuccess) responseService.getSuccessResult() else responseService.getFailResult(-10, "해당하는 아이템이 없음")
     }
 }

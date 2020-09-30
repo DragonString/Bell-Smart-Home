@@ -1,5 +1,6 @@
 package net.softbell.bsh.iot.service.v1
 
+import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.repository.NodeRepo
@@ -19,47 +20,49 @@ import java.util.*
 @Service
 class IotUIDServiceV1 {
     // Global Field
-    @Autowired lateinit var iotChannelCompV1: IotChannelCompV1
-    @Autowired lateinit var iotAuthCompV1: IotAuthCompV1
-    @Autowired lateinit var nodeRepo: NodeRepo
+    @Autowired private lateinit var iotChannelCompV1: IotChannelCompV1
+    @Autowired private lateinit var iotAuthCompV1: IotAuthCompV1
+    @Autowired private lateinit var nodeRepo: NodeRepo
 
     @Transactional
-    fun setNewNodeInfo(uid: String?, nodeInfo: NodeInfoV1Dto): Boolean {
+    fun setNewNodeInfo(uid: String, nodeInfo: NodeInfoV1Dto): Boolean {
         // Field
         val message: BaseV1Dto
         var node: Node?
 
         // Init
-        node = nodeRepo!!.findByUid(uid)
+        node = nodeRepo.findByUid(uid)
 
         // Exception
         if (node != null) return false
 
         // Process
-        node = builder().uid(nodeInfo.getUid())
-                .controlMode(nodeInfo.getControlMode())
-                .nodeName(nodeInfo.getNodeName())
-                .alias(nodeInfo.getNodeName())
-                .version(nodeInfo.getVersion())
-                .registerDate(Date())
-                .enableStatus(EnableStatusRule.WAIT)
-                .build()
+        node = Node()
+
+        node.uid = nodeInfo.uid
+        node.controlMode = nodeInfo.controlMode
+        node.nodeName = nodeInfo.nodeName
+        node.alias = nodeInfo.nodeName
+        node.version = nodeInfo.version
+        node.registerDate = Date()
+        node.enableStatus = EnableStatusRule.WAIT
 
         // DB - Save
         nodeRepo.save(node)
 
         // Message
-        message = builder().sender("SERVER")
-                .target(uid)
-                .cmd("INFO")
-                .type("NEW")
-                .obj("NODE")
-                .value("SUCCESS")
-                .build()
-        iotChannelCompV1!!.sendDataUID(message) // Send
+        message = BaseV1Dto(
+                sender = "SERVER",
+                target = uid,
+                cmd = "INFO",
+                type = "NEW",
+                obj = "NODE",
+                value = "SUCCESS"
+        )
+        iotChannelCompV1.sendDataUID(message) // Send
 
         // Log
-        log.info(BellLog.getLogHead() + "New Node Info Save (" + nodeInfo.getUid() + ")")
+        logger.info("New Node Info Save (" + nodeInfo.uid + ")")
 
         // Return
         return true
@@ -68,31 +71,39 @@ class IotUIDServiceV1 {
     fun generateToken(uid: String): Boolean {
         // Field
         val message: BaseV1Dto
-        val node: Node?
         val token: String?
 
         // Init
-        node = nodeRepo!!.findByUid(uid)
+        val node: Node? = nodeRepo.findByUid(uid)
 
         // Process
-        if (node == null) message = builder().sender("SERVER").target(uid)
-                .cmd("GET")
-                .type("INFO")
-                .obj("NODE")
-                .build() else {
-            token = iotAuthCompV1!!.generateToken(uid)
-            message = builder().sender("SERVER").target(uid)
-                    .cmd("SET")
-                    .type("INFO")
-                    .obj("TOKEN")
-                    .value(token)
-                    .build()
+        if (node == null)
+            message = BaseV1Dto(
+                    sender = "SERVER",
+                    target = uid,
+                    cmd = "GET",
+                    type = "INFO",
+                    obj = "NODE",
+                    value = null
+            )
+        else {
+            token = iotAuthCompV1.generateToken(uid)
+            message = BaseV1Dto(
+                    sender = "SERVER",
+                    target = uid,
+                    cmd = "SET",
+                    type = "INFO",
+                    obj = "TOKEN",
+                    value = token
+            )
         }
 
         // Send
-        iotChannelCompV1!!.sendDataUID(message)
+        iotChannelCompV1.sendDataUID(message)
 
         // Return
         return true
     }
+
+    companion object : KLogging()
 }

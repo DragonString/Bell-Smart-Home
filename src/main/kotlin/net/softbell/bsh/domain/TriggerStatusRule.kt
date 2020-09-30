@@ -36,7 +36,6 @@ enum class TriggerStatusRule {
             get() = 6
     };
 
-
     abstract val value: String
     abstract val code: Int
 

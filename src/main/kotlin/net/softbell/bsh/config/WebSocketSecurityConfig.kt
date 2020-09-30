@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.socket.AbstractSecurit
  */
 @Configuration
 class WebSocketSecurityConfig : AbstractSecurityWebSocketMessageBrokerConfigurer() {
-    override fun configureInbound(messages: MessageSecurityMetadataSourceRegistry) {
+    override fun configureInbound(messages: MessageSecurityMetadataSourceRegistry?) {
 //        messages.simpTypeMatchers(SimpMessageType.CONNECT, SimpMessageType.DISCONNECT, SimpMessageType.UNSUBSCRIBE).permitAll()
 //        		.simpSubscribeDestMatchers("/**").authenticated()
 //        		.simpDestMatchers("/**").authenticated()

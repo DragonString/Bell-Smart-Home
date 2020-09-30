@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest
  * @Description : 클라이언트 데이터 처리 라이브러리
  */
 object ClientData {
-    fun getClientIP(request: HttpServletRequest): String? {
+    fun getClientIP(request: HttpServletRequest): String {
         // Field
         var ip = request.getHeader("X-Forwarded-For")
 

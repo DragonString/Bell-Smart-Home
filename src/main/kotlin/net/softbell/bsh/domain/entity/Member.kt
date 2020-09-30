@@ -49,7 +49,7 @@ class Member : Serializable, UserDetails {
     var nickname: String? = null
 
     @Column(nullable = false, length = 64)
-    var passwd: String? = null
+    private var password: String? = null
 
     @Column(nullable = false)
     var permission: MemberRole? = null
@@ -65,87 +65,90 @@ class Member : Serializable, UserDetails {
     var name: String? = null
 
     @OneToMany(mappedBy = "member")
-    var memberGroupItems: List<MemberGroupItem>? = null
+    var memberGroupItems: MutableList<MemberGroupItem>? = null
 
     @OneToMany(mappedBy = "member")
-    var memberLoginLogs: List<MemberLoginLog>? = null
+    var memberLoginLogs: MutableList<MemberLoginLog>? = null
 
     @OneToMany(mappedBy = "member")
-    var nodeActions: List<NodeAction>? = null
+    var nodeActions: MutableList<NodeAction>? = null
 
     @OneToMany(mappedBy = "member")
-    var nodeReservs: List<NodeReserv>? = null
+    var nodeReservs: MutableList<NodeReserv>? = null
 
     @OneToMany(mappedBy = "member")
-    var nodeTriggers: List<NodeTrigger>? = null
+    var nodeTriggers: MutableList<NodeTrigger>? = null
 
+    fun addMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
+        memberGroupItems?.add(memberGroupItem)
+        memberGroupItem.member = this
+        return memberGroupItem
+    }
 
-//    fun addMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
-//        getMemberGroupItems().add(memberGroupItem)
-//        memberGroupItem.setMember(this)
-//        return memberGroupItem
-//    }
-//
-//    fun removeMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
-//        getMemberGroupItems().remove(memberGroupItem)
-//        memberGroupItem.setMember(null)
-//        return memberGroupItem
-//    }
-//
-//    fun addMemberLoginLog(memberLoginLog: MemberLoginLog): MemberLoginLog {
-//        getMemberLoginLogs().add(memberLoginLog)
-//        memberLoginLog.setMember(this)
-//        return memberLoginLog
-//    }
-//
-//    fun removeMemberLoginLog(memberLoginLog: MemberLoginLog): MemberLoginLog {
-//        getMemberLoginLogs().remove(memberLoginLog)
-//        memberLoginLog.setMember(null)
-//        return memberLoginLog
-//    }
-//
-//    fun addNodeAction(nodeAction: NodeAction): NodeAction {
-//        getNodeActions().add(nodeAction)
-//        nodeAction.setMember(this)
-//        return nodeAction
-//    }
-//
-//    fun removeNodeAction(nodeAction: NodeAction): NodeAction {
-//        getNodeActions().remove(nodeAction)
-//        nodeAction.setMember(null)
-//        return nodeAction
-//    }
-//
-//    fun addNodeReserv(nodeReserv: NodeReserv): NodeReserv {
-//        getNodeReservs().add(nodeReserv)
-//        nodeReserv.setMember(this)
-//        return nodeReserv
-//    }
-//
-//    fun removeNodeReserv(nodeReserv: NodeReserv): NodeReserv {
-//        getNodeReservs().remove(nodeReserv)
-//        nodeReserv.setMember(null)
-//        return nodeReserv
-//    }
-//
-//    fun addNodeTrigger(nodeTrigger: NodeTrigger): NodeTrigger {
-//        getNodeTriggers().add(nodeTrigger)
-//        nodeTrigger.setMember(this)
-//        return nodeTrigger
-//    }
-//
-//    fun removeNodeTrigger(nodeTrigger: NodeTrigger): NodeTrigger {
-//        getNodeTriggers().remove(nodeTrigger)
-//        nodeTrigger.setMember(null)
-//        return nodeTrigger
-//    }
+    fun removeMemberGroupItem(memberGroupItem: MemberGroupItem): MemberGroupItem {
+        memberGroupItems?.remove(memberGroupItem)
+        memberGroupItem.member = null
+        return memberGroupItem
+    }
+
+    fun addMemberLoginLog(memberLoginLog: MemberLoginLog): MemberLoginLog {
+        memberLoginLogs?.add(memberLoginLog)
+        memberLoginLog.member = this
+        return memberLoginLog
+    }
+
+    fun removeMemberLoginLog(memberLoginLog: MemberLoginLog): MemberLoginLog {
+        memberLoginLogs?.remove(memberLoginLog)
+        memberLoginLog.member = null
+        return memberLoginLog
+    }
+
+    fun addNodeAction(nodeAction: NodeAction): NodeAction {
+        nodeActions?.add(nodeAction)
+        nodeAction.member = this
+        return nodeAction
+    }
+
+    fun removeNodeAction(nodeAction: NodeAction): NodeAction {
+        nodeActions?.remove(nodeAction)
+        nodeAction.member = null
+        return nodeAction
+    }
+
+    fun addNodeReserv(nodeReserv: NodeReserv): NodeReserv {
+        nodeReservs?.add(nodeReserv)
+        nodeReserv.member = this
+        return nodeReserv
+    }
+
+    fun removeNodeReserv(nodeReserv: NodeReserv): NodeReserv {
+        nodeReservs?.remove(nodeReserv)
+        nodeReserv.member = null
+        return nodeReserv
+    }
+
+    fun addNodeTrigger(nodeTrigger: NodeTrigger): NodeTrigger {
+        nodeTriggers?.add(nodeTrigger)
+        nodeTrigger.member = this
+        return nodeTrigger
+    }
+
+    fun removeNodeTrigger(nodeTrigger: NodeTrigger): NodeTrigger {
+        nodeTriggers?.remove(nodeTrigger)
+        nodeTrigger.member = null
+        return nodeTrigger
+    }
+
+    fun setPassword(password: String) {
+        this.password = password
+    }
 
     override fun getAuthorities(): Collection<GrantedAuthority> {
         // Field
         val listAuth: MutableList<GrantedAuthority> = ArrayList()
 
         // Load
-        listAuth.add(SimpleGrantedAuthority(permission?.value))
+        listAuth.add(SimpleGrantedAuthority(permission!!.value))
 
         // Return
         return listAuth
@@ -166,17 +169,16 @@ class Member : Serializable, UserDetails {
         return true
     }
 
-    override fun getPassword(): String {
-        //return passwd ?: ""
-        return passwd!!
-    }
-
     override fun isEnabled(): Boolean {
-        return if (ban == BanRule.NORMAL) true else false
+        return if (ban === BanRule.NORMAL) true else false
     }
 
-    override fun getUsername(): String? {
-        return userId
+    override fun getUsername(): String {
+        return userId!!
+    }
+
+    override fun getPassword(): String {
+        return password!!
     }
 
     companion object {

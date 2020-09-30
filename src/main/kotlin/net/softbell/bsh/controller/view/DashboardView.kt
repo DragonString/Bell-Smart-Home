@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @Controller
 @RequestMapping("/")
-class DashboardView constructor() {
+class DashboardView {
     // Global Field
-    @Autowired lateinit var dashboardService: DashboardService
+    @Autowired private lateinit var dashboardService: DashboardService
 
     @GetMapping
     fun dispIndex(model: Model): String {

@@ -5,32 +5,31 @@ package net.softbell.bsh.domain
  * @Description : 활성화 상태 자료형
  */
 enum class EnableStatusRule {
-    WAIT {  // 인증 대기
+    WAIT { // 인증 대기
         override val value: String
             get() = "WAIT"
         override val code: Int
             get() = 0
     },
-    DISABLE {  // 비활성화
+    DISABLE { // 비활성화
         override val value: String
             get() = "DISABLE"
         override val code: Int
             get() = 1
     },
-    ENABLE {  // 활성화
+    ENABLE { // 활성화
         override val value: String
             get() = "ENABLE"
         override val code: Int
             get() = 2
     },
-    REJECT {
+    REJECT { // 접근 제한
         override val value: String
             get() = "REJECT"
         override val code: Int
             get() = -1
     };
 
-    // 접근 제한
     abstract val value: String
     abstract val code: Int
 

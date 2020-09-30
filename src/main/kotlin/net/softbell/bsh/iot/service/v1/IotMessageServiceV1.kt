@@ -9,18 +9,19 @@ import org.springframework.stereotype.Service
  */
 @Service
 class IotMessageServiceV1 {
-    fun getBaseMessage(target: String?, cmd: String?, type: String?, obj: String?, value: Any?): BaseV1Dto {
+    fun getBaseMessage(target: String, cmd: String, type: String, obj: String, value: Any?): BaseV1Dto? {
         // Field
         val message: BaseV1Dto
 
         // Init
-        message = builder().sender("SERVER")
-                .target(target)
-                .cmd(cmd)
-                .type(type)
-                .obj(obj)
-                .value(value)
-                .build()
+        message = BaseV1Dto(
+                sender = "SERVER",
+                target = target,
+                cmd = cmd,
+                type = type,
+                obj = obj,
+                value = value
+        )
 
         // Return
         return message

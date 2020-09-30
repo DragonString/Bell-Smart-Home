@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional
  * @Description : 노드 액션 리포지토리 인터페이스
  */
 @Repository
-interface NodeActionRepo : JpaRepository<NodeAction?, Long?> {
-    fun findByMember(member: Member?): List<NodeAction?>?
+open interface NodeActionRepo : JpaRepository<NodeAction?, Long?> {
+    fun findByMember(member: Member?): List<NodeAction?>
 
     @Transactional
     @Modifying
