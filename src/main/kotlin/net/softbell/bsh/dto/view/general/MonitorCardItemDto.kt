@@ -13,7 +13,7 @@ class MonitorCardItemDto(entity: NodeItem?, lastHistory: NodeItemHistory) {
     var alias: String?
     var lastStatus: Double?
     var widthPercent: Int? = null
-    var isDigital: Boolean? = null
+    var digital: Boolean? = null
 
     init {
         // Exception
@@ -23,11 +23,11 @@ class MonitorCardItemDto(entity: NodeItem?, lastHistory: NodeItemHistory) {
             lastStatus = lastHistory.itemStatus
             when (entity.itemMode) {
                 ItemModeRule.DIGITAL -> {
-                    isDigital = true
+                    digital = true
                     if (lastStatus == 0.0) widthPercent = 0 else widthPercent = 100
                 }
                 ItemModeRule.ANALOG -> {
-                    isDigital = false
+                    digital = false
                     when (entity.itemType) {
                         ItemTypeRule.SENSOR_HUMIDITY -> widthPercent = lastStatus!!.toInt() // 습도는 0~100%
                         ItemTypeRule.SENSOR_TEMPERATURE -> widthPercent = (lastStatus!! + 20).toInt() // 온도는 -20~40

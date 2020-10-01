@@ -38,9 +38,9 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Autowired private lateinit var jwtTokenProvider: JwtTokenProvider
 
 
-    private fun isDevMode(): Boolean {
-        val profile = if (env.activeProfiles.isNotEmpty()) env.activeProfiles[0] else "dev"
-        return profile == "dev"
+    private fun isLocalMode(): Boolean {
+        val profile = if (env.activeProfiles.isNotEmpty()) env.activeProfiles[0] else "local"
+        return profile == "local"
     }
 
     @Bean
@@ -99,7 +99,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                 .addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java) // JWT Token 필터
 
         // Dev Mode
-        if (isDevMode()) {
+        if (isLocalMode()) {
             http.authorizeRequests() // 페이지 권한 설정
                     .antMatchers("/h2-console/**")
                     .permitAll()

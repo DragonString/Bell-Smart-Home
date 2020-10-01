@@ -7,7 +7,7 @@ import net.softbell.bsh.domain.entity.CenterSetting
  * @Description : 센터 설정 카드정보 DTO
  */
 class CenterSettingSummaryCardDto(entity: CenterSetting?) {
-    var isEnabled: Byte
+    var enabled: Byte
     var iotAction: Byte?
     var iotControl: Byte?
     var iotMonitor: Byte?
@@ -25,7 +25,7 @@ class CenterSettingSummaryCardDto(entity: CenterSetting?) {
         // Exception
         entity.let {
             // Convert
-            isEnabled = entity!!.isEnabled!!
+            enabled = entity!!.isEnabled!!
             iotAction = entity!!.iotAction
             iotControl = entity.iotControl
             iotMonitor = entity.iotMonitor

@@ -24,14 +24,13 @@ class DashboardService {
     fun getHumidityWarn(): List<DashboardAvgCardDto>? {
         // Field
         val listHumidityCardDto: MutableList<DashboardAvgCardDto>
-        val listNodeItem: List<NodeItem?>?
 
         // Init
         listHumidityCardDto = ArrayList()
-        listNodeItem = nodeItemRepo.findByItemType(ItemTypeRule.SENSOR_HUMIDITY)
+        val listNodeItem: List<NodeItem?> = nodeItemRepo.findByItemType(ItemTypeRule.SENSOR_HUMIDITY)
 
         // Exception
-        if (listNodeItem!!.size <= 0) return null
+        if (listNodeItem.isEmpty()) return null
 
         // Process
         for (nodeItem in listNodeItem) {
@@ -45,12 +44,14 @@ class DashboardService {
             avgStatus = nodeItemHistoryRepo.avgByNodeItem(nodeItem, calendar.time)
             val afterTime = System.currentTimeMillis() // 코드 실행 후에 시간 받아오기
             val secDiffTime = afterTime - beforeTime //두 시간에 차 계산
-            logger.info(nodeItem?.alias + "평균 로드 끝 (" + secDiffTime + "ms)")
+            val alias = nodeItem?.node?.alias
+
+            logger.info("$alias 평균 습도 로드 끝 (${secDiffTime}ms)")
 
             // Process
             if (avgStatus != null && !(avgStatus > 40 && avgStatus <= 60)) {
                 var dashboardAvgCardDto = DashboardAvgCardDto()
-                dashboardAvgCardDto.alias = nodeItem?.alias
+                dashboardAvgCardDto.alias = alias
                 dashboardAvgCardDto.avgStatus = avgStatus
                 listHumidityCardDto.add(dashboardAvgCardDto)
             }
@@ -70,7 +71,7 @@ class DashboardService {
         listNodeItem = nodeItemRepo.findByItemType(ItemTypeRule.SENSOR_TEMPERATURE)
 
         // Exception
-        if (listNodeItem!!.size <= 0) return null
+        if (listNodeItem.isEmpty()) return null
 
         // Process
         for (nodeItem in listNodeItem) {
@@ -84,12 +85,14 @@ class DashboardService {
             avgStatus = nodeItemHistoryRepo.avgByNodeItem(nodeItem, calendar.time)
             val afterTime = System.currentTimeMillis() // 코드 실행 후에 시간 받아오기
             val secDiffTime = afterTime - beforeTime //두 시간에 차 계산
-            logger.info(nodeItem?.alias + "평균 로드 끝 (" + secDiffTime + "ms)")
+            val alias = nodeItem?.node?.alias
+
+            logger.info("$alias 평균 온도 로드 끝 (${secDiffTime}ms)")
 
             // Process
             if (avgStatus != null && !(avgStatus >= 18 && avgStatus <= 22)) {
                 var dashboardAvgCardDto = DashboardAvgCardDto()
-                dashboardAvgCardDto.alias = nodeItem?.alias
+                dashboardAvgCardDto.alias = alias
                 dashboardAvgCardDto.avgStatus = avgStatus
                 listHumidityCardDto.add(dashboardAvgCardDto)
             }

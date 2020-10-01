@@ -68,7 +68,7 @@ dependencies {
 }
 
 tasks.withType<BootRun> {
-	environment("SPRING_PROFILES_ACTIVE", "dev")
+	environment("SPRING_PROFILES_ACTIVE", "local")
 }
 
 tasks.withType<Test> {
