@@ -11,67 +11,66 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_action")
 @NamedQuery(name = "NodeAction.findAll", query = "SELECT n FROM NodeAction n")
-class NodeAction : Serializable {
+class NodeAction(
+        @Column(nullable = false, length = 50)
+        var description: String,
+
+        @Column(name = "enable_status", nullable = false)
+        var enableStatus: EnableStatusRule,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "member_id")
+        var member: Member? = null,
+
+        @OneToMany(mappedBy = "nodeAction")
+        var nodeActionItems: MutableList<NodeActionItem> = ArrayList(),
+
+        @OneToMany(mappedBy = "nodeAction")
+        var nodeReservActions: MutableList<NodeReservAction> = ArrayList(),
+
+        @OneToMany(mappedBy = "nodeAction")
+        var nodeTriggerActions: MutableList<NodeTriggerAction> = ArrayList()
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "action_id", unique = true, nullable = false)
-    var actionId: Long? = null
-
-    @Column(nullable = false, length = 50)
-    var description: String? = null
-
-    @Column(name = "enable_status", nullable = false)
-    var enableStatus: EnableStatusRule? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    var member: Member? = null
-
-    @OneToMany(mappedBy = "nodeAction")
-    var nodeActionItems: MutableList<NodeActionItem>? = null
-
-    @OneToMany(mappedBy = "nodeAction")
-    var nodeReservActions: MutableList<NodeReservAction>? = null
-
-    @OneToMany(mappedBy = "nodeAction")
-    var nodeTriggerActions: MutableList<NodeTriggerAction>? = null
-
+    var actionId: Long = 0
 
     fun addNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem? {
-        nodeActionItems?.add(nodeActionItem)
+        nodeActionItems.add(nodeActionItem)
         nodeActionItem.nodeAction = this
         return nodeActionItem
     }
 
-    fun removeNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem? {
-        nodeActionItems?.remove(nodeActionItem)
-        nodeActionItem.nodeAction = null
-        return nodeActionItem
-    }
+//    fun removeNodeActionItem(nodeActionItem: NodeActionItem): NodeActionItem? {
+//        nodeActionItems.remove(nodeActionItem)
+//        nodeActionItem.nodeAction = null
+//        return nodeActionItem
+//    }
 
     fun addNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
-        nodeReservActions?.add(nodeReservAction)
+        nodeReservActions.add(nodeReservAction)
         nodeReservAction.nodeAction = this
         return nodeReservAction
     }
 
-    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
-        nodeReservActions?.remove(nodeReservAction)
-        nodeReservAction.nodeAction = null
-        return nodeReservAction
-    }
+//    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
+//        nodeReservActions.remove(nodeReservAction)
+//        nodeReservAction.nodeAction = null
+//        return nodeReservAction
+//    }
 
     fun addNodeTriggerActions(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction? {
-        nodeTriggerActions?.add(nodeTriggerAction)
+        nodeTriggerActions.add(nodeTriggerAction)
         nodeTriggerAction.nodeAction = this
         return nodeTriggerAction
     }
 
-    fun removeNodeTriggerActions(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction? {
-        nodeTriggerActions?.remove(nodeTriggerAction)
-        nodeTriggerAction.nodeAction = null
-        return nodeTriggerAction
-    }
+//    fun removeNodeTriggerActions(nodeTriggerAction: NodeTriggerAction): NodeTriggerAction? {
+//        nodeTriggerActions.remove(nodeTriggerAction)
+//        nodeTriggerAction.nodeAction = null
+//        return nodeTriggerAction
+//    }
 
     companion object {
         private const val serialVersionUID = 1L

@@ -36,11 +36,10 @@ class PermissionComp {
     // 사용자가 포함된 활성화된 사용자 그룹 반환
     fun getEnableMemberGroup(member: Member?): List<MemberGroup?>? {
         // Field
-        val listMemberGroupItem: List<MemberGroupItem?>?
         val listMemberGroup: List<MemberGroup?>?
 
         // Init
-        listMemberGroupItem = memberGroupItemRepo.findByMember(member)
+        val listMemberGroupItem: List<MemberGroupItem?>? = memberGroupItemRepo.findByMember(member)
         listMemberGroup = memberGroupRepo.findByMemberGroupItemsInAndEnableStatus(listMemberGroupItem, EnableStatusRule.ENABLE)
 
         // Return
@@ -111,38 +110,20 @@ class PermissionComp {
 
 
     // 사용자 그룹으로 특정 권한이 포함된 그룹 권한 반환
-    fun getMemberGroupPermission(role: GroupRole?, listMemberGroup: List<MemberGroup?>?): List<GroupPermission?>? {
-        // Field
-        val listGroupPermission: List<GroupPermission?>?
-
-        // Init
-        listGroupPermission = groupPermissionRepo.findByGroupPermissionAndMemberGroupIn(role, listMemberGroup)
-
+    fun getMemberGroupPermission(role: GroupRole, listMemberGroup: List<MemberGroup>): List<GroupPermission> {
         // Return
-        return listGroupPermission
+        return groupPermissionRepo.findByGroupPermissionAndMemberGroupIn(role, listMemberGroup)
     }
 
     // 노드 그룹으로 특정 권한이 포함된 그룹 권한 반환
-    fun getNodeGroupPermission(role: GroupRole?, listNodeGroup: List<NodeGroup?>?): List<GroupPermission?>? {
-        // Field
-        val listGroupPermission: List<GroupPermission?>?
-
-        // Init
-        listGroupPermission = groupPermissionRepo.findByGroupPermissionAndNodeGroupIn(role, listNodeGroup)
-
+    fun getNodeGroupPermission(role: GroupRole, listNodeGroup: List<NodeGroup>): List<GroupPermission> {
         // Return
-        return listGroupPermission
+        return groupPermissionRepo.findByGroupPermissionAndNodeGroupIn(role, listNodeGroup)
     }
 
     // 노드 그룹과 사용자 그룹으로 특정 권한이 포함된 그룹 권한 반환
-    fun getGroupPermission(role: GroupRole?, listMemberGroup: List<MemberGroup?>?, listNodeGroup: List<NodeGroup?>?): List<GroupPermission?>? {
-        // Field
-        val listGroupPermission: List<GroupPermission?>?
-
-        // Init
-        listGroupPermission = groupPermissionRepo.findByGroupPermissionAndMemberGroupInAndNodeGroupIn(role, listMemberGroup, listNodeGroup)
-
+    fun getGroupPermission(role: GroupRole, listMemberGroup: List<MemberGroup>, listNodeGroup: List<NodeGroup>): List<GroupPermission> {
         // Return
-        return listGroupPermission
+        return groupPermissionRepo.findByGroupPermissionAndMemberGroupInAndNodeGroupIn(role, listMemberGroup, listNodeGroup)
     }
 }

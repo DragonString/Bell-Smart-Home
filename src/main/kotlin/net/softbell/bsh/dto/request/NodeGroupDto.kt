@@ -6,6 +6,6 @@ package net.softbell.bsh.dto.request
  */
 data class NodeGroupDto (
         var enableStatus: Boolean = false,
-        var name: String? = null,
+        var name: String,
         var nodeId: List<Long>? = null
 )

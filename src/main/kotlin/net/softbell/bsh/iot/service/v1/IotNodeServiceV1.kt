@@ -237,7 +237,7 @@ class IotNodeServiceV1 {
         return true
     }
 
-    fun setNodeAlias(nodeId: Long, alias: String?): Boolean {
+    fun setNodeAlias(nodeId: Long, alias: String): Boolean {
         // Field
         val node: Node?
 
@@ -257,7 +257,7 @@ class IotNodeServiceV1 {
         return true
     }
 
-    fun setNodeItemAlias(nodeItemId: Long, alias: String?): Boolean {
+    fun setNodeItemAlias(nodeItemId: Long, alias: String): Boolean {
         // Field
         val nodeItem: NodeItem?
 

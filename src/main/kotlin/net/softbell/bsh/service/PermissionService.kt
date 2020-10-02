@@ -153,15 +153,18 @@ class PermissionService {
         val memberGroup: MemberGroup
 
         // Parent Load
-        memberGroup = MemberGroup()
-        memberGroup.name = memberGroupDto.name
-        if (memberGroupDto.enableStatus) memberGroup.enableStatus = EnableStatusRule.ENABLE else memberGroup.enableStatus = EnableStatusRule.DISABLE
+        memberGroup = MemberGroup(
+                name = memberGroupDto.name,
+                enableStatus = EnableStatusRule.DISABLE
+        )
+        if (memberGroupDto.enableStatus)
+            memberGroup.enableStatus = EnableStatusRule.ENABLE
 
         // DB - Save
         memberGroupRepo.save(memberGroup)
 
         // Child Load
-        for (memberId in memberGroupDto.memberId!!) {
+        for (memberId in memberGroupDto.memberId) {
             // Field
             var member: Member?
             var memberGroupItem: MemberGroupItem
@@ -173,11 +176,11 @@ class PermissionService {
             if (member == null) continue
 
             // Create
-            memberGroupItem = MemberGroupItem()
-
-            memberGroupItem.memberGroup = memberGroup
-            memberGroupItem.member = member
-            memberGroupItem.assignDate = Date()
+            memberGroupItem = MemberGroupItem(
+                    memberGroup = memberGroup,
+                    member = member,
+                    assignDate = Date()
+            )
 
             // DB = Save
             memberGroupItemRepo.save(memberGroupItem)
@@ -223,11 +226,11 @@ class PermissionService {
             if (member == null) continue
 
             // Create
-            memberGroupItem = MemberGroupItem()
-
-            memberGroupItem.memberGroup = memberGroup
-            memberGroupItem.member = member
-            memberGroupItem.assignDate = Date()
+            memberGroupItem = MemberGroupItem(
+                    memberGroup = memberGroup,
+                    member = member,
+                    assignDate = Date()
+            )
 
             // DB = Save
             memberGroupItemRepo.save(memberGroupItem)
@@ -351,12 +354,12 @@ class PermissionService {
         // TODO 기존 권한이 있으면 생성 중단하는 코드 필요
 
         // Make
-        groupPermission = GroupPermission()
-
-        groupPermission.assignDate = Date()
-        groupPermission.memberGroup = memberGroup
-        groupPermission.nodeGroup = nodeGroup
-        groupPermission.groupPermission = groupRole
+        groupPermission = GroupPermission(
+                assignDate = Date(),
+                memberGroup = memberGroup,
+                nodeGroup = nodeGroup,
+                groupPermission = groupRole!!
+        )
 
         // DB - Save
         groupPermissionRepo.save(groupPermission)
@@ -371,10 +374,13 @@ class PermissionService {
         val nodeGroup: NodeGroup
 
         // Parent Load
-        nodeGroup = NodeGroup()
+        nodeGroup = NodeGroup(
+                name = nodeGroupDto.name,
+                enableStatus = EnableStatusRule.DISABLE
+        )
+        if (nodeGroupDto.enableStatus)
+            nodeGroup.enableStatus = EnableStatusRule.ENABLE
 
-        nodeGroup.name = nodeGroupDto.name
-        if (nodeGroupDto.enableStatus) nodeGroup.enableStatus = EnableStatusRule.ENABLE else nodeGroup.enableStatus = EnableStatusRule.DISABLE
 
         // DB - Save
         nodeGroupRepo.save(nodeGroup)
@@ -392,11 +398,11 @@ class PermissionService {
             if (!optNode.isPresent) continue
 
             // Create
-            nodeGroupItem = NodeGroupItem()
-
-            nodeGroupItem.nodeGroup = nodeGroup
-            nodeGroupItem.node = optNode.get()
-            nodeGroupItem.assignDate = Date()
+            nodeGroupItem = NodeGroupItem(
+                    nodeGroup = nodeGroup,
+                    node = optNode.get(),
+                    assignDate = Date()
+            )
 
             // DB = Save
             nodeGroupItemRepo.save(nodeGroupItem)
@@ -426,7 +432,7 @@ class PermissionService {
         if (nodeGroupDto.enableStatus) nodeGroup.enableStatus = EnableStatusRule.ENABLE else nodeGroup.enableStatus = EnableStatusRule.DISABLE
 
         // DB - Delete
-        nodeGroupItemRepo.deleteAll(nodeGroup.nodeGroupItems!!)
+        nodeGroupItemRepo.deleteAll(nodeGroup.nodeGroupItems)
         nodeGroupItemRepo.flush()
 
         // Child Load
@@ -442,11 +448,11 @@ class PermissionService {
             if (!optNode.isPresent) continue
 
             // Create
-            nodeGroupItem = NodeGroupItem()
-
-            nodeGroupItem.nodeGroup = nodeGroup
-            nodeGroupItem.node = optNode.get()
-            nodeGroupItem.assignDate = Date()
+            nodeGroupItem = NodeGroupItem(
+                    nodeGroup = nodeGroup,
+                    node = optNode.get(),
+                    assignDate = Date()
+            )
 
             // DB = Save
             nodeGroupItemRepo.save(nodeGroupItem)
@@ -466,11 +472,8 @@ class PermissionService {
 
         // Process
         for (gid in listGid) {
-            // Field
-            var optNodeGroup: Optional<NodeGroup?>
-
             // Init
-            optNodeGroup = nodeGroupRepo.findById(gid!!)
+            var optNodeGroup: Optional<NodeGroup?> = nodeGroupRepo.findById(gid!!)
 
             // Exception
             if (!optNodeGroup.isPresent) {
@@ -496,11 +499,8 @@ class PermissionService {
 
         // Process
         for (gid in listGid) {
-            // Field
-            var optNodeGroup: Optional<NodeGroup?>
-
             // Init
-            optNodeGroup = nodeGroupRepo.findById(gid!!)
+            var optNodeGroup: Optional<NodeGroup?> = nodeGroupRepo.findById(gid!!)
 
             // Exception
             if (!optNodeGroup.isPresent) {
@@ -570,12 +570,12 @@ class PermissionService {
         // TODO 기존 권한이 있으면 생성 중단하는 코드 필요
 
         // Make
-        groupPermission = GroupPermission()
-
-        groupPermission.assignDate = Date()
-        groupPermission.memberGroup = memberGroup
-        groupPermission.nodeGroup = nodeGroup
-        groupPermission.groupPermission = groupRole
+        groupPermission = GroupPermission(
+                assignDate = Date(),
+                memberGroup = memberGroup,
+                nodeGroup = nodeGroup,
+                groupPermission = groupRole!!
+        )
 
         // DB - Save
         groupPermissionRepo.save(groupPermission)

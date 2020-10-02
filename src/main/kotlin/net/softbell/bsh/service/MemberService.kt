@@ -172,22 +172,24 @@ class MemberService : UserDetailsService {
     }
 
     @Transactional
-    fun procLogin(userId: String?, loginIp: String?, isLogin: Boolean): Boolean {
+    fun procLogin(userId: String?, loginIp: String, isLogin: Boolean): Boolean {
         // Field
         val member: Member?
         val memberLoginLog: MemberLoginLog
 
         // Init
         member = getMember(userId)
-        memberLoginLog = MemberLoginLog()
 
         // Exception
         if (member == null) return false
 
         // Process
-        memberLoginLog.member = member
-        memberLoginLog.requestDate = Date()
-        memberLoginLog.ipv4 = loginIp
+        memberLoginLog = MemberLoginLog(
+                member = member,
+                requestDate = Date(),
+                ipv4 = loginIp,
+                status = AuthStatusRule.FAIL
+        )
 
         if (isLogin) {
             memberLoginLog.status = AuthStatusRule.SUCCESS
@@ -206,7 +208,6 @@ class MemberService : UserDetailsService {
             failCheckTime = centerService.getSetting().webLoginFailCheckTime!!
             maxFailCount = centerService.getSetting().webLoginFailMaxCount!!.toInt()
             start.add(Calendar.SECOND, -failCheckTime)
-            memberLoginLog.status = AuthStatusRule.FAIL
             fail = memberLoginLogRepo.countByMemberAndStatusAndRequestDateBetween(member, AuthStatusRule.FAIL, start.time, end.time) + 1
 
             // Check

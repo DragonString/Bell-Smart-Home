@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
  * @Description : 회원 그룹 리포지토리 인터페이스
  */
 @Repository
-open interface MemberGroupRepo : JpaRepository<MemberGroup?, Long?> {
+interface MemberGroupRepo : JpaRepository<MemberGroup, Long> {
     fun findByEnableStatus(enableStatus: EnableStatusRule?): List<MemberGroup?>?
     fun findByMemberGroupItemsInAndEnableStatus(listMemberGroupItem: List<MemberGroupItem?>?, enableStatus: EnableStatusRule?): List<MemberGroup?>?
     fun findByGroupPermissionsIn(listGroupPermission: List<GroupPermission?>?): List<MemberGroup?>?

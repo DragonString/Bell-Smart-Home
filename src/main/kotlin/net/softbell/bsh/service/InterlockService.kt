@@ -60,18 +60,17 @@ class InterlockService {
 
     @Transactional
     fun createToken(auth: Authentication, interlockTokenDto: InterlockTokenDto): Boolean {
-        // Field
-        var memberInterlockToken: MemberInterlockToken = MemberInterlockToken()
-
         // Init
         val member: Member = memberService.getMember(auth.name) ?: return false
 
         // Process
-        memberInterlockToken.name = interlockTokenDto.name
-        memberInterlockToken.member = member
-        memberInterlockToken.registerDate = Date()
-        memberInterlockToken.enableStatus = EnableStatusRule.ENABLE
-        memberInterlockToken.token = authComp.getRandomToken()
+        var memberInterlockToken: MemberInterlockToken = MemberInterlockToken(
+                name = interlockTokenDto.name,
+                member = member,
+                registerDate = Date(),
+                enableStatus = EnableStatusRule.ENABLE,
+                token = authComp.getRandomToken()
+        )
 
         // DB - Save
         memberInterlockTokenRepo.save(memberInterlockToken)
@@ -81,7 +80,7 @@ class InterlockService {
     }
 
     @Transactional
-    fun modifyToken(auth: Authentication, tokenId: Long, enableStatus: EnableStatusRule?): Boolean {
+    fun modifyToken(auth: Authentication, tokenId: Long, enableStatus: EnableStatusRule): Boolean {
         // Field
         val member: Member?
         val optMemberInterlockToken: Optional<MemberInterlockToken?>

@@ -100,30 +100,29 @@ class IotActionServiceV1 {
         if (member == null) return false
 
         // Data Process - Action Info
-        nodeAction = NodeAction()
-
-        nodeAction.enableStatus = enableStatus
-        nodeAction.description = iotActionDto.description
-        nodeAction.member = member
+        nodeAction = NodeAction(
+                enableStatus = enableStatus,
+                description = iotActionDto.description,
+                member = member
+        )
 
         // Data Process - Action Item Info
         if (mapActionItem != null) {
             mapActionItem.forEach(BiConsumer { key: Long?, (_, itemId, itemStatus) ->
-                if (itemId != null && itemId != 0L) {
+                if (itemId != 0L) {
                     // Field
-                    val optNodeItem: Optional<NodeItem?>
                     val nodeActionItem: NodeActionItem
 
                     // Init
-                    optNodeItem = nodeItemRepo.findById(itemId)
+                    val optNodeItem: Optional<NodeItem?> = nodeItemRepo.findById(itemId)
 
                     // Build
                     if (optNodeItem.isPresent) {
-                        nodeActionItem = NodeActionItem()
-
-                        nodeActionItem.nodeItem = optNodeItem.get()
-                        nodeActionItem.itemStatus = itemStatus
-                        nodeActionItem.nodeAction = nodeAction
+                        nodeActionItem = NodeActionItem(
+                                nodeItem = optNodeItem.get(),
+                                itemStatus = itemStatus,
+                                nodeAction = nodeAction
+                        )
 
                         // List Add
                         listNodeActionItem.add(nodeActionItem)
@@ -174,7 +173,7 @@ class IotActionServiceV1 {
 //			nodeAction.removeNodeActionItem(value);
 
         // Data Process - Item Info
-        nodeAction.nodeActionItems = null
+//        nodeAction.nodeActionItems = null // TODO 이거 뭐지?
         nodeAction.enableStatus = enableStatus
         nodeAction.description = iotActionDto.description
 
@@ -184,7 +183,7 @@ class IotActionServiceV1 {
         // Data Process - Action Item Info
         if (mapActionItem != null) {
             mapActionItem.forEach(BiConsumer { key: Long?, (_, itemId, itemStatus) ->
-                if (itemId != null && itemId != 0L) {
+                if (itemId != 0L) {
                     // Field
                     val optNodeItem: Optional<NodeItem?>
                     val nodeActionItem: NodeActionItem
@@ -194,11 +193,11 @@ class IotActionServiceV1 {
 
                     // Build
                     if (optNodeItem.isPresent) {
-                        nodeActionItem = NodeActionItem()
-
-                        nodeActionItem.nodeItem = optNodeItem.get()
-                        nodeActionItem.itemStatus = itemStatus
-                        nodeActionItem.nodeAction = nodeAction
+                        nodeActionItem = NodeActionItem(
+                                nodeItem = optNodeItem.get(),
+                                itemStatus = itemStatus,
+                                nodeAction = nodeAction
+                        )
 
                         // List Add
                         listNodeActionItem.add(nodeActionItem)

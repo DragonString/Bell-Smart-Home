@@ -101,12 +101,12 @@ class IotReservServiceV1 {
         if (member == null) return false
 
         // Data Process - Reservation Info
-        nodeReserv = NodeReserv()
-
-        nodeReserv.enableStatus = enableStatus
-        nodeReserv.description = iotReservDto.description
-        nodeReserv.expression = iotReservDto.expression
-        nodeReserv.member = member
+        nodeReserv = NodeReserv(
+                enableStatus = enableStatus,
+                description = iotReservDto.description,
+                expression = iotReservDto.expression,
+                member = member
+        )
 
         // Data Process - Reservation Action Info
         if (mapAction != null) {
@@ -121,10 +121,10 @@ class IotReservServiceV1 {
 
                     // Build
                     if (optNodeAction.isPresent) {
-                        nodeReservAction = NodeReservAction()
-
-                        nodeReservAction.nodeAction = optNodeAction.get()
-                        nodeReservAction.nodeReserv = nodeReserv
+                        nodeReservAction = NodeReservAction(
+                                nodeAction = optNodeAction.get(),
+                                nodeReserv = nodeReserv
+                        )
 
                         // List Add
                         listNodeReservAction.add(nodeReservAction)
@@ -175,7 +175,7 @@ class IotReservServiceV1 {
 //					nodeAction.removeNodeActionItem(value);
 
         // Data Process - Item Info
-        nodeReserv.nodeReservActions = null
+//        nodeReserv.nodeReservActions = null // TODO 이거 뭐지?
         nodeReserv.enableStatus = enableStatus
         nodeReserv.description = iotReservDto.description
         nodeReserv.expression = iotReservDto.expression
@@ -196,10 +196,10 @@ class IotReservServiceV1 {
 
                     // Build
                     if (optNodeAction.isPresent) {
-                        nodeReservAction = NodeReservAction()
-
-                        nodeReservAction.nodeAction = optNodeAction.get()
-                        nodeReservAction.nodeReserv = nodeReserv
+                        nodeReservAction = NodeReservAction(
+                                nodeAction = optNodeAction.get(),
+                                nodeReserv = nodeReserv
+                        )
 
                         // List Add
                         listNodeReservAction.add(nodeReservAction)

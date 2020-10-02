@@ -11,39 +11,39 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_reserv")
 @NamedQuery(name = "NodeReserv.findAll", query = "SELECT n FROM NodeReserv n")
-class NodeReserv : Serializable {
+class NodeReserv(
+        @Column(nullable = false, length = 50)
+        var description: String,
+
+        @Column(name = "enable_status", nullable = false)
+        var enableStatus: EnableStatusRule,
+
+        @Column(nullable = false, length = 100)
+        var expression: String,
+
+        @OneToMany(mappedBy = "nodeReserv")
+        var nodeReservActions: MutableList<NodeReservAction> = ArrayList(),
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "member_id", nullable = false)
+        var member: Member
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserv_id", unique = true, nullable = false)
-    var reservId: Long? = null
-
-    @Column(nullable = false, length = 50)
-    var description: String? = null
-
-    @Column(name = "enable_status", nullable = false)
-    var enableStatus: EnableStatusRule? = null
-
-    @Column(nullable = false, length = 100)
-    var expression: String? = null
-
-    @OneToMany(mappedBy = "nodeReserv")
-    var nodeReservActions: MutableList<NodeReservAction>? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    var member: Member? = null
+    var reservId: Long = 0
 
     fun addNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
-        nodeReservActions?.add(nodeReservAction)
+        nodeReservActions.add(nodeReservAction)
         nodeReservAction.nodeReserv = this
         return nodeReservAction
     }
 
-    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
-        nodeReservActions?.remove(nodeReservAction)
-        nodeReservAction.nodeReserv = null
-        return nodeReservAction
-    }
+//    fun removeNodeReservAction(nodeReservAction: NodeReservAction): NodeReservAction? {
+//        nodeReservActions.remove(nodeReservAction)
+//        nodeReservAction.nodeReserv = null
+//        return nodeReservAction
+//    }
 
     companion object {
         private const val serialVersionUID = 1L

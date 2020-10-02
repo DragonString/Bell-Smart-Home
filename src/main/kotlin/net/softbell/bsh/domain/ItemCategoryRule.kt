@@ -6,31 +6,31 @@ package net.softbell.bsh.domain
  * (사용자, 제어, 센서, 리더)
  */
 enum class ItemCategoryRule {
-    ERROR {
+    UNKNOWN { // 미확인
         override val value: String
-            get() = "ERROR"
+            get() = "UNKNOWN"
         override val code: Int
             get() = -1
     },
-    USER {
+    USER { // 사용자
         override val value: String
             get() = "USER"
         override val code: Int
             get() = 0
     },
-    CONTROL {
+    CONTROL { // 제어
         override val value: String
             get() = "CONTROL"
         override val code: Int
             get() = 10
     },
-    SENSOR {
+    SENSOR { // 센서
         override val value: String
             get() = "SENSOR"
         override val code: Int
             get() = 20
     },
-    READER {
+    READER { // 리더
         override val value: String
             get() = "READER"
         override val code: Int
@@ -41,9 +41,11 @@ enum class ItemCategoryRule {
     abstract val code: Int
 
     companion object {
-        fun ofLegacyCode(legacyCode: Int): ItemCategoryRule? {
-            for (rule in values()) if (rule.code === legacyCode) return rule
-            return null
+        fun ofLegacyCode(legacyCode: Int): ItemCategoryRule {
+            for (rule in values())
+                if (rule.code == legacyCode)
+                    return rule
+            return UNKNOWN
         }
     }
 }

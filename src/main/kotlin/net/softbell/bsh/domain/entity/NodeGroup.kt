@@ -11,48 +11,47 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_group")
 @NamedQuery(name = "NodeGroup.findAll", query = "SELECT n FROM NodeGroup n")
-class NodeGroup : Serializable {
+class NodeGroup(
+        @Column(name = "enable_status", nullable = false)
+        var enableStatus: EnableStatusRule,
+
+        @Column(nullable = false, length = 50)
+        var name: String,
+
+        @OneToMany(mappedBy = "nodeGroup")
+        var groupPermissions: MutableList<GroupPermission> = ArrayList(),
+
+        @OneToMany(mappedBy = "nodeGroup")
+        var nodeGroupItems: MutableList<NodeGroupItem> = ArrayList()
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "node_group_id", unique = true, nullable = false)
-    var nodeGroupId: Long? = null
-
-    @Column(name = "enable_status", nullable = false)
-    var enableStatus: EnableStatusRule? = null
-
-    @Column(nullable = false, length = 50)
-    var name: String? = null
-
-    @OneToMany(mappedBy = "nodeGroup")
-    var groupPermissions: MutableList<GroupPermission>? = null
-
-    @OneToMany(mappedBy = "nodeGroup")
-    var nodeGroupItems: MutableList<NodeGroupItem>? = null
-
+    var nodeGroupId: Long = 0
 
     fun addGroupPermission(groupPermission: GroupPermission): GroupPermission? {
-        groupPermissions?.add(groupPermission)
+        groupPermissions.add(groupPermission)
         groupPermission.nodeGroup = this
         return groupPermission
     }
 
-    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission? {
-        groupPermissions?.remove(groupPermission)
-        groupPermission.nodeGroup = null
-        return groupPermission
-    }
+//    fun removeGroupPermission(groupPermission: GroupPermission): GroupPermission? {
+//        groupPermissions.remove(groupPermission)
+//        groupPermission.nodeGroup = null
+//        return groupPermission
+//    }
 
     fun addNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem? {
-        nodeGroupItems?.add(nodeGroupItem)
+        nodeGroupItems.add(nodeGroupItem)
         nodeGroupItem.nodeGroup = this
         return nodeGroupItem
     }
 
-    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem? {
-        nodeGroupItems?.remove(nodeGroupItem)
-        nodeGroupItem.nodeGroup = null
-        return nodeGroupItem
-    }
+//    fun removeNodeGroupItem(nodeGroupItem: NodeGroupItem): NodeGroupItem? {
+//        nodeGroupItems.remove(nodeGroupItem)
+//        nodeGroupItem.nodeGroup = null
+//        return nodeGroupItem
+//    }
 
     companion object {
         private const val serialVersionUID = 1L

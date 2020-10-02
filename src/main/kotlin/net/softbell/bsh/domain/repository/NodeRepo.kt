@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
  * @Description : 노드 리포지토리 인터페이스
  */
 @Repository
-open interface NodeRepo : JpaRepository<Node?, Long?> {
+interface NodeRepo : JpaRepository<Node, Long> {
     fun findByUid(uid: String?): Node?
     fun findByToken(token: String?): Node?
     fun findByNodeGroupItemsIn(listNodeGroupItem: List<NodeGroupItem?>?): List<Node?>

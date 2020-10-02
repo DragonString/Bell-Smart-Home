@@ -6,19 +6,19 @@ package net.softbell.bsh.domain
  * (디지털, 아날로그)
  */
 enum class ItemModeRule {
-    ERROR {
+    UNKNOWN { // 미확인
         override val value: String
-            get() = "ERROR"
+            get() = "UNKNOWN"
         override val code: Int
             get() = -1
     },
-    DIGITAL {
+    DIGITAL { // 디지털
         override val value: String
             get() = "DIGITAL"
         override val code: Int
             get() = 0
     },
-    ANALOG {
+    ANALOG { // 아날로그
         override val value: String
             get() = "ANALOG"
         override val code: Int
@@ -29,9 +29,11 @@ enum class ItemModeRule {
     abstract val code: Int
 
     companion object {
-        fun ofLegacyCode(legacyCode: Int): ItemModeRule? {
-            for (rule in values()) if (rule.code === legacyCode) return rule
-            return null
+        fun ofLegacyCode(legacyCode: Int): ItemModeRule {
+            for (rule in values())
+                if (rule.code == legacyCode)
+                    return rule
+            return UNKNOWN
         }
     }
 }

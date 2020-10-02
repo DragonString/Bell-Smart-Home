@@ -6,5 +6,5 @@ package net.softbell.bsh.dto.request
  */
 data class InterlockTokenDto (
         var memberInterlockId: Long? = null,
-        var name: String? = null
+        var name: String
 )

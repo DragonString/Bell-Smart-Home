@@ -11,23 +11,23 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_group_item", uniqueConstraints = [UniqueConstraint(columnNames = ["node_group_id", "node_id"])])
 @NamedQuery(name = "NodeGroupItem.findAll", query = "SELECT n FROM NodeGroupItem n")
-class NodeGroupItem : Serializable {
+class NodeGroupItem(
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "assign_date", nullable = false)
+        var assignDate: Date,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "node_group_id", nullable = false)
+        var nodeGroup: NodeGroup,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "node_id", nullable = false)
+        var node: Node
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_item_id", unique = true, nullable = false)
-    var groupItemId: Long? = null
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "assign_date", nullable = false)
-    var assignDate: Date? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "node_group_id", nullable = false)
-    var nodeGroup: NodeGroup? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "node_id", nullable = false)
-    var node: Node? = null
+    var groupItemId: Long = 0
 
     companion object {
         private const val serialVersionUID = 1L

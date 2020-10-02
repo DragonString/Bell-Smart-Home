@@ -82,13 +82,13 @@ class IotTriggerServiceV1 {
         if (member == null) return false
 
         // Data Process - Node Trigger
-        nodeTrigger = NodeTrigger()
-
-        nodeTrigger.enableStatus = enableStatus
-        nodeTrigger.description = iotTriggerDto.description
-        nodeTrigger.expression = iotTriggerDto.expression
-        nodeTrigger.member = member
-        nodeTrigger.lastStatus = TriggerLastStatusRule.WAIT
+        nodeTrigger = NodeTrigger(
+                enableStatus = enableStatus,
+                description = iotTriggerDto.description,
+                expression = iotTriggerDto.expression,
+                member = member,
+                lastStatus = TriggerLastStatusRule.WAIT
+        )
 
         // DB - Node Trigger Save
         nodeTriggerRepo.save(nodeTrigger)
@@ -106,10 +106,11 @@ class IotTriggerServiceV1 {
 
                 // Build
                 if (optNodeAction.isPresent) {
-                    nodeTriggerAction = NodeTriggerAction()
-
-                    nodeTriggerAction.nodeTrigger = nodeTrigger
-                    nodeTriggerAction.nodeAction = optNodeAction.get()
+                    nodeTriggerAction = NodeTriggerAction(
+                            nodeTrigger = nodeTrigger,
+                            nodeAction = optNodeAction.get(),
+                            triggerStatus = TriggerStatusRule.RESTORE // TEMP
+                    )
 
                     if (value.eventError && value.eventOccur && value.eventRestore)
                         nodeTriggerAction.triggerStatus = TriggerStatusRule.ALL
@@ -187,10 +188,11 @@ class IotTriggerServiceV1 {
 
                 // Build
                 if (optNodeAction.isPresent) {
-                    nodeTriggerAction = NodeTriggerAction()
-
-                    nodeTriggerAction.nodeTrigger = nodeTrigger
-                    nodeTriggerAction.nodeAction = optNodeAction.get()
+                    nodeTriggerAction = NodeTriggerAction(
+                            nodeTrigger = nodeTrigger,
+                            nodeAction = optNodeAction.get(),
+                            triggerStatus = TriggerStatusRule.RESTORE // TEMP
+                    )
 
                     if (value.eventError && value.eventOccur && value.eventRestore)
                         nodeTriggerAction.triggerStatus = TriggerStatusRule.ALL
@@ -280,12 +282,12 @@ class IotTriggerServiceV1 {
             isOccur = iotTriggerParserComp.parseEntity(nodeTrigger!!)
 
             // Exception
-            if (nodeTrigger.lastStatus === TriggerLastStatusRule.ERROR && isOccur == null ||
+            if (nodeTrigger.lastStatus === TriggerLastStatusRule.UNKNOWN && isOccur == null ||
                     nodeTrigger.lastStatus === TriggerLastStatusRule.OCCUR && isOccur!! ||
                     nodeTrigger.lastStatus === TriggerLastStatusRule.RESTORE && !isOccur!!) continue
 
             // DB - Update
-            if (isOccur == null) nodeTrigger.lastStatus = TriggerLastStatusRule.ERROR // DB Update - Error
+            if (isOccur == null) nodeTrigger.lastStatus = TriggerLastStatusRule.UNKNOWN // DB Update - Error
             else if (isOccur) nodeTrigger.lastStatus = TriggerLastStatusRule.OCCUR // Occur
             else nodeTrigger.lastStatus = TriggerLastStatusRule.RESTORE // Restore
 

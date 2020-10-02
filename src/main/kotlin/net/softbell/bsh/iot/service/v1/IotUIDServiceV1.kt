@@ -37,15 +37,15 @@ class IotUIDServiceV1 {
         if (node != null) return false
 
         // Process
-        node = Node()
-
-        node.uid = nodeInfo.uid
-        node.controlMode = nodeInfo.controlMode
-        node.nodeName = nodeInfo.nodeName
-        node.alias = nodeInfo.nodeName
-        node.version = nodeInfo.version
-        node.registerDate = Date()
-        node.enableStatus = EnableStatusRule.WAIT
+        node = Node(
+                uid = nodeInfo.uid,
+                controlMode = nodeInfo.controlMode,
+                nodeName = nodeInfo.nodeName,
+                alias = nodeInfo.nodeName,
+                version = nodeInfo.version,
+                registerDate = Date(),
+                enableStatus = EnableStatusRule.WAIT
+        )
 
         // DB - Save
         nodeRepo.save(node)

@@ -9,32 +9,44 @@ import java.util.*
  * @Author : Bell(bell@softbell.net)
  * @Description : 회원정보 DTO
  */
-class MemberDto {
-    var memberId: Long? = null
-    var ban: Int? = null
-    var banDate: Date? = null
-    var changePasswdDate: Date? = null
-    var email: String? = null
-    var lastLogin: Date? = null
-    var nickname: String? = null
-    var password: String = ""
-    var permission: Int? = null
-    var registerDate: Date? = null
-    var userId: String? = null
-    var username: String? = null
+class MemberDto(
+        ban: Int,
+        banDate: Date,
+        changePasswdDate: Date,
+        email: String,
+        lastLogin: Date,
+        nickname: String,
+        password: String,
+        permission: Int,
+        registerDate: Date = Date(),
+        userId: String,
+        username: String
+) {
+//    var memberId: Long = null
+    var ban: Int = ban
+    var banDate: Date? = banDate
+    var changePasswdDate: Date? = changePasswdDate
+    var email: String = email
+    var lastLogin: Date? = lastLogin
+    var nickname: String = nickname
+    var password: String = password
+    var permission: Int = permission
+    var registerDate: Date = registerDate
+    var userId: String = userId
+    var username: String = nickname
 
     fun toEntity(): Member {
         // Generate
-        var member = Member()
-
-        member.userId = userId
-        member.email = email
-        member.password = password
-        member.name = username
-        member.nickname = nickname
-        member.registerDate = Date()
-        member.ban = BanRule.ofLegacyCode(ban!!)
-        member.permission = MemberRole.ofLegacyCode(permission!!)
+        var member = Member(
+                userId = userId,
+                email = email,
+                password = password,
+                name = username,
+                nickname = nickname,
+                registerDate = registerDate,
+                ban = BanRule.ofLegacyCode(ban),
+                permission = MemberRole.ofLegacyCode(permission)
+        )
 
         return member
     }

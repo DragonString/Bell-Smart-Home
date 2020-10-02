@@ -12,28 +12,28 @@ import javax.persistence.*
 @Entity
 @Table(name = "member_interlock_token", uniqueConstraints = [UniqueConstraint(columnNames = ["token"])])
 @NamedQuery(name = "MemberInterlockToken.findAll", query = "SELECT m FROM MemberInterlockToken m")
-class MemberInterlockToken : Serializable {
+class MemberInterlockToken(
+        @Column(name = "enable_status", nullable = false)
+        var enableStatus: EnableStatusRule,
+
+        @Column(name = "token", nullable = false)
+        var token: String,
+
+        @Column(name = "name", nullable = false)
+        var name: String,
+
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "register_date", nullable = false)
+        var registerDate: Date,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "member_id", nullable = false)
+        var member: Member
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_interlock_id", unique = true, nullable = false)
-    var memberInterlockId: Long? = null
-
-    @Column(name = "enable_status", nullable = false)
-    var enableStatus: EnableStatusRule? = null
-
-    @Column(name = "token", nullable = false)
-    var token: String? = null
-
-    @Column(name = "name", nullable = false)
-    var name: String? = null
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "register_date", nullable = false)
-    var registerDate: Date? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    var member: Member? = null
+    var memberInterlockId: Long = 0
 
     companion object {
         private const val serialVersionUID = 1L

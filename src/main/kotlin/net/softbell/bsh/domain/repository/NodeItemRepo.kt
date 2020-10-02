@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
  * @Description : 노드 아이템 리포지토리 인터페이스
  */
 @Repository
-open interface NodeItemRepo : JpaRepository<NodeItem?, Long?> {
+interface NodeItemRepo : JpaRepository<NodeItem, Long> {
     fun findByNodeIn(listNode: List<Node?>?): List<NodeItem?>
     fun findByItemCategory(itemCategory: ItemCategoryRule?): List<NodeItem?>
     fun findByNodeInAndItemCategory(listNode: List<Node?>?, itemCategory: ItemCategoryRule?): List<NodeItem?>

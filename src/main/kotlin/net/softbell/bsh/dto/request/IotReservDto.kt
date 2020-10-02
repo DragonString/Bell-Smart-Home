@@ -6,7 +6,7 @@ package net.softbell.bsh.dto.request
  */
 data class IotReservDto (
         var enableStatus: Boolean = false,
-        var description: String? = null,
-        var expression: String? = null,
+        var description: String,
+        var expression: String,
         var mapAction: HashMap<Long, IotActionDto>? = null
 )

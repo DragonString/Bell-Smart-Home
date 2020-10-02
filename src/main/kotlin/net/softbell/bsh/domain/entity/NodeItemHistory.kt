@@ -11,22 +11,22 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_item_history", indexes = [Index(name = "IDX_NODE_ITEM_HISTORY_RECEIVE_DATE", columnList = "receive_date")])
 @NamedQuery(name = "NodeItemHistory.findAll", query = "SELECT n FROM NodeItemHistory n")
-class NodeItemHistory : Serializable {
+class NodeItemHistory(
+        @Column(name = "item_status", nullable = false)
+        var itemStatus: Double,
+
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "receive_date", nullable = false)
+        var receiveDate: Date,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "item_id", nullable = false)
+        var nodeItem: NodeItem
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_history_id", unique = true, nullable = false)
-    var itemHistoryId: Long? = null
-
-    @Column(name = "item_status", nullable = false)
-    var itemStatus: Double? = null
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "receive_date", nullable = false)
-    var receiveDate: Date? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false)
-    var nodeItem: NodeItem? = null
+    var itemHistoryId: Long = 0
 
     companion object {
         private const val serialVersionUID = 1L

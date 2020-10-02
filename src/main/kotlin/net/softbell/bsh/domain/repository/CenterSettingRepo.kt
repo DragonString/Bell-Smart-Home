@@ -9,4 +9,4 @@ import org.springframework.stereotype.Repository
  * @Description : 센터 설정 리포지토리 인터페이스
  */
 @Repository
-open interface CenterSettingRepo : JpaRepository<CenterSetting?, Byte?>
+interface CenterSettingRepo : JpaRepository<CenterSetting, Byte>

@@ -12,26 +12,26 @@ import javax.persistence.*
 @Entity
 @Table(name = "group_permission", uniqueConstraints = [UniqueConstraint(columnNames = ["node_group_id", "member_group_id", "group_permission"])])
 @NamedQuery(name = "GroupPermission.findAll", query = "SELECT g FROM GroupPermission g")
-class GroupPermission : Serializable {
+class GroupPermission(
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "assign_date", nullable = false)
+        var assignDate: Date,
+
+        @Column(name = "group_permission", nullable = false)
+        var groupPermission: GroupRole,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "node_group_id", nullable = false)
+        var nodeGroup: NodeGroup,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "member_group_id", nullable = false)
+        var memberGroup: MemberGroup
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_permission_id", unique = true, nullable = false)
-    var groupPermissionId: Long? = null
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "assign_date", nullable = false)
-    var assignDate: Date? = null
-
-    @Column(name = "group_permission", nullable = false)
-    var groupPermission: GroupRole? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "node_group_id", nullable = false)
-    var nodeGroup: NodeGroup? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_group_id", nullable = false)
-    var memberGroup: MemberGroup? = null
+    var groupPermissionId: Long = 0
 
     companion object {
         private const val serialVersionUID = 1L

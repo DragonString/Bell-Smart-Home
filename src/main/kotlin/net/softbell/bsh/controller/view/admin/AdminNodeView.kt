@@ -36,7 +36,7 @@ class AdminNodeView {
     @GetMapping("modify/{id}")
     fun dispNodeModify(model: Model, principal: Principal, @PathVariable("id") nodeId: Long): String? {
         // Exception
-        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotNode.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val member = memberService.getAdminMember(principal.name)
@@ -50,7 +50,7 @@ class AdminNodeView {
 
         // Process
         model.addAttribute("cardNodeInfo", NodeManageInfoCardDto(node))
-        model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeManageItemCards(node!!.nodeItems!!))
+        model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeManageItemCards(node!!.nodeItems))
 
         // Return
         return "$G_BASE_PATH/NodeModify"
@@ -61,7 +61,8 @@ class AdminNodeView {
     fun procNodeDisable(model: Model, principal: Principal,
                         @RequestParam("intNodeId") intNodeId: Int): String? {
         // Exception
-        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotNode.toInt() != 1)
+            return G_INDEX_REDIRECT_URL
 
         // Field
         val member = memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
@@ -72,7 +73,10 @@ class AdminNodeView {
         logger.info("$intNodeId 노드 비활성화 ")
 
         // Process
-        return if (iotNodeService.setNodeEnableStatus(intNodeId.toLong(), EnableStatusRule.DISABLE)) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?error"
+        return if (iotNodeService.setNodeEnableStatus(intNodeId.toLong(), EnableStatusRule.DISABLE))
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?error"
     }
 
     // 노드 활성화 처리
@@ -80,7 +84,7 @@ class AdminNodeView {
     fun procNodeEnable(model: Model, principal: Principal,
                        @RequestParam("intNodeId") intNodeId: Int): String? {
         // Exception
-        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
+        if (centerService.getSetting().iotNode.toInt() != 1) return G_INDEX_REDIRECT_URL
 
         // Field
         val member = memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL

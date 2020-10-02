@@ -82,7 +82,7 @@ class IotTokenServiceV1 {
         node.version = nodeInfo.version
 
         // DB - Save
-        nodeRepo!!.save(node)
+        nodeRepo.save(node)
 
         // Log
         logger.info("Node Info Save (" + node.uid + ")")
@@ -103,7 +103,7 @@ class IotTokenServiceV1 {
         if (node == null) return false
 
         // Process
-        for (nodeItem in node.nodeItems!!)  // TODO 불필요한 이 반복 부분 제거하고 NodeItemRepo에 조회절 추가하기
+        for (nodeItem in node.nodeItems)  // TODO 불필요한 이 반복 부분 제거하고 NodeItemRepo에 조회절 추가하기
             if (nodeItem.itemIndex == itemInfo.itemIndex) // DB Update
             {
                 nodeItem.controlMode = itemInfo.controlMode
@@ -119,16 +119,16 @@ class IotTokenServiceV1 {
             }
 
         // DB - Insert data
-        val nodeItem: NodeItem = NodeItem()
-
-        nodeItem.node = node
-        nodeItem.controlMode = itemInfo.controlMode
-        nodeItem.itemIndex = itemInfo.itemIndex
-        nodeItem.itemCategory = ItemCategoryRule.ofLegacyCode(itemInfo.itemCategory)
-        nodeItem.itemMode = ItemModeRule.ofLegacyCode(itemInfo.itemMode)
-        nodeItem.itemName = itemInfo.itemName
-        nodeItem.itemType = ItemTypeRule.ofLegacyCode(itemInfo.itemType)
-        nodeItem.alias = itemInfo.itemName
+        val nodeItem: NodeItem = NodeItem(
+                node = node,
+                controlMode = itemInfo.controlMode,
+                itemIndex = itemInfo.itemIndex,
+                itemCategory = ItemCategoryRule.ofLegacyCode(itemInfo.itemCategory),
+                itemMode = ItemModeRule.ofLegacyCode(itemInfo.itemMode),
+                itemName = itemInfo.itemName,
+                itemType = ItemTypeRule.ofLegacyCode(itemInfo.itemType),
+                alias = itemInfo.itemName
+        )
 
         nodeItemRepo.save(nodeItem)
 
@@ -162,7 +162,6 @@ class IotTokenServiceV1 {
         // Field
         val node: Node?
         val nodeItem: NodeItem?
-        val nodeItemHistory: NodeItemHistory = NodeItemHistory()
 
         // Init
         node = getNormalTokenNode(token) // TODO 이것도 token, uid로 한번에 검색되게
@@ -177,9 +176,11 @@ class IotTokenServiceV1 {
         if (nodeItem == null) return false
 
         // Process
-        nodeItemHistory.nodeItem = nodeItem
-        nodeItemHistory.itemStatus = itemValue.itemStatus
-        nodeItemHistory.receiveDate = Date()
+        val nodeItemHistory: NodeItemHistory = NodeItemHistory(
+                nodeItem = nodeItem,
+                itemStatus = itemValue.itemStatus!!,
+                receiveDate = Date()
+        )
 
         // DB - Save
         nodeItemHistoryRepo.save(nodeItemHistory)

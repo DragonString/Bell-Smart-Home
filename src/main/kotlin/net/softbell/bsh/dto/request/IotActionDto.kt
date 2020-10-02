@@ -7,6 +7,6 @@ package net.softbell.bsh.dto.request
 data class IotActionDto (
         var actionId: Long? = null,
         var enableStatus: Boolean = false,
-        var description: String? = null,
-        var mapActionItem: HashMap<Long, IotActionItemDto>? = null
+        var description: String,
+        var mapActionItem: HashMap<Long, IotActionItemDto>?
 )

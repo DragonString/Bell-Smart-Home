@@ -11,22 +11,22 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_trigger_action")
 @NamedQuery(name = "NodeTriggerAction.findAll", query = "SELECT n FROM NodeTriggerAction n")
-class NodeTriggerAction : Serializable {
+class NodeTriggerAction(
+        @Column(name = "trigger_status", nullable = false)
+        var triggerStatus: TriggerStatusRule,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "trigger_id", nullable = false)
+        var nodeTrigger: NodeTrigger,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "action_id", nullable = false)
+        var nodeAction: NodeAction
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trigger_action_id", unique = true, nullable = false)
-    var triggerActionId: Long? = null
-
-    @Column(name = "trigger_status", nullable = false)
-    var triggerStatus: TriggerStatusRule? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "trigger_id", nullable = false)
-    var nodeTrigger: NodeTrigger? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "action_id", nullable = false)
-    var nodeAction: NodeAction? = null
+    var triggerActionId: Long = 0
 
     companion object {
         private const val serialVersionUID = 1L

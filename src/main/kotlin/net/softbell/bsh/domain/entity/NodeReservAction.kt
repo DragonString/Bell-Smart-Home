@@ -10,19 +10,19 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_reserv_action")
 @NamedQuery(name = "NodeReservAction.findAll", query = "SELECT n FROM NodeReservAction n")
-class NodeReservAction : Serializable {
+class NodeReservAction(
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "reserv_id", nullable = false)
+        var nodeReserv: NodeReserv,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "action_id", nullable = false)
+        var nodeAction: NodeAction
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reserv_action_id", unique = true, nullable = false)
-    var reservActionId: Long? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reserv_id", nullable = false)
-    var nodeReserv: NodeReserv? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "action_id", nullable = false)
-    var nodeAction: NodeAction? = null
+    var reservActionId: Long = 0
 
     companion object {
         private const val serialVersionUID = 1L

@@ -12,25 +12,25 @@ import javax.persistence.*
 @Entity
 @Table(name = "node_connection_log")
 @NamedQuery(name = "NodeConnectionLog.findAll", query = "SELECT n FROM NodeConnectionLog n")
-class NodeConnectionLog : Serializable {
+class NodeConnectionLog(
+        @Column(nullable = false, length = 15)
+        var ipv4: String,
+
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "request_date", nullable = false)
+        var requestDate: Date,
+
+        @Column(nullable = false)
+        var status: AuthStatusRule,
+
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "node_id", nullable = false, insertable = false, updatable = false)
+        var node: Node
+) : Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "log_id", unique = true, nullable = false)
-    var logId: Long? = null
-
-    @Column(nullable = false, length = 15)
-    var ipv4: String? = null
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "request_date", nullable = false)
-    var requestDate: Date? = null
-
-    @Column(nullable = false)
-    var status: AuthStatusRule? = null
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "node_id", nullable = false, insertable = false, updatable = false)
-    var node: Node? = null
+    var logId: Long = 0
 
     companion object {
         private const val serialVersionUID = 1L

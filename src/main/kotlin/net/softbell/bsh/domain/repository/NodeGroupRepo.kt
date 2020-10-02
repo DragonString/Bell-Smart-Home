@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository
  * @Description : 노드 그룹 리포지토리 인터페이스
  */
 @Repository
-open interface NodeGroupRepo : JpaRepository<NodeGroup?, Long?> {
+interface NodeGroupRepo : JpaRepository<NodeGroup, Long> {
     fun findByEnableStatus(enableStatus: EnableStatusRule?): List<NodeGroup>?
     fun findByNodeGroupItemsInAndEnableStatus(listNodeGroupItem: List<NodeGroupItem?>?, enableStatus: EnableStatusRule?): List<NodeGroup?>?
     fun findByGroupPermissionsIn(listGroupPermission: List<GroupPermission?>?): List<NodeGroup?>?

@@ -6,5 +6,5 @@ package net.softbell.bsh.iot.dto.bshp.v1
  */
 data class ItemValueV1Dto (
     var itemIndex: Byte,
-    var itemStatus: Double
+    var itemStatus: Double?
 )

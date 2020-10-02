@@ -5,9 +5,17 @@ import org.springframework.boot.gradle.tasks.run.BootRun
 plugins {
 	id("org.springframework.boot") version "2.3.4.RELEASE"
 	id("io.spring.dependency-management") version "1.0.10.RELEASE"
+	id("org.jetbrains.kotlin.plugin.allopen") version "1.3.72"
+
 	kotlin("jvm") version "1.3.72"
 	kotlin("plugin.spring") version "1.3.72"
 	kotlin("plugin.jpa") version "1.3.72"
+}
+
+allOpen {
+	annotation("javax.persistence.Entity")
+	annotation("javax.persistence.MappedSuperclass")
+	annotation("javax.persistence.Embeddable")
 }
 
 group = "net.softbell"
@@ -60,8 +68,9 @@ dependencies {
 	// Library
 	implementation("io.github.microutils:kotlin-logging:2.0.3") // Kotlin Logging
 	developmentOnly("org.springframework.boot:spring-boot-devtools:2.3.4.RELEASE") // Devtools
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor") // Profile Config Processor
 	testImplementation("org.springframework.boot:spring-boot-starter-test:2.3.4.RELEASE") {
-//		exclude(group = "org.junit.vintage", module = "junit-vintage-engine") // Test
+		exclude(group = "org.junit.vintage", module = "junit-vintage-engine") // Test
 	}
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.11.2") // Jackson
 	implementation("com.google.code.gson:gson-parent:2.8.6") // Gson

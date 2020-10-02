@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
  * @Description : 노드 트리거 액션 리포지토리 인터페이스
  */
 @Repository
-open interface NodeTriggerActionRepo : JpaRepository<NodeTriggerAction?, Long?> {
+interface NodeTriggerActionRepo : JpaRepository<NodeTriggerAction, Long> {
     fun findByNodeTriggerAndTriggerStatus(nodeTrigger: NodeTrigger?, triggerStatus: TriggerStatusRule?): List<NodeTriggerAction?>?
 
     @Transactional

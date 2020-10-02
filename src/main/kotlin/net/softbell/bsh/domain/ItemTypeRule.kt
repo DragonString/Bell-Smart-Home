@@ -10,9 +10,9 @@ package net.softbell.bsh.domain
  * 3000~3999: 리더 카테고리
  */
 enum class ItemTypeRule {
-    ERROR {
+    UNKNOWN { // 미확인
         override val value: String
-            get() = "ERROR"
+            get() = "UNKNOWN"
         override val code: Int
             get() = -1
     },
@@ -166,9 +166,11 @@ enum class ItemTypeRule {
     abstract val code: Int
 
     companion object {
-        fun ofLegacyCode(legacyCode: Int): ItemTypeRule? {
-            for (rule in values()) if (rule.code === legacyCode) return rule
-            return null
+        fun ofLegacyCode(legacyCode: Int): ItemTypeRule {
+            for (rule in values())
+                if (rule.code == legacyCode)
+                    return rule
+            return UNKNOWN
         }
     }
 }

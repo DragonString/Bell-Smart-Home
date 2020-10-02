@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
  * @Description : 회원 연동 토큰 리포지토리 인터페이스
  */
 @Repository
-open interface MemberInterlockTokenRepo : JpaRepository<MemberInterlockToken?, Long?> {
+interface MemberInterlockTokenRepo : JpaRepository<MemberInterlockToken, Long> {
     fun findByMember(member: Member?): List<MemberInterlockToken?>?
     fun findByToken(token: String?): MemberInterlockToken?
     fun findByEnableStatusAndToken(enableStatus: EnableStatusRule?, token: String?): MemberInterlockToken?

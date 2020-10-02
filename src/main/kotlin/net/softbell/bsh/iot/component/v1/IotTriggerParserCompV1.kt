@@ -1,6 +1,5 @@
 package net.softbell.bsh.iot.component.v1
 
-import jdk.nashorn.internal.objects.annotations.Getter
 import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.TriggerLastStatusRule
@@ -151,7 +150,7 @@ class IotTriggerParserCompV1 {
                     entity.triggerStatus !== TriggerStatusRule.RESTORE) listNodeAction.add(entity.nodeAction)
             TriggerLastStatusRule.RESTORE -> if (entity.triggerStatus !== TriggerStatusRule.ERROR &&
                     entity.triggerStatus !== TriggerStatusRule.OCCUR) listNodeAction.add(entity.nodeAction)
-            TriggerLastStatusRule.ERROR -> if (entity.triggerStatus === TriggerStatusRule.ALL ||
+            TriggerLastStatusRule.UNKNOWN -> if (entity.triggerStatus === TriggerStatusRule.ALL ||
                     entity.triggerStatus === TriggerStatusRule.ERROR) listNodeAction.add(entity.nodeAction)
             else -> {
             }

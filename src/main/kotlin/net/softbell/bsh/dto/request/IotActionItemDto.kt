@@ -5,7 +5,7 @@ package net.softbell.bsh.dto.request
  * @Description : 액션 아이템 DTO
  */
 data class IotActionItemDto (
-        var actionItemId: Long? = null,
-        var itemId: Long? = null,
-        var itemStatus: Double? = null
+        var actionItemId: Long,
+        var itemId: Long,
+        var itemStatus: Double
 )

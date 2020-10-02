@@ -14,7 +14,7 @@ import java.util.*
  * @Description : 노드 아이템 기록 리포지토리 인터페이스
  */
 @Repository
-open interface NodeItemHistoryRepo : JpaRepository<NodeItemHistory?, Long?> {
+interface NodeItemHistoryRepo : JpaRepository<NodeItemHistory, Long> {
     fun findByNodeItem(nodeItem: NodeItem?, page: Pageable?): List<NodeItemHistory?>?
     fun findFirstByNodeItemOrderByItemHistoryIdDesc(nodeItem: NodeItem?): NodeItemHistory?
     fun findByNodeItemOrderByItemHistoryIdDesc(nodeItem: NodeItem?, page: Pageable?): Page<NodeItemHistory?>?
