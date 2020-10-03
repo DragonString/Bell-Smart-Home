@@ -11,8 +11,8 @@ import java.security.SecureRandom
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 인증 컴포넌트 v1
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 인증 컴포넌트 v1
  */
 @Component
 class IotAuthCompV1 {
@@ -34,18 +34,11 @@ class IotAuthCompV1 {
 
     @Transactional
     fun generateToken(uid: String): String? {
-        // Field
-        val node: Node?
-        val token: String
-
         // Init
-        node = nodeRepo!!.findByUid(uid)
-
-        // Exception
-        if (node == null) return null
+        val node = nodeRepo.findByUid(uid) ?: return null
 
         // Generate
-        token = getRandomToken()
+        val token = getRandomToken()
         node.token = token
 
         // DB - Save
@@ -59,7 +52,7 @@ class IotAuthCompV1 {
     }
 
     fun isTokenAvailable(token: String?): Boolean {
-        return if (nodeRepo!!.findByToken(token) == null) false else true
+        return nodeRepo.findByToken(token) != null
     }
 
     /**
@@ -72,7 +65,7 @@ class IotAuthCompV1 {
         val enableStatus = node.enableStatus
 
         // Process
-        return if (enableStatus === EnableStatusRule.WAIT || enableStatus === EnableStatusRule.REJECT) false else true
+        return !(enableStatus == EnableStatusRule.WAIT || enableStatus == EnableStatusRule.REJECT)
     }
 
     companion object : KLogging() {

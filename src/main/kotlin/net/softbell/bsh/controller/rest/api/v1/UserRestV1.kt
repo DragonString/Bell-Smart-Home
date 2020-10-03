@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 유저 정보 관련 REST API 컨트롤러 V1
+ * @author : Bell(bell@softbell.net)
+ * @description : 유저 정보 관련 REST API 컨트롤러 V1
  */
 @Api(tags = ["2. User"])
 @RestController
@@ -27,7 +27,7 @@ class UserRestV1 {
     @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "access_token", required = true, dataType = "String", paramType = "header")
     @ApiOperation(value = "인증 토큰 재발급", notes = "인증 토큰 만료기간 연장")
     @GetMapping(value = ["/regenToken"])
-    fun regenToken(auth: Authentication): SingleResultDto<String>? {
+    fun regenToken(auth: Authentication): SingleResultDto<String> {
         return responseService.getSingleResult(jwtTokenProvider.createToken(auth.name, auth.authorities))
     }
 }

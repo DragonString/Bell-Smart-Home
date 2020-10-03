@@ -6,64 +6,40 @@ import net.softbell.bsh.domain.entity.GroupPermission
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.entity.NodeGroup
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 그룹 정보 카드 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 그룹 정보 카드 DTO
  */
-class NodeGroupInfoCardDto(entity: NodeGroup?) {
-    var gid: Long?
-    var enableStatus: EnableStatusRule?
-    var name: String?
-    var listNodes: MutableList<MemberGroupInfoCardNode>
-    var listPermissions: MutableList<MemberGroupInfoCardPermission>
+class NodeGroupInfoCardDto(entity: NodeGroup) {
+    val gid: Long = entity.nodeGroupId
+    val enableStatus: EnableStatusRule = entity.enableStatus
+    val name: String = entity.name
+    val listNodes: MutableList<MemberGroupInfoCardNode> = ArrayList()
+    val listPermissions: MutableList<MemberGroupInfoCardPermission> = ArrayList()
 
-    inner class MemberGroupInfoCardNode(entity: Node?) {
-        var nodeId: Long?
-        var uid: String?
-        var name: String?
-        var alias: String?
-        var version: String?
-
-        init {
-            // Convert
-            nodeId = entity!!.nodeId
-            uid = entity.uid
-            this.name = entity.nodeName
-            alias = entity.alias
-            version = entity.version
-        }
+    inner class MemberGroupInfoCardNode(entity: Node) {
+        val nodeId: Long = entity.nodeId
+        val uid: String = entity.uid
+        val name: String = entity.nodeName
+        val alias: String = entity.alias
+        val version: String = entity.version
     }
 
     inner class MemberGroupInfoCardPermission(entity: GroupPermission) {
-        var pid: Long?
-        var gid: Long?
-        var name: String?
-        var permission: GroupRole?
-        var assignDate: Date?
-
-        init {
-            pid = entity.groupPermissionId
-            this.gid = entity.memberGroup!!.memberGroupId
-            this.name = entity.memberGroup!!.name
-            permission = entity.groupPermission
-            assignDate = entity.assignDate
-        }
+        val pid: Long = entity.groupPermissionId
+        val gid: Long = entity.memberGroup.memberGroupId
+        val name: String = entity.memberGroup.name
+        val permission: GroupRole = entity.groupPermission
+        val assignDate: Date = entity.assignDate
     }
 
     init {
-        // Exception
-        entity.let {
-            // Init
-            listNodes = ArrayList()
-            listPermissions = ArrayList()
-
-            // Convert
-            gid = entity!!.nodeGroupId
-            enableStatus = entity.enableStatus
-            name = entity.name
-            for (child in entity.nodeGroupItems!!) listNodes.add(MemberGroupInfoCardNode(child.node))
-            for (child in entity.groupPermissions!!) listPermissions.add(MemberGroupInfoCardPermission(child))
-        }
+        // Convert
+        for (child in entity.nodeGroupItems)
+            listNodes.add(MemberGroupInfoCardNode(child.node))
+        for (child in entity.groupPermissions)
+            listPermissions.add(MemberGroupInfoCardPermission(child))
     }
 }

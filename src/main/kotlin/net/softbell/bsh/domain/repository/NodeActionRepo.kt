@@ -9,15 +9,15 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 액션 리포지토리 인터페이스
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 액션 리포지토리 인터페이스
  */
 @Repository
 interface NodeActionRepo : JpaRepository<NodeAction, Long> {
-    fun findByMember(member: Member?): List<NodeAction?>
+    fun findByMember(member: Member): List<NodeAction>
 
     @Transactional
     @Modifying
     @Query("DELETE FROM NodeAction na WHERE na.member = ?1")
-    fun deleteByMember(member: Member?)
+    fun deleteByMember(member: Member)
 }

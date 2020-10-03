@@ -1,8 +1,8 @@
 package net.softbell.bsh.domain
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 아이템 모드 자료형
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 아이템 모드 자료형
  * (디지털, 아날로그)
  */
 enum class ItemModeRule {

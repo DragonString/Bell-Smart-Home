@@ -3,22 +3,22 @@ package net.softbell.bsh.util
 import javax.servlet.http.HttpServletRequest
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 클라이언트 데이터 처리 라이브러리
+ * @author : Bell(bell@softbell.net)
+ * @description : 클라이언트 데이터 처리 라이브러리
  */
 object ClientData {
     fun getClientIP(request: HttpServletRequest): String {
         // Field
-        var ip = request.getHeader("X-Forwarded-For")
+        var ipv4 = request.getHeader("X-Forwarded-For")
 
         // Load
-        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("Proxy-Client-IP")
-        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("WL-Proxy-Client-IP")
-        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("HTTP_CLIENT_IP")
-        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.getHeader("HTTP_X_FORWARDED_FOR")
-        if (ip == null || ip.length == 0 || "unknown".equals(ip, ignoreCase = true)) ip = request.remoteAddr
+        if (ipv4 == null || ipv4.isEmpty() || "unknown".equals(ipv4, ignoreCase = true)) ipv4 = request.getHeader("Proxy-Client-IP")
+        if (ipv4 == null || ipv4.isEmpty() || "unknown".equals(ipv4, ignoreCase = true)) ipv4 = request.getHeader("WL-Proxy-Client-IP")
+        if (ipv4 == null || ipv4.isEmpty() || "unknown".equals(ipv4, ignoreCase = true)) ipv4 = request.getHeader("HTTP_CLIENT_IP")
+        if (ipv4 == null || ipv4.isEmpty() || "unknown".equals(ipv4, ignoreCase = true)) ipv4 = request.getHeader("HTTP_X_FORWARDED_FOR")
+        if (ipv4 == null || ipv4.isEmpty() || "unknown".equals(ipv4, ignoreCase = true)) ipv4 = request.remoteAddr
 
         // Return
-        return ip
+        return ipv4
     }
 }

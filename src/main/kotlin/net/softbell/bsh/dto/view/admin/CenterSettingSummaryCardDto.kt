@@ -3,41 +3,21 @@ package net.softbell.bsh.dto.view.admin
 import net.softbell.bsh.domain.entity.CenterSetting
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 센터 설정 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 센터 설정 카드정보 DTO
  */
-class CenterSettingSummaryCardDto(entity: CenterSetting?) {
-    var enabled: Byte
-    var iotAction: Byte?
-    var iotControl: Byte?
-    var iotMonitor: Byte?
-    var iotNode: Byte?
-    var iotReserv: Byte?
-    var iotTrigger: Byte?
-    var webAuthMode: Byte?
-    var webLoginFailBanTime: Int?
-    var webLoginFailCheckTime: Int?
-    var webLoginFailMaxCount: Byte?
-    var webMaintenance: Byte?
-    var webRegister: Byte?
-
-    init {
-        // Exception
-        entity.let {
-            // Convert
-            enabled = entity!!.isEnabled!!
-            iotAction = entity!!.iotAction
-            iotControl = entity.iotControl
-            iotMonitor = entity.iotMonitor
-            iotNode = entity.iotNode
-            iotReserv = entity.iotReserv
-            iotTrigger = entity.iotTrigger
-            webAuthMode = entity.webAuthMode
-            webLoginFailBanTime = entity.webLoginFailBanTime
-            webLoginFailCheckTime = entity.webLoginFailCheckTime
-            webLoginFailMaxCount = entity.webLoginFailMaxCount
-            webMaintenance = entity.webMaintenance
-            webRegister = entity.webRegister
-        }
-    }
+class CenterSettingSummaryCardDto(entity: CenterSetting) {
+    val enabled: Byte = entity.isEnabled
+    val iotAction: Byte = entity.iotAction
+    val iotControl: Byte = entity.iotControl
+    val iotMonitor: Byte = entity.iotMonitor
+    val iotNode: Byte = entity.iotNode
+    val iotReserv: Byte = entity.iotReserv
+    val iotTrigger: Byte = entity.iotTrigger
+    val webAuthMode: Byte = entity.webAuthMode
+    val webLoginFailBanTime: Int = entity.webLoginFailBanTime
+    val webLoginFailCheckTime: Int = entity.webLoginFailCheckTime
+    val webLoginFailMaxCount: Byte = entity.webLoginFailMaxCount
+    val webMaintenance: Byte = entity.webMaintenance
+    val webRegister: Byte = entity.webRegister
 }

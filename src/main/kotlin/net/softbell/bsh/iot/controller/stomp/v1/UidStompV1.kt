@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 /**
  * @author : Bell(bell@softbell.net)
- * @Description : STOMP UID Controller
+ * @description : STOMP UID Controller
  * STOMP publish: /api/stomp/pub
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */

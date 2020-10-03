@@ -1,7 +1,6 @@
 package net.softbell.bsh.iot.controller.rest.v1
 
 import mu.KLogging
-import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.response.ResultDto
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1
 import net.softbell.bsh.service.InterlockService
@@ -13,8 +12,8 @@ import java.net.DatagramSocket
 import java.net.InetAddress
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 외부 연동 REST API 컨트롤러 V1
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 외부 연동 REST API 컨트롤러 V1
  */
 @RestController
 @RequestMapping("/api/rest/v1/interlock")
@@ -25,16 +24,15 @@ class IotInterlockRestV1 {
     @Autowired private lateinit var interlockService: InterlockService
 
     @PostMapping("/{token}/action/{id}")
-    fun execNodeAction(@PathVariable("token") token: String?, @PathVariable("id") actionId: Long /*,
+    fun execNodeAction(@PathVariable("token") token: String, @PathVariable("id") actionId: Long /*,
 									@RequestParam("id")String id,+
-									@RequestParam("password")String password*/): ResultDto? {
-        // Field
-        val isSuccess: Boolean
-        val member: Member?
-
+									@RequestParam("password")String password*/): ResultDto {
         // Init
-        member = interlockService.findEnableTokenToMember(token)
-        isSuccess = iotActionService.execAction(actionId, member)
+        val member = interlockService.findEnableTokenToMember(token)
+        var isSuccess = false
+
+        if (member != null)
+            isSuccess = iotActionService.execAction(actionId, member)
 
         // Return
         return if (isSuccess) {
@@ -47,12 +45,9 @@ class IotInterlockRestV1 {
     }
 
     @PostMapping("/wol")
-    fun execWoL(@RequestParam("mac") macStr: String): ResultDto? {
-        // Field
-        val ipStr: String
-
+    fun execWoL(@RequestParam("mac") macStr: String): ResultDto {
         // Init
-        ipStr = "255.255.255.255"
+        val ipv4 = "255.255.255.255"
 
         // Process
         return try {
@@ -61,15 +56,17 @@ class IotInterlockRestV1 {
             val bytes = ByteArray(6 + 16 * macBytes.size)
             for (i in 0..5) bytes[i] = 0xff.toByte()
             var i = 6
+
             while (i < bytes.size) {
                 System.arraycopy(macBytes, 0, bytes, i, macBytes.size)
                 i += macBytes.size
             }
 
             // Process - Send Magic Packet
-            val address = InetAddress.getByName(ipStr)
+            val address = InetAddress.getByName(ipv4)
             val packet = DatagramPacket(bytes, bytes.size, address, PORT)
             val socket = DatagramSocket()
+
             socket.send(packet)
             socket.close()
             logger.info("WoL Magic Packet Send ($macStr)")

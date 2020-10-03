@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 스프링 애플리케이션 진입지점
+ * @author : Bell(bell@softbell.net)
+ * @description : 스프링 애플리케이션 진입지점
  * -- 개발 환경에서 H2 DB 사용방법
  * 1. Run Configurations에서 Profile을 dev로 설정 (안해도 정상 동작)
  * 2. 실행 - 미리 정의된 JPA Entity 정보에 의해 자동으로 테이블이 생성됩니다.

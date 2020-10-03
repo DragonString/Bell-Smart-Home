@@ -1,12 +1,12 @@
 package net.softbell.bsh.dto.request
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 트리거정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 트리거정보 DTO
  */
 data class IotTriggerDto (
-        var enableStatus: Boolean = false,
+        var enableStatus: Boolean,
         var description: String,
         var expression: String,
-        var mapAction: HashMap<Long, IotTriggerActionDto>? = null
+        var mapAction: HashMap<Long, IotTriggerActionDto>? // TODO Not Null 대체방법 강구
 )

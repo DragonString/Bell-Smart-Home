@@ -1,7 +1,6 @@
 package net.softbell.bsh.iot.service.v1
 
 import mu.KLogging
-import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.repository.NodeRepo
 import net.softbell.bsh.iot.component.v1.IotChannelCompV1
 import net.softbell.bsh.iot.dto.bshp.v1.BaseV1Dto
@@ -10,8 +9,8 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 구독 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 구독 서비스
  */
 @Service
 class IotSubscribeServiceV1 {
@@ -19,12 +18,9 @@ class IotSubscribeServiceV1 {
     @Autowired private lateinit var iotChannelCompV1: IotChannelCompV1
     @Autowired private lateinit var nodeRepo: NodeRepo
 
-    fun procTopicSubscribe(): BaseV1Dto? {
-        // Field
-        val data: BaseV1Dto
-
+    fun procTopicSubscribe(): BaseV1Dto {
         // Init
-        data = BaseV1Dto(
+        val data = BaseV1Dto(
                 sender = "SERVER",
                 target = "NODE",
                 cmd = "INFO",
@@ -40,12 +36,9 @@ class IotSubscribeServiceV1 {
         return data
     }
 
-    fun procUIDSubscribe(uid: String): BaseV1Dto? {
-        // Field
-        val data: BaseV1Dto
-
+    fun procUIDSubscribe(uid: String): BaseV1Dto {
         // Init
-        data = BaseV1Dto(
+        val data = BaseV1Dto(
                 sender = "SERVER",
                 target = uid,
                 cmd = "INFO",
@@ -61,15 +54,11 @@ class IotSubscribeServiceV1 {
         return data
     }
 
-    fun procTokenSubscribe(token: String): BaseV1Dto? {
-        // Field
-        val node: Node?
-        val listMsg: MutableList<BaseV1Dto>
-        val msgInfo: BaseV1Dto
-
+    fun procTokenSubscribe(token: String): BaseV1Dto {
         // Init
-        node = nodeRepo.findByToken(token)
-        listMsg = ArrayList()
+        val node = nodeRepo.findByToken(token)
+        val listMsg: MutableList<BaseV1Dto> = ArrayList()
+
         listMsg.add(BaseV1Dto(
                 sender = "SERVER",
                 target = token,
@@ -86,7 +75,8 @@ class IotSubscribeServiceV1 {
                 obj = "ITEMS",
                 value = null
         ))
-        msgInfo = BaseV1Dto(
+
+        val msgInfo = BaseV1Dto(
                 sender = "SERVER",
                 target = token,
                 cmd = "INFO",
@@ -96,10 +86,12 @@ class IotSubscribeServiceV1 {
         )
 
         // Exception
-        if (node == null) msgInfo.value = "REJECT"
+        if (node == null)
+            msgInfo.value = "REJECT"
 
         // Process
-        for (message in listMsg) iotChannelCompV1.sendDataToken(message)
+        for (message in listMsg)
+            iotChannelCompV1.sendDataToken(message)
 
         // Log
         logger.info("Node Token Channel Subscribe ($token)")

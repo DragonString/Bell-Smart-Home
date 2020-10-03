@@ -1,8 +1,8 @@
 package net.softbell.bsh.dto.request
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 그룹 회원 정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 그룹 회원 정보 DTO
  */
 data class MemberGroupDto (
         var enableStatus: Boolean,

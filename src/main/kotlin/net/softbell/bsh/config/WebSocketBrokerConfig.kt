@@ -7,8 +7,8 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 웹 소켓 설정
+ * @author : Bell(bell@softbell.net)
+ * @description : 웹 소켓 설정
  */
 @Configuration
 @EnableWebSocketMessageBroker

@@ -4,23 +4,12 @@ import net.softbell.bsh.domain.entity.Node
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 모니터뷰 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 모니터뷰 카드정보 DTO
  */
-class MonitorSummaryCardDto(entity: Node?) {
-    var alias: String?
-    var listItems: MutableList<MonitorCardItemDto>
+class MonitorSummaryCardDto(entity: Node) {
+    val alias: String = entity.alias
+    val listItems: MutableList<MonitorCardItemDto> = ArrayList()
     var lastReceive: Date? = null
     var lastReceiveSecond: Long? = null
-
-    init {
-        // Exception
-        entity.let {
-            // Init
-            listItems = java.util.ArrayList()
-
-            // Convert
-            alias = entity!!.alias
-        }
-    }
 }

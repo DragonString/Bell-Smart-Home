@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : Spring Boot Test 진입지점
+ * @author : Bell(bell@softbell.net)
+ * @description : Spring Boot Test 진입지점
  */
 @SpringBootTest
 class BellsmarthomeApplicationTests {

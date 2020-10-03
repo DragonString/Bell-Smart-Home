@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 /**
  * @author : Bell(bell@softbell.net)
- * @Description : STOMP Token Controller
+ * @description : STOMP Token Controller
  * STOMP publish: /api/stomp/pub
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */

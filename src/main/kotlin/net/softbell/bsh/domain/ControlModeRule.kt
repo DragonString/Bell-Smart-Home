@@ -1,8 +1,8 @@
 package net.softbell.bsh.domain
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 제어 모드 비트플래그 자료형
+ * @author : Bell(bell@softbell.net)
+ * @description : 제어 모드 비트플래그 자료형
  */
 enum class ControlModeRule {
     UNKNOWN { // 미확인

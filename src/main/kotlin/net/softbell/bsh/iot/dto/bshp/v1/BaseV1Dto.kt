@@ -1,8 +1,8 @@
 package net.softbell.bsh.iot.dto.bshp.v1
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : Bell Smart Home Protocol v1 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : Bell Smart Home Protocol v1 DTO
  */
 data class BaseV1Dto (
     var sender: String,

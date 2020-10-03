@@ -2,50 +2,30 @@ package net.softbell.bsh.dto.view.admin.group
 
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.entity.MemberGroup
-import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 그룹 정보 카드 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 그룹 정보 카드 DTO
  */
-class NodeGroupPermissionCardDto(entities: List<MemberGroup?>) {
-    var listMembers: MutableList<NodeGroupNode>
-    var listPermissions: MutableList<NodeGroupPermission>
+class NodeGroupPermissionCardDto(entities: List<MemberGroup>) {
+    val listMembers: MutableList<NodeGroupNode> = ArrayList()
+    val listPermissions: MutableList<NodeGroupPermission> = ArrayList()
 
     inner class NodeGroupNode(entity: MemberGroup) {
-        var gid: Long?
-        var name: String?
-
-        init {
-            // Convert
-            gid = entity.memberGroupId
-            name = entity.name
-        }
+        val gid: Long = entity.memberGroupId
+        val name: String = entity.name
     }
 
     inner class NodeGroupPermission(role: GroupRole) {
-        var pid: Int
-        var name: String
-
-        init {
-            pid = role.code
-            name = role.value
-        }
+        val pid: Int = role.code
+        val name: String = role.value
     }
 
     init {
-        // Exception
-        entities.let {
-            // Init
-            listMembers = ArrayList()
-            listPermissions = ArrayList()
-
-            // Convert
-            for (entity in entities)
-                if (entity != null)
-                    listMembers.add(NodeGroupNode(entity))
-            for (role in GroupRole.values())
-                listPermissions.add(NodeGroupPermission(role))
-        }
+        // Convert
+        for (entity in entities)
+            listMembers.add(NodeGroupNode(entity))
+        for (role in GroupRole.values())
+            listPermissions.add(NodeGroupPermission(role))
     }
 }

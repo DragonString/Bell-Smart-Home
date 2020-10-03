@@ -1,8 +1,8 @@
 package net.softbell.bsh.domain
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 아이템 타입 자료형
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 아이템 타입 자료형
  * (버튼, 전등, 액티브부저, 패시브부저, 스피커, 온도센서, 습도센서, 문열림센서, 소리감지센서, 적외선센서, 노크센서, 공기질센서, 가스센서, RFID리더)
  * 0~999: 유저 카테고리
  * 1000~1999: 제어 카테고리

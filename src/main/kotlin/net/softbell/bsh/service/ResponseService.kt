@@ -6,8 +6,8 @@ import net.softbell.bsh.dto.response.SingleResultDto
 import org.springframework.stereotype.Service
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 응답 메시지 처리 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : 응답 메시지 처리 서비스
  */
 @Service
 class ResponseService {
@@ -24,34 +24,44 @@ class ResponseService {
     }
 
     // 단일건 결과를 처리하는 메소드
-    fun <T> getSingleResult(data: T): SingleResultDto<T>? {
-        val result = SingleResultDto<T>()
-        result.data = data
+    fun <T> getSingleResult(data: T): SingleResultDto<T> {
+        // Process
+        val result = SingleResultDto(data)
         setSuccessResult(result)
+
+        // Return
         return result
     }
 
     // 다중건 결과를 처리하는 메소드
-    fun <T> getListResult(list: MutableList<T>?): ListResultDto<T>? {
-        val result = ListResultDto<T>()
-        result.list = list
+    fun <T> getListResult(list: MutableList<T>): ListResultDto<T> {
+        // Process
+        val result = ListResultDto(list)
         setSuccessResult(result)
+
+        // Return
         return result
     }
 
     // 성공 결과만 처리하는 메소드
-    fun getSuccessResult(): ResultDto? {
+    fun getSuccessResult(): ResultDto {
+        // Process
         val result = ResultDto()
         setSuccessResult(result)
+
+        // Return
         return result
     }
 
     // 실패 결과만 처리하는 메소드
-    fun getFailResult(code: Int, msg: String?): ResultDto? {
+    fun getFailResult(code: Int, msg: String?): ResultDto {
+        // Process
         val result = ResultDto()
         result.success = false
         result.code = code
         result.message = msg
+
+        // Return
         return result
     }
 

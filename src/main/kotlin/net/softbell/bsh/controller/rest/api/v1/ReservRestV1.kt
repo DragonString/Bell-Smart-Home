@@ -8,8 +8,8 @@ import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 트리거 관련 REST API 컨트롤러 V1
+ * @author : Bell(bell@softbell.net)
+ * @description : 트리거 관련 REST API 컨트롤러 V1
  */
 @RestController
 @RequestMapping("/api/rest/v1/reserv")
@@ -19,14 +19,14 @@ class ReservRestV1 {
     @Autowired private lateinit var iotReservService: IotReservServiceV1
 
     @PostMapping("/status/{id}")
-    fun setTriggerStatus(auth: Authentication, @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto? {
-        // Field
-        val isSuccess: Boolean
-
+    fun setTriggerStatus(auth: Authentication, @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto {
         // Init
-        isSuccess = iotReservService.setTriggerEnableStatus(auth, id, status)
+        val isSuccess = iotReservService.setTriggerEnableStatus(auth, id, status)
 
         // Return
-        return if (isSuccess) responseService.getSuccessResult() else responseService.getFailResult(-10, "해당하는 아이템이 없음")
+        return if (isSuccess)
+            responseService.getSuccessResult()
+        else
+            responseService.getFailResult(-10, "해당하는 아이템이 없음")
     }
 }

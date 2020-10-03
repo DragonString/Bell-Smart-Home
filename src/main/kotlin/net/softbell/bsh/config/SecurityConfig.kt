@@ -27,8 +27,8 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 보안 설정
+ * @author : Bell(bell@softbell.net)
+ * @description : 보안 설정
  */
 @Configuration
 @EnableWebSecurity
@@ -60,56 +60,56 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         // Common
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+            .and()
                 .authorizeRequests() // 페이지 권한 설정
-                .antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup",  // 계정 인증
-                        "/api/rest/exception/**",  // 권한 예외
-                        "/api/rest/*/auth/**",  // API 인증
-                        "/api/rest/*/status/**",  // 서버 Status
-                        "/api/rest/*/iot/auth/**",  // IoT API 인증
-                        "/api/rest/*/interlock/**" // 연동 Webhook
-                ).permitAll() // 누구나 접근 가능
-                .antMatchers("/denied").authenticated() // 접근제한 페이지 인증
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // 관리자 페이지 인증
-                .antMatchers("/ws/**").hasRole("NODE") // WebSocket 인증
-                .anyRequest().hasAnyRole("MEMBER", "ADMIN", "SUPERADMIN") // 기타 모든 페이지는 Member 권한 보유자만 가능
-                .and()
+                    .antMatchers("/login", "/logout", "/signup", "/**/signin", "/**/signup",  // 계정 인증
+                            "/api/rest/exception/**",  // 권한 예외
+                            "/api/rest/*/auth/**",  // API 인증
+                            "/api/rest/*/status/**",  // 서버 Status
+                            "/api/rest/*/iot/auth/**",  // IoT API 인증
+                            "/api/rest/*/interlock/**" // 연동 Webhook
+                    ).permitAll() // 누구나 접근 가능
+                    .antMatchers("/denied").authenticated() // 접근제한 페이지 인증
+                    .antMatchers("/admin/**").hasAnyRole("ADMIN", "SUPERADMIN") // 관리자 페이지 인증
+                    .antMatchers("/ws/**").hasRole("NODE") // WebSocket 인증
+                    .anyRequest().hasAnyRole("MEMBER", "ADMIN", "SUPERADMIN") // 기타 모든 페이지는 Member 권한 보유자만 가능
+            .and()
                 .csrf() // CSRF 설정
-                .csrfTokenRepository(CookieCsrfTokenRepository())
-                .ignoringAntMatchers("/api/**") // API는 CSRF 사용 안함 (헤더로 인증하기 때문)
-                .and()
+                    .csrfTokenRepository(CookieCsrfTokenRepository())
+                    .ignoringAntMatchers("/api/**") // API는 CSRF 사용 안함 (헤더로 인증하기 때문)
+            .and()
                 .formLogin() // 폼 로그인 설정
-                .loginPage("/login")
-                .usernameParameter("userId")
-                .passwordParameter("password")
-                .successHandler(successHandler())
-                .failureHandler(failHandler())
-                .permitAll()
-                .and()
+                    .loginPage("/login")
+                    .usernameParameter("userId")
+                    .passwordParameter("password")
+                    .successHandler(successHandler())
+                    .failureHandler(failHandler())
+                        .permitAll()
+            .and()
                 .logout() // 로그아웃 설정
-                .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .deleteCookies(CustomConfig.SECURITY_COOKIE_NAME, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
-                .and()
+                    .logoutRequestMatcher(AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/login")
+                    .invalidateHttpSession(true)
+                    .deleteCookies(CustomConfig.SECURITY_COOKIE_NAME, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
+            .and()
                 .exceptionHandling() // 예외 핸들링
-                .accessDeniedHandler(CustomAccessDeniedHandler("/api/rest/exception/denied", "/denied"))
-                .authenticationEntryPoint(CustomAuthenticationEntryPoint("/api/rest/exception/entrypoint", "/login"))
-                .and()
+                    .accessDeniedHandler(CustomAccessDeniedHandler("/api/rest/exception/denied", "/denied"))
+                    .authenticationEntryPoint(CustomAuthenticationEntryPoint("/api/rest/exception/entrypoint", "/login"))
+            .and()
                 .addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java) // JWT Token 필터
 
         // Dev Mode
         if (isLocalMode()) {
             http.authorizeRequests() // 페이지 권한 설정
                     .antMatchers("/h2-console/**")
-                    .permitAll()
-                    .and()
+                        .permitAll()
+                .and()
                     .csrf() // CSRF 설정
-                    .ignoringAntMatchers("/h2-console/**")
-                    .and()
-                    .headers() // 헤더 설정
-                    .frameOptions()
-                    .disable()
+                        .ignoringAntMatchers("/h2-console/**")
+                .and()
+                        .headers() // 헤더 설정
+                            .frameOptions()
+                                .disable()
         }
     }
 
@@ -131,7 +131,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     }*/
     @Autowired
     @Throws(Exception::class)
-    fun configureGlobal(auth: AuthenticationManagerBuilder?) {
+    fun configureGlobal(auth: AuthenticationManagerBuilder) {
     }
 
     @Bean

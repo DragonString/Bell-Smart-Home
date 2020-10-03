@@ -6,29 +6,15 @@ import net.softbell.bsh.domain.entity.Member
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 프로필뷰 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 프로필뷰 카드정보 DTO
  */
-class MemberProfileCardDto(entity: Member?) {
-    var name: String?
-    var nickname: String?
-    var userId: String?
-    var email: String?
-    var ban: BanRule?
-    var permission: MemberRole?
-    var registerDate: Date?
-
-    init {
-        // Exception
-        entity.let {
-            // Convert
-            name = entity!!.name
-            nickname = entity.nickname
-            userId = entity.userId
-            email = entity.email
-            ban = entity.ban
-            permission = entity.permission
-            registerDate = entity.registerDate
-        }
-    }
+class MemberProfileCardDto(entity: Member) {
+    val name: String = entity.name
+    val nickname: String = entity.nickname
+    val userId: String = entity.userId
+    val email: String = entity.email
+    val ban: BanRule = entity.ban
+    val permission: MemberRole = entity.permission
+    val registerDate: Date = entity.registerDate
 }

@@ -1,7 +1,6 @@
 package net.softbell.bsh.controller.view.admin
 
 import net.softbell.bsh.domain.entity.Node
-import net.softbell.bsh.domain.entity.NodeGroup
 import net.softbell.bsh.dto.request.NodeGroupDto
 import net.softbell.bsh.dto.request.NodeGroupPermissionDto
 import net.softbell.bsh.dto.view.admin.group.NodeGroupInfoCardDto
@@ -17,8 +16,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 관리자 노드 그룹 관리 뷰 컨트롤러
+ * @author : Bell(bell@softbell.net)
+ * @description : 관리자 노드 그룹 관리 뷰 컨트롤러
  */
 @Controller
 @RequestMapping("/admin/group/node")
@@ -34,7 +33,7 @@ class AdminGroupNodeView {
     @Autowired private lateinit var iotNodeService: IotNodeServiceV1
 
     @GetMapping
-    fun dispGroupNode(model: Model): String? {
+    fun dispGroupNode(model: Model): String {
         // Load
         model.addAttribute("listCardGroups", viewDtoConverterService.convNodeGroupSummaryCards(permissionService.getAllNodeGroup()))
 
@@ -43,31 +42,27 @@ class AdminGroupNodeView {
     }
 
     @GetMapping("/create")
-    fun dispGroupCreate(model: Model): String? {
-        // Field
-
+    fun dispGroupCreate(model: Model): String {
         // Init
-        model.addAttribute("listCardNodes", viewDtoConverterService.convGroupNodeCardItems(iotNodeService.getAllNodes()!!))
+        model.addAttribute("listCardNodes", viewDtoConverterService.convGroupNodeCardItems(iotNodeService.getAllNodes()))
 
         // Return
         return "$G_BASE_PATH/NodeGroupCreate"
     }
 
     @GetMapping("/modify/{gid}")
-    fun dispGroupModify(model: Model, @PathVariable("gid") gid: Long): String? {
-        // Field
-        val listNode: MutableList<Node?>
-        val nodeGroup: NodeGroup?
-
+    fun dispGroupModify(model: Model, @PathVariable("gid") gid: Long): String {
         // Init
-        listNode = iotNodeService.getAllNodes() as MutableList<Node?>
-        nodeGroup = permissionService.getNodeGroup(gid)
+        val listNode: MutableList<Node> = iotNodeService.getAllNodes() as MutableList<Node>
+        val nodeGroup = permissionService.getNodeGroup(gid)
 
         // Process
-        for (entity in nodeGroup!!.nodeGroupItems!!) listNode.remove(entity.node)
+        if (nodeGroup != null)
+            for (entity in nodeGroup.nodeGroupItems)
+                listNode.remove(entity.node)
 
         // View
-        model.addAttribute("cardGroup", NodeGroupInfoCardDto(permissionService.getNodeGroup(gid)))
+        model.addAttribute("cardGroup", permissionService.getNodeGroup(gid)?.let { NodeGroupInfoCardDto(it) })
         model.addAttribute("listCardNodes", viewDtoConverterService.convGroupNodeCardItems(listNode))
 
         // Return
@@ -75,12 +70,10 @@ class AdminGroupNodeView {
     }
 
     @GetMapping("/{gid}")
-    fun dispGroup(model: Model, @PathVariable("gid") gid: Long?): String? {
-        // Field
-
+    fun dispGroup(model: Model, @PathVariable("gid") gid: Long): String {
         // Init
         model.addAttribute("cardPermission", NodeGroupPermissionCardDto(permissionService.getAllMemberGroup()))
-        model.addAttribute("cardGroup", NodeGroupInfoCardDto(permissionService.getNodeGroup(gid!!)))
+        model.addAttribute("cardGroup", permissionService.getNodeGroup(gid)?.let { NodeGroupInfoCardDto(it) })
 
         // Return
         return "$G_BASE_PATH/NodeGroupInfo"
@@ -88,86 +81,86 @@ class AdminGroupNodeView {
 
 
     @PostMapping("/create")
-    fun procGroupCreate(auth: Authentication?, nodeGroupDto: NodeGroupDto?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupCreate(auth: Authentication, nodeGroupDto: NodeGroupDto): String {
         // Init
-        isSuccess = permissionService.createNodeGroup(nodeGroupDto!!)
+        val isSuccess = permissionService.createNodeGroup(nodeGroupDto)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/modify/{gid}")
-    fun procGroupModify(auth: Authentication?, @PathVariable("gid") gid: Long, nodeGroupDto: NodeGroupDto?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupModify(auth: Authentication, @PathVariable("gid") gid: Long, nodeGroupDto: NodeGroupDto): String {
         // Init
-        isSuccess = permissionService.modifyNodeGroup(gid, nodeGroupDto!!)
+        val isSuccess = permissionService.modifyNodeGroup(gid, nodeGroupDto)
 
         // Return
-        return if (isSuccess) "$G_BASE_REDIRECT_URL/$gid" else "$G_BASE_REDIRECT_URL/$gid?err"
+        return if (isSuccess)
+            "$G_BASE_REDIRECT_URL/$gid"
+        else
+            "$G_BASE_REDIRECT_URL/$gid?err"
     }
 
     @PostMapping("/enable")
-    fun procGroupEnable(auth: Authentication?, @RequestParam("gid") listGid: List<Long?>?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupEnable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
         // Init
-        isSuccess = permissionService.enableNodeGroup(listGid!!)
+        val isSuccess = permissionService.enableNodeGroup(listGid)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/disable")
-    fun procGroupDisable(auth: Authentication?, @RequestParam("gid") listGid: List<Long?>?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupDisable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
         // Init
-        isSuccess = permissionService.disableNodeGroup(listGid!!)
+        val isSuccess = permissionService.disableNodeGroup(listGid)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/delete")
-    fun procGroupDelete(auth: Authentication?, @RequestParam("gid") listGid: List<Long?>?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupDelete(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
         // Init
-        isSuccess = permissionService.deleteNodeGroup(listGid!!)
+        val isSuccess = permissionService.deleteNodeGroup(listGid)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/permission/add/{gid}")
-    fun addPermission(@PathVariable("gid") gid: Long, nodeGroupPermissionDto: NodeGroupPermissionDto?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun addPermission(@PathVariable("gid") gid: Long, nodeGroupPermissionDto: NodeGroupPermissionDto): String {
         // Init
-        isSuccess = permissionService.addNodePermission(gid, nodeGroupPermissionDto!!)
+        val isSuccess = permissionService.addNodePermission(gid, nodeGroupPermissionDto)
 
         // Return
-        return if (isSuccess) "$G_BASE_REDIRECT_URL/$gid" else "$G_BASE_REDIRECT_URL/$gid?err"
+        return if (isSuccess)
+            "$G_BASE_REDIRECT_URL/$gid"
+        else
+            "$G_BASE_REDIRECT_URL/$gid?err"
     }
 
     @PostMapping("/permission/delete/{gid}")
-    fun deletePermission(@PathVariable("gid") gid: Long, @RequestParam("pid") pid: Long?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun deletePermission(@PathVariable("gid") gid: Long, @RequestParam("pid") pid: Long): String {
         // Init
-        isSuccess = permissionService.deleteGroupPermission(pid)
+        val isSuccess = permissionService.deleteGroupPermission(pid)
 
         // Return
-        return if (isSuccess) "$G_BASE_REDIRECT_URL/$gid" else "$G_BASE_REDIRECT_URL/$gid?err"
+        return if (isSuccess)
+            "$G_BASE_REDIRECT_URL/$gid"
+        else
+            "$G_BASE_REDIRECT_URL/$gid?err"
     }
 }

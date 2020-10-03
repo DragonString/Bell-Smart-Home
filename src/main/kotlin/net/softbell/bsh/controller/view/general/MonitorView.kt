@@ -1,7 +1,6 @@
 package net.softbell.bsh.controller.view.general
 
 import net.softbell.bsh.domain.GroupRole
-import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.ViewDtoConverterService
@@ -14,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 모니터 뷰 컨트롤러
+ * @author : Bell(bell@softbell.net)
+ * @description : 모니터 뷰 컨트롤러
  */
 @Controller
 @RequestMapping("/monitor")
@@ -31,15 +30,13 @@ class MonitorView {
     @GetMapping
     fun dispIndex(model: Model, auth: Authentication,
                   @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
-                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String? {
+                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
         // Exception
-        if (centerService.getSetting().iotMonitor!!.toInt() != 1) return G_INDEX_REDIRECT_URL
-
-        // Field
-        val listNode: List<Node?>
+        if (centerService.setting.iotMonitor != 1.toByte())
+            return G_INDEX_REDIRECT_URL
 
         // Init
-        listNode = iotNodeService.getAllNodes(auth, GroupRole.MONITOR)
+        val listNode = iotNodeService.getAllNodes(auth, GroupRole.MONITOR)
 
         // Process
         model.addAttribute("listCardNodes", viewDtoConverterService.convMonitorSummaryCards(listNode))

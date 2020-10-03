@@ -3,39 +3,25 @@ package net.softbell.bsh.dto.view.admin.group
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.entity.NodeGroup
-import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 그룹뷰 요약 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 그룹뷰 요약 카드정보 DTO
  */
-class NodeGroupSummaryCardDto(entity: NodeGroup?) {
-    var gid: Long?
-    var name: String?
-    var enableStatus: EnableStatusRule?
-    var listNode: MutableList<NodeGroupItemDto>
+class NodeGroupSummaryCardDto(entity: NodeGroup) {
+    val gid: Long = entity.nodeGroupId
+    val name: String = entity.name
+    val enableStatus: EnableStatusRule = entity.enableStatus
+    val listNode: MutableList<NodeGroupItemDto> = ArrayList()
 
-    inner class NodeGroupItemDto(entity: Node?) {
-        var nodeId: Long?
-        var alias: String?
-
-        init {
-            nodeId = entity!!.nodeId
-            alias = entity.alias
-        }
+    inner class NodeGroupItemDto(entity: Node) {
+        val nodeId: Long = entity.nodeId
+        val alias: String = entity.alias
     }
 
     init {
-        // Exception
-        entity.let {
-            // Init
-            listNode = ArrayList()
-
-            // Convert
-            gid = entity!!.nodeGroupId
-            name = entity.name
-            enableStatus = entity.enableStatus
-            for (child in entity.nodeGroupItems!!) listNode.add(NodeGroupItemDto(child.node))
-        }
+        // Convert
+        for (child in entity.nodeGroupItems)
+            listNode.add(NodeGroupItemDto(child.node))
     }
 }

@@ -1,16 +1,10 @@
 package net.softbell.bsh.domain
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 그룹 권한 자료형
+ * @author : Bell(bell@softbell.net)
+ * @description : 그룹 권한 자료형
  */
 enum class GroupRole {
-    UNKNOWN { // 미확인
-        override val value: String
-            get() = "UNKNOWN"
-        override val code: Int
-            get() = -1
-    },
     MONITOR { // 모니터링 기능 이용 가능
         override val value: String
             get() = "MONITOR"
@@ -46,11 +40,11 @@ enum class GroupRole {
     abstract val code: Int
 
     companion object {
-        fun ofLegacyCode(legacyCode: Int): GroupRole {
+        fun ofLegacyCode(legacyCode: Int): GroupRole? {
             for (rule in values())
                 if (rule.code == legacyCode)
                     return rule
-            return UNKNOWN
+            return null
         }
     }
 }

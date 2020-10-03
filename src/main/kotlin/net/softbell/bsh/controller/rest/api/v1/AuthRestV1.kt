@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 인증관련 REST API 컨트롤러 V1
+ * @author : Bell(bell@softbell.net)
+ * @description : 인증관련 REST API 컨트롤러 V1
  */
 @Api(tags = ["1. Auth"])
 @RestController
@@ -28,13 +28,14 @@ class AuthRestV1 {
 
     @PostMapping("/login")
     fun procLogin(@ApiParam(value = "회원ID : 이메일", required = true) @RequestParam id: String,
-                  @ApiParam(value = "비밀번호", required = true) @RequestParam password: String): ResultDto? {
+                  @ApiParam(value = "비밀번호", required = true) @RequestParam password: String): ResultDto {
         // Init
         val member: Member? = userService.loginMember(id, password)
 
-        // Exception
-        return if (member == null) responseService.getFailResult(-100, "로그인 실패") else responseService.getSingleResult(jwtTokenProvider.createToken(member.userId, member.authorities))
-
         // Return
+        return if (member == null)
+            responseService.getFailResult(-100, "로그인 실패")
+        else
+            responseService.getSingleResult(jwtTokenProvider.createToken(member.userId, member.authorities))
     }
 }

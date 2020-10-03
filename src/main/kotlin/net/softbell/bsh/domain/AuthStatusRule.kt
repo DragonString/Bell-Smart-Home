@@ -1,8 +1,8 @@
 package net.softbell.bsh.domain
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 인증 상태 자료형
+ * @author : Bell(bell@softbell.net)
+ * @description : 인증 상태 자료형
  */
 enum class AuthStatusRule {
     UNKNOWN { // 미확인

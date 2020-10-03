@@ -2,7 +2,6 @@ package net.softbell.bsh.service
 
 import mu.KLogging
 import net.softbell.bsh.domain.ItemTypeRule
-import net.softbell.bsh.domain.entity.NodeItem
 import net.softbell.bsh.domain.repository.NodeItemHistoryRepo
 import net.softbell.bsh.domain.repository.NodeItemRepo
 import net.softbell.bsh.dto.view.DashboardAvgCardDto
@@ -11,8 +10,8 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 응답 메시지 처리 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : 응답 메시지 처리 서비스
  */
 @Service
 class DashboardService {
@@ -21,38 +20,36 @@ class DashboardService {
     @Autowired private lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
 
 
-    fun getHumidityWarn(): List<DashboardAvgCardDto>? {
-        // Field
-        val listHumidityCardDto: MutableList<DashboardAvgCardDto>
-
+    fun getHumidityWarn(): List<DashboardAvgCardDto> {
         // Init
-        listHumidityCardDto = ArrayList()
-        val listNodeItem: List<NodeItem?> = nodeItemRepo.findByItemType(ItemTypeRule.SENSOR_HUMIDITY)
+        val listHumidityCardDto: MutableList<DashboardAvgCardDto> = ArrayList()
+        val listNodeItem = nodeItemRepo.findByItemType(ItemTypeRule.SENSOR_HUMIDITY)
 
         // Exception
-        if (listNodeItem.isEmpty()) return null
+        if (listNodeItem.isEmpty())
+            return emptyList()
 
         // Process
         for (nodeItem in listNodeItem) {
             // Field
-            var avgStatus: Double?
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.MINUTE, -5) // 5분 평균값 기준
 
             // Init
             val beforeTime = System.currentTimeMillis()
-            avgStatus = nodeItemHistoryRepo.avgByNodeItem(nodeItem, calendar.time)
+            val avgStatus = nodeItemHistoryRepo.avgByNodeItem(nodeItem, calendar.time) ?: continue
             val afterTime = System.currentTimeMillis() // 코드 실행 후에 시간 받아오기
             val secDiffTime = afterTime - beforeTime //두 시간에 차 계산
-            val alias = nodeItem?.node?.alias
+            val alias = nodeItem.node.alias
 
-            logger.info("$alias 평균 습도 로드 끝 (${secDiffTime}ms)")
+            logger.info("$alias 평균 습도($avgStatus %) 로드 끝 (${secDiffTime}ms)") // TODO Tuning log
 
             // Process
-            if (avgStatus != null && !(avgStatus > 40 && avgStatus <= 60)) {
-                var dashboardAvgCardDto = DashboardAvgCardDto()
-                dashboardAvgCardDto.alias = alias
-                dashboardAvgCardDto.avgStatus = avgStatus
+            if (avgStatus !in 40.0..60.0) { // 평균이 40 이상 60 이하가 아니면 경고 카드 생성
+                val dashboardAvgCardDto = DashboardAvgCardDto(
+                        alias = alias,
+                        avgStatus = avgStatus
+                )
                 listHumidityCardDto.add(dashboardAvgCardDto)
             }
         }
@@ -61,39 +58,36 @@ class DashboardService {
         return listHumidityCardDto
     }
 
-    fun getTemperatureWarn(): List<DashboardAvgCardDto>? {
-        // Field
-        val listHumidityCardDto: MutableList<DashboardAvgCardDto>
-        val listNodeItem: List<NodeItem?>?
-
+    fun getTemperatureWarn(): List<DashboardAvgCardDto> {
         // Init
-        listHumidityCardDto = ArrayList()
-        listNodeItem = nodeItemRepo.findByItemType(ItemTypeRule.SENSOR_TEMPERATURE)
+        val listHumidityCardDto: MutableList<DashboardAvgCardDto> = ArrayList()
+        val listNodeItem = nodeItemRepo.findByItemType(ItemTypeRule.SENSOR_TEMPERATURE)
 
         // Exception
-        if (listNodeItem.isEmpty()) return null
+        if (listNodeItem.isEmpty())
+            return emptyList()
 
         // Process
         for (nodeItem in listNodeItem) {
             // Field
-            var avgStatus: Double?
             val calendar = Calendar.getInstance()
             calendar.add(Calendar.MINUTE, -5) // 5분 평균값 기준
 
             // Init
             val beforeTime = System.currentTimeMillis()
-            avgStatus = nodeItemHistoryRepo.avgByNodeItem(nodeItem, calendar.time)
+            var avgStatus = nodeItemHistoryRepo.avgByNodeItem(nodeItem, calendar.time) ?: continue
             val afterTime = System.currentTimeMillis() // 코드 실행 후에 시간 받아오기
             val secDiffTime = afterTime - beforeTime //두 시간에 차 계산
-            val alias = nodeItem?.node?.alias
+            val alias = nodeItem.node.alias
 
-            logger.info("$alias 평균 온도 로드 끝 (${secDiffTime}ms)")
+            logger.info("$alias 평균 온도 ($avgStatus C) 로드 끝 (${secDiffTime}ms)") // TODO Tuning log
 
             // Process
-            if (avgStatus != null && !(avgStatus >= 18 && avgStatus <= 22)) {
-                var dashboardAvgCardDto = DashboardAvgCardDto()
-                dashboardAvgCardDto.alias = alias
-                dashboardAvgCardDto.avgStatus = avgStatus
+            if (avgStatus !in 18.0..22.0) { // 평균이 18 이상 22 이하가 아닐 경우 경고 카드 생성
+                var dashboardAvgCardDto = DashboardAvgCardDto(
+                        alias = alias,
+                        avgStatus = avgStatus
+                )
                 listHumidityCardDto.add(dashboardAvgCardDto)
             }
         }

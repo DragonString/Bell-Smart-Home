@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 계정 비 인증 뷰 컨트롤러
+ * @author : Bell(bell@softbell.net)
+ * @description : 계정 비 인증 뷰 컨트롤러
  */
 @Controller
 class DmzView {
@@ -26,7 +26,7 @@ class DmzView {
 
     // 회원가입 페이지
     @GetMapping("/signup")
-    fun dispSignup(model: Model, principal: Principal?): String? {
+    fun dispSignup(model: Model, principal: Principal?): String {
         // Init
         //FilterModelPrincipal(model, principal);
 
@@ -35,7 +35,7 @@ class DmzView {
             return "redirect:/"
 
         // Process
-        model.addAttribute("register", centerService.getSetting().webRegister)
+        model.addAttribute("register", centerService.setting.webRegister)
 
         // Return
         return "$G_BASE_PATH/Signup"
@@ -43,23 +43,24 @@ class DmzView {
 
     // 회원가입 처리
     @PostMapping("/signup")
-    fun execSignup(memberDTO: MemberDto): String? {
-        // Field
-        val intResult: Long
-
+    fun execSignup(memberDTO: MemberDto): String {
         // Exception
-        if (centerService.getSetting().webRegister!!.toInt() == 0);
+        if (centerService.setting.webRegister == 0.toByte())
+            ; // TODO 회원가입 금지 설정시 리다이렉션
 
         // Init
-        intResult = memberService.joinUser(memberDTO)
+        val intResult = memberService.joinUser(memberDTO)
 
         // Check
-        return if (intResult == -1L) "redirect:/signup?error" else "redirect:/login"
+        return if (intResult == -1L)
+            "redirect:/signup?error"
+        else
+            "redirect:/login"
     }
 
     // 로그인 페이지
     @GetMapping("/login")
-    fun dispLogin(model: Model, principal: Principal?, request: HttpServletRequest?, response: HttpServletResponse?): String? {
+    fun dispLogin(model: Model, principal: Principal?, request: HttpServletRequest, response: HttpServletResponse): String {
         // Init
         //FilterModelPrincipal(model, principal);
 
@@ -68,7 +69,7 @@ class DmzView {
             return "redirect:/"
 
         // Process
-        model.addAttribute("maintenance", centerService.getSetting().webMaintenance)
+        model.addAttribute("maintenance", centerService.setting.webMaintenance)
 
         // Return
         return "$G_BASE_PATH/Login"

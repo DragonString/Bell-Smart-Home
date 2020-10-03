@@ -6,8 +6,8 @@ import java.util.*
 import javax.persistence.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 로그인 로그 엔티티
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 로그인 로그 엔티티
  */
 @Entity
 @Table(name = "member_login_log", indexes = [Index(name = "IDX_MEMBER_LOGIN_LOG_REQUEST_DATE", columnList = "request_date")])

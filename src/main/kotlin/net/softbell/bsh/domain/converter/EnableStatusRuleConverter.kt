@@ -5,8 +5,8 @@ import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 활성화 상태 타입 자료형 DB 컨버터
+ * @author : Bell(bell@softbell.net)
+ * @description : 활성화 상태 타입 자료형 DB 컨버터
  */
 @Converter(autoApply = true)
 class EnableStatusRuleConverter : AttributeConverter<TriggerLastStatusRule, Int> {

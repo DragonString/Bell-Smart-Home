@@ -5,8 +5,8 @@ import java.util.*
 import javax.persistence.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 그룹 아이템 엔티티
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 그룹 아이템 엔티티
  */
 @Entity
 @Table(name = "node_group_item", uniqueConstraints = [UniqueConstraint(columnNames = ["node_group_id", "node_id"])])

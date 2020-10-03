@@ -13,8 +13,8 @@ import java.util.*
 import javax.transaction.Transactional
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 연동 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : 연동 서비스
  */
 @Service
 class InterlockService {
@@ -23,39 +23,28 @@ class InterlockService {
     @Autowired private lateinit var authComp: IotAuthCompV1
     @Autowired private lateinit var memberInterlockTokenRepo: MemberInterlockTokenRepo
 
-    fun getAllTokens(auth: Authentication): List<MemberInterlockToken?>? {
-        // Field
-        val member: Member?
-
+    fun getAllTokens(auth: Authentication): List<MemberInterlockToken> {
         // Init
-        member = memberService.getMember(auth.name)
+        val member = memberService.getMember(auth.name) ?: return emptyList()
 
         // Return
         return memberInterlockTokenRepo.findByMember(member)
     }
 
-    fun findEnableTokenToMember(token: String?): Member? {
-        // Field
-        val memberInterlockToken: MemberInterlockToken?
-
+    fun findEnableTokenToMember(token: String): Member? {
         // Init
-        memberInterlockToken = memberInterlockTokenRepo.findByEnableStatusAndToken(EnableStatusRule.ENABLE, token)
-
-        // Exception
-        return memberInterlockToken?.member
+        val memberInterlockToken = memberInterlockTokenRepo.findByEnableStatusAndToken(EnableStatusRule.ENABLE, token)
 
         // Return
+        return memberInterlockToken?.member
     }
 
-    fun findTokenToMember(token: String?): Member? {
-        // Field
-        val memberInterlockToken: MemberInterlockToken?
-
+    fun findTokenToMember(token: String): Member? {
         // Init
-        memberInterlockToken = memberInterlockTokenRepo.findByToken(token)
+        val memberInterlockToken = memberInterlockTokenRepo.findByToken(token)
 
         // Return
-        return memberInterlockToken!!.member
+        return memberInterlockToken?.member
     }
 
     @Transactional
@@ -64,7 +53,7 @@ class InterlockService {
         val member: Member = memberService.getMember(auth.name) ?: return false
 
         // Process
-        var memberInterlockToken: MemberInterlockToken = MemberInterlockToken(
+        val memberInterlockToken = MemberInterlockToken(
                 name = interlockTokenDto.name,
                 member = member,
                 registerDate = Date(),
@@ -81,16 +70,13 @@ class InterlockService {
 
     @Transactional
     fun modifyToken(auth: Authentication, tokenId: Long, enableStatus: EnableStatusRule): Boolean {
-        // Field
-        val member: Member?
-        val optMemberInterlockToken: Optional<MemberInterlockToken?>
-
         // Init
-        member = memberService.getMember(auth.name)
-        optMemberInterlockToken = memberInterlockTokenRepo.findById(tokenId)
+        memberService.getMember(auth.name) ?: return false
+        val optMemberInterlockToken = memberInterlockTokenRepo.findById(tokenId)
 
         // Exception
-        if (!optMemberInterlockToken.isPresent || member == null) return false
+        if (!optMemberInterlockToken.isPresent)
+            return false
 
         // DB - Update
         optMemberInterlockToken.get().enableStatus = enableStatus
@@ -101,16 +87,13 @@ class InterlockService {
 
     @Transactional
     fun deleteToken(auth: Authentication, tokenId: Long): Boolean {
-        // Field
-        val member: Member?
-        val optMemberInterlockToken: Optional<MemberInterlockToken?>
-
         // Init
-        member = memberService.getMember(auth.name)
-        optMemberInterlockToken = memberInterlockTokenRepo.findById(tokenId)
+        val member = memberService.getMember(auth.name) ?: return false
+        val optMemberInterlockToken = memberInterlockTokenRepo.findById(tokenId)
 
         // Exception
-        if (!optMemberInterlockToken.isPresent || member == null) return false
+        if (!optMemberInterlockToken.isPresent)
+            return false
 
         // DB - Update
         memberInterlockTokenRepo.delete(optMemberInterlockToken.get())

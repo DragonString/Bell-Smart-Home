@@ -6,8 +6,8 @@ import java.util.*
 import javax.persistence.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 그룹 권한 엔티티
+ * @author : Bell(bell@softbell.net)
+ * @description : 그룹 권한 엔티티
  */
 @Entity
 @Table(name = "group_permission", uniqueConstraints = [UniqueConstraint(columnNames = ["node_group_id", "member_group_id", "group_permission"])])

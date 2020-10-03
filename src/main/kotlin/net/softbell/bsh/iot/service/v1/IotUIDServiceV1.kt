@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT UID 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT UID 서비스
  */
 @Service
 class IotUIDServiceV1 {
@@ -26,15 +26,12 @@ class IotUIDServiceV1 {
 
     @Transactional
     fun setNewNodeInfo(uid: String, nodeInfo: NodeInfoV1Dto): Boolean {
-        // Field
-        val message: BaseV1Dto
-        var node: Node?
-
         // Init
-        node = nodeRepo.findByUid(uid)
+        var node = nodeRepo.findByUid(uid)
 
         // Exception
-        if (node != null) return false
+        if (node != null)
+            return false
 
         // Process
         node = Node(
@@ -51,7 +48,7 @@ class IotUIDServiceV1 {
         nodeRepo.save(node)
 
         // Message
-        message = BaseV1Dto(
+        val message = BaseV1Dto(
                 sender = "SERVER",
                 target = uid,
                 cmd = "INFO",
@@ -69,12 +66,9 @@ class IotUIDServiceV1 {
     }
 
     fun generateToken(uid: String): Boolean {
-        // Field
-        val message: BaseV1Dto
-        val token: String?
-
         // Init
-        val node: Node? = nodeRepo.findByUid(uid)
+        val message: BaseV1Dto
+        val node = nodeRepo.findByUid(uid)
 
         // Process
         if (node == null)
@@ -87,7 +81,7 @@ class IotUIDServiceV1 {
                     value = null
             )
         else {
-            token = iotAuthCompV1.generateToken(uid)
+            val token = iotAuthCompV1.generateToken(uid)
             message = BaseV1Dto(
                     sender = "SERVER",
                     target = uid,

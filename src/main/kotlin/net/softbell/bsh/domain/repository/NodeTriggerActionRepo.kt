@@ -12,15 +12,15 @@ import org.springframework.stereotype.Repository
 import org.springframework.transaction.annotation.Transactional
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 트리거 액션 리포지토리 인터페이스
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 트리거 액션 리포지토리 인터페이스
  */
 @Repository
 interface NodeTriggerActionRepo : JpaRepository<NodeTriggerAction, Long> {
-    fun findByNodeTriggerAndTriggerStatus(nodeTrigger: NodeTrigger?, triggerStatus: TriggerStatusRule?): List<NodeTriggerAction?>?
+    fun findByNodeTriggerAndTriggerStatus(nodeTrigger: NodeTrigger, triggerStatus: TriggerStatusRule): List<NodeTriggerAction>
 
     @Transactional
     @Modifying
     @Query("DELETE FROM NodeTriggerAction nta WHERE nta.nodeAction IN :actions")
-    fun deleteAllByNodeAction(@Param("actions") nodeAction: List<NodeAction?>?)
+    fun deleteAllByNodeAction(@Param("actions") nodeAction: List<NodeAction>)
 }

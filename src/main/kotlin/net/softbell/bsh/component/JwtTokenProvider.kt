@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 인증관련 JWT 토큰 생성 및 검증 컴포넌트
+ * @author : Bell(bell@softbell.net)
+ * @description : 인증관련 JWT 토큰 생성 및 검증 컴포넌트
  */
 @Component
 class JwtTokenProvider {
@@ -34,27 +34,22 @@ class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey!!.toByteArray())
     }
 
-    fun setCookieAuth(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication) {
-        // Field
-        var maxAge: Int
-        var multiple: Int
-        val strAutoLogin: String?
-
+    fun setCookieAuth(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
         // Init
-        maxAge = 60 * 60
-        multiple = 1
-        strAutoLogin = getValue(request, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
+        var maxAge = 60 * 60
+        var multiple = 1
+        val strAutoLogin = getValue(request, CustomConfig.AUTO_LOGIN_COOKIE_NAME)
 
         // Check
         if (strAutoLogin != null && strAutoLogin.equals("1", ignoreCase = true)) multiple = 24 * 7
         maxAge *= multiple
 
         // Create
-        create(response!!, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication, multiple), false, false, maxAge)
+        create(response, CustomConfig.SECURITY_COOKIE_NAME, createToken(authentication, multiple), httpOnly = false, secure = false, maxAge = maxAge)
     }
 
     // Jwt 토큰 생성
-    fun createToken(userPk: String?, roles: Collection<GrantedAuthority?>): String {
+    fun createToken(userPk: String, roles: Collection<GrantedAuthority>): String {
         val claims = Jwts.claims().setSubject(userPk)
         claims["roles"] = roles
         val now = Date()
@@ -88,45 +83,39 @@ class JwtTokenProvider {
     }
 
     // Jwt 토큰으로 인증 정보를 조회
-    fun getAuthentication(token: String?): Authentication {
+    fun getAuthentication(token: String): Authentication {
         val userDetails = memberService.tokenLoadUserByUsername(getUserPk(token))
 
-        return UsernamePasswordAuthenticationToken(userDetails, "", userDetails?.authorities)
+        return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
     }
 
     fun checkMaintenanceLogin(auth: Authentication): Boolean {
-        if (centerService.getSetting().webMaintenance == 1.toByte())
-            for (role in auth.authorities) if (role.authority != "ROLE_SUPERADMIN" &&
-                role.authority != "ROLE_ADMIN" &&
-                role.authority != "ROLE_NODE") return false
+        if (centerService.setting.webMaintenance == 1.toByte())
+            for (role in auth.authorities)
+                if (role.authority != "ROLE_SUPERADMIN" && role.authority != "ROLE_ADMIN" && role.authority != "ROLE_NODE")
+                    return false
         return true
     }
 
     // Jwt 토큰에서 회원 구별 정보 추출
-    fun getUserPk(token: String?): String {
+    fun getUserPk(token: String): String {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).body.subject
     }
 
     fun isApiMode(request: HttpServletRequest): Boolean {
-        return if (request.requestURI.startsWith("/api/") || request.requestURI.startsWith("/ws/")) true else false
+        return request.requestURI.startsWith("/api/") || request.requestURI.startsWith("/ws/")
     }
 
     // Request의 Header에서 token 파싱 : "X-AUTH-TOKEN: jwt토큰"
     fun resolveToken(request: HttpServletRequest): String? {
-        // Field
-        val token: String?
-
-        // Load
-        token = if (isApiMode(request)) // API 및 웹소켓 경로면 헤더에서 인증정보 로드 (CSRF 미사용)
+        // Return
+        return if (isApiMode(request)) // API 및 웹소켓 경로면 헤더에서 인증정보 로드 (CSRF 미사용)
             request.getHeader(CustomConfig.SECURITY_HEADER_NAME) else  // 일반 유저 경로면 쿠키에서 인증정보 로드 (CSRF 사용)
             getValue(request, CustomConfig.SECURITY_COOKIE_NAME)
-
-        // Return
-        return token
     }
 
     // Jwt 토큰의 유효성 + 만료일자 확인
-    fun validateToken(jwtToken: String?): Boolean {
+    fun validateToken(jwtToken: String): Boolean {
         return try {
             val claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken)
             !claims.body.expiration.before(Date())

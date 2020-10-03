@@ -11,13 +11,11 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 로그인 실패 핸들러
+ * @author : Bell(bell@softbell.net)
+ * @description : 로그인 실패 핸들러
  */
-class LoginFailureHandler(defaultUrl: String?) : AuthenticationFailureHandler {
+class LoginFailureHandler(private val defaultUrl: String = "") : AuthenticationFailureHandler {
     @Autowired private lateinit var memberService: MemberService
-
-    private var defaultUrl: String? = null
 
     @Throws(IOException::class, ServletException::class)
     override fun onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException?) {
@@ -25,21 +23,9 @@ class LoginFailureHandler(defaultUrl: String?) : AuthenticationFailureHandler {
         val strUserId = request.getParameter("userId")
 
         // Process
-        memberService!!.procLogin(strUserId, getClientIP(request), false)
+        memberService.procLogin(strUserId, getClientIP(request), false)
 
         // Redirect
-        response.sendRedirect(getDefaultUrl())
-    }
-
-    fun getDefaultUrl(): String? {
-        return defaultUrl
-    }
-
-    fun setDefaultUrl(defaultUrl: String?) {
-        this.defaultUrl = defaultUrl
-    }
-
-    init {
-        setDefaultUrl(defaultUrl)
+        response.sendRedirect(defaultUrl)
     }
 }

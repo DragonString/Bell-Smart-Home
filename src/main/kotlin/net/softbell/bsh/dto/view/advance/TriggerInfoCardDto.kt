@@ -4,23 +4,12 @@ import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.NodeTrigger
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 트리거 수정뷰 정보 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 트리거 수정뷰 정보 카드정보 DTO
  */
-class TriggerInfoCardDto(entity: NodeTrigger?) {
-    var triggerId: Long?
-    var enableStatus = false
-    var description: String?
-    var expression: String?
-
-    init {
-        // Exception
-        entity.let {
-            // Convert
-            triggerId = entity!!.triggerId
-            description = entity.description
-            expression = entity.expression
-            if (entity.enableStatus === EnableStatusRule.ENABLE) enableStatus = true
-        }
-    }
+class TriggerInfoCardDto(entity: NodeTrigger) {
+    val triggerId: Long = entity.triggerId
+    val enableStatus = entity.enableStatus == EnableStatusRule.ENABLE
+    val description: String = entity.description
+    val expression: String = entity.expression
 }

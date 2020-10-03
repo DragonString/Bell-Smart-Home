@@ -1,9 +1,6 @@
 package net.softbell.bsh.controller.view.advance
 
 import net.softbell.bsh.domain.GroupRole
-import net.softbell.bsh.domain.entity.Node
-import net.softbell.bsh.domain.entity.NodeItem
-import net.softbell.bsh.domain.entity.NodeItemHistory
 import net.softbell.bsh.dto.view.advance.NodeInfoCardDto
 import net.softbell.bsh.dto.view.advance.NodeItemHistoryCardDto
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
@@ -19,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 뷰 컨트롤러
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 뷰 컨트롤러
  */
 @Controller
 @RequestMapping("/node")
@@ -36,57 +33,52 @@ class NodeView {
     @GetMapping
     fun dispIndex(model: Model, auth: Authentication,
                   @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
-                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String? {
+                  @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
         // Exception
-        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
-
-        // Field
-        val listNode: List<Node?>?
+        if (centerService.setting.iotNode != 1.toByte())
+            return G_INDEX_REDIRECT_URL
 
         // Init
-        listNode = iotNodeService.getAllNodes(auth!!, GroupRole.MANUAL_CONTROL)
+        val listNode = iotNodeService.getAllNodes(auth, GroupRole.MANUAL_CONTROL)
 
         // Process
-        model.addAttribute("listCardNodes", viewDtoConverterService.convNodeSummaryCards(listNode!!))
+        model.addAttribute("listCardNodes", viewDtoConverterService.convNodeSummaryCards(listNode))
 
         // Return
         return "$G_BASE_PATH/NodeList"
     }
 
     @GetMapping("/{id}")
-    fun dispNode(model: Model, @PathVariable("id") intNodeId: Int): String? {
+    fun dispNode(model: Model, @PathVariable("id") intNodeId: Long): String {
         // Exception
-        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
-
-        // Field
-        val node: Node?
+        if (centerService.setting.iotNode != 1.toByte())
+            return G_INDEX_REDIRECT_URL
 
         // Init
-        node = iotNodeService.getNode(intNodeId.toLong())
+        val node = iotNodeService.getNode(intNodeId)
 
         // Process
-        model.addAttribute("cardNodeInfo", NodeInfoCardDto(node))
-        model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeItemCards(node!!.nodeItems!!))
+        model.addAttribute("cardNodeInfo", node?.let { NodeInfoCardDto(it) })
+        if (node != null) {
+            model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeItemCards(node.nodeItems))
+        }
 
         // Return
         return "$G_BASE_PATH/NodeInfo"
     }
 
     @GetMapping("/item/{id}")
-    fun dispNodeItemHistory(model: Model, @PathVariable("id") intNodeItemId: Int): String? {
+    fun dispNodeItemHistory(model: Model, @PathVariable("id") intNodeItemId: Long): String {
         // Exception
-        if (centerService.getSetting().iotNode!!.toInt() != 1) return G_INDEX_REDIRECT_URL
-
-        // Field
-        val nodeItem: NodeItem?
-        val listNodeItemHistory: List<NodeItemHistory?>?
+        if (centerService.setting.iotNode != 1.toByte())
+            return G_INDEX_REDIRECT_URL
 
         // Init
-        nodeItem = iotNodeService.getNodeItem(intNodeItemId.toLong())
-        listNodeItemHistory = iotNodeService.getNodeItemHistory(intNodeItemId.toLong())
+        val nodeItem = iotNodeService.getNodeItem(intNodeItemId)
+        val listNodeItemHistory = iotNodeService.getNodeItemHistory(intNodeItemId)
 
         // Process
-        model.addAttribute("cardNodeItemHistory", NodeItemHistoryCardDto(nodeItem, listNodeItemHistory!!))
+        model.addAttribute("cardNodeItemHistory", nodeItem?.let { NodeItemHistoryCardDto(it, listNodeItemHistory) })
 
         // Return
         return "$G_BASE_PATH/NodeItemInfo"

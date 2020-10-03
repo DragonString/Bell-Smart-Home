@@ -5,18 +5,21 @@ import org.springframework.web.servlet.ModelAndView
 import java.security.Principal
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 컨트롤러가 동작하기 전 필터 클래스
+ * @author : Bell(bell@softbell.net)
+ * @description : 컨트롤러가 동작하기 전 필터 클래스
  */
 class ControllerFilter {
     fun FilterModelPrincipal(model: Model, principal: Principal?) {
         // Username
-        if (principal != null) model.addAttribute("USER_NAME", principal.name)
+        if (principal != null)
+            model.addAttribute("USER_NAME", principal.name)
     }
 
     fun FilterModelAndViewPrincipal(model: ModelAndView, principal: Principal?): ModelAndView {
         // Username
-        if (principal != null) model.addObject("USER_NAME", principal.name)
+        if (principal != null)
+            model.addObject("USER_NAME", principal.name)
+
         return model
     }
 

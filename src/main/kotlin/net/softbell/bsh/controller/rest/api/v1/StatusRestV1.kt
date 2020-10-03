@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 상태관련 REST API 컨트롤러 V1
+ * @author : Bell(bell@softbell.net)
+ * @description : 상태관련 REST API 컨트롤러 V1
  */
 @Api(tags = ["0. Status"])
 @RestController
@@ -20,7 +20,7 @@ class StatusRestV1 {
     @Autowired private lateinit var responseService: ResponseService
 
     @GetMapping("/server")
-    fun checkServer(): SingleResultDto<String>? {
+    fun checkServer(): SingleResultDto<String> {
         return responseService.getSingleResult("normal")
     }
 }

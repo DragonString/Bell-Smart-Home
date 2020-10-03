@@ -13,17 +13,17 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 로그인 로그 리포지토리 인터페이스
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 로그인 로그 리포지토리 인터페이스
  */
 @Repository
 interface MemberLoginLogRepo : JpaRepository<MemberLoginLog, Long> {
-    fun findByMember(member: Member?, pageable: Pageable?): Page<MemberLoginLog?>?
-    fun countByMember(member: Member?): Long
-    fun countByMemberAndStatusAndRequestDateBetween(member: Member?, status: AuthStatusRule?, start: Date?, end: Date?): Long
+    fun findByMember(member: Member, pageable: Pageable): Page<MemberLoginLog>
+    fun countByMember(member: Member): Long
+    fun countByMemberAndStatusAndRequestDateBetween(member: Member, status: AuthStatusRule, start: Date, end: Date): Long
 
     @Transactional
     @Modifying
     @Query("DELETE FROM MemberLoginLog mll WHERE mll.member = ?1")
-    fun deleteByMember(member: Member?)
+    fun deleteByMember(member: Member)
 }

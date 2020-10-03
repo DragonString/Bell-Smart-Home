@@ -1,7 +1,6 @@
 package net.softbell.bsh.iot.component.v1
 
 import mu.KLogging
-import net.softbell.bsh.domain.entity.NodeReserv
 import net.softbell.bsh.iot.service.v1.IotActionServiceV1
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -9,8 +8,8 @@ import org.springframework.stereotype.Component
 import javax.transaction.Transactional
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 예약 스케줄러 v1
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 예약 스케줄러 v1
  */
 @Component
 class IotReservSchedulerV1 {
@@ -22,25 +21,20 @@ class IotReservSchedulerV1 {
     @Scheduled(cron = "0 * * * * *")
     @Transactional
     fun iotReservTask() {
-        // Field
-        val listNodeReserv: List<NodeReserv?>?
-
         // Init
-        listNodeReserv = iotReservParser!!.getEnableReserv()
+        val listNodeReserv = iotReservParser.getEnableReserv()
 
         // Process
-        for (nodeReserv in listNodeReserv!!) {
-            // Field
-            var isSuccess: Boolean?
-
+        for (nodeReserv in listNodeReserv) {
             // Parse
-            isSuccess = iotReservParser.parseEntity(nodeReserv!!)
+            val isSuccess = iotReservParser.parseEntity(nodeReserv)
 
             // Process
             if (isSuccess != null && isSuccess == true) {
                 logger.info("예약 실행 (" + nodeReserv.description + ")")
+
                 for (nodeAction in iotReservParser.getReservAction(nodeReserv))  // Get Reserv Action
-                    iotActionService!!.execAction(nodeAction, nodeReserv.member) // Exec Action
+                    iotActionService.execAction(nodeAction, nodeReserv.member) // Exec Action
             }
         }
     }

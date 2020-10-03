@@ -6,8 +6,8 @@ import java.io.IOException
 import javax.servlet.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : request 최초, response 최후에 동작하는 필터 클래스
+ * @author : Bell(bell@softbell.net)
+ * @description : request 최초, response 최후에 동작하는 필터 클래스
  */
 @Component
 @Order(1)

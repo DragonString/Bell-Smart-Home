@@ -5,8 +5,8 @@ import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 권한 자료형 DB 컨버터
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 권한 자료형 DB 컨버터
  */
 @Converter(autoApply = true)
 class MemberRoleConverter : AttributeConverter<MemberRole, Int> {

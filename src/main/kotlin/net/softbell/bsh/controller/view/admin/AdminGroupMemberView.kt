@@ -1,7 +1,6 @@
 package net.softbell.bsh.controller.view.admin
 
 import net.softbell.bsh.domain.entity.Member
-import net.softbell.bsh.domain.entity.MemberGroup
 import net.softbell.bsh.dto.request.MemberGroupDto
 import net.softbell.bsh.dto.request.MemberGroupPermissionDto
 import net.softbell.bsh.dto.view.admin.group.MemberGroupInfoCardDto
@@ -17,8 +16,8 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 관리자 회원 그룹 관리 뷰 컨트롤러
+ * @author : Bell(bell@softbell.net)
+ * @description : 관리자 회원 그룹 관리 뷰 컨트롤러
  */
 @Controller
 @RequestMapping("/admin/group/member")
@@ -34,53 +33,46 @@ class AdminGroupMemberView {
     @Autowired private lateinit var iotNodeService: IotNodeServiceV1
 
     @GetMapping
-    fun dispGroupMember(model: Model): String? {
+    fun dispGroupMember(model: Model): String {
         // Load
-        model.addAttribute("listCardGroups", viewDtoConverterService.convMemberGroupSummaryCards(permissionService.getAllMemberGroup()!!))
+        model.addAttribute("listCardGroups", viewDtoConverterService.convMemberGroupSummaryCards(permissionService.getAllMemberGroup()))
 
         // Return
         return "$G_BASE_PATH/MemberGroup"
     }
 
     @GetMapping("/create")
-    fun dispGroupCreate(model: Model): String? {
-        // Field
-
+    fun dispGroupCreate(model: Model): String {
         // Init
-        model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(memberService.getAllMember()!!))
+        model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(memberService.getAllMember()))
 
         // Return
         return "$G_BASE_PATH/MemberGroupCreate"
     }
 
     @GetMapping("/modify/{gid}")
-    fun dispGroupModify(model: Model, @PathVariable("gid") gid: Long?): String? {
-        // Field
-        val listMember: MutableList<Member?>
-        val memberGroup: MemberGroup?
-
+    fun dispGroupModify(model: Model, @PathVariable("gid") gid: Long): String {
         // Init
-        listMember = memberService.getAllMember()
-        memberGroup = permissionService.getMemberGroup(gid!!)
+        val listMember: MutableList<Member> = memberService.getAllMember() as MutableList<Member>
+        val memberGroup = permissionService.getMemberGroup(gid)
 
         // Process
-        for (entity in memberGroup!!.memberGroupItems!!) listMember.remove(entity.member)
+        for (entity in memberGroup!!.memberGroupItems)
+            listMember.remove(entity.member)
 
         // View
-        model.addAttribute("cardGroup", MemberGroupInfoCardDto(permissionService.getMemberGroup(gid)))
-        model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(listMember!!))
+        model.addAttribute("cardGroup", permissionService.getMemberGroup(gid)?.let { MemberGroupInfoCardDto(it) })
+        model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(listMember))
 
         // Return
         return "$G_BASE_PATH/MemberGroupModify"
     }
 
     @GetMapping("/{gid}")
-    fun dispGroup(model: Model, @PathVariable("gid") gid: Long?): String? {
-        // Field
-
+    fun dispGroup(model: Model, @PathVariable("gid") gid: Long): String {
         // Init
         model.addAttribute("cardPermission", MemberGroupPermissionCardDto(permissionService.getAllNodeGroup()))
-        model.addAttribute("cardGroup", MemberGroupInfoCardDto(permissionService.getMemberGroup(gid!!)))
+        model.addAttribute("cardGroup", permissionService.getMemberGroup(gid)?.let { MemberGroupInfoCardDto(it) })
 
         // Return
         return "$G_BASE_PATH/MemberGroupInfo"
@@ -88,86 +80,86 @@ class AdminGroupMemberView {
 
 
     @PostMapping("/create")
-    fun procGroupCreate(auth: Authentication?, memberGroupDto: MemberGroupDto?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupCreate(auth: Authentication, memberGroupDto: MemberGroupDto): String {
         // Init
-        isSuccess = permissionService.createMemberGroup(memberGroupDto!!)
+        val isSuccess = permissionService.createMemberGroup(memberGroupDto)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/modify/{gid}")
-    fun procGroupModify(auth: Authentication?, @PathVariable("gid") gid: Long, memberGroupDto: MemberGroupDto?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupModify(auth: Authentication, @PathVariable("gid") gid: Long, memberGroupDto: MemberGroupDto): String {
         // Init
-        isSuccess = permissionService.modifyMemberGroup(gid, memberGroupDto!!)
+        val isSuccess = permissionService.modifyMemberGroup(gid, memberGroupDto)
 
         // Return
-        return if (isSuccess) "$G_BASE_REDIRECT_URL/$gid" else "$G_BASE_REDIRECT_URL/$gid?err"
+        return if (isSuccess)
+            "$G_BASE_REDIRECT_URL/$gid"
+        else
+            "$G_BASE_REDIRECT_URL/$gid?err"
     }
 
     @PostMapping("/enable")
-    fun procGroupEnable(auth: Authentication?, @RequestParam("gid") listGid: List<Long?>?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupEnable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
         // Init
-        isSuccess = permissionService.enableMemberGroup(listGid!!)
+        val isSuccess = permissionService.enableMemberGroup(listGid)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/disable")
-    fun procGroupDisable(auth: Authentication?, @RequestParam("gid") listGid: List<Long?>?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupDisable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
         // Init
-        isSuccess = permissionService.disableMemberGroup(listGid!!)
+        val isSuccess = permissionService.disableMemberGroup(listGid)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/delete")
-    fun procGroupDelete(auth: Authentication?, @RequestParam("gid") listGid: List<Long?>?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun procGroupDelete(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
         // Init
-        isSuccess = permissionService.deleteMemberGroup(listGid!!)
+        val isSuccess = permissionService.deleteMemberGroup(listGid)
 
         // Return
-        return if (isSuccess) G_BASE_REDIRECT_URL else "$G_BASE_REDIRECT_URL?err"
+        return if (isSuccess)
+            G_BASE_REDIRECT_URL
+        else
+            "$G_BASE_REDIRECT_URL?err"
     }
 
     @PostMapping("/permission/add/{gid}")
-    fun addPermission(@PathVariable("gid") gid: Long, memberGroupPermissionDto: MemberGroupPermissionDto?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun addPermission(@PathVariable("gid") gid: Long, memberGroupPermissionDto: MemberGroupPermissionDto): String {
         // Init
-        isSuccess = permissionService.addMemberPermission(gid, memberGroupPermissionDto!!)
+        val isSuccess = permissionService.addMemberPermission(gid, memberGroupPermissionDto)
 
         // Return
-        return if (isSuccess) "$G_BASE_REDIRECT_URL/$gid" else "$G_BASE_REDIRECT_URL/$gid?err"
+        return if (isSuccess)
+            "$G_BASE_REDIRECT_URL/$gid"
+        else
+            "$G_BASE_REDIRECT_URL/$gid?err"
     }
 
     @PostMapping("/permission/delete/{gid}")
-    fun deletePermission(@PathVariable("gid") gid: Long, @RequestParam("pid") pid: Long?): String? {
-        // Field
-        val isSuccess: Boolean
-
+    fun deletePermission(@PathVariable("gid") gid: Long, @RequestParam("pid") pid: Long): String {
         // Init
-        isSuccess = permissionService.deleteGroupPermission(pid)
+        val isSuccess = permissionService.deleteGroupPermission(pid)
 
         // Return
-        return if (isSuccess) "$G_BASE_REDIRECT_URL/$gid" else "$G_BASE_REDIRECT_URL/$gid?err"
+        return if (isSuccess)
+            "$G_BASE_REDIRECT_URL/$gid"
+        else
+            "$G_BASE_REDIRECT_URL/$gid?err"
     }
 }

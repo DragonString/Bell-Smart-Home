@@ -1,8 +1,8 @@
 package net.softbell.bsh.domain
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 트리거 상태 자료형
+ * @author : Bell(bell@softbell.net)
+ * @description : 트리거 상태 자료형
  */
 enum class TriggerStatusRule {
     UNKNOWN { // 미확인

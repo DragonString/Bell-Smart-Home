@@ -6,8 +6,8 @@ import java.util.*
 import javax.persistence.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 연동 토큰 엔티티
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 연동 토큰 엔티티
  */
 @Entity
 @Table(name = "member_interlock_token", uniqueConstraints = [UniqueConstraint(columnNames = ["token"])])

@@ -6,29 +6,15 @@ import net.softbell.bsh.domain.ItemTypeRule
 import net.softbell.bsh.domain.entity.NodeItem
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 관리 수정뷰 아이템 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 관리 수정뷰 아이템 카드정보 DTO
  */
-class NodeManageItemCardDto(entity: NodeItem?) {
-    var itemId: Long?
-    var alias: String?
-    var itemName: String?
-    var itemMode: ItemModeRule?
-    var itemType: ItemTypeRule?
-    var itemCategory: ItemCategoryRule?
-    var controlMode: Byte?
-
-    init {
-        // Exception
-        entity.let {
-            // Convert
-            itemId = entity!!.itemId
-            alias = entity.alias
-            itemName = entity.itemName
-            itemMode = entity.itemMode
-            itemType = entity.itemType
-            itemCategory = entity.itemCategory
-            controlMode = entity.controlMode
-        }
-    }
+class NodeManageItemCardDto(entity: NodeItem) {
+    val itemId: Long = entity.itemId
+    val alias: String = entity.alias
+    val itemName: String = entity.itemName
+    val itemMode: ItemModeRule = entity.itemMode
+    val itemType: ItemTypeRule = entity.itemType
+    val itemCategory: ItemCategoryRule = entity.itemCategory
+    val controlMode: Byte = entity.controlMode
 }

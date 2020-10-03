@@ -1,8 +1,8 @@
 package net.softbell.bsh.iot.dto.bshp.v1
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : BSHPv1 전용 Items Info DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : BSHPv1 전용 Items Info DTO
  */
 data class ItemInfoV1Dto (
     var controlMode: Byte,

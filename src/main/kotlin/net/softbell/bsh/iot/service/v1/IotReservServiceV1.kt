@@ -2,14 +2,12 @@ package net.softbell.bsh.iot.service.v1
 
 import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
-import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.entity.NodeReserv
 import net.softbell.bsh.domain.entity.NodeReservAction
 import net.softbell.bsh.domain.repository.NodeActionRepo
 import net.softbell.bsh.domain.repository.NodeReservActionRepo
 import net.softbell.bsh.domain.repository.NodeReservRepo
-import net.softbell.bsh.dto.request.IotActionDto
 import net.softbell.bsh.dto.request.IotReservDto
 import net.softbell.bsh.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,8 +18,8 @@ import java.util.function.BiConsumer
 import javax.transaction.Transactional
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT Node Reservation 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT Node Reservation 서비스
  */
 @Service
 class IotReservServiceV1 {
@@ -31,52 +29,38 @@ class IotReservServiceV1 {
     @Autowired private lateinit var nodeReservActionRepo: NodeReservActionRepo
     @Autowired private lateinit var nodeActionRepo: NodeActionRepo
 
-    fun getAvailableAction(auth: Authentication): List<NodeAction?> {
-        // Field
-        val member: Member?
-        val listNodeAction: List<NodeAction?>?
-
+    fun getAvailableAction(auth: Authentication): List<NodeAction> {
         // Init
-        member = memberService.getMember(auth.name)
-
-        // Process
-        listNodeAction = if (memberService.isAdmin(member)) nodeActionRepo.findAll() else nodeActionRepo.findByMember(member)
+        val member = memberService.getMember(auth.name) ?: return emptyList()
 
         // Return
-        return listNodeAction
+        return if (memberService.isAdmin(member))
+            nodeActionRepo.findAll()
+        else
+            nodeActionRepo.findByMember(member)
     }
 
-    fun getAllReservs(auth: Authentication): List<NodeReserv?>? {
-        // Field
-        val member: Member?
-        val listNodeReserv: List<NodeReserv?>?
-
+    fun getAllReservs(auth: Authentication): List<NodeReserv> {
         // Init
-        member = memberService.getMember(auth.name)
-
-        // Process
-        listNodeReserv = if (memberService.isAdmin(member)) nodeReservRepo.findAll() else nodeReservRepo.findByMember(member)
+        val member = memberService.getMember(auth.name) ?: return emptyList()
 
         // Return
-        return listNodeReserv
+        return if (memberService.isAdmin(member))
+            nodeReservRepo.findAll()
+        else
+            nodeReservRepo.findByMember(member)
     }
 
-    fun getReserv(auth: Authentication?, reservId: Long): NodeReserv? {
-        // Field
-        val optNodeReserv: Optional<NodeReserv?>
-        val nodeReserv: NodeReserv
-
+    fun getReserv(auth: Authentication, reservId: Long): NodeReserv? {
         // Init
-        optNodeReserv = nodeReservRepo.findById(reservId)
+        val optNodeReserv = nodeReservRepo.findById(reservId)
 
         // Exception
-        if (!optNodeReserv.isPresent) return null
-
-        // Load
-        nodeReserv = optNodeReserv.get()
+        if (!optNodeReserv.isPresent)
+            return null
 
         // Return
-        return nodeReserv
+        return optNodeReserv.get()
     }
 
     @Transactional
@@ -84,24 +68,21 @@ class IotReservServiceV1 {
         // Log
         logger.info("Creating Reservation (" + iotReservDto.description + ")")
 
-        // Field
-        val member: Member?
-        val nodeReserv: NodeReserv
-        val mapAction: HashMap<Long, IotActionDto>?
-        val listNodeReservAction: MutableList<NodeReservAction>
-        val enableStatus: EnableStatusRule
-
         // Init
-        member = memberService.getMember(auth.name)
-        listNodeReservAction = ArrayList()
-        mapAction = iotReservDto.mapAction
-        enableStatus = if (iotReservDto.enableStatus) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
+        val member = memberService.getMember(auth.name)
+        val listNodeReservAction: MutableList<NodeReservAction> = ArrayList()
+        val mapAction = iotReservDto.mapAction
+        val enableStatus = if (iotReservDto.enableStatus)
+            EnableStatusRule.ENABLE
+        else
+            EnableStatusRule.DISABLE
 
         // Exception
-        if (member == null) return false
+        if (member == null)
+            return false
 
         // Data Process - Reservation Info
-        nodeReserv = NodeReserv(
+        val nodeReserv = NodeReserv(
                 enableStatus = enableStatus,
                 description = iotReservDto.description,
                 expression = iotReservDto.expression,
@@ -110,18 +91,14 @@ class IotReservServiceV1 {
 
         // Data Process - Reservation Action Info
         if (mapAction != null) {
-            mapAction.forEach(BiConsumer { key: Long?, (actionId) ->
+            mapAction.forEach(BiConsumer { key: Long, (actionId) ->
                 if (actionId != 0L) {
-                    // Field
-                    val optNodeAction: Optional<NodeAction?>
-                    val nodeReservAction: NodeReservAction
-
                     // Init
-                    optNodeAction = nodeActionRepo.findById(actionId!!)
+                    val optNodeAction = nodeActionRepo.findById(actionId!!)
 
                     // Build
                     if (optNodeAction.isPresent) {
-                        nodeReservAction = NodeReservAction(
+                        val nodeReservAction = NodeReservAction(
                                 nodeAction = optNodeAction.get(),
                                 nodeReserv = nodeReserv
                         )
@@ -146,29 +123,26 @@ class IotReservServiceV1 {
     }
 
     @Transactional
-    fun modifyReservation(auth: Authentication?, reservId: Long, iotReservDto: IotReservDto): Boolean {
-        // Field
-        val optNodeReserv: Optional<NodeReserv?>
-        val nodeReserv: NodeReserv
-        val mapAction: HashMap<Long, IotActionDto>?
-        val listNodeReservAction: MutableList<NodeReservAction>
-        val enableStatus: EnableStatusRule
-
+    fun modifyReservation(auth: Authentication, reservId: Long, iotReservDto: IotReservDto): Boolean {
         // Init
-        optNodeReserv = nodeReservRepo.findById(reservId)
-        mapAction = iotReservDto.mapAction
-        listNodeReservAction = ArrayList()
-        enableStatus = if (iotReservDto.enableStatus) EnableStatusRule.ENABLE else EnableStatusRule.DISABLE
+        val optNodeReserv = nodeReservRepo.findById(reservId)
+        val mapAction = iotReservDto.mapAction
+        val listNodeReservAction: MutableList<NodeReservAction> = ArrayList()
+        val enableStatus = if (iotReservDto.enableStatus)
+            EnableStatusRule.ENABLE
+        else
+            EnableStatusRule.DISABLE
 
         // Exception
-        if (!optNodeReserv.isPresent) return false
+        if (!optNodeReserv.isPresent)
+            return false
 
         // Load
-        nodeReserv = optNodeReserv.get()
+        val nodeReserv = optNodeReserv.get()
         //				listNodeActionItem = nodeAction.getNodeActionItems();
 
         // DB - Action Item Clear
-        nodeReservActionRepo.deleteAll(nodeReserv.nodeReservActions!!)
+        nodeReservActionRepo.deleteAll(nodeReserv.nodeReservActions)
         nodeReservActionRepo.flush()
         //				nodeActionRepo.flush();
 //				for (NodeActionItem value : listNodeActionItem)
@@ -187,16 +161,12 @@ class IotReservServiceV1 {
         if (mapAction != null) {
             mapAction.forEach(BiConsumer { key: Long?, (actionId) ->
                 if (actionId != 0L) {
-                    // Field
-                    val optNodeAction: Optional<NodeAction?>
-                    val nodeReservAction: NodeReservAction
-
                     // Init
-                    optNodeAction = nodeActionRepo.findById(actionId!!)
+                    val optNodeAction = nodeActionRepo.findById(actionId)
 
                     // Build
                     if (optNodeAction.isPresent) {
-                        nodeReservAction = NodeReservAction(
+                        val nodeReservAction = NodeReservAction(
                                 nodeAction = optNodeAction.get(),
                                 nodeReserv = nodeReserv
                         )
@@ -218,44 +188,41 @@ class IotReservServiceV1 {
     }
 
     @Transactional
-    fun setTriggerEnableStatus(auth: Authentication?, reservId: Long, status: Boolean): Boolean {
-        // Field
-        val optNodeReserv: Optional<NodeReserv?>
-        val nodeReserv: NodeReserv
-
+    fun setTriggerEnableStatus(auth: Authentication, reservId: Long, status: Boolean): Boolean {
         // Init
-        optNodeReserv = nodeReservRepo.findById(reservId)
+        val optNodeReserv = nodeReservRepo.findById(reservId)
 
         // Exception
-        if (!optNodeReserv.isPresent) return false
+        if (!optNodeReserv.isPresent)
+            return false
 
         // Load
-        nodeReserv = optNodeReserv.get()
+        val nodeReserv = optNodeReserv.get()
 
         // DB - Update
-        if (status) nodeReserv.enableStatus = EnableStatusRule.ENABLE else nodeReserv.enableStatus = EnableStatusRule.DISABLE
+        if (status)
+            nodeReserv.enableStatus = EnableStatusRule.ENABLE
+        else
+            nodeReserv.enableStatus = EnableStatusRule.DISABLE
 
         // Return
         return true
     }
 
     @Transactional
-    fun deleteReserv(auth: Authentication?, reservId: Long): Boolean {
-        // Field
-        val optNodeReserv: Optional<NodeReserv?>
-        val nodeReserv: NodeReserv
-
+    fun deleteReserv(auth: Authentication, reservId: Long): Boolean {
         // Init
-        optNodeReserv = nodeReservRepo.findById(reservId)
+        val optNodeReserv = nodeReservRepo.findById(reservId)
 
         // Exception
-        if (!optNodeReserv.isPresent) return false
+        if (!optNodeReserv.isPresent)
+            return false
 
         // Load
-        nodeReserv = optNodeReserv.get()
+        val nodeReserv = optNodeReserv.get()
 
         // DB - Delete
-        nodeReservActionRepo.deleteAll(nodeReserv.nodeReservActions!!)
+        nodeReservActionRepo.deleteAll(nodeReserv.nodeReservActions)
         nodeReservRepo.delete(nodeReserv)
 
         // Return

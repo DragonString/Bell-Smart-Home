@@ -5,8 +5,8 @@ import java.io.Serializable
 import javax.persistence.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 그룹 엔티티
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 그룹 엔티티
  */
 @Entity
 @Table(name = "member_group")

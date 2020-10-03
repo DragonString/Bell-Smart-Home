@@ -5,25 +5,13 @@ import net.softbell.bsh.domain.entity.MemberInterlockToken
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 연동 토큰뷰 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 연동 토큰뷰 카드정보 DTO
  */
-class InterlockTokenCardDto(entity: MemberInterlockToken?) {
-    var tokenId: Long?
-    var name: String?
-    var token: String?
-    var enableStatus: EnableStatusRule?
-    var registerDate: Date?
-
-    init {
-        // Exception
-        entity.let {
-            // Convert
-            tokenId = entity!!.memberInterlockId
-            name = entity.name
-            token = entity.token
-            enableStatus = entity.enableStatus
-            registerDate = entity.registerDate
-        }
-    }
+class InterlockTokenCardDto(entity: MemberInterlockToken) {
+    val tokenId: Long = entity.memberInterlockId
+    val name: String = entity.name
+    val token: String = entity.token
+    val enableStatus: EnableStatusRule = entity.enableStatus
+    val registerDate: Date = entity.registerDate
 }

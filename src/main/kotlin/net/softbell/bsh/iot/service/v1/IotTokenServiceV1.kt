@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT Token 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT Token 서비스
  */
 @Service
 class IotTokenServiceV1 {
@@ -36,11 +36,8 @@ class IotTokenServiceV1 {
     @Autowired private lateinit var nodeItemHistoryRepo: NodeItemHistoryRepo
 
     private fun getNormalTokenNode(token: String): Node? {
-        // Field
-        val node: Node?
-
         // Init
-        node = nodeRepo!!.findByToken(token)
+        val node = nodeRepo.findByToken(token)
 
         // Exception
         if (node == null) // 토큰에 해당하는 노드가 없다면
@@ -56,25 +53,25 @@ class IotTokenServiceV1 {
             )
 
             // Send
-            iotChannelCompV1!!.sendDataToken(data) // 연결 실패 메시지 전송
+            iotChannelCompV1.sendDataToken(data) // 연결 실패 메시지 전송
             return null
         }
-        return if (!iotAuthCompV1!!.isApprovalNode(node)) null else node
 
         // Return
+        return if (iotAuthCompV1.isApprovalNode(node))
+            node
+        else
+            null
     }
 
     @Transactional
     fun setNodeInfo(token: String, nodeInfo: NodeInfoV1Dto): Boolean {
-        // Field
-        val node: Node?
-
         // Init
-        node = getNormalTokenNode(token)
+        val node = getNormalTokenNode(token) ?: return false
 
         // Exception
-        if (node == null) return false
-        if (node.uid != nodeInfo.uid) return false // 서버상 UID와 수신된 UID가 다르면 해킹으로 간주
+        if (node.uid != nodeInfo.uid)
+            return false // 서버상 UID와 수신된 UID가 다르면 해킹으로 간주
 
         // Process
         node.controlMode = nodeInfo.controlMode
@@ -93,14 +90,8 @@ class IotTokenServiceV1 {
 
     @Transactional
     fun setItemInfo(token: String, itemInfo: ItemInfoV1Dto): Boolean {
-        // Field
-        val node: Node?
-
         // Init
-        node = getNormalTokenNode(token)
-
-        // Exception
-        if (node == null) return false
+        val node = getNormalTokenNode(token) ?: return false
 
         // Process
         for (nodeItem in node.nodeItems)  // TODO 불필요한 이 반복 부분 제거하고 NodeItemRepo에 조회절 추가하기
@@ -119,7 +110,7 @@ class IotTokenServiceV1 {
             }
 
         // DB - Insert data
-        val nodeItem: NodeItem = NodeItem(
+        val nodeItem = NodeItem(
                 node = node,
                 controlMode = itemInfo.controlMode,
                 itemIndex = itemInfo.itemIndex,
@@ -140,11 +131,8 @@ class IotTokenServiceV1 {
     }
 
     fun reqItemValue(token: String, pin: Int) {
-        // Field
-        val data: BaseV1Dto
-
         // Init
-        data = BaseV1Dto(
+        val data = BaseV1Dto(
                 sender = "SERVER",
                 target = token,
                 cmd = "GET",
@@ -159,21 +147,15 @@ class IotTokenServiceV1 {
 
     @Transactional
     fun setItemValue(token: String, itemValue: ItemValueV1Dto): Boolean {
-        // Field
-        val node: Node?
-        val nodeItem: NodeItem?
-
         // Init
-        node = getNormalTokenNode(token) // TODO 이것도 token, uid로 한번에 검색되게
+        val node = getNormalTokenNode(token) ?: return false // TODO 이것도 token, uid로 한번에 검색되게
 
         // Exception
-        if (node == null) return false
         if (itemValue.itemStatus == null) {
             logger.error("ItemStatus 수신 데이터 없음 (" + node.alias + ")")
             return false
         }
-        nodeItem = nodeItemRepo.findByNodeAndItemIndex(node, itemValue.itemIndex)
-        if (nodeItem == null) return false
+        val nodeItem = nodeItemRepo.findByNodeAndItemIndex(node, itemValue.itemIndex) ?: return false
 
         // Process
         val nodeItemHistory: NodeItemHistory = NodeItemHistory(

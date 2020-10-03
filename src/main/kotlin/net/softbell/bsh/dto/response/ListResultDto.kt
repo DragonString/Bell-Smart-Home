@@ -1,9 +1,9 @@
 package net.softbell.bsh.dto.response
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : API 수행 결과 리스트 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : API 수행 결과 리스트 DTO
  */
-class ListResultDto<T> : ResultDto() {
-    var list: MutableList<T>? = null
-}
+data class ListResultDto<T>(
+        var list: MutableList<T> = ArrayList()
+) : ResultDto()

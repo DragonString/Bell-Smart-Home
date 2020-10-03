@@ -5,8 +5,8 @@ import javax.persistence.AttributeConverter
 import javax.persistence.Converter
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 아이템 타입 자료형 DB 컨버터
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 아이템 타입 자료형 DB 컨버터
  */
 @Converter(autoApply = true)
 class ItemTypeRuleConverter : AttributeConverter<ItemTypeRule, Int> {

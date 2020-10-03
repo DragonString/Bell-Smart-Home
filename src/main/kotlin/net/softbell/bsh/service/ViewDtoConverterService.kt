@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 엔티티 to 뷰 DTO 변환 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : 엔티티 to 뷰 DTO 변환 서비스
  */
 @Service
 class ViewDtoConverterService {
@@ -26,42 +26,35 @@ class ViewDtoConverterService {
     @Autowired private lateinit var iotNodeService: IotNodeServiceV1
 
     // Node Entity List to Monitor Card Dto List
-    fun convMonitorSummaryCards(listEntity: Collection<Node?>): List<MonitorSummaryCardDto> {
-        // Field
-        val listCards: MutableList<MonitorSummaryCardDto>
-
+    fun convMonitorSummaryCards(listEntity: Collection<Node>): List<MonitorSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<MonitorSummaryCardDto> = ArrayList()
 
         // Process
         for (entity in listEntity) {
-            // Field
-            var cardDto: MonitorSummaryCardDto
-            var listItems: MutableList<MonitorCardItemDto>
-            var curDate: Date
-            var lastReceive: Date?
-
             // Init
-            cardDto = MonitorSummaryCardDto(entity)
-            listItems = ArrayList()
-            curDate = Date()
-            lastReceive = null
+            val cardDto = MonitorSummaryCardDto(entity)
+            val curDate = Date()
 
             // Process
-            for (nodeItem in entity?.nodeItems!!) {
-                // Field
-                var lastHistory: NodeItemHistory?
-
+            for (nodeItem in entity.nodeItems) {
                 // Init
-                listItems.add(MonitorCardItemDto(nodeItem, iotNodeService!!.getLastNodeItemHistory(nodeItem)!!))
-                lastHistory = iotNodeService.getLastNodeItemHistory(nodeItem)
-                if (lastReceive == null || lastHistory!!.receiveDate!!.compareTo(lastReceive) > 0) lastReceive = lastHistory!!.receiveDate
+                val nodeItemHistory = iotNodeService.getLastNodeItemHistory(nodeItem) ?: continue
+                val lastHistory = iotNodeService.getLastNodeItemHistory(nodeItem) ?: continue
+
+                cardDto.listItems.add(MonitorCardItemDto(nodeItem, nodeItemHistory))
+
+                // 제일 최근 수신시각 계산
+                if (cardDto.lastReceive == null || lastHistory.receiveDate > cardDto.lastReceive)
+                    cardDto.lastReceive = lastHistory.receiveDate
             }
-            cardDto.lastReceive = lastReceive
-            cardDto.lastReceiveSecond = (curDate.time - lastReceive!!.time) / 1000
+            cardDto.lastReceive.let {
+                if (it != null) {
+                    cardDto.lastReceiveSecond = (curDate.time - it.time) / 1000
+                }
+            }
 
             // Add
-            cardDto.listItems = listItems
             listCards.add(cardDto)
         }
 
@@ -70,15 +63,13 @@ class ViewDtoConverterService {
     }
 
     // NodeReserv Entity List to Reserv Card Dto List
-    fun convReservSummaryCards(listEntity: Collection<NodeReserv?>): List<ReservSummaryCardDto> {
-        // Field
-        val listCards: MutableList<ReservSummaryCardDto>
-
+    fun convReservSummaryCards(listEntity: Collection<NodeReserv>): List<ReservSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<ReservSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(ReservSummaryCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(ReservSummaryCardDto(entity))
 
         // Return
         return listCards
@@ -86,29 +77,28 @@ class ViewDtoConverterService {
 
     // NodeAction Entity List to Reserv Action Card Dto List
     fun <T> convReservActionCards(listEntity: Collection<T>): List<ReservActionCardDto> {
-        // Field
-        val listCards: MutableList<ReservActionCardDto>
-
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<ReservActionCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) if (entity is NodeAction) listCards.add(ReservActionCardDto(entity as NodeAction)) else if (entity is NodeReservAction) listCards.add(ReservActionCardDto((entity as NodeReservAction).nodeAction))
+        for (entity in listEntity)
+            if (entity is NodeAction)
+                listCards.add(ReservActionCardDto(entity as NodeAction))
+            else if (entity is NodeReservAction)
+                listCards.add(ReservActionCardDto((entity as NodeReservAction).nodeAction))
 
         // Return
         return listCards
     }
 
     // NodeAction Entity List to Action Summary Card Dto List
-    fun convActionSummaryCards(listEntity: Collection<NodeAction?>): List<ActionSummaryCardDto> {
-        // Field
-        val listCards: MutableList<ActionSummaryCardDto>
-
+    fun convActionSummaryCards(listEntity: Collection<NodeAction>): List<ActionSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<ActionSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(ActionSummaryCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(ActionSummaryCardDto(entity))
 
         // Return
         return listCards
@@ -116,14 +106,15 @@ class ViewDtoConverterService {
 
     // NodeItem Entity List to Action Item Card Dto List
     fun <T> convActionItemCards(listEntity: Collection<T>): List<ActionItemCardDto> {
-        // Field
-        val listCards: MutableList<ActionItemCardDto>
-
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<ActionItemCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) if (entity is NodeItem) listCards.add(ActionItemCardDto(entity as NodeItem)) else if (entity is NodeActionItem) listCards.add(ActionItemCardDto(entity as NodeActionItem))
+        for (entity in listEntity)
+            if (entity is NodeItem)
+                listCards.add(ActionItemCardDto(entity as NodeItem))
+            else if (entity is NodeActionItem)
+                listCards.add(ActionItemCardDto(entity as NodeActionItem))
 
         // Return
         return listCards
@@ -131,209 +122,184 @@ class ViewDtoConverterService {
 
     // Node Entity List to Node Summary Card Dto List
     fun <T> convNodeSummaryCards(listEntity: Collection<T>): List<NodeSummaryCardDto> {
-        // Field
-        val listCards: MutableList<NodeSummaryCardDto>
-
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<NodeSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(NodeSummaryCardDto(entity as Node))
+        for (entity in listEntity)
+            listCards.add(NodeSummaryCardDto(entity as Node))
 
         // Return
         return listCards
     }
 
     // NodeItem Entity List to Node Item Card Dto List
-    fun convNodeItemCards(listEntity: Collection<NodeItem?>): List<NodeItemCardDto> {
-        // Field
-        val listCards: MutableList<NodeItemCardDto>
-
+    fun convNodeItemCards(listEntity: Collection<NodeItem>): List<NodeItemCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<NodeItemCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(NodeItemCardDto(entity, iotNodeService!!.getLastNodeItemHistory(entity)!!))
+        for (entity in listEntity)
+        {
+            val lastHistory = iotNodeService.getLastNodeItemHistory(entity) ?: continue
+            listCards.add(NodeItemCardDto(entity, lastHistory))
+        }
 
         // Return
         return listCards
     }
 
     // Member Entity List to Member Summary Card Dto List
-    fun convMemberSummaryCards(listEntity: Collection<Member?>): List<MemberSummaryCardDto> {
-        // Field
-        val listCards: MutableList<MemberSummaryCardDto>
-
+    fun convMemberSummaryCards(listEntity: Collection<Member>): List<MemberSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<MemberSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(MemberSummaryCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(MemberSummaryCardDto(entity))
 
         // Return
         return listCards
     }
 
     // MemberLoginLog Entity List to Member Activity Log Card Dto List
-    fun convMemberActivityLogCards(listEntity: Collection<MemberLoginLog?>): List<MemberActivityLogCardDto> {
-        // Field
-        val listCards: MutableList<MemberActivityLogCardDto>
-
+    fun convMemberActivityLogCards(listEntity: Collection<MemberLoginLog>): List<MemberActivityLogCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<MemberActivityLogCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(MemberActivityLogCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(MemberActivityLogCardDto(entity))
 
         // Return
         return listCards
     }
 
     // Node Entity List to Node Manage Summary Card Dto List
-    fun convNodeManageSummaryCards(listEntity: Collection<Node?>): List<NodeManageSummaryCardDto> {
-        // Field
-        val listCards: MutableList<NodeManageSummaryCardDto>
-
+    fun convNodeManageSummaryCards(listEntity: Collection<Node>): List<NodeManageSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<NodeManageSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(NodeManageSummaryCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(NodeManageSummaryCardDto(entity))
 
         // Return
         return listCards
     }
 
     // NodeItem Entity List to Node Manage Item Card Dto List
-    fun convNodeManageItemCards(listEntity: Collection<NodeItem?>): List<NodeManageItemCardDto> {
-        // Field
-        val listCards: MutableList<NodeManageItemCardDto>
-
+    fun convNodeManageItemCards(listEntity: Collection<NodeItem>): List<NodeManageItemCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<NodeManageItemCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(NodeManageItemCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(NodeManageItemCardDto(entity))
 
         // Return
         return listCards
     }
 
     // NodeItem Entity List to Trigger Item Card Dto List
-    fun convTriggerItemCards(listEntity: Collection<NodeItem?>): List<TriggerItemCardDto> {
-        // Field
-        val listCards: MutableList<TriggerItemCardDto>
-
+    fun convTriggerItemCards(listEntity: Collection<NodeItem>): List<TriggerItemCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<TriggerItemCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(TriggerItemCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(TriggerItemCardDto(entity))
 
         // Return
         return listCards
     }
 
     // Node Entity List to Node Manage Summary Card Dto List
-    fun convTriggerSummaryCards(listEntity: Collection<NodeTrigger?>): List<TriggerSummaryCardDto> {
-        // Field
-        val listCards: MutableList<TriggerSummaryCardDto>
-
+    fun convTriggerSummaryCards(listEntity: Collection<NodeTrigger>): List<TriggerSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<TriggerSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(TriggerSummaryCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(TriggerSummaryCardDto(entity))
 
         // Return
         return listCards
     }
 
     // Member Entity List to Group Member Card Item Dto List
-    fun convGroupMemberCardItems(listEntity: Collection<Member?>): List<GroupMemberCardItemDto> {
-        // Field
-        val listCards: MutableList<GroupMemberCardItemDto>
-
+    fun convGroupMemberCardItems(listEntity: Collection<Member>): List<GroupMemberCardItemDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<GroupMemberCardItemDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(GroupMemberCardItemDto(entity))
+        for (entity in listEntity)
+            listCards.add(GroupMemberCardItemDto(entity))
 
         // Return
         return listCards
     }
 
     // Node Entity List to Group Node Card Item Dto List
-    fun convGroupNodeCardItems(listEntity: Collection<Node?>): List<GroupNodeCardItemDto> {
-        // Field
-        val listCards: MutableList<GroupNodeCardItemDto>
-
+    fun convGroupNodeCardItems(listEntity: Collection<Node>): List<GroupNodeCardItemDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<GroupNodeCardItemDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(GroupNodeCardItemDto(entity))
+        for (entity in listEntity)
+            listCards.add(GroupNodeCardItemDto(entity))
 
         // Return
         return listCards
     }
 
     // NodeGroup Entity List to Node Group Summary Card Dto List
-    fun convNodeGroupSummaryCards(listEntity: Collection<NodeGroup?>): List<NodeGroupSummaryCardDto> {
-        // Field
-        val listCards: MutableList<NodeGroupSummaryCardDto>
-
+    fun convNodeGroupSummaryCards(listEntity: Collection<NodeGroup>): List<NodeGroupSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<NodeGroupSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(NodeGroupSummaryCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(NodeGroupSummaryCardDto(entity))
 
         // Return
         return listCards
     }
 
     // MemberGroup Entity List to Member Group Summary Card Dto List
-    fun convMemberGroupSummaryCards(listEntity: Collection<MemberGroup?>): List<MemberGroupSummaryCardDto> {
-        // Field
-        val listCards: MutableList<MemberGroupSummaryCardDto>
-
+    fun convMemberGroupSummaryCards(listEntity: Collection<MemberGroup>): List<MemberGroupSummaryCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<MemberGroupSummaryCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(MemberGroupSummaryCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(MemberGroupSummaryCardDto(entity))
 
         // Return
         return listCards
     }
 
     // MemberInterlockToken Entity List to Interlock Token Card Dto List
-    fun convInterlockTokenCards(listEntity: Collection<MemberInterlockToken?>): List<InterlockTokenCardDto> {
-        // Field
-        val listCards: MutableList<InterlockTokenCardDto>
-
+    fun convInterlockTokenCards(listEntity: Collection<MemberInterlockToken>): List<InterlockTokenCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<InterlockTokenCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(InterlockTokenCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(InterlockTokenCardDto(entity))
 
         // Return
         return listCards
     }
 
     // MemberInterlockToken Entity List to Action Interlock Token Card Dto List
-    fun convActionInterlockTokenCards(listEntity: Collection<MemberInterlockToken?>): List<ActionInterlockCardDto> {
-        // Field
-        val listCards: MutableList<ActionInterlockCardDto>
-
+    fun convActionInterlockTokenCards(listEntity: Collection<MemberInterlockToken>): List<ActionInterlockCardDto> {
         // Init
-        listCards = ArrayList()
+        val listCards: MutableList<ActionInterlockCardDto> = ArrayList()
 
         // Process
-        for (entity in listEntity) listCards.add(ActionInterlockCardDto(entity))
+        for (entity in listEntity)
+            listCards.add(ActionInterlockCardDto(entity))
 
         // Return
         return listCards

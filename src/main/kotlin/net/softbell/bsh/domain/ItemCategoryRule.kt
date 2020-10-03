@@ -1,8 +1,8 @@
 package net.softbell.bsh.domain
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 아이템 카테고리 자료형
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 아이템 카테고리 자료형
  * (사용자, 제어, 센서, 리더)
  */
 enum class ItemCategoryRule {

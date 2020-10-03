@@ -8,8 +8,8 @@ import javax.persistence.*
 import kotlin.collections.ArrayList
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 트리거 엔티티
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 트리거 엔티티
  */
 @Entity
 @Table(name = "node_trigger")

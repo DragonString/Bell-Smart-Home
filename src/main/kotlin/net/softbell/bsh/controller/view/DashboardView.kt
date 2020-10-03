@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 대시보드 뷰 컨트롤러
+ * @author : Bell(bell@softbell.net)
+ * @description : 대시보드 뷰 컨트롤러
  */
 @Controller
 @RequestMapping("/")
@@ -19,10 +19,6 @@ class DashboardView {
 
     @GetMapping
     fun dispIndex(model: Model): String {
-        // Field
-
-        // Init
-
         // Process
         model.addAttribute("listCardHumidityWarns", dashboardService.getHumidityWarn())
         model.addAttribute("listCardTemperatureWarns", dashboardService.getTemperatureWarn())

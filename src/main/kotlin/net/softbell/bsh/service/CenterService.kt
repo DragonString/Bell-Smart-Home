@@ -1,6 +1,5 @@
 package net.softbell.bsh.service
 
-import jdk.nashorn.internal.objects.annotations.Getter
 import net.softbell.bsh.domain.entity.CenterSetting
 import net.softbell.bsh.domain.repository.CenterSettingRepo
 import net.softbell.bsh.dto.request.CenterSettingDto
@@ -10,21 +9,21 @@ import javax.annotation.PostConstruct
 import javax.transaction.Transactional
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : Center Setting 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : Center Setting 서비스
  */
 @Service
 class CenterService {
     // Global Field
     @Autowired private lateinit var centerSettingRepo: CenterSettingRepo
-    private lateinit var setting: CenterSetting
+    lateinit var setting: CenterSetting // 현재 운영 값
 
     /**
      * 센터 설정 기본값 생성
      */
     fun createSetting(isEnabled: Boolean): CenterSetting {
-        // Field
-        val centerSetting: CenterSetting = CenterSetting(
+        // Default Init
+        val centerSetting = CenterSetting(
                 isEnabled = 0.toByte(), // 센터 설정 오버라이드 사용 여부 (true[1]: 활성화, false[0]: 비활성화)
                 iotAction = 1.toByte(), // IoT 액션 사용 여부 (0: 비활성화, 1: 활성화)
                 iotControl = 1.toByte(), // IoT 제어 사용 여부 (0: 비활성화, 1: 활성화)
@@ -55,7 +54,7 @@ class CenterService {
     fun loadSetting(): CenterSetting {
         // Init
         var centerSetting: CenterSetting? = null
-        val listSetting: List<CenterSetting?> = centerSettingRepo.findAll()
+        val listSetting: List<CenterSetting> = centerSettingRepo.findAll()
 
         // DB - Load
         if (listSetting.size != 1) // DB에 세팅값이 1개 초과면 (이상 저장)
@@ -68,7 +67,7 @@ class CenterService {
         else { // DB에 세팅값이 있으면
             centerSetting = listSetting[0] // DB에 있는 센터설정값 로드
 
-            setting = if (centerSetting?.isEnabled == 1.toByte()) // 센터 설정이 사용중이면 그대로 반영
+            setting = if (centerSetting.isEnabled == 1.toByte()) // 센터 설정이 사용중이면 그대로 반영
                 centerSetting
             else // 센터 설정이 미사용중
                 createSetting(true) // 기본값으로 오버라이드 비활성화로 생성
@@ -110,12 +109,5 @@ class CenterService {
 
         // Return
         return true
-    }
-
-    /**
-     * 현재 운영 값 반환
-     */
-    fun getSetting(): CenterSetting {
-        return setting
     }
 }

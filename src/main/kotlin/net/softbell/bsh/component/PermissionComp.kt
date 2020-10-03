@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 권한 관련 컴포넌트
+ * @author : Bell(bell@softbell.net)
+ * @description : 권한 관련 컴포넌트
  */
 @Component
 class PermissionComp {
@@ -22,24 +22,18 @@ class PermissionComp {
     @Autowired lateinit var nodeGroupItemRepo: NodeGroupItemRepo
 
     // 활성화된 사용자 그룹 반환
-    fun getEnableMemberGroup(): List<MemberGroup?>? {
-        // Field
-        val listMemberGroup: List<MemberGroup?>?
-
-        // Init
-        listMemberGroup = memberGroupRepo.findByEnableStatus(EnableStatusRule.ENABLE)
-
+    fun getEnableMemberGroup(): List<MemberGroup> {
         // Return
-        return listMemberGroup
+        return memberGroupRepo.findByEnableStatus(EnableStatusRule.ENABLE)
     }
 
     // 사용자가 포함된 활성화된 사용자 그룹 반환
-    fun getEnableMemberGroup(member: Member?): List<MemberGroup?>? {
+    fun getEnableMemberGroup(member: Member): List<MemberGroup> {
         // Field
-        val listMemberGroup: List<MemberGroup?>?
+        val listMemberGroup: List<MemberGroup>
 
         // Init
-        val listMemberGroupItem: List<MemberGroupItem?>? = memberGroupItemRepo.findByMember(member)
+        val listMemberGroupItem: List<MemberGroupItem> = memberGroupItemRepo.findByMember(member)
         listMemberGroup = memberGroupRepo.findByMemberGroupItemsInAndEnableStatus(listMemberGroupItem, EnableStatusRule.ENABLE)
 
         // Return
@@ -47,15 +41,15 @@ class PermissionComp {
     }
 
     // 권한이 있는 사용자 그룹 반환
-    fun getPrivilegeMemberGroup(listGroupPermission: List<GroupPermission?>?): List<MemberGroup?>? {
+    fun getPrivilegeMemberGroup(listGroupPermission: List<GroupPermission>): List<MemberGroup> {
         // Return
         return memberGroupRepo.findByGroupPermissionsIn(listGroupPermission)
     }
 
     // 권한이 있는 사용자 그룹 반환
-    fun getPrivilegeMemberGroup(listMemberGroup: List<MemberGroup>, listGroupPermission: List<GroupPermission?>?): List<MemberGroup?>? {
+    fun getPrivilegeMemberGroup(listMemberGroup: List<MemberGroup>, listGroupPermission: List<GroupPermission>): List<MemberGroup> {
         // Field
-        val listMemberGroupId: MutableList<Long?>
+        val listMemberGroupId: MutableList<Long>
 
         // Init
         listMemberGroupId = ArrayList()
@@ -68,25 +62,18 @@ class PermissionComp {
     }
 
     // 활성화된 노드 그룹 반환
-    fun getEnableNodeGroup(): List<NodeGroup>? {
-        // Field
-        val listNodeGroup: List<NodeGroup>?
-
-        // Init
-        listNodeGroup = nodeGroupRepo.findByEnableStatus(EnableStatusRule.ENABLE)
-
+    fun getEnableNodeGroup(): List<NodeGroup> {
         // Return
-        return listNodeGroup
+        return nodeGroupRepo.findByEnableStatus(EnableStatusRule.ENABLE)
     }
 
     // 노드가 포함된 활성화된 노드 그룹 반환
-    fun getEnableNodeGroup(node: Node?): List<NodeGroup?>? {
+    fun getEnableNodeGroup(node: Node): List<NodeGroup> {
         // Field
-        val listNodeGroupItem: List<NodeGroupItem?>?
-        val listNodeGroup: List<NodeGroup?>?
+        val listNodeGroup: List<NodeGroup>
 
         // Init
-        listNodeGroupItem = nodeGroupItemRepo.findByNode(node)
+        val listNodeGroupItem: List<NodeGroupItem> = nodeGroupItemRepo.findByNode(node)
         listNodeGroup = nodeGroupRepo.findByNodeGroupItemsInAndEnableStatus(listNodeGroupItem, EnableStatusRule.ENABLE)
 
         // Return
@@ -94,9 +81,9 @@ class PermissionComp {
     }
 
     // 권한이 있는 사용자 그룹 반환
-    fun getPrivilegeNodeGroup(listNodeGroup: List<NodeGroup>, listGroupPermission: List<GroupPermission?>?): List<NodeGroup?>? {
+    fun getPrivilegeNodeGroup(listNodeGroup: List<NodeGroup>, listGroupPermission: List<GroupPermission>): List<NodeGroup> {
         // Field
-        val listNodeGroupId: MutableList<Long?>
+        val listNodeGroupId: MutableList<Long>
 
         // Init
         listNodeGroupId = ArrayList()

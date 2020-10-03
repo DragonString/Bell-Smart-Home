@@ -6,8 +6,8 @@ import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Component
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 채널 컴포넌트 v1
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 채널 컴포넌트 v1
  */
 @Component
 class IotChannelCompV1 {
@@ -20,11 +20,11 @@ class IotChannelCompV1 {
 
     fun sendDataUID(data: BaseV1Dto) {
         // Process
-        template!!.convertAndSend(G_UID_URL + data.target, data)
+        template.convertAndSend(G_UID_URL + data.target, data)
     }
 
     fun sendDataToken(data: BaseV1Dto) {
         // Process
-        template!!.convertAndSend(G_TOKEN_URL + data.target, data)
+        template.convertAndSend(G_TOKEN_URL + data.target, data)
     }
 }

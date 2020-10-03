@@ -4,8 +4,8 @@ import java.io.Serializable
 import javax.persistence.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 예약 액션 엔티티
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 예약 액션 엔티티
  */
 @Entity
 @Table(name = "node_reserv_action")

@@ -4,23 +4,12 @@ import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.entity.Node
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드뷰 리스트 카드정보 DTO
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드뷰 리스트 카드정보 DTO
  */
-class NodeSummaryCardDto(entity: Node?) {
-    var nodeId: Long?
-    var alias: String?
-    var enableStatus: EnableStatusRule?
-    var controlMode: Byte?
-
-    init {
-        // Exception
-        entity.let {
-            // Convert
-            nodeId = entity!!.nodeId
-            alias = entity.alias
-            enableStatus = entity.enableStatus
-            controlMode = entity.controlMode
-        }
-    }
+class NodeSummaryCardDto(entity: Node) {
+    val nodeId: Long = entity.nodeId
+    val alias: String = entity.alias
+    val enableStatus: EnableStatusRule = entity.enableStatus
+    val controlMode: Byte = entity.controlMode
 }

@@ -6,7 +6,6 @@ import net.softbell.bsh.domain.BanRule
 import net.softbell.bsh.domain.MemberRole
 import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.MemberLoginLog
-import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.repository.*
 import net.softbell.bsh.dto.request.MemberDto
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,8 +23,8 @@ import java.security.Principal
 import java.util.*
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 서비스
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 서비스
  */
 @Service
 class MemberService : UserDetailsService {
@@ -45,14 +44,13 @@ class MemberService : UserDetailsService {
     @Transactional
     fun joinUser(memberDto: MemberDto): Long {
         // Log
-        logger.info("회원가입 요청 (" + memberDto.userId + " - " + memberDto.username + ")")
+        logger.info("회원가입 요청 (" + memberDto.userId + " - " + memberDto.username + ")") // TODO
 
         // Field
         val passwordEncoder = BCryptPasswordEncoder()
-        val member: Member?
 
         // Init
-        member = getMember(memberDto.userId)
+        val member: Member? = getMember(memberDto.userId)
 
         // Exception
         if (member != null) // 같은 아이디로 회원가입이 되어있다면,
@@ -69,21 +67,16 @@ class MemberService : UserDetailsService {
         memberDto.password = passwordEncoder.encode(memberDto.password) // 비밀번호 암호화
         memberDto.ban = BanRule.NORMAL.code
         memberDto.permission = MemberRole.WAIT.code
-        logger.info("가입완료") // TEST ####
-        return memberRepo.save(memberDto.toEntity()).memberId!!
+        logger.info("가입완료") // TODO TEST ####
+        return memberRepo.save(memberDto.toEntity()).memberId
     }
 
-    fun getAllMember(): MutableList<Member?> {
+    fun getAllMember(): List<Member> {
         return memberRepo.findAll()
     }
 
-    fun getMember(userId: String?): Member? {
-        // Field
-
-        // Check
-
-        // Return
-        return memberRepo.findByUserId(userId) ?: return null
+    fun getMember(userId: String): Member? {
+        return memberRepo.findByUserId(userId)
     }
 
     fun getMember(id: Long): Member? {
@@ -91,97 +84,79 @@ class MemberService : UserDetailsService {
         val optMember = memberRepo.findById(id)
 
         // Check
-        return if (!optMember.isPresent) null else optMember.get()
+        return if (optMember.isPresent)
+            optMember.get()
+        else
+            null
     }
 
-    fun getAdminMember(userId: String?): Member? {
-        // Field
-        val member: Member?
-
+    fun getAdminMember(userId: String): Member? {
         // Init
-        member = getMember(userId)
-
-        // Exception
-        if (member == null) return null
+        val member: Member = getMember(userId) ?: return null
 
         // Auth Check
-        return if (!isAdmin(member)) null else member
+        return if (isAdmin(member))
+            member
+        else
+            null
     }
 
-    fun isAdmin(member: Member?): Boolean {
-        if (member == null) return false
-        return !(!(member.permission === MemberRole.ADMIN || member.permission === MemberRole.SUPERADMIN) ||
-                member.ban !== BanRule.NORMAL)
+    fun isAdmin(member: Member): Boolean {
+        return (member.permission == MemberRole.ADMIN || member.permission == MemberRole.SUPERADMIN) &&
+                member.ban == BanRule.NORMAL
     }
 
-    fun loginMember(id: String?, password: String?): Member? {
-        // Field
-        val member: Member?
-        val passwordEncoder = BCryptPasswordEncoder()
-
+    fun loginMember(id: String, password: String): Member? {
         // Init
-        member = getMember(id)
-
-        // Exception
-        return if (member == null || !passwordEncoder.matches(password, member.password)) null else member
+        val passwordEncoder = BCryptPasswordEncoder()
+        val member: Member? = getMember(id)
 
         // Return
+        return if (member != null && passwordEncoder.matches(password, member.password))
+            member
+        else
+            null
     }
 
     @Throws(UsernameNotFoundException::class)
-    override fun loadUserByUsername(userId: String?): UserDetails? {
-        // Field
-        val member: Member?
-
+    override fun loadUserByUsername(userId: String): UserDetails {
         // Init
-        member = getMember(userId)
-
-        // Exsist Check
-        if (member == null) throw UsernameNotFoundException("저장된 회원 없음")
+        val member: Member = getMember(userId) ?: throw UsernameNotFoundException("저장된 회원 없음")
 
         // Login Fail Check
-        if (isLoginCancel(member)) throw UsernameNotFoundException("loginFail")
+        if (isLoginCancel(member))
+            throw UsernameNotFoundException("loginFail")
 
         // DB - Update
         member.lastLogin = Date()
         memberRepo.save(member)
 
         // Ban Check
-        if (isLoginBan(member)) member.permission = MemberRole.BAN
+        if (isLoginBan(member))
+            member.permission = MemberRole.BAN
 
         // Return
         return member
     }
 
     @Throws(UsernameNotFoundException::class)
-    fun tokenLoadUserByUsername(userId: String?): UserDetails? {
-        // Field
-        val member: Member?
-
+    fun tokenLoadUserByUsername(userId: String): UserDetails {
         // Init
-        member = getMember(userId)
-
-        // Exsist Check
-        if (member == null) throw UsernameNotFoundException("저장된 회원 없음")
+        val member: Member = getMember(userId) ?: throw UsernameNotFoundException("저장된 회원 없음")
 
         // Ban Check
-        if (isLoginBan(member)) member.permission = MemberRole.BAN
+        if (isLoginBan(member))
+            member.permission = MemberRole.BAN
 
         // Return
         return member
     }
 
     @Transactional
-    fun procLogin(userId: String?, loginIp: String, isLogin: Boolean): Boolean {
-        // Field
-        val member: Member?
-        val memberLoginLog: MemberLoginLog
-
+    fun procLogin(userId: String, loginIp: String, isLogin: Boolean): Boolean {
         // Init
-        member = getMember(userId)
-
-        // Exception
-        if (member == null) return false
+        val memberLoginLog: MemberLoginLog
+        val member: Member = getMember(userId) ?: return false
 
         // Process
         memberLoginLog = MemberLoginLog(
@@ -195,18 +170,13 @@ class MemberService : UserDetailsService {
             memberLoginLog.status = AuthStatusRule.SUCCESS
             member.loginFailBanStart = null
         } else {
-            // Field
-            val start: Calendar
-            val end: Calendar
-            val maxFailCount: Int
-            val failCheckTime: Int
-            val fail: Long
-
             // Init
-            start = Calendar.getInstance()
-            end = Calendar.getInstance()
-            failCheckTime = centerService.getSetting().webLoginFailCheckTime!!
-            maxFailCount = centerService.getSetting().webLoginFailMaxCount!!.toInt()
+            val fail: Long
+            val start: Calendar = Calendar.getInstance()
+            val end: Calendar = Calendar.getInstance()
+            val failCheckTime: Int = centerService.setting.webLoginFailCheckTime
+            val maxFailCount: Int = centerService.setting.webLoginFailMaxCount.toInt()
+
             start.add(Calendar.SECOND, -failCheckTime)
             fail = memberLoginLogRepo.countByMemberAndStatusAndRequestDateBetween(member, AuthStatusRule.FAIL, start.time, end.time) + 1
 
@@ -226,51 +196,31 @@ class MemberService : UserDetailsService {
 
     fun isLoginBan(member: Member): Boolean {
         // 1st Check
-        if (member.ban === BanRule.PERMANENT) return true
-
-        // Field
-        val now: Date
-        val ban: Date?
+        if (member.ban == BanRule.PERMANENT)
+            return true
 
         // Init
-        now = Date()
-        ban = member.banDate
+        val now = Date()
+        val ban = member.banDate ?: return false
 
-        // 2st Check
-        if (member.ban === BanRule.TEMP) {
-            // Exception
-            if (ban == null) return false
+        // Check
+        if (member.ban == BanRule.TEMP)
+            return now <= ban // Check
 
-            // Check
-            return if (now.compareTo(ban) > 0) // 차단 기한이 지났으면
-                false else true
-        }
-
-        // Return
+        // Default Return
         return false
     }
 
     fun isLoginCancel(member: Member): Boolean {
-        // Field
-        val ban: Calendar
-        val banStart: Date?
-
         // Init
-        ban = Calendar.getInstance()
-        banStart = member.loginFailBanStart // 로그인 실패 시각 로드
-
-        // Exception
-        if (banStart == null) // 차단되지 않았으면
-            return false
+        val ban = Calendar.getInstance()
 
         // Load
-        ban.time = member.loginFailBanStart
-        ban.add(Calendar.SECOND, centerService.getSetting().webLoginFailBanTime!!) // 차단 시각 추가
+        ban.time = member.loginFailBanStart ?: return false // 차단되지 않았으면 로그인 실패 시각 로드
+        ban.add(Calendar.SECOND, centerService.setting.webLoginFailBanTime) // 차단 시각 추가
 
         // Check
-        return if (ban.time.compareTo(Date()) > 0) true else false // 로그인 취소
-
-        // Return
+        return ban.time > Date() // 로그인 취소
     }
 
     /**
@@ -291,7 +241,7 @@ class MemberService : UserDetailsService {
     @Transactional
     fun deleteMember(member: Member?): Boolean {
         // Exception
-        return if (member == null) false else true
+        return member != null
 
         // Field
 
@@ -382,15 +332,9 @@ class MemberService : UserDetailsService {
 	}*/
 
     @Transactional
-    fun deleteUser(member: Member?): Boolean {
-        // Exception
-        if (member == null) return false
-
-        // Field
-        val listNodeAction: List<NodeAction?>?
-
+    fun deleteUser(member: Member): Boolean {
         // Init
-        listNodeAction = member.nodeActions
+        val listNodeAction = member.nodeActions
 
         // DB - Node Action Child Delete
         nodeReservActionRepo.deleteAllByNodeAction(listNodeAction)
@@ -415,17 +359,17 @@ class MemberService : UserDetailsService {
     }
 
     @Transactional
-    fun deleteUserList(principal: Principal, listMemberId: List<Int>): Boolean {
+    fun deleteUserList(principal: Principal, listMemberId: List<Long>): Boolean {
         // Log
         logger.info("회원 탈퇴 요청 (" + listMemberId.size + ") (" + principal.name + ")")
 
         // Field
         var isError = false
-        val memberMySelf = getMember(principal.name)
+        val memberMySelf = getMember(principal.name) ?: return false // 본인이 없으면 실패
 
         // Init
         for (value in listMemberId) {
-            val member = getMember(value.toLong())
+            val member = getMember(value)
 
             // Exception
             if (member == null || member == memberMySelf) // 해당하는 회원이 없으면
@@ -433,7 +377,7 @@ class MemberService : UserDetailsService {
                 isError = true
                 continue
             }
-            if (member.permission === MemberRole.SUPERADMIN && memberMySelf!!.permission !== MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
+            if (member.permission == MemberRole.SUPERADMIN && memberMySelf.permission != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
                 continue
 
             // Process
@@ -465,21 +409,18 @@ class MemberService : UserDetailsService {
 	}
 */
     @Transactional
-    fun modifyInfo(principal: Principal, strCurPassword: String?, strModPassword: String?): Member? {
+    fun modifyInfo(principal: Principal, strCurPassword: String, strModPassword: String): Member? {
         // Log
         logger.info("회원정보 수정 요청 (" + principal.name + ")")
 
-        // Field
-        var member: Member?
-        val passwordEncoder = BCryptPasswordEncoder()
-
         // Init
-        member = getMember(principal.name)
+        val passwordEncoder = BCryptPasswordEncoder()
+        var member: Member = getMember(principal.name) ?: return null
 
         // Exception
-        if (member == null) return null
         /*if (strModPassword.length() < 6 || strModPassword.length() > 20) // 비밀번호 규칙
-			return null;*/if (!passwordEncoder.matches(strCurPassword, member.password)) // 현재 등록된 비번이 다르면
+			return null;*/
+        if (!passwordEncoder.matches(strCurPassword, member.password)) // 현재 등록된 비번이 다르면
             return null
 
         // Process
@@ -492,17 +433,12 @@ class MemberService : UserDetailsService {
         return member
     }
 
-    fun getMemberList(intPage: Int, intCount: Int): Page<Member?>? {
-        // Field
-        val pageMember: Page<Member?>
-        val curPage: Pageable
-
+    fun getMemberList(intPage: Int, intCount: Int): Page<Member> {
         // Init
-        curPage = PageRequest.of(intPage - 1, intCount, Sort.by(Sort.Direction.DESC, "memberId"))
-        pageMember = memberRepo.findAll(curPage)
+        val curPage = PageRequest.of(intPage - 1, intCount, Sort.by(Sort.Direction.DESC, "memberId"))
 
         // Return
-        return pageMember
+        return memberRepo.findAll(curPage)
     }
 /*
 	public int getMemberMaxPage(int intCount) {
@@ -535,110 +471,95 @@ class MemberService : UserDetailsService {
 		// Return
 		return intMaxPage;
 	}*/
-    fun procMemberApproval(principal: Principal, listMemberId: List<Int>, isApproval: Boolean, isMember: Boolean): Boolean {
+    fun procMemberApproval(principal: Principal, listMemberId: List<Long>, isApproval: Boolean, isMember: Boolean): Boolean {
         // Log
         logger.info(listMemberId.size.toString() + "명 회원 승인(" + isApproval + ") 처리 (" + principal.name + ")")
 
-        // Field
-        var intSuccess = listMemberId.size
-        val memberMySelf: Member?
-
         // Init
-        memberMySelf = getAdminMember(principal.name)
-
-        // Exception
-        if (memberMySelf == null) return false
+        var intSuccess = listMemberId.size
+        getAdminMember(principal.name) ?: return false // 본인이 관리자가 아니면 실패
 
         // Process
-        for (intMemberId in listMemberId) {
-            // Field
-            var member: Member?
-
+        for (memberId in listMemberId) {
             // Init
-            member = getMember(intMemberId.toLong())
+            val member = getMember(memberId)
 
             // Exception
             if (member == null) {
                 intSuccess--
                 continue
             }
-            if (member.permission !== MemberRole.WAIT) // 승인 대기중 회원만 제어 가능
+            if (member.permission != MemberRole.WAIT) // 승인 대기중 회원만 제어 가능
                 continue
 
             // Process
-            if (isApproval) if (isMember) member.permission = MemberRole.MEMBER else member.permission = MemberRole.NODE else member.permission = MemberRole.BAN
+            if (isApproval)
+                if (isMember)
+                    member.permission = MemberRole.MEMBER
+                else
+                    member.permission = MemberRole.NODE
+            else
+                member.permission = MemberRole.BAN
 
             // Process - DB Update
             memberRepo.save(member)
         }
 
         // Return
-        return if (intSuccess <= 0) false else true
+        return intSuccess > 0
     }
 
-    fun procMemberBan(principal: Principal, listMemberId: List<Int>, isBan: Boolean): Boolean {
+    fun procMemberBan(principal: Principal, listMemberId: List<Long>, isBan: Boolean): Boolean {
         // Log
         logger.info(listMemberId.size.toString() + "명 회원 정지(" + isBan + ") 처리 (" + principal.name + ")")
 
-        // Field
-        var intSuccess = listMemberId.size
-        val memberMySelf: Member?
-
         // Init
-        memberMySelf = getMember(principal.name)
-
-        // Exception
-        if (memberMySelf == null) return false
+        var intSuccess = listMemberId.size
+        val memberMySelf = getMember(principal.name) ?: return false
 
         // Process
-        for (intMemberId in listMemberId) {
-            // Field
-            var member: Member?
-
+        for (memberId in listMemberId) {
             // Init
-            member = getMember(intMemberId.toLong())
+            val member = getMember(memberId)
 
             // Exception
             if (member == null || member == memberMySelf) {
                 intSuccess--
                 continue
             }
-            if (member.permission === MemberRole.SUPERADMIN && memberMySelf.permission !== MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
+            if (member.permission == MemberRole.SUPERADMIN && memberMySelf.permission != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
                 continue
 
             // Process
-            if (isBan) member.ban = BanRule.PERMANENT else member.ban = BanRule.NORMAL
+            if (isBan)
+                member.ban = BanRule.PERMANENT
+            else
+                member.ban = BanRule.NORMAL
 
             // Process - DB Update
             memberRepo.save(member)
         }
 
         // Return
-        return if (intSuccess <= 0) false else true
+        return intSuccess > 0
     }
 
-    fun procSetAdmin(principal: Principal, listMemberId: List<Int>, isAdd: Boolean): Boolean {
+    fun procSetAdmin(principal: Principal, listMemberId: List<Long>, isAdd: Boolean): Boolean {
         // Log
         logger.info(listMemberId.size.toString() + "명 관리자 설정(" + isAdd + ") 처리 (" + principal.name + ")")
 
-        // Exception
-
-
         // Field
         var intSuccess = listMemberId.size
-        val memberMySelf = getMember(principal.name)
+        val memberMySelf = getMember(principal.name) ?: return false
 
         // Exception
-        if (memberMySelf!!.permission !== MemberRole.SUPERADMIN) // 권한 제어는 최고 관리자가 아니면 불가능
+        if (memberMySelf.permission != MemberRole.SUPERADMIN) // 권한 제어는 최고 관리자가 아니면 불가능
             return false
 
         // Process
-        for (intMemberId in listMemberId) {
-            // Field
-            var member: Member?
-
+        for (memberId in listMemberId) {
             // Init
-            member = getMember(intMemberId.toLong())
+            var member = getMember(memberId)
 
             // Exception
             if (member == null || member == memberMySelf) {
@@ -648,55 +569,44 @@ class MemberService : UserDetailsService {
 
             // Process
             if (isAdd) {
-                if (member.permission === MemberRole.MEMBER) member.permission = MemberRole.ADMIN
-            } else if (member.permission === MemberRole.ADMIN) member.permission = MemberRole.MEMBER
+                if (member.permission == MemberRole.MEMBER)
+                    member.permission = MemberRole.ADMIN
+            } else if (member.permission == MemberRole.ADMIN)
+                member.permission = MemberRole.MEMBER
 
             // Process - DB Update
             memberRepo.save(member)
         }
 
         // Return
-        return if (intSuccess <= 0) false else true
+        return intSuccess > 0
     }
 
-    fun getLoginLog(principal: Principal, intPage: Int, intCount: Int): Page<MemberLoginLog?>? {
+    fun getLoginLog(principal: Principal, intPage: Int, intCount: Int): Page<MemberLoginLog> {
         // Field
-        val member: Member?
-        val pageMemberLoginLog: Page<MemberLoginLog?>?
+        val pageMemberLoginLog: Page<MemberLoginLog>
         val curPage: Pageable
 
         // Init
-        member = getMember(principal.name)
-
-        // Exception
-        if (member == null) return null
+        val member: Member = getMember(principal.name) ?: return Page.empty()
 
         // Init
         curPage = PageRequest.of(intPage - 1, intCount, Sort.by(Sort.Direction.DESC, "logId"))
-        pageMemberLoginLog = memberLoginLogRepo.findByMember(member, curPage)
-
-        // Process
 
         // Return
-        return pageMemberLoginLog
+        return memberLoginLogRepo.findByMember(member, curPage)
     }
 
     fun getLoginLogMaxPage(principal: Principal, intCount: Int): Long {
-        // Field
-        val member: Member?
-        val longCount: Long
-        var intMaxPage: Int
-
         // Init
-        member = getMember(principal.name)
-
-        // Exception
-        if (member == null) return 0
+        val member: Member = getMember(principal.name) ?: return 0
 
         // Process
-        longCount = memberLoginLogRepo.countByMember(member) // userid로 검색
-        intMaxPage = (longCount / intCount).toInt()
-        if (longCount % intCount != 0L) intMaxPage += 1
+        val longCount = memberLoginLogRepo.countByMember(member) // userid로 검색
+        var intMaxPage = (longCount / intCount).toInt()
+
+        if (longCount % intCount != 0L)
+            intMaxPage += 1
 
         // Return
         return intMaxPage.toLong()

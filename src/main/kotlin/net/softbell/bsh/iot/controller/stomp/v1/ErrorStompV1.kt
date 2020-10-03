@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController
 
 /**
  * @author : Bell(bell@softbell.net)
- * @Description : STOMP Error Controller
+ * @description : STOMP Error Controller
  * STOMP publish: /api/stomp/pub
  * STOMP subscribe: /api/stomp/topic, /api/stomp/queue
  */

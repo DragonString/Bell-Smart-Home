@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : IoT 인증 REST API 컨트롤러 V1
+ * @author : Bell(bell@softbell.net)
+ * @description : IoT 인증 REST API 컨트롤러 V1
  */
 @RestController
 @RequestMapping("/api/rest/v1/iot/auth")
@@ -18,12 +18,12 @@ class IotAuthRestV1 {
     @Autowired private lateinit var iotAuthComp: IotAuthCompV1
 
     @GetMapping("/token/check")
-    fun checkTokenAvailable(@RequestParam("token") token: String?): ResultDto {
-        // Field
-        val message: ResultDto = ResultDto()
+    fun checkTokenAvailable(@RequestParam("token") token: String): ResultDto {
+        // Init
+        val message = ResultDto()
 
         // Check
-        val isAvailable: Boolean = iotAuthComp.isTokenAvailable(token)
+        val isAvailable = iotAuthComp.isTokenAvailable(token)
 
         // Message
         if (isAvailable)
