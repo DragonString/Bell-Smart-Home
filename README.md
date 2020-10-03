@@ -11,45 +11,72 @@ Bell Smart Home
 [![pipeline status](https://git.bellsoft.net/Bell/BSH/badges/develop/pipeline.svg)](https://git.bellsoft.net/Bell/BSH/commits/develop)
   
 ## ※ 질문 전 체크사항  
-#### Q. 프로젝트 클론했는데 컴파일에러가 오지게 뜹니다.
-* [ ]  클론 후 프로젝트 자동 Import를 체크했다면, 기존 프로젝트를 삭제하고 Existing Gradle Project 로 임포트하세요.  
-* [ ]  lombok 라이브러리를 IDE에 설치하세요.  
-* [ ]  프로젝트를 재 빌드하세요.  
-
 #### Q. 프로젝트를 클론해서 보는데 한글이 다 깨져서 보입니다.  
 * [ ]  인코딩 설정을 UTF-8로 변경하세요.  
 
 
 ## ※ 개발 전 환경설정  
-- STS - Windows - Preferences  
-1. General - Workspace 에서 Text file encoding을 UTF-8 로 변경   
-2. lombok.jar 파일을 실행해서 STS 설치폴더에 lombok 의존성 설치     
-3. 프로젝트 클론 후 '프로젝트 우클릭 - Gradle - Refresh Gradle Project' 으로 의존성 체크 진행 필수   
-4. Lombok Library 를 사용하는데 이클립스 버그로 정상 커밋을 받았는데 컴파일에러가 발생할 때 'Project - Clean...' 으로 로컬에 다시 빌드하면 에러가 사라짐.  
+- IDE 설정  
+`C:\Program Files\JetBrains\IntelliJ IDEA {Version}\bin\idea64.exe.vmoptions`  
+메모리 할당량 수정 후 파일 제일 하단에 아래 매개변수 추가  
+`-Dfile.encoding=UTF-8`
+
+
+- 파일 수정 후 저장되지 않았을 시 * 표시 켜기  
+`File - Settings` 메뉴  
+`Editor > General > Editor Tabs`  
+`Mark modified (*)` 체크  
+
+
+- 인코딩 수정
+`File - Settings` 메뉴  
+`Editor > File Encodings`  
+Encoding 수정  
+
+
+- DevTools 설정 1/3  
+`File - Settings` 메뉴  
+`Build, Execution, Deployment > Build Toolls > Gradle`  
+`Build and run using:` 항목에 `IntelliJ IDEA` 선택  
+
+- DevTools 설정 2/3  
+`File - Settings` 메뉴  
+`Build, Execution, Deployment > Compiler`  
+`Build project automatically` 체크  
+
+- DevTools 설정 3/3  
+`Ctrl + Shift + A` 단축키로 `Registry` 검색  
+`compiler.automake.allow.when.app.running` 의 값을 체크  
+
 
 
 ## ※ 이용 예정 기술 및 도구  
 - IDE  
-Spring Tools Suite 4  
+IntelliJ CE 2020.2  
 
 - CI/CD  
 GitLab Auto DevOps  
 
 - 언어  
-JAVA 1.8.0_221  
+JAVA 1.8  
 Thymeleaf  
 HTML  
 CSS  
+JavaScript
 SQL  
 
+- 프레임워크  
+Spring Boot 2.3.4  
+Spring Data JPA  
+Spring Security 5  
+
 - 외부 라이브러리  
-Spring Boot 2.1.9  
 Gradle 3.x  
-Lombok  
 JDBC MySQL Connector  
-JPA  
+JWT  
+Swagger  
 DevTools  
-등등..
+등등..  
 
 - 물리 서버  
 Dell PowerEdge R610 (6C 12T * 2, DDR3 ECC 64GB)  
@@ -72,5 +99,5 @@ NTP
 
 
 ## ※ 참고 사이트  
-- STS : https://download.springsource.com/release/STS4/4.4.0.RELEASE/dist/e4.13/spring-tool-suite-4-4.4.0.RELEASE-e4.13.0-win32.win32.x86_64.zip  
+- IntelliJ : https://www.jetbrains.com/idea/download/  
 - Docker System Status : https://status.docker.com/  

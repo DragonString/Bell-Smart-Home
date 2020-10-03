@@ -1,6 +1,6 @@
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 방울의 자바스크립트 필수 라이브러리
+ * @author : Bell(bell@softbell.net)
+ * @description : 방울의 자바스크립트 필수 라이브러리
  */
 
 // Bootstrap Modal Init Focus

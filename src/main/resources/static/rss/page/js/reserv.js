@@ -1,6 +1,6 @@
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 노드 정보 페이지 자바스크립트
+ * @author : Bell(bell@softbell.net)
+ * @description : 노드 정보 페이지 자바스크립트
  */
 
 // 아이템 상태 변경

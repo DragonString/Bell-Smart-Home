@@ -33,8 +33,8 @@
 							<tbody>
 								<tr>
 									<td class="align-middle text-center">활성화 상태</td>
-									<td class="align-middle text-center" th:classappend="${ cardCenterSetting.isEnabled } ? 'text-success' : 'text-danger'" th:text="${ cardCenterSetting.isEnabled } ? '활성화' : '비활성화'"></td>
-									<td class="align-middle text-center" th:classappend="${ cardCenterSettingDefault.isEnabled } ? 'text-success' : 'text-danger'" th:text="${ cardCenterSettingDefault.isEnabled } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center" th:classappend="${ cardCenterSetting.enabled } ? 'text-success' : 'text-danger'" th:text="${ cardCenterSetting.enabled } ? '활성화' : '비활성화'"></td>
+									<td class="align-middle text-center" th:classappend="${ cardCenterSettingDefault.enabled } ? 'text-success' : 'text-danger'" th:text="${ cardCenterSettingDefault.enabled } ? '활성화' : '비활성화'"></td>
 								</tr>
 								<tr>
 									<td class="align-middle text-center">IoT Action</td>

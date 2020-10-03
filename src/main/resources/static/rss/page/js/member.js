@@ -1,6 +1,6 @@
 /**
- * @Author : Bell(bell@softbell.net)
- * @Description : 회원 관련 JS
+ * @author : Bell(bell@softbell.net)
+ * @description : 회원 관련 JS
  */
 
 function checkSignup(strFormId)
