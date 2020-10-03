@@ -1,0 +1,32 @@
+package net.softbell.bsh.controller.rest.api.v1
+
+import net.softbell.bsh.dto.response.ResultDto
+import net.softbell.bsh.iot.service.v1.IotReservServiceV1
+import net.softbell.bsh.service.ResponseService
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.Authentication
+import org.springframework.web.bind.annotation.*
+
+/**
+ * @author : Bell(bell@softbell.net)
+ * @description : 트리거 관련 REST API 컨트롤러 V1
+ */
+@RestController
+@RequestMapping("/api/rest/v1/reserv")
+class ReservRestV1 {
+    // Global Field
+    @Autowired private lateinit var responseService: ResponseService
+    @Autowired private lateinit var iotReservService: IotReservServiceV1
+
+    @PostMapping("/status/{id}")
+    fun setTriggerStatus(auth: Authentication, @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto {
+        // Init
+        val isSuccess = iotReservService.setTriggerEnableStatus(auth, id, status)
+
+        // Return
+        return if (isSuccess)
+            responseService.getSuccessResult()
+        else
+            responseService.getFailResult(-10, "해당하는 아이템이 없음")
+    }
+}

@@ -25,9 +25,9 @@
 								<div th:if="${ not #lists.isEmpty(cardValue.listItems) }" th:each="cardItemValue : ${cardValue.listItems}">
 									<span th:text="${cardItemValue.alias}"></span>
 									<div class="progress mb-4">
-										<div th:if="${cardItemValue.isDigital}" th:text="${cardItemValue.lastStatus} == 1 ? 'On' : 'Off'" th:style="|width: ${cardItemValue.widthPercent}%|" th:classappend="${cardItemValue.widthPercent} == 0 ? 'text-dark'" class="progress-bar progress-bar-striped progress-bar-animated bg-primary"></div>
-										<div th:if="not ${cardItemValue.isDigital} and ${cardItemValue.widthPercent} < 50" th:text="${cardItemValue.lastStatus}" th:style="|width: ${cardItemValue.widthPercent}%|" th:classappend="${(cardItemValue.widthPercent < 30 ? 'bg-primary' : 'bg-success') + (cardItemValue.widthPercent < 10 ? ' text-dark' : '')}" class="progress-bar progress-bar-striped progress-bar-animated"></div>
-										<div th:if="not ${cardItemValue.isDigital} and ${cardItemValue.widthPercent} >= 50" th:text="${cardItemValue.lastStatus}" th:style="|width: ${cardItemValue.widthPercent}%|" th:classappend="${cardItemValue.widthPercent} > 60 ? 'bg-danger' : 'bg-success'" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+										<div th:if="${cardItemValue.digital}" th:text="${cardItemValue.lastStatus} == 1 ? 'On' : 'Off'" th:style="|width: ${cardItemValue.widthPercent}%|" th:classappend="${cardItemValue.widthPercent} == 0 ? 'text-dark'" class="progress-bar progress-bar-striped progress-bar-animated bg-primary"></div>
+										<div th:if="not ${cardItemValue.digital} and ${cardItemValue.widthPercent} < 50" th:text="${cardItemValue.lastStatus}" th:style="|width: ${cardItemValue.widthPercent}%|" th:classappend="${(cardItemValue.widthPercent < 30 ? 'bg-primary' : 'bg-success') + (cardItemValue.widthPercent < 10 ? ' text-dark' : '')}" class="progress-bar progress-bar-striped progress-bar-animated"></div>
+										<div th:if="not ${cardItemValue.digital} and ${cardItemValue.widthPercent} >= 50" th:text="${cardItemValue.lastStatus}" th:style="|width: ${cardItemValue.widthPercent}%|" th:classappend="${cardItemValue.widthPercent} > 60 ? 'bg-danger' : 'bg-success'" class="progress-bar progress-bar-striped progress-bar-animated"></div>
 									</div>
 								</div>
 							</div>
