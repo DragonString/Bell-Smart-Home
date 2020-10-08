@@ -33,8 +33,6 @@ performance:
   only:
     refs:
       - master
-      - develop
-      - release/*
     kubernetes: active
   except:
     variables:
