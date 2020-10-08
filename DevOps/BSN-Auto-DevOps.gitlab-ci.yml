@@ -9,7 +9,8 @@ variables:
 stages:
   - build
   - test
-  - production
+  - deploy
+  - performance
 
 include:
   - local: /DevOps/Jobs/Build.gitlab-ci.yml

@@ -1,5 +1,5 @@
-production:
-  stage: production
+deploy:
+  stage: deploy
   only:
     - master
   script:
@@ -27,4 +27,4 @@ production:
     - deploy
   except:
     variables:
-      - $PRODUCTION_DISABLED
+      - $DEPLOY_DISABLED
