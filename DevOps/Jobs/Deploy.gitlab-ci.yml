@@ -2,6 +2,8 @@ deploy:
   stage: deploy
   only:
     - master
+  before_script:
+    - chmod +x ./gradlew
   script:
     - echo "Start Build clean.."
     - ./gradlew clean
@@ -22,7 +24,7 @@ deploy:
     - cp ./build/libs/*.jar $SERVER_ROOT_PATH/
     - SERVER_FILE_NAME=$(ls $SERVER_ROOT_PATH/ | grep 'BellSmartHome' | tail -n 1)
     - echo "Start Server.. ($SERVER_FILE_NAME)"
-    - nohup java -jar -Dspring.profiles.active=prod $SERVER_ROOT_PATH/$SERVER_FILE_NAME &
+    - nohup java -jar -Dspring.profiles.active=prod $SERVER_ROOT_PATH/$SERVER_FILE_NAME > $SERVER_ROOT_PATH/server.log &
   tags:
     - deploy
   except:
