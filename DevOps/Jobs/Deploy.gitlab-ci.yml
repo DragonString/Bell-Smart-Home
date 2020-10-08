@@ -30,3 +30,4 @@ deploy:
   except:
     variables:
       - $DEPLOY_DISABLED
+  retry: 2
