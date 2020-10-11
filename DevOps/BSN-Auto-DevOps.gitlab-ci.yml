@@ -10,10 +10,8 @@ stages:
   - build
   - test
   - deploy
-  - performance
 
 include:
   - local: /DevOps/Jobs/Build.gitlab-ci.yml
   - local: /DevOps/Jobs/Test.gitlab-ci.yml
   - local: /DevOps/Jobs/Deploy.gitlab-ci.yml
-  - local: /DevOps/Jobs/Browser-Performance-Testing.gitlab-ci.yml

@@ -9,22 +9,10 @@ deploy:
     - ./gradlew clean
     - echo "Start Build BootJar.."
     - ./gradlew bootJar
-    - echo "Start Server Shutdown Process.."
-    - export CURRENT_PID=$(pgrep -f BellSmartHome)
-    - |
-      if [ -z $CURRENT_PID ]; then
-        echo "Server Process Not Found"
-      else
-        echo "Server Process ($CURRENT_PID) Shutdown"
-        kill $CURRENT_PID
-        sleep 5
-      fi
     - echo "Start Server Deploy Process.."
-    - rm -rf $SERVER_ROOT_PATH/*.jar
-    - cp ./build/libs/*.jar $SERVER_ROOT_PATH/
-    - export SERVER_FILE_NAME=$(ls $SERVER_ROOT_PATH/ | grep 'BellSmartHome' | tail -n 1)
-    - echo "Start Server.. ($SERVER_FILE_NAME)"
-    - nohup java -jar -Dspring.profiles.active=prod $SERVER_ROOT_PATH/$SERVER_FILE_NAME > $LOG_ROOT_PATH/server.log &
+    - cp ./build/libs/*.jar $SERVER_ROOT_PATH/bellsmarthome.jar
+    - echo "Restart Server Service.."
+    - systemctl --user restart bellsmarthome
   tags:
     - deploy
   except:
