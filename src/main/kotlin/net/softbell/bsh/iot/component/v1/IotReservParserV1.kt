@@ -63,14 +63,12 @@ class IotReservParserV1 {
 
         // Parse
         for (i in arrNow.indices) {
-            // Field
-
             // Init
             val isSuccess = checkColumn(arrNow[i], arrExpression[i])
-            return if (isSuccess == null)
-                isSuccess
-            else
-                !isSuccess
+
+            // Check
+            if (isSuccess != true)
+                return isSuccess
         }
 
         // Return
