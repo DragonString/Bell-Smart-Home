@@ -11,14 +11,14 @@ import java.util.*
  */
 class MemberDto(
         //    var memberId: Long = null
-        var ban: Int,
+        var ban: Int = 0,
         var banDate: Date?,
         var changePasswdDate: Date?,
         var email: String,
         var lastLogin: Date?,
         var nickname: String,
         var password: String,
-        var permission: Int,
+        var permission: Int = 0,
         var registerDate: Date = Date(),
         var userId: String,
         var username: String
