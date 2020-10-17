@@ -5,7 +5,7 @@ package net.softbell.bsh.dto.request
  * @description : 그룹 회원 정보 DTO
  */
 data class MemberGroupDto (
-        var enableStatus: Boolean,
+        var enableStatus: Boolean = false,
         var name: String,
         var memberId: List<Long>
 )

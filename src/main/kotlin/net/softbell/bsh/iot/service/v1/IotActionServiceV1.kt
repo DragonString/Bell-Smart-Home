@@ -89,7 +89,7 @@ class IotActionServiceV1 {
         // Data Process - Action Item Info
         if (mapActionItem != null) {
             mapActionItem.forEach(BiConsumer { key: Long, (_, itemId, itemStatus) ->
-                if (itemId != 0L) {
+                if (itemId != -1L) {
                     // Init
                     val optNodeItem = nodeItemRepo.findById(itemId)
 
@@ -151,13 +151,10 @@ class IotActionServiceV1 {
         nodeAction.enableStatus = enableStatus
         nodeAction.description = iotActionDto.description
 
-        // DB - Save
-        nodeActionRepo.save(nodeAction)
-
         // Data Process - Action Item Info
         if (mapActionItem != null) {
             mapActionItem.forEach(BiConsumer { key: Long?, (_, itemId, itemStatus) ->
-                if (itemId != 0L) {
+                if (itemId != -1L) {
                     // Init
                     val optNodeItem = nodeItemRepo.findById(itemId)
 

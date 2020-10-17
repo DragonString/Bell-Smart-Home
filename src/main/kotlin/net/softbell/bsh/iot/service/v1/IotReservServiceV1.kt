@@ -92,9 +92,9 @@ class IotReservServiceV1 {
         // Data Process - Reservation Action Info
         if (mapAction != null) {
             mapAction.forEach(BiConsumer { key: Long, (actionId) ->
-                if (actionId != 0L) {
+                if (actionId != -1L) {
                     // Init
-                    val optNodeAction = nodeActionRepo.findById(actionId!!)
+                    val optNodeAction = nodeActionRepo.findById(actionId)
 
                     // Build
                     if (optNodeAction.isPresent) {
@@ -154,13 +154,10 @@ class IotReservServiceV1 {
         nodeReserv.description = iotReservDto.description
         nodeReserv.expression = iotReservDto.expression
 
-        // DB - Save
-        nodeReservRepo.save(nodeReserv)
-
         // Data Process - Action Item Info
         if (mapAction != null) {
             mapAction.forEach(BiConsumer { key: Long?, (actionId) ->
-                if (actionId != 0L) {
+                if (actionId != -1L) {
                     // Init
                     val optNodeAction = nodeActionRepo.findById(actionId)
 
