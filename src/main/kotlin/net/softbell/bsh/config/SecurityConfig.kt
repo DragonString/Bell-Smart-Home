@@ -57,6 +57,20 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
+        // Local Mode
+        if (isLocalMode()) {
+            http.authorizeRequests() // 페이지 권한 설정
+                    .antMatchers("/h2-console/**")
+                        .permitAll()
+                .and()
+                    .csrf() // CSRF 설정
+                        .ignoringAntMatchers("/h2-console/**")
+                .and()
+                    .headers() // 헤더 설정
+                        .frameOptions()
+                            .disable()
+        }
+
         // Common
         http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -97,20 +111,6 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
                     .authenticationEntryPoint(CustomAuthenticationEntryPoint("/api/rest/exception/entrypoint", "/login"))
             .and()
                 .addFilterBefore(JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java) // JWT Token 필터
-
-        // Dev Mode
-        if (isLocalMode()) {
-            http.authorizeRequests() // 페이지 권한 설정
-                    .antMatchers("/h2-console/**")
-                        .permitAll()
-                .and()
-                    .csrf() // CSRF 설정
-                        .ignoringAntMatchers("/h2-console/**")
-                .and()
-                        .headers() // 헤더 설정
-                            .frameOptions()
-                                .disable()
-        }
     }
 
     @Throws(Exception::class)
