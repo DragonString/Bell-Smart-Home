@@ -60,6 +60,10 @@ class Member(
         @Column(nullable = false, length = 10)
         var name: String,
 
+        @Temporal(TemporalType.TIMESTAMP)
+        @Column(name = "withdrawal_date")
+        var withdrawalDate: Date? = null,
+
         @OneToMany(mappedBy = "member")
         var memberGroupItems: MutableList<MemberGroupItem> = ArrayList(),
 
