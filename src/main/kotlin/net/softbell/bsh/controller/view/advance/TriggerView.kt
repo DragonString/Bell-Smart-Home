@@ -28,7 +28,6 @@ import java.util.*
 @RequestMapping("/trigger")
 class TriggerView {
     // Global Field
-    private val G_BASE_PATH: String = "services/advance"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
     @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
@@ -49,7 +48,7 @@ class TriggerView {
         model.addAttribute("listCardTriggers", viewDtoConverterService.convTriggerSummaryCards(listTrigger))
 
         // Return
-        return "$G_BASE_PATH/Trigger"
+        return "services/advance/Trigger"
     }
 
     @GetMapping("/create")
@@ -66,7 +65,7 @@ class TriggerView {
         //model.addAttribute("listCardNodeItems", viewDtoConverterService.convTriggerItemCards(iotNodeService.getAllNodeItems(auth)));
 
         // Return
-        return "$G_BASE_PATH/TriggerCreate"
+        return "services/advance/TriggerCreate"
     }
 
     @GetMapping("/{id}")
@@ -103,7 +102,7 @@ class TriggerView {
         model.addAttribute("listCardActionsError", listCardActionsError)
 
         // Return
-        return "$G_BASE_PATH/TriggerInfo"
+        return "services/advance/TriggerInfo"
     }
 
     @GetMapping("/modify/{id}")
@@ -146,7 +145,7 @@ class TriggerView {
         model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction))
 
         // Return
-        return "$G_BASE_PATH/TriggerModify"
+        return "services/advance/TriggerModify"
     }
 
     @PostMapping("/create")

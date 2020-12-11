@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping("/node")
 class NodeView {
     // Global Field
-    private val G_BASE_PATH: String = "services/advance"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
     @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
@@ -46,7 +45,7 @@ class NodeView {
         model.addAttribute("listCardNodes", viewDtoConverterService.convNodeSummaryCards(listNode))
 
         // Return
-        return "$G_BASE_PATH/NodeList"
+        return "services/advance/NodeList"
     }
 
     @GetMapping("/{id}")
@@ -65,7 +64,7 @@ class NodeView {
         }
 
         // Return
-        return "$G_BASE_PATH/NodeInfo"
+        return "services/advance/NodeInfo"
     }
 
     @GetMapping("/item/{id}")
@@ -82,6 +81,6 @@ class NodeView {
         model.addAttribute("cardNodeItemHistory", nodeItem?.let { NodeItemHistoryCardDto(it, listNodeItemHistory) })
 
         // Return
-        return "$G_BASE_PATH/NodeItemInfo"
+        return "services/advance/NodeItemInfo"
     }
 }

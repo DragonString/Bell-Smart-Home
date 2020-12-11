@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping("/monitor")
 class MonitorView {
     // Global Field
-    private val G_BASE_PATH: String = "services/general"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
     @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
@@ -43,6 +42,6 @@ class MonitorView {
         model.addAttribute("listCardNodes", viewDtoConverterService.convMonitorSummaryCards(listNode))
 
         // Return
-        return "$G_BASE_PATH/Monitor"
+        return "services/general/Monitor"
     }
 }

@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/member")
 class AuthView {
     // Global Field
-    private val G_BASE_PATH: String = "services/auth"
     private val G_BASE_REDIRECT_URL: String = "redirect:/member"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
 
@@ -38,14 +37,14 @@ class AuthView {
 //    			model.addAttribute("checkDelete", "1");
 
         // Return
-        return "$G_BASE_PATH/Profile"
+        return "services/auth/Profile"
     }
 
     // 내 정보 수정 페이지
     @GetMapping("/modify")
     fun dispMyInfoModify(model: Model, @AuthenticationPrincipal member: Member): String {
         // Return
-        return "$G_BASE_PATH/Modify"
+        return "services/auth/Modify"
     }
 
     // 내 정보 수정 처리
@@ -98,7 +97,7 @@ class AuthView {
 //    	model.addAttribute("logMaxPage", memberService.getLoginLogMaxPage(principal, intCount));
 
         // Return
-        return "$G_BASE_PATH/LoginLog"
+        return "services/auth/LoginLog"
     }
 
     @GetMapping("/interlock")
@@ -110,7 +109,7 @@ class AuthView {
         model.addAttribute("listCardTokens", viewDtoConverterService.convInterlockTokenCards(listMemberInterlockToken))
 
         // Return
-        return "$G_BASE_PATH/Interlock"
+        return "services/auth/Interlock"
     }
 
     @PostMapping("/interlock/create")

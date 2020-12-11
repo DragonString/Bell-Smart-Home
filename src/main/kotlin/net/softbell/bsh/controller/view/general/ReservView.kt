@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping
 @RequestMapping("/reserv")
 class ReservView {
     // Global Field
-    private val G_BASE_PATH: String = "services/general"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
     @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
@@ -44,7 +43,7 @@ class ReservView {
         model.addAttribute("listCardReservs", viewDtoConverterService.convReservSummaryCards(listReserv))
 
         // Return
-        return "$G_BASE_PATH/Reserv"
+        return "services/general/Reserv"
     }
 
     @GetMapping("/{id}")
@@ -64,7 +63,7 @@ class ReservView {
         }
 
         // Return
-        return "$G_BASE_PATH/ReservInfo"
+        return "services/general/ReservInfo"
     }
 
     @GetMapping("/modify/{id}")
@@ -90,7 +89,7 @@ class ReservView {
         model.addAttribute("listCardActions", viewDtoConverterService.convReservActionCards(listNodeAction))
 
         // Return
-        return "$G_BASE_PATH/ReservModify"
+        return "services/general/ReservModify"
     }
 
     @GetMapping("/create")
@@ -106,7 +105,7 @@ class ReservView {
         model.addAttribute("listCardActions", viewDtoConverterService.convReservActionCards(listNodeAction))
 
         // Return
-        return "$G_BASE_PATH/ReservCreate"
+        return "services/general/ReservCreate"
     }
 
     @PostMapping("/create")

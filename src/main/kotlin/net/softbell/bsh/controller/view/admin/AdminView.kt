@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam
 @RequestMapping("/admin")
 class AdminView {
     // Global Field
-    private val G_BASE_PATH: String = "services/admin"
     private val G_BASE_REDIRECT_URL: String = "redirect:/admin"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
@@ -42,7 +41,7 @@ class AdminView {
         model.addAttribute("listCardMembers", viewDtoConverterService.convMemberSummaryCards(pageMember.content))
 
         // Return
-        return "$G_BASE_PATH/Member"
+        return "services/admin/Member"
     }
 
     @GetMapping("/node")
@@ -60,7 +59,7 @@ class AdminView {
         model.addAttribute("listCardNodes", viewDtoConverterService.convNodeManageSummaryCards(pageNode.content))
 
         // Return
-        return "$G_BASE_PATH/Node"
+        return "services/admin/Node"
     }
 
     @GetMapping("/center")
@@ -70,7 +69,7 @@ class AdminView {
         model.addAttribute("cardCenterSettingDefault", CenterSettingSummaryCardDto(centerService.setting))
 
         // Return
-        return "$G_BASE_PATH/CenterSetting"
+        return "services/admin/CenterSetting"
     }
 
     @GetMapping("/center/modify")
@@ -79,7 +78,7 @@ class AdminView {
         model.addAttribute("cardCenterSetting", CenterSettingSummaryCardDto(centerService.loadSetting()))
 
         // Return
-        return "$G_BASE_PATH/CenterSettingModify"
+        return "services/admin/CenterSettingModify"
     }
 
     @PostMapping("/center/modify")

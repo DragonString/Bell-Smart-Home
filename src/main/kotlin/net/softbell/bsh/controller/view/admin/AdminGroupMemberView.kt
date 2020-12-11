@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/admin/group/member")
 class AdminGroupMemberView {
     // Global Field
-    private val G_BASE_PATH: String = "services/admin/group"
     private val G_BASE_REDIRECT_URL: String = "redirect:/admin/group/member"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
 
@@ -37,7 +36,7 @@ class AdminGroupMemberView {
         model.addAttribute("listCardGroups", viewDtoConverterService.convMemberGroupSummaryCards(permissionService.getAllMemberGroup()))
 
         // Return
-        return "$G_BASE_PATH/MemberGroup"
+        return "services/admin/group/MemberGroup"
     }
 
     @GetMapping("/create")
@@ -46,7 +45,7 @@ class AdminGroupMemberView {
         model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(memberService.getAllMember()))
 
         // Return
-        return "$G_BASE_PATH/MemberGroupCreate"
+        return "services/admin/group/MemberGroupCreate"
     }
 
     @GetMapping("/modify/{gid}")
@@ -64,7 +63,7 @@ class AdminGroupMemberView {
         model.addAttribute("listCardMembers", viewDtoConverterService.convGroupMemberCardItems(listMember))
 
         // Return
-        return "$G_BASE_PATH/MemberGroupModify"
+        return "services/admin/group/MemberGroupModify"
     }
 
     @GetMapping("/{gid}")
@@ -74,7 +73,7 @@ class AdminGroupMemberView {
         model.addAttribute("cardGroup", permissionService.getMemberGroup(gid)?.let { MemberGroupInfoCardDto(it) })
 
         // Return
-        return "$G_BASE_PATH/MemberGroupInfo"
+        return "services/admin/group/MemberGroupInfo"
     }
 
 

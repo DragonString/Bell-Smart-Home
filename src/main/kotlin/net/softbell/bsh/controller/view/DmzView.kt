@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.PostMapping
 @Controller
 class DmzView {
     // Global Field
-    private val G_BASE_PATH: String = "services/dmz"
-
     @Autowired private lateinit var memberService: MemberService
     @Autowired private lateinit var centerService: CenterService
 
@@ -34,7 +32,7 @@ class DmzView {
         model.addAttribute("register", centerService.setting.webRegister)
 
         // Return
-        return "$G_BASE_PATH/Signup"
+        return "services/dmz/Signup"
     }
 
     // 회원가입 처리
@@ -65,6 +63,6 @@ class DmzView {
         model.addAttribute("maintenance", centerService.setting.webMaintenance)
 
         // Return
-        return "$G_BASE_PATH/Login"
+        return "services/dmz/Login"
     }
 }

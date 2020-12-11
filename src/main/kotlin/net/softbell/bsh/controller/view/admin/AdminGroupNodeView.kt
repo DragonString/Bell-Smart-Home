@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/admin/group/node")
 class AdminGroupNodeView {
     // Global Field
-    private val G_BASE_PATH: String = "services/admin/group"
     private val G_BASE_REDIRECT_URL: String = "redirect:/admin/group/node"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
 
@@ -37,7 +36,7 @@ class AdminGroupNodeView {
         model.addAttribute("listCardGroups", viewDtoConverterService.convNodeGroupSummaryCards(permissionService.getAllNodeGroup()))
 
         // Return
-        return "$G_BASE_PATH/NodeGroup"
+        return "services/admin/group/NodeGroup"
     }
 
     @GetMapping("/create")
@@ -46,7 +45,7 @@ class AdminGroupNodeView {
         model.addAttribute("listCardNodes", viewDtoConverterService.convGroupNodeCardItems(iotNodeService.getAllNodes()))
 
         // Return
-        return "$G_BASE_PATH/NodeGroupCreate"
+        return "services/admin/group/NodeGroupCreate"
     }
 
     @GetMapping("/modify/{gid}")
@@ -65,7 +64,7 @@ class AdminGroupNodeView {
         model.addAttribute("listCardNodes", viewDtoConverterService.convGroupNodeCardItems(listNode))
 
         // Return
-        return "$G_BASE_PATH/NodeGroupModify"
+        return "services/admin/group/NodeGroupModify"
     }
 
     @GetMapping("/{gid}")
@@ -75,7 +74,7 @@ class AdminGroupNodeView {
         model.addAttribute("cardGroup", permissionService.getNodeGroup(gid)?.let { NodeGroupInfoCardDto(it) })
 
         // Return
-        return "$G_BASE_PATH/NodeGroupInfo"
+        return "services/admin/group/NodeGroupInfo"
     }
 
 

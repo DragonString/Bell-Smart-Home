@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletRequest
 @RequestMapping("/action")
 class ActionView {
     // Global Field
-    private val G_BASE_PATH: String = "services/general"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
     @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
@@ -47,7 +46,7 @@ class ActionView {
         model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction))
 
         // Return
-        return "$G_BASE_PATH/Action"
+        return "services/general/Action"
     }
 
     @GetMapping("/{id}")
@@ -76,7 +75,7 @@ class ActionView {
         model.addAttribute("baseURL", baseUrl)
 
         // Return
-        return "$G_BASE_PATH/ActionInfo"
+        return "services/general/ActionInfo"
     }
 
     @GetMapping("/modify/{id}")
@@ -101,7 +100,7 @@ class ActionView {
         model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem))
 
         // Return
-        return "$G_BASE_PATH/ActionModify"
+        return "services/general/ActionModify"
     }
 
     @GetMapping("/create")
@@ -117,7 +116,7 @@ class ActionView {
         model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem))
 
         // Return
-        return "$G_BASE_PATH/ActionCreate"
+        return "services/general/ActionCreate"
     }
 
     @PostMapping("/create")

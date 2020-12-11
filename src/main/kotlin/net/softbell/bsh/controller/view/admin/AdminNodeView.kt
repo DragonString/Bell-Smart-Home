@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/admin/node/")
 class AdminNodeView {
     // Global Field
-    private val G_BASE_PATH: String = "services/admin"
     private val G_BASE_REDIRECT_URL: String = "redirect:/admin/node"
     private val G_LOGOUT_REDIRECT_URL: String = "redirect:/logout"
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
@@ -46,7 +45,7 @@ class AdminNodeView {
         model.addAttribute("listCardNodeItems", viewDtoConverterService.convNodeManageItemCards(node.nodeItems))
 
         // Return
-        return "$G_BASE_PATH/NodeModify"
+        return "services/admin/NodeModify"
     }
 
     // 노드 비활성화 처리

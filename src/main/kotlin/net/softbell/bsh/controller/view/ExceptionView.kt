@@ -52,7 +52,7 @@ class ExceptionView : ErrorController {
     @RequestMapping("/err")
     fun defaultError(): String {
         // Return
-        return G_ERROR_DEFAULT_PATH + "Default"
+        return "services/error/Default"
     }
 
     // 접근 거부 페이지
@@ -62,12 +62,11 @@ class ExceptionView : ErrorController {
         //FilterModelPrincipal(model, principal);
 
         // Return
-        return "$G_ERROR_DEFAULT_PATH/Denied"
+        return "services/error/Denied"
     }
 
     companion object : KLogging() {
         // Global Field
-        private const val G_ERROR_DEFAULT_PATH: String = "services/error/"
         private const val ERROR_PATH: String = "/error"
     }
 }
