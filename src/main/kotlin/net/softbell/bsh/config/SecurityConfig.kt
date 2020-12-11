@@ -51,7 +51,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Throws(Exception::class)
     override fun configure(web: WebSecurity) {
         // static 디렉터리의 하위 파일 목록은 인증 무시 ( = 항상통과 )
-        web.ignoring().antMatchers("/rss/**", "/files/**", "/v2/api-docs", "/swagger-resources/**",
+        web.ignoring().antMatchers("/assets/**", "/files/**", "/v2/api-docs", "/swagger-resources/**",
                 "/swagger-ui.html", "/webjars/**", "/swagger/**", "/h2-console/**", "/favicon.ico")
     }
 
