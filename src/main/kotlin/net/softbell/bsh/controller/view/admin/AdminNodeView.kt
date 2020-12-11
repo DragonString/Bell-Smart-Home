@@ -2,16 +2,16 @@ package net.softbell.bsh.controller.view.admin
 
 import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.view.admin.NodeManageInfoCardDto
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
 import net.softbell.bsh.service.CenterService
-import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
 
 /**
  * @author : Bell(bell@softbell.net)
@@ -27,19 +27,18 @@ class AdminNodeView {
     private val G_INDEX_REDIRECT_URL: String = "redirect:/"
 
     @Autowired private lateinit var viewDtoConverterService: ViewDtoConverterService
-    @Autowired private lateinit var memberService: MemberService
     @Autowired private lateinit var iotNodeService: IotNodeServiceV1
     @Autowired private lateinit var centerService: CenterService
 
     // 노드 정보 수정페이지 출력
     @GetMapping("modify/{id}")
-    fun dispNodeModify(model: Model, principal: Principal, @PathVariable("id") nodeId: Long): String {
+    fun dispNodeModify(model: Model, @AuthenticationPrincipal member: Member,
+                       @PathVariable("id") nodeId: Long): String {
         // Exception
         if (centerService.setting.iotNode != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val member = memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
         val node = iotNodeService.getNode(nodeId) ?: return G_BASE_REDIRECT_URL
 
         // Process
@@ -52,13 +51,11 @@ class AdminNodeView {
 
     // 노드 비활성화 처리
     @PostMapping("disable")
-    fun procNodeDisable(model: Model, principal: Principal,
+    fun procNodeDisable(model: Model, @AuthenticationPrincipal member: Member,
                         @RequestParam("intNodeId") intNodeId: Long): String {
         // Exception
         if (centerService.setting.iotNode != 1.toByte())
             return G_INDEX_REDIRECT_URL
-
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
 
         // Log
         logger.info("$intNodeId 노드 비활성화 ")
@@ -72,13 +69,11 @@ class AdminNodeView {
 
     // 노드 활성화 처리
     @PostMapping("enable")
-    fun procNodeEnable(model: Model, principal: Principal,
+    fun procNodeEnable(model: Model, @AuthenticationPrincipal member: Member,
                        @RequestParam("intNodeId") intNodeId: Long): String {
         // Exception
         if (centerService.setting.iotNode != 1.toByte())
             return G_INDEX_REDIRECT_URL
-
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
 
         // Log
         logger.info("$intNodeId 노드 활성화 ")
@@ -92,13 +87,11 @@ class AdminNodeView {
 
     // 노드 제한 처리
     @PostMapping("reject")
-    fun procNodeReject(model: Model, principal: Principal,
+    fun procNodeReject(model: Model, @AuthenticationPrincipal member: Member,
                        @RequestParam("intNodeId") intNodeId: Long): String {
         // Exception
         if (centerService.setting.iotNode != 1.toByte())
             return G_INDEX_REDIRECT_URL
-
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
 
         // Log
         logger.info("$intNodeId 노드 승인 거절 ")
@@ -112,13 +105,12 @@ class AdminNodeView {
 
     // 노드 정보 수정 프로세스 수행
     @PostMapping("modify/{id}")
-    fun procNodeModify(model: Model, principal: Principal, @PathVariable("id") nodeId: Long,
+    fun procNodeModify(model: Model, @AuthenticationPrincipal member: Member,
+                       @PathVariable("id") nodeId: Long,
                        @RequestParam("alias") alias: String): String {
         // Exception
         if (centerService.setting.iotNode != 1.toByte())
             return G_INDEX_REDIRECT_URL
-
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
 
         // Process
         return if (iotNodeService.setNodeAlias(nodeId, alias))
@@ -129,14 +121,13 @@ class AdminNodeView {
 
     // 노드 정보 수정 프로세스 수행
     @PostMapping("modify/item/{id}")
-    fun procNodeItemModify(model: Model, principal: Principal, @PathVariable("id") nodeItemId: Long,
+    fun procNodeItemModify(model: Model, @AuthenticationPrincipal member: Member,
+                           @PathVariable("id") nodeItemId: Long,
                            @RequestParam("id") nodeId: Long,
                            @RequestParam("alias") alias: String): String {
         // Exception
         if (centerService.setting.iotNode != 1.toByte())
             return G_INDEX_REDIRECT_URL
-
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
 
         // Process
         return if (iotNodeService.setNodeItemAlias(nodeItemId, alias))

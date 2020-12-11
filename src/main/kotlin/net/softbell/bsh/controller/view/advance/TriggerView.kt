@@ -1,6 +1,7 @@
 package net.softbell.bsh.controller.view.advance
 
 import net.softbell.bsh.domain.TriggerStatusRule
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.dto.request.IotTriggerDto
 import net.softbell.bsh.dto.view.advance.TriggerInfoCardDto
@@ -10,7 +11,7 @@ import net.softbell.bsh.iot.service.v1.IotTriggerServiceV1
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -36,13 +37,13 @@ class TriggerView {
     @Autowired private lateinit var centerService: CenterService
 
     @GetMapping
-    fun dispIndex(model: Model, auth: Authentication): String {
+    fun dispIndex(model: Model, @AuthenticationPrincipal member: Member): String {
         // Exception
         if (centerService.setting.iotTrigger != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val listTrigger = iotTriggerService.getAllTriggers(auth)
+        val listTrigger = iotTriggerService.getPrivilegesTriggers(member)
 
         // Process
         model.addAttribute("listCardTriggers", viewDtoConverterService.convTriggerSummaryCards(listTrigger))
@@ -52,13 +53,13 @@ class TriggerView {
     }
 
     @GetMapping("/create")
-    fun dispCreate(model: Model, auth: Authentication): String {
+    fun dispCreate(model: Model, @AuthenticationPrincipal member: Member): String {
         // Exception
         if (centerService.setting.iotTrigger != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val listNodeAction = iotActionService.getAllNodeActions(auth)
+        val listNodeAction = iotActionService.getPrivilegesNodeActions(member)
 
         // Process
         model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction))
@@ -69,13 +70,14 @@ class TriggerView {
     }
 
     @GetMapping("/{id}")
-    fun dispTrigger(model: Model, auth: Authentication, @PathVariable("id") triggerId: Long): String {
+    fun dispTrigger(model: Model, @AuthenticationPrincipal member: Member,
+                    @PathVariable("id") triggerId: Long): String {
         // Exception
         if (centerService.setting.iotTrigger != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val nodeTrigger = iotTriggerService.getTrigger(auth, triggerId) ?: return "redirect:/trigger?err"
+        val nodeTrigger = iotTriggerService.getPrivilegesTrigger(member, triggerId) ?: return "redirect:/trigger?err"
         val listCardActionsAll: MutableList<ActionSummaryCardDto> = ArrayList()
         val listCardActionsOccurAndRestore: MutableList<ActionSummaryCardDto> = ArrayList()
         val listCardActionsOccur: MutableList<ActionSummaryCardDto> = ArrayList()
@@ -105,7 +107,8 @@ class TriggerView {
     }
 
     @GetMapping("/modify/{id}")
-    fun dispTriggerModify(model: Model, auth: Authentication, @PathVariable("id") triggerId: Long): String {
+    fun dispTriggerModify(model: Model, @AuthenticationPrincipal member: Member,
+                          @PathVariable("id") triggerId: Long): String {
         // Exception
         if (centerService.setting.iotTrigger != 1.toByte())
             return G_INDEX_REDIRECT_URL
@@ -113,10 +116,9 @@ class TriggerView {
         // Field
 
 
-
         // Init
-        val nodeTrigger = iotTriggerService.getTrigger(auth, triggerId) ?: return "redirect:/trigger?err"
-        val listNodeAction = iotActionService.getAllNodeActions(auth) as MutableList<NodeAction>
+        val nodeTrigger = iotTriggerService.getPrivilegesTrigger(member, triggerId) ?: return "redirect:/trigger?err"
+        val listNodeAction = iotActionService.getPrivilegesNodeActions(member) as MutableList<NodeAction>
         val listCardActionsAll: MutableList<ActionSummaryCardDto> = ArrayList()
         val listCardActionsOccurAndRestore: MutableList<ActionSummaryCardDto> = ArrayList()
         val listCardActionsOccur: MutableList<ActionSummaryCardDto> = ArrayList()
@@ -148,13 +150,14 @@ class TriggerView {
     }
 
     @PostMapping("/create")
-    fun procCreate(auth: Authentication, iotTriggerDto: IotTriggerDto): String {
+    fun procCreate(@AuthenticationPrincipal member: Member,
+                   iotTriggerDto: IotTriggerDto): String {
         // Exception
         if (centerService.setting.iotTrigger != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Process
-        val isSuccess = iotTriggerService.createTrigger(auth, iotTriggerDto)
+        val isSuccess = iotTriggerService.createTrigger(member, iotTriggerDto)
 
         // Return
         return if (isSuccess)
@@ -164,13 +167,14 @@ class TriggerView {
     }
 
     @PostMapping("/modify/{id}")
-    fun procModify(auth: Authentication, @PathVariable("id") triggerId: Long, iotTriggerDto: IotTriggerDto): String {
+    fun procModify(@AuthenticationPrincipal member: Member,
+                   @PathVariable("id") triggerId: Long, iotTriggerDto: IotTriggerDto): String {
         // Exception
         if (centerService.setting.iotTrigger != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Process
-        val isSuccess = iotTriggerService.modifyTrigger(auth, triggerId, iotTriggerDto)
+        val isSuccess = iotTriggerService.modifyPrivilegesTrigger(member, triggerId, iotTriggerDto)
 
         // Return
         return if (isSuccess)
@@ -180,13 +184,14 @@ class TriggerView {
     }
 
     @PostMapping("/delete/{id}")
-    fun procDelete(auth: Authentication, @PathVariable("id") triggerId: Long): String {
+    fun procDelete(@AuthenticationPrincipal member: Member,
+                   @PathVariable("id") triggerId: Long): String {
         // Exception
         if (centerService.setting.iotTrigger != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Process
-        val isSuccess = iotTriggerService.deleteTrigger(auth, triggerId)
+        val isSuccess = iotTriggerService.deletePrivilegesTrigger(member, triggerId)
 
         // Return
         return if (isSuccess)

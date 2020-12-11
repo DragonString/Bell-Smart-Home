@@ -1,17 +1,17 @@
 package net.softbell.bsh.controller.view
 
 import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.request.InterlockTokenDto
 import net.softbell.bsh.dto.view.MemberProfileCardDto
 import net.softbell.bsh.service.InterlockService
 import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import java.security.Principal
 
 /**
  * @author : Bell(bell@softbell.net)
@@ -31,10 +31,7 @@ class AuthView {
 
     // 내 정보 페이지
     @GetMapping("/profile")
-    fun dispMyInfo(model: Model, principal: Principal): String {
-        // Init
-        val member = memberService.getMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL // 회원 정보가 존재하지 않으면 로그아웃 처리
-
+    fun dispMyInfo(model: Model, @AuthenticationPrincipal member: Member): String {
         // Process
         model.addAttribute("cardMemberProfile", MemberProfileCardDto(member))
         //    	if (memberService.checkDelete(principal.getName()))
@@ -46,28 +43,21 @@ class AuthView {
 
     // 내 정보 수정 페이지
     @GetMapping("/modify")
-    fun dispMyInfoModify(model: Model, principal: Principal): String {
+    fun dispMyInfoModify(model: Model, @AuthenticationPrincipal member: Member): String {
         // Return
-        return if (memberService.getMember(principal.name) == null)
-            G_LOGOUT_REDIRECT_URL
-        else
-            "$G_BASE_PATH/Modify"
+        return "$G_BASE_PATH/Modify"
     }
 
     // 내 정보 수정 처리
     @PostMapping("/modify")
-    fun procMyInfoModify(model: Model, principal: Principal,
+    fun procMyInfoModify(model: Model, @AuthenticationPrincipal member: Member,
                          @RequestParam("curPassword") strCurPassword: String,
                          @RequestParam("modPassword") strModPassword: String): String {
-        // Auth Check
-        if (memberService.getMember(principal.name) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
-            return G_LOGOUT_REDIRECT_URL
-
         // Init
-        val member = memberService.modifyInfo(principal, strCurPassword, strModPassword)
+        val isSuccess = memberService.modifyInfo(member, strCurPassword, strModPassword)
 
         // Return
-        return if (member == null)
+        return if (!isSuccess)
             "$G_BASE_REDIRECT_URL/modify?error"
         else
             G_LOGOUT_REDIRECT_URL
@@ -87,21 +77,19 @@ class AuthView {
 */
     // 로그인 로그 페이지
     @GetMapping("/log")
-    fun dispLoginLog(model: Model, principal: Principal,
+    fun dispLoginLog(model: Model, @AuthenticationPrincipal member: Member,
                      @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
                      @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
         // Auth Check
         var page = intPage
         var count = intCount
-        if (memberService.getMember(principal.name) == null) // 회원 정보가 존재하지 않으면 로그아웃 처리
-            return G_LOGOUT_REDIRECT_URL
 
         // Exception
         if (page < 1) page = 1
         if (count < 1) count = 1
 
         // Init
-        val pageMemberLoginLog = memberService.getLoginLog(principal, page, count)
+        val pageMemberLoginLog = memberService.getLoginLog(member, page, count)
 
         // Process
         model.addAttribute("listCardActivityLogs", viewDtoConverterService.convMemberActivityLogCards(pageMemberLoginLog.content))
@@ -114,9 +102,9 @@ class AuthView {
     }
 
     @GetMapping("/interlock")
-    fun dispInterlock(model: Model, auth: Authentication): String {
+    fun dispInterlock(model: Model, @AuthenticationPrincipal member: Member): String {
         // Init
-        val listMemberInterlockToken = interlockService.getAllTokens(auth)
+        val listMemberInterlockToken = interlockService.getAllTokens(member)
 
         // Process
         model.addAttribute("listCardTokens", viewDtoConverterService.convInterlockTokenCards(listMemberInterlockToken))
@@ -126,9 +114,9 @@ class AuthView {
     }
 
     @PostMapping("/interlock/create")
-    fun createInterlock(auth: Authentication, interlockTokenDto: InterlockTokenDto): String {
+    fun createInterlock(@AuthenticationPrincipal member: Member, interlockTokenDto: InterlockTokenDto): String {
         // Process
-        val isSuccess = interlockService.createToken(auth, interlockTokenDto)
+        val isSuccess = interlockService.createToken(member, interlockTokenDto)
 
         // Return
         return if (isSuccess)
@@ -138,9 +126,9 @@ class AuthView {
     }
 
     @PostMapping("/interlock/enable/{id}")
-    fun enableToken(auth: Authentication, @PathVariable("id") tokenId: Long): String {
+    fun enableToken(@AuthenticationPrincipal member: Member, @PathVariable("id") tokenId: Long): String {
         // Process
-        val isSuccess = interlockService.modifyToken(auth, tokenId, EnableStatusRule.ENABLE)
+        val isSuccess = interlockService.modifyToken(member, tokenId, EnableStatusRule.ENABLE)
 
         // Return
         return if (isSuccess)
@@ -150,9 +138,9 @@ class AuthView {
     }
 
     @PostMapping("/interlock/disable/{id}")
-    fun disableToken(auth: Authentication, @PathVariable("id") tokenId: Long): String {
+    fun disableToken(@AuthenticationPrincipal member: Member, @PathVariable("id") tokenId: Long): String {
         // Process
-        val isSuccess = interlockService.modifyToken(auth, tokenId, EnableStatusRule.DISABLE)
+        val isSuccess = interlockService.modifyToken(member, tokenId, EnableStatusRule.DISABLE)
 
         // Return
         return if (isSuccess)
@@ -162,9 +150,9 @@ class AuthView {
     }
 
     @PostMapping("/interlock/delete/{id}")
-    fun deleteToken(auth: Authentication, @PathVariable("id") tokenId: Long): String {
+    fun deleteToken(@AuthenticationPrincipal member: Member, @PathVariable("id") tokenId: Long): String {
         // Process
-        val isSuccess = interlockService.deleteToken(auth, tokenId)
+        val isSuccess = interlockService.deleteToken(member, tokenId)
 
         // Return
         return if (isSuccess)

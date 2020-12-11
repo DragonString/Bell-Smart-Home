@@ -34,7 +34,7 @@ class IotReservSchedulerV1 {
                 logger.info("예약 실행 (" + nodeReserv.description + ")")
 
                 for (nodeAction in iotReservParser.getReservAction(nodeReserv))  // Get Reserv Action
-                    iotActionService.execAction(nodeAction, nodeReserv.member) // Exec Action
+                    iotActionService.execPrivilegesAction(nodeAction, nodeReserv.member) // Exec Action
             }
         }
     }

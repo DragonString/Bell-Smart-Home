@@ -1,12 +1,13 @@
 package net.softbell.bsh.iot.controller.rest.v1
 
 import net.softbell.bsh.domain.GroupRole
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.response.ResultDto
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
 import net.softbell.bsh.service.PermissionService
 import net.softbell.bsh.service.ResponseService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -21,7 +22,7 @@ class IotControlRestV1 {
     @Autowired private lateinit var permissionService: PermissionService
 
     @PostMapping("/item/set/{id}")
-    fun setNodeItemValue(auth: Authentication,
+    fun setNodeItemValue(@AuthenticationPrincipal member: Member,
                          @PathVariable("id") id: Long, @RequestParam("value") value: Short): ResultDto {
         // Init
         var isSuccess = false
@@ -29,7 +30,7 @@ class IotControlRestV1 {
 
         // Process
         if (nodeItem != null)
-            if (permissionService.isPrivilege(GroupRole.MANUAL_CONTROL, auth, nodeItem.node))
+            if (permissionService.isPrivilege(GroupRole.MANUAL_CONTROL, member, nodeItem.node))
                 isSuccess = iotNodeService.setItemValue(nodeItem, value.toDouble())
 
         // Return
@@ -40,7 +41,7 @@ class IotControlRestV1 {
     }
 
     @PostMapping("/node/restart/{id}")
-    fun restartNode(auth: Authentication,
+    fun restartNode(@AuthenticationPrincipal member: Member,
                     @PathVariable("id") id: Long): ResultDto {
         // Init
         var isSuccess = false
@@ -48,7 +49,7 @@ class IotControlRestV1 {
 
         // Process
         if (node != null)
-            if (permissionService.isPrivilege(GroupRole.MANUAL_CONTROL, auth, node))
+            if (permissionService.isPrivilege(GroupRole.MANUAL_CONTROL, member, node))
                 isSuccess = iotNodeService.restartNode(node)
 
         // Return

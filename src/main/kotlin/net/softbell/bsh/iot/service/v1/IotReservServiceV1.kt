@@ -2,6 +2,7 @@ package net.softbell.bsh.iot.service.v1
 
 import mu.KLogging
 import net.softbell.bsh.domain.EnableStatusRule
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.domain.entity.NodeReserv
 import net.softbell.bsh.domain.entity.NodeReservAction
@@ -11,7 +12,6 @@ import net.softbell.bsh.domain.repository.NodeReservRepo
 import net.softbell.bsh.dto.request.IotReservDto
 import net.softbell.bsh.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.function.BiConsumer
@@ -29,10 +29,7 @@ class IotReservServiceV1 {
     @Autowired private lateinit var nodeReservActionRepo: NodeReservActionRepo
     @Autowired private lateinit var nodeActionRepo: NodeActionRepo
 
-    fun getAvailableAction(auth: Authentication): List<NodeAction> {
-        // Init
-        val member = memberService.getMember(auth.name) ?: return emptyList()
-
+    fun getAvailableAction(member: Member): List<NodeAction> {
         // Return
         return if (memberService.isAdmin(member))
             nodeActionRepo.findAll()
@@ -40,18 +37,33 @@ class IotReservServiceV1 {
             nodeActionRepo.findByMember(member)
     }
 
-    fun getAllReservs(auth: Authentication): List<NodeReserv> {
-        // Init
-        val member = memberService.getMember(auth.name) ?: return emptyList()
+    fun getReservs(): List<NodeReserv> {
+        // Return
+        return nodeReservRepo.findAll()
+    }
 
+    fun getPrivilegesReservs(member: Member): List<NodeReserv> {
         // Return
         return if (memberService.isAdmin(member))
-            nodeReservRepo.findAll()
+            getReservs()
         else
             nodeReservRepo.findByMember(member)
     }
 
-    fun getReserv(auth: Authentication, reservId: Long): NodeReserv? {
+    fun getReserv(reservId: Long): NodeReserv? {
+        // Init
+        val optNodeReserv = nodeReservRepo.findById(reservId)
+
+        // Exception
+        if (!optNodeReserv.isPresent)
+            return null
+
+        // Return
+        return optNodeReserv.get()
+    }
+
+    fun getPrivilegesReserv(member: Member, reservId: Long): NodeReserv? {
+        // TODO 권한 체크 필요
         // Init
         val optNodeReserv = nodeReservRepo.findById(reservId)
 
@@ -64,22 +76,17 @@ class IotReservServiceV1 {
     }
 
     @Transactional
-    fun createReservation(auth: Authentication, iotReservDto: IotReservDto): Boolean {
+    fun createReservation(member: Member, iotReservDto: IotReservDto): Boolean {
         // Log
         logger.info("Creating Reservation (" + iotReservDto.description + ")")
 
         // Init
-        val member = memberService.getMember(auth.name)
         val listNodeReservAction: MutableList<NodeReservAction> = ArrayList()
         val mapAction = iotReservDto.mapAction
         val enableStatus = if (iotReservDto.enableStatus)
             EnableStatusRule.ENABLE
         else
             EnableStatusRule.DISABLE
-
-        // Exception
-        if (member == null)
-            return false
 
         // Data Process - Reservation Info
         val nodeReserv = NodeReserv(
@@ -123,7 +130,7 @@ class IotReservServiceV1 {
     }
 
     @Transactional
-    fun modifyReservation(auth: Authentication, reservId: Long, iotReservDto: IotReservDto): Boolean {
+    fun modifyReservation(reservId: Long, iotReservDto: IotReservDto): Boolean {
         // Init
         val optNodeReserv = nodeReservRepo.findById(reservId)
         val mapAction = iotReservDto.mapAction
@@ -184,8 +191,13 @@ class IotReservServiceV1 {
         return true
     }
 
+    fun modifyPrivilegesReservation(member: Member, reservId: Long, iotReservDto: IotReservDto): Boolean {
+        // TODO 권한 체크 필요
+        return modifyReservation(reservId, iotReservDto)
+    }
+
     @Transactional
-    fun setTriggerEnableStatus(auth: Authentication, reservId: Long, status: Boolean): Boolean {
+    fun setTriggerEnableStatus(reservId: Long, status: Boolean): Boolean {
         // Init
         val optNodeReserv = nodeReservRepo.findById(reservId)
 
@@ -206,8 +218,13 @@ class IotReservServiceV1 {
         return true
     }
 
+    fun setPrivilegesTriggerEnableStatus(member: Member, reservId: Long, status: Boolean): Boolean {
+        // TODO 권한 체크 필요
+        return setTriggerEnableStatus(reservId, status)
+    }
+
     @Transactional
-    fun deleteReserv(auth: Authentication, reservId: Long): Boolean {
+    fun deleteReserv(reservId: Long): Boolean {
         // Init
         val optNodeReserv = nodeReservRepo.findById(reservId)
 
@@ -224,6 +241,11 @@ class IotReservServiceV1 {
 
         // Return
         return true
+    }
+
+    fun deletePrivilegesReserv(member: Member, reservId: Long): Boolean {
+        // TODO 권한 체크 필요
+        return deleteReserv(reservId)
     }
 
     companion object : KLogging()

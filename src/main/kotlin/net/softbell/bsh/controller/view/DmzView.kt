@@ -1,16 +1,15 @@
 package net.softbell.bsh.controller.view
 
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.request.MemberDto
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
-import java.security.Principal
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 /**
  * @author : Bell(bell@softbell.net)
@@ -26,12 +25,9 @@ class DmzView {
 
     // 회원가입 페이지
     @GetMapping("/signup")
-    fun dispSignup(model: Model, principal: Principal?): String {
-        // Init
-        //FilterModelPrincipal(model, principal);
-
+    fun dispSignup(model: Model, @AuthenticationPrincipal member: Member?): String {
         // Auth Check
-        if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
+        if (member != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
             return "redirect:/"
 
         // Process
@@ -46,7 +42,7 @@ class DmzView {
     fun execSignup(memberDTO: MemberDto): String {
         // Exception
         if (centerService.setting.webRegister == 0.toByte())
-            ; // TODO 회원가입 금지 설정시 리다이렉션
+            return "redirect:/signup?error" // TODO 회원가입 금지 설정시 리다이렉션
 
         // Init
         val intResult = memberService.joinUser(memberDTO)
@@ -60,12 +56,9 @@ class DmzView {
 
     // 로그인 페이지
     @GetMapping("/login")
-    fun dispLogin(model: Model, principal: Principal?, request: HttpServletRequest, response: HttpServletResponse): String {
-        // Init
-        //FilterModelPrincipal(model, principal);
-
+    fun dispLogin(model: Model, @AuthenticationPrincipal member: Member?): String {
         // Auth Check
-        if (principal != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
+        if (member != null) // 회원 정보가 존재하면 메인 화면으로 이동 (로그아웃부터 하셈)
             return "redirect:/"
 
         // Process

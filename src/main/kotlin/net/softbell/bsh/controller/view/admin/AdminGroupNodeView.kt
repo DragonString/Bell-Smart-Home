@@ -10,7 +10,6 @@ import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.service.PermissionService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -81,7 +80,7 @@ class AdminGroupNodeView {
 
 
     @PostMapping("/create")
-    fun procGroupCreate(auth: Authentication, nodeGroupDto: NodeGroupDto): String {
+    fun procGroupCreate(nodeGroupDto: NodeGroupDto): String {
         // Init
         val isSuccess = permissionService.createNodeGroup(nodeGroupDto)
 
@@ -93,7 +92,7 @@ class AdminGroupNodeView {
     }
 
     @PostMapping("/modify/{gid}")
-    fun procGroupModify(auth: Authentication, @PathVariable("gid") gid: Long, nodeGroupDto: NodeGroupDto): String {
+    fun procGroupModify(@PathVariable("gid") gid: Long, nodeGroupDto: NodeGroupDto): String {
         // Init
         val isSuccess = permissionService.modifyNodeGroup(gid, nodeGroupDto)
 
@@ -105,7 +104,7 @@ class AdminGroupNodeView {
     }
 
     @PostMapping("/enable")
-    fun procGroupEnable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
+    fun procGroupEnable(@RequestParam("gid") listGid: List<Long>): String {
         // Init
         val isSuccess = permissionService.enableNodeGroup(listGid)
 
@@ -117,7 +116,7 @@ class AdminGroupNodeView {
     }
 
     @PostMapping("/disable")
-    fun procGroupDisable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
+    fun procGroupDisable(@RequestParam("gid") listGid: List<Long>): String {
         // Init
         val isSuccess = permissionService.disableNodeGroup(listGid)
 
@@ -129,7 +128,7 @@ class AdminGroupNodeView {
     }
 
     @PostMapping("/delete")
-    fun procGroupDelete(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
+    fun procGroupDelete(@RequestParam("gid") listGid: List<Long>): String {
         // Init
         val isSuccess = permissionService.deleteNodeGroup(listGid)
 

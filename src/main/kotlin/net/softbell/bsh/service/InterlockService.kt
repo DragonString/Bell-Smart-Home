@@ -7,7 +7,6 @@ import net.softbell.bsh.domain.repository.MemberInterlockTokenRepo
 import net.softbell.bsh.dto.request.InterlockTokenDto
 import net.softbell.bsh.iot.component.v1.IotAuthCompV1
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -23,10 +22,7 @@ class InterlockService {
     @Autowired private lateinit var authComp: IotAuthCompV1
     @Autowired private lateinit var memberInterlockTokenRepo: MemberInterlockTokenRepo
 
-    fun getAllTokens(auth: Authentication): List<MemberInterlockToken> {
-        // Init
-        val member = memberService.getMember(auth.name) ?: return emptyList()
-
+    fun getAllTokens(member: Member): List<MemberInterlockToken> {
         // Return
         return memberInterlockTokenRepo.findByMember(member)
     }
@@ -48,10 +44,7 @@ class InterlockService {
     }
 
     @Transactional
-    fun createToken(auth: Authentication, interlockTokenDto: InterlockTokenDto): Boolean {
-        // Init
-        val member: Member = memberService.getMember(auth.name) ?: return false
-
+    fun createToken(member: Member, interlockTokenDto: InterlockTokenDto): Boolean {
         // Process
         val memberInterlockToken = MemberInterlockToken(
                 name = interlockTokenDto.name,
@@ -69,34 +62,47 @@ class InterlockService {
     }
 
     @Transactional
-    fun modifyToken(auth: Authentication, tokenId: Long, enableStatus: EnableStatusRule): Boolean {
+    fun modifyToken(member: Member, tokenId: Long, enableStatus: EnableStatusRule): Boolean {
         // Init
-        memberService.getMember(auth.name) ?: return false
         val optMemberInterlockToken = memberInterlockTokenRepo.findById(tokenId)
 
         // Exception
         if (!optMemberInterlockToken.isPresent)
             return false
 
+        // Load
+        val memberInterlockToken = optMemberInterlockToken.get()
+
+        // Privileges Check
+        if (!memberService.isAdmin(member) && memberInterlockToken.member != member)
+            return false
+
         // DB - Update
-        optMemberInterlockToken.get().enableStatus = enableStatus
+        memberInterlockToken.enableStatus = enableStatus
+        memberInterlockTokenRepo.save(memberInterlockToken)
 
         // Return
         return true
     }
 
     @Transactional
-    fun deleteToken(auth: Authentication, tokenId: Long): Boolean {
+    fun deleteToken(member: Member, tokenId: Long): Boolean {
         // Init
-        val member = memberService.getMember(auth.name) ?: return false
         val optMemberInterlockToken = memberInterlockTokenRepo.findById(tokenId)
 
         // Exception
         if (!optMemberInterlockToken.isPresent)
             return false
 
-        // DB - Update
-        memberInterlockTokenRepo.delete(optMemberInterlockToken.get())
+        // Load
+        val memberInterlockToken = optMemberInterlockToken.get()
+
+        // Privileges Check
+        if (!memberService.isAdmin(member) && memberInterlockToken.member != member)
+            return false
+
+        // DB - Delete
+        memberInterlockTokenRepo.delete(memberInterlockToken)
 
         // Return
         return true

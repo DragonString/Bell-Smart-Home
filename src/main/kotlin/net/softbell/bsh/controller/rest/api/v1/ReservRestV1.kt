@@ -1,10 +1,11 @@
 package net.softbell.bsh.controller.rest.api.v1
 
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.response.ResultDto
 import net.softbell.bsh.iot.service.v1.IotReservServiceV1
 import net.softbell.bsh.service.ResponseService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 /**
@@ -19,9 +20,10 @@ class ReservRestV1 {
     @Autowired private lateinit var iotReservService: IotReservServiceV1
 
     @PostMapping("/status/{id}")
-    fun setTriggerStatus(auth: Authentication, @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto {
+    fun setTriggerStatus(@AuthenticationPrincipal member: Member,
+                         @PathVariable("id") id: Long, @RequestParam("status") status: Boolean): ResultDto {
         // Init
-        val isSuccess = iotReservService.setTriggerEnableStatus(auth, id, status)
+        val isSuccess = iotReservService.setPrivilegesTriggerEnableStatus(member, id, status)
 
         // Return
         return if (isSuccess)

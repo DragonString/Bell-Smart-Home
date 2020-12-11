@@ -14,7 +14,6 @@ import net.softbell.bsh.domain.repository.NodeItemRepo
 import net.softbell.bsh.dto.request.IotActionDto
 import net.softbell.bsh.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.function.BiConsumer
@@ -33,23 +32,41 @@ class IotActionServiceV1 {
     @Autowired private lateinit var nodeActionRepo: NodeActionRepo
     @Autowired private lateinit var nodeActionItemRepo: NodeActionItemRepo
 
-    fun getAvailableNodeItem(auth: Authentication): List<NodeItem> {
+    fun getAvailableNodeItem(member: Member): List<NodeItem> {
         // Return
-        return nodeService.getCategoryNodeItems(auth, GroupRole.ACTION, ItemCategoryRule.CONTROL)
-    }
-
-    fun getAllNodeActions(auth: Authentication): List<NodeAction> {
-        // Init
-        val member = memberService.getMember(auth.name) ?: return emptyList()
-
-        // Return
-        return if (memberService.isAdmin(member))
-            nodeActionRepo.findAll()
+        if (memberService.isAdmin(member))
+            return nodeService.getCategoryAllNodeItems(ItemCategoryRule.CONTROL)
         else
-            nodeActionRepo.findByMember(member)
+            return nodeService.getCategoryPrivilegesNodeItems(member, GroupRole.ACTION, ItemCategoryRule.CONTROL)
     }
 
-    fun getNodeAction(auth: Authentication, actionId: Long): NodeAction? {
+    fun getNodeActions(): List<NodeAction> {
+        // Return
+        return nodeActionRepo.findAll()
+    }
+
+    fun getPrivilegesNodeActions(member: Member): List<NodeAction> {
+        if (memberService.isAdmin(member))
+            return getNodeActions()
+
+        // Return
+        return nodeActionRepo.findByMember(member)
+    }
+
+    fun getNodeAction(actionId: Long): NodeAction? {
+        // Init
+        val optNodeAction = nodeActionRepo.findById(actionId)
+
+        // Exception
+        if (!optNodeAction.isPresent)
+            return null
+
+        // Return
+        return optNodeAction.get()
+    }
+
+    fun getPrivilegesNodeAction(member: Member, actionId: Long): NodeAction? {
+        // TODO 권한 있는 노드 액션만 반환 필요
         // Init
         val optNodeAction = nodeActionRepo.findById(actionId)
 
@@ -62,22 +79,17 @@ class IotActionServiceV1 {
     }
 
     @Transactional
-    fun createAction(auth: Authentication, iotActionDto: IotActionDto): Boolean {
+    fun createAction(member: Member, iotActionDto: IotActionDto): Boolean {
         // Log
         logger.info("Creating Action (" + iotActionDto.description + ")")
 
         // Init
-        val member = memberService.getMember(auth.name)
         val listNodeActionItem: MutableList<NodeActionItem> = ArrayList()
         val mapActionItem = iotActionDto.mapActionItem
         val enableStatus = if (iotActionDto.enableStatus)
             EnableStatusRule.ENABLE
         else
             EnableStatusRule.DISABLE
-
-        // Exception
-        if (member == null)
-            return false
 
         // Data Process - Action Info
         val nodeAction = NodeAction(
@@ -121,7 +133,7 @@ class IotActionServiceV1 {
     }
 
     @Transactional
-    fun modifyAction(auth: Authentication, actionId: Long, iotActionDto: IotActionDto): Boolean {
+    fun modifyAction(actionId: Long, iotActionDto: IotActionDto): Boolean {
         // Init
         val optNodeAction = nodeActionRepo.findById(actionId)
         val mapActionItem = iotActionDto.mapActionItem
@@ -182,8 +194,13 @@ class IotActionServiceV1 {
         return true
     }
 
+    fun modifyPrivilegesAction(member: Member, actionId: Long, iotActionDto: IotActionDto): Boolean {
+        // TODO 권한 체크 필요
+        return modifyAction(actionId, iotActionDto)
+    }
+
     @Transactional
-    fun deleteAction(auth: Authentication, actionId: Long): Boolean {
+    fun deleteAction(actionId: Long): Boolean {
         // Init
         val optNodeAction = nodeActionRepo.findById(actionId)
 
@@ -202,39 +219,14 @@ class IotActionServiceV1 {
         return true
     }
 
-    fun execAction(actionId: Long, member: Member): Boolean {
-        // Init
-        val optNodeAction = nodeActionRepo.findById(actionId)
-
-        // Exception
-        if (!optNodeAction.isPresent)
-            return false
-
-        // Return
-        return execAction(optNodeAction.get(), member)
+    fun deletePrivilegesAction(member: Member, actionId: Long): Boolean {
+        // TODO 권한 체크 필요
+        return deleteAction(actionId)
     }
 
-    fun execAction(actionId: Long, auth: Authentication): Boolean {
-        // Init
-        val member = memberService.getMember(auth.name) ?: return false
-        val optNodeAction = nodeActionRepo.findById(actionId)
-
-        // Exception
-        if (!optNodeAction.isPresent)
-            return false
-
-        // Return
-        return execAction(optNodeAction.get(), member)
-    }
-
-    fun execAction(nodeAction: NodeAction, member: Member): Boolean {
+    fun execAction(nodeAction: NodeAction): Boolean {
         // Init
         var isSuccess = true
-
-        // Permission
-        if (!memberService.isAdmin(member)) // 관리자가 아닌데
-            if (nodeAction.member != member) // 액션 제작자가 아니면
-                return false // 수행 중단
 
         // Load
         val listNodeActionItem = nodeAction.nodeActionItems
@@ -246,6 +238,28 @@ class IotActionServiceV1 {
 
         // Return
         return isSuccess
+    }
+
+    fun execPrivilegesAction(actionId: Long, member: Member): Boolean {
+        // Init
+        val optNodeAction = nodeActionRepo.findById(actionId)
+
+        // Exception
+        if (!optNodeAction.isPresent)
+            return false
+
+        // Return
+        return execPrivilegesAction(optNodeAction.get(), member)
+    }
+
+    fun execPrivilegesAction(nodeAction: NodeAction, member: Member): Boolean {
+        // Permission
+        if (!memberService.isAdmin(member)) // 관리자가 아닌데
+            if (nodeAction.member != member) // 액션 제작자가 아니면
+                return false // 수행 중단
+
+        // Return
+        return execAction(nodeAction)
     }
 
     companion object : KLogging()

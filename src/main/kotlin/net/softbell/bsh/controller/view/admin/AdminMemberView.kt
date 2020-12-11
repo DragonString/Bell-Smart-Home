@@ -1,13 +1,14 @@
 package net.softbell.bsh.controller.view.admin
 
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import java.security.Principal
 
 /**
  * @author : Bell(bell@softbell.net)
@@ -24,13 +25,14 @@ class AdminMemberView {
 
     // 회원 승인 처리
     @PostMapping("approvalNode")
-    fun procNodeApproval(model: Model, principal: Principal,
+    fun procNodeApproval(model: Model, @AuthenticationPrincipal member: Member,
                          @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Exception
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
+        if (!memberService.isAdmin(member))
+            return G_LOGOUT_REDIRECT_URL
 
         // Process
-        return if (memberService.procMemberApproval(principal, listMemberId, isApproval = true, isMember = false))
+        return if (memberService.procMemberApproval(member, listMemberId, isApproval = true, isMember = false))
             G_BASE_REDIRECT_URL
         else
             "$G_BASE_REDIRECT_URL?error"
@@ -38,13 +40,14 @@ class AdminMemberView {
 
     // 회원 승인 처리
     @PostMapping("approvalMember")
-    fun procMemberApproval(model: Model, principal: Principal,
+    fun procMemberApproval(model: Model, @AuthenticationPrincipal member: Member,
                            @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Exception
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
+        if (!memberService.isAdmin(member))
+            return G_LOGOUT_REDIRECT_URL
 
         // Process
-        return if (memberService.procMemberApproval(principal, listMemberId, isApproval = true, isMember = true))
+        return if (memberService.procMemberApproval(member, listMemberId, isApproval = true, isMember = true))
             G_BASE_REDIRECT_URL
         else
             "$G_BASE_REDIRECT_URL?error"
@@ -52,13 +55,14 @@ class AdminMemberView {
 
     // 회원 승인 처리
     @PostMapping("refusal")
-    fun procMemberRefusal(model: Model, principal: Principal,
+    fun procMemberRefusal(model: Model, @AuthenticationPrincipal member: Member,
                           @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Exception
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
+        if (!memberService.isAdmin(member))
+            return G_LOGOUT_REDIRECT_URL
 
         // Process
-        return if (memberService.procMemberApproval(principal, listMemberId, isApproval = false, isMember = true))
+        return if (memberService.procMemberApproval(member, listMemberId, isApproval = false, isMember = true))
             G_BASE_REDIRECT_URL
         else
             "$G_BASE_REDIRECT_URL?error"
@@ -66,13 +70,14 @@ class AdminMemberView {
 
     // 회원 정지 처리
     @PostMapping("ban")
-    fun procMemberBan(model: Model, principal: Principal,
+    fun procMemberBan(model: Model, @AuthenticationPrincipal member: Member,
                       @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Exception
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
+        if (!memberService.isAdmin(member))
+            return G_LOGOUT_REDIRECT_URL
 
         // Process
-        return if (memberService.procMemberBan(principal, listMemberId, true))
+        return if (memberService.procMemberBan(member, listMemberId, true))
             G_BASE_REDIRECT_URL
         else
             "$G_BASE_REDIRECT_URL?error"
@@ -80,13 +85,14 @@ class AdminMemberView {
 
     // 회원 정지 해제 처리
     @PostMapping("unban")
-    fun procMemberUnban(model: Model, principal: Principal,
+    fun procMemberUnban(model: Model, @AuthenticationPrincipal member: Member,
                         @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Exception
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
+        if (!memberService.isAdmin(member))
+            return G_LOGOUT_REDIRECT_URL
 
         // Process
-        return if (memberService.procMemberBan(principal, listMemberId, false))
+        return if (memberService.procMemberBan(member, listMemberId, false))
             G_BASE_REDIRECT_URL
         else
             "$G_BASE_REDIRECT_URL?error"
@@ -94,13 +100,14 @@ class AdminMemberView {
 
     // 회원 권한 상승 처리
     @PostMapping("addAuth")
-    fun procMemberAddAuth(model: Model, principal: Principal,
+    fun procMemberAddAuth(model: Model, @AuthenticationPrincipal member: Member,
                           @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Exception
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
+        if (!memberService.isSuperAdmin(member))
+            return G_LOGOUT_REDIRECT_URL
 
         // Process
-        return if (memberService.procSetAdmin(principal, listMemberId, true))
+        return if (memberService.procSetAdmin(member, listMemberId, true))
             G_BASE_REDIRECT_URL
         else
             "$G_BASE_REDIRECT_URL?error"
@@ -108,13 +115,14 @@ class AdminMemberView {
 
     // 회원 권한 하강 처리
     @PostMapping("delAuth")
-    fun procMemberDelAuth(model: Model, principal: Principal,
+    fun procMemberDelAuth(model: Model, @AuthenticationPrincipal member: Member,
                           @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Exception
-        memberService.getAdminMember(principal.name) ?: return G_LOGOUT_REDIRECT_URL
+        if (!memberService.isAdmin(member))
+            return G_LOGOUT_REDIRECT_URL
 
         // Process
-        return if (memberService.procSetAdmin(principal, listMemberId, false))
+        return if (memberService.procSetAdmin(member, listMemberId, false))
             G_BASE_REDIRECT_URL
         else
             "$G_BASE_REDIRECT_URL?error"
@@ -122,9 +130,10 @@ class AdminMemberView {
 
     // 회원탈퇴 처리
     @PostMapping("delete")
-    fun execAdminDelete(principal: Principal, @RequestParam("intMemberId") listMemberId: List<Long>): String {
+    fun execAdminDelete(@AuthenticationPrincipal member: Member,
+                        @RequestParam("intMemberId") listMemberId: List<Long>): String {
         // Check
-        return if (!memberService.deleteUserList(principal, listMemberId))
+        return if (!memberService.deleteUserList(member, listMemberId))
             "$G_BASE_REDIRECT_URL?error"
         else
             G_BASE_REDIRECT_URL

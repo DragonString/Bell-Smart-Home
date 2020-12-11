@@ -10,7 +10,6 @@ import net.softbell.bsh.service.MemberService
 import net.softbell.bsh.service.PermissionService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
@@ -80,7 +79,7 @@ class AdminGroupMemberView {
 
 
     @PostMapping("/create")
-    fun procGroupCreate(auth: Authentication, memberGroupDto: MemberGroupDto): String {
+    fun procGroupCreate(memberGroupDto: MemberGroupDto): String {
         // Init
         val isSuccess = permissionService.createMemberGroup(memberGroupDto)
 
@@ -92,7 +91,7 @@ class AdminGroupMemberView {
     }
 
     @PostMapping("/modify/{gid}")
-    fun procGroupModify(auth: Authentication, @PathVariable("gid") gid: Long, memberGroupDto: MemberGroupDto): String {
+    fun procGroupModify(@PathVariable("gid") gid: Long, memberGroupDto: MemberGroupDto): String {
         // Init
         val isSuccess = permissionService.modifyMemberGroup(gid, memberGroupDto)
 
@@ -104,7 +103,7 @@ class AdminGroupMemberView {
     }
 
     @PostMapping("/enable")
-    fun procGroupEnable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
+    fun procGroupEnable(@RequestParam("gid") listGid: List<Long>): String {
         // Init
         val isSuccess = permissionService.enableMemberGroup(listGid)
 
@@ -116,7 +115,7 @@ class AdminGroupMemberView {
     }
 
     @PostMapping("/disable")
-    fun procGroupDisable(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
+    fun procGroupDisable(@RequestParam("gid") listGid: List<Long>): String {
         // Init
         val isSuccess = permissionService.disableMemberGroup(listGid)
 
@@ -128,7 +127,7 @@ class AdminGroupMemberView {
     }
 
     @PostMapping("/delete")
-    fun procGroupDelete(auth: Authentication, @RequestParam("gid") listGid: List<Long>): String {
+    fun procGroupDelete(@RequestParam("gid") listGid: List<Long>): String {
         // Init
         val isSuccess = permissionService.deleteMemberGroup(listGid)
 
@@ -152,7 +151,8 @@ class AdminGroupMemberView {
     }
 
     @PostMapping("/permission/delete/{gid}")
-    fun deletePermission(@PathVariable("gid") gid: Long, @RequestParam("pid") pid: Long): String {
+    fun deletePermission(@PathVariable("gid") gid: Long,
+                         @RequestParam("pid") pid: Long): String {
         // Init
         val isSuccess = permissionService.deleteGroupPermission(pid)
 

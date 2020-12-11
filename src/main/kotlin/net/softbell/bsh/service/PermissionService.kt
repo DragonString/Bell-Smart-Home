@@ -11,7 +11,6 @@ import net.softbell.bsh.dto.request.MemberGroupPermissionDto
 import net.softbell.bsh.dto.request.NodeGroupDto
 import net.softbell.bsh.dto.request.NodeGroupPermissionDto
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -62,14 +61,6 @@ class PermissionService {
             null
     }
 
-    fun isPrivilege(role: GroupRole, auth: Authentication, node: Node): Boolean {
-        // Init
-        val member: Member = memberService.getMember(auth.name) ?: return false
-
-        // Return
-        return isPrivilege(role, member, node)
-    }
-
     /** @description 특정 사용자가 해당 노드에 권한이 있는지 검증
      * 1. 사용자가 포함된 활성화된 사용자 그룹 리스트 검색
      * 2. 노드가 포함된 활성화된 노드 그룹 리스트 검색
@@ -87,14 +78,6 @@ class PermissionService {
 
         // Return
         return listGroupPermission.isNotEmpty()
-    }
-
-    fun getPrivilegeNodeGroupItems(role: GroupRole, auth: Authentication): List<NodeGroupItem> {
-        // Init
-        val member = memberService.getMember(auth.name) ?: return emptyList()
-
-        // Return
-        return getPrivilegeNodeGroupItems(role, member)
     }
 
     /** @description 특정 회원에게 특정 권한이 있는 노드 리스트 반환

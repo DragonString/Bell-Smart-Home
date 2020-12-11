@@ -3,6 +3,7 @@ package net.softbell.bsh.iot.service.v1
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.TriggerLastStatusRule
 import net.softbell.bsh.domain.TriggerStatusRule
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.NodeItem
 import net.softbell.bsh.domain.entity.NodeTrigger
 import net.softbell.bsh.domain.entity.NodeTriggerAction
@@ -14,7 +15,6 @@ import net.softbell.bsh.dto.request.IotTriggerDto
 import net.softbell.bsh.iot.component.v1.IotTriggerParserCompV1
 import net.softbell.bsh.service.MemberService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.function.BiConsumer
@@ -34,18 +34,35 @@ class IotTriggerServiceV1 {
     @Autowired private lateinit var nodeTriggerActionRepo: NodeTriggerActionRepo
     @Autowired private lateinit var nodeActionRepo: NodeActionRepo
 
-    fun getAllTriggers(auth: Authentication): List<NodeTrigger> {
-        // Init
-        val member = memberService.getMember(auth.name) ?: return emptyList()
-
+    fun getAllTriggers(): List<NodeTrigger> {
         // Return
-        return if (memberService.isAdmin(member))
-            nodeTriggerRepo.findAll()
-        else
-            nodeTriggerRepo.findByMember(member)
+        return nodeTriggerRepo.findAll()
     }
 
-    fun getTrigger(auth: Authentication, triggerId: Long): NodeTrigger? {
+    fun getPrivilegesTriggers(member: Member): List<NodeTrigger> {
+        if (memberService.isAdmin(member))
+            return getAllTriggers()
+
+        // Return
+        return nodeTriggerRepo.findByMember(member)
+    }
+
+    fun getTrigger(triggerId: Long): NodeTrigger? {
+        // Init
+        val optNodeTrigger = nodeTriggerRepo.findById(triggerId)
+
+        // Return
+        return if (optNodeTrigger.isPresent)
+            optNodeTrigger.get()
+        else
+            null
+    }
+
+    fun getPrivilegesTrigger(member: Member, triggerId: Long): NodeTrigger? {
+        if (memberService.isAdmin(member))
+            return getTrigger(triggerId)
+
+        // TODO 권한 체크 필요
         // Init
         val optNodeTrigger = nodeTriggerRepo.findById(triggerId)
 
@@ -57,11 +74,10 @@ class IotTriggerServiceV1 {
     }
 
     @Transactional
-    fun createTrigger(auth: Authentication, iotTriggerDto: IotTriggerDto): Boolean {
+    fun createTrigger(member: Member, iotTriggerDto: IotTriggerDto): Boolean {
         // Init
         val listAction: MutableList<NodeTriggerAction> = ArrayList()
         val mapAction = iotTriggerDto.mapAction
-        val member = memberService.getMember(auth.name) ?: return false
         val enableStatus = if (iotTriggerDto.enableStatus)
             EnableStatusRule.ENABLE
         else
@@ -121,7 +137,7 @@ class IotTriggerServiceV1 {
     }
 
     @Transactional
-    fun modifyTrigger(auth: Authentication, triggerId: Long, iotTriggerDto: IotTriggerDto): Boolean {
+    fun modifyTrigger(triggerId: Long, iotTriggerDto: IotTriggerDto): Boolean {
         // Init
         val listAction: MutableList<NodeTriggerAction> = ArrayList()
         val mapAction = iotTriggerDto.mapAction
@@ -189,8 +205,13 @@ class IotTriggerServiceV1 {
         return true
     }
 
+    fun modifyPrivilegesTrigger(member: Member, triggerId: Long, iotTriggerDto: IotTriggerDto): Boolean {
+        // TODO 권한 체크 필요
+        return modifyTrigger(triggerId, iotTriggerDto)
+    }
+
     @Transactional
-    fun setTriggerEnableStatus(auth: Authentication, triggerId: Long, status: Boolean): Boolean {
+    fun setTriggerEnableStatus(triggerId: Long, status: Boolean): Boolean {
         // Init
         val optNodeTrigger = nodeTriggerRepo.findById(triggerId)
 
@@ -211,8 +232,13 @@ class IotTriggerServiceV1 {
         return true
     }
 
+    fun setPrivilegesTriggerEnableStatus(member: Member, triggerId: Long, status: Boolean): Boolean {
+        // TODO 권한 체크 필요
+        return setTriggerEnableStatus(triggerId, status)
+    }
+
     @Transactional
-    fun deleteTrigger(auth: Authentication, triggerId: Long): Boolean {
+    fun deleteTrigger(triggerId: Long): Boolean {
         // Init
         val optNodeTrigger = nodeTriggerRepo.findById(triggerId)
 
@@ -228,6 +254,11 @@ class IotTriggerServiceV1 {
 
         // Return
         return true
+    }
+
+    fun deletePrivilegesTrigger(member: Member, triggerId: Long): Boolean {
+        // TODO 권한 체크 필요
+        return deleteTrigger(triggerId)
     }
 
     @Transactional
@@ -256,7 +287,7 @@ class IotTriggerServiceV1 {
 
             // Exec Action
             for (nodeAction in iotTriggerParserComp.getTriggerAction(nodeTrigger))
-                if (!iotActionService.execAction(nodeAction, nodeTrigger.member))
+                if (!iotActionService.execPrivilegesAction(nodeAction, nodeTrigger.member))
                     isSuccess = false
         }
 

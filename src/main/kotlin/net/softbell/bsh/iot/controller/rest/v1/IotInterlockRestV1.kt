@@ -28,11 +28,11 @@ class IotInterlockRestV1 {
 									@RequestParam("id")String id,+
 									@RequestParam("password")String password*/): ResultDto {
         // Init
-        val member = interlockService.findEnableTokenToMember(token)
         var isSuccess = false
+        val member = interlockService.findEnableTokenToMember(token)
 
         if (member != null)
-            isSuccess = iotActionService.execAction(actionId, member)
+            isSuccess = iotActionService.execPrivilegesAction(actionId, member)
 
         // Return
         return if (isSuccess) {

@@ -1,13 +1,14 @@
 package net.softbell.bsh.controller.view.advance
 
 import net.softbell.bsh.domain.GroupRole
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.dto.view.advance.NodeInfoCardDto
 import net.softbell.bsh.dto.view.advance.NodeItemHistoryCardDto
 import net.softbell.bsh.iot.service.v1.IotNodeServiceV1
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,7 +32,7 @@ class NodeView {
     @Autowired private lateinit var centerService: CenterService
 
     @GetMapping
-    fun dispIndex(model: Model, auth: Authentication,
+    fun dispIndex(model: Model, @AuthenticationPrincipal member: Member,
                   @RequestParam(value = "page", required = false, defaultValue = "1") intPage: Int,
                   @RequestParam(value = "count", required = false, defaultValue = "100") intCount: Int): String {
         // Exception
@@ -39,7 +40,7 @@ class NodeView {
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val listNode = iotNodeService.getAllNodes(auth, GroupRole.MANUAL_CONTROL)
+        val listNode = iotNodeService.getPrivilegesNodes(member, GroupRole.MANUAL_CONTROL)
 
         // Process
         model.addAttribute("listCardNodes", viewDtoConverterService.convNodeSummaryCards(listNode))

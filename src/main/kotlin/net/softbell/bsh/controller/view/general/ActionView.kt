@@ -1,5 +1,6 @@
 package net.softbell.bsh.controller.view.general
 
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.NodeItem
 import net.softbell.bsh.dto.request.IotActionDto
 import net.softbell.bsh.dto.view.general.ActionInfoCardDto
@@ -8,7 +9,7 @@ import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.InterlockService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -34,13 +35,13 @@ class ActionView {
     @Autowired private lateinit var interlockService: InterlockService
 
     @GetMapping
-    fun dispIndex(model: Model, auth: Authentication): String {
+    fun dispIndex(model: Model, @AuthenticationPrincipal member: Member): String {
         // Exception
         if (centerService.setting.iotAction != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val listNodeAction = iotActionService.getAllNodeActions(auth)
+        val listNodeAction = iotActionService.getPrivilegesNodeActions(member)
 
         // Process
         model.addAttribute("listCardActions", viewDtoConverterService.convActionSummaryCards(listNodeAction))
@@ -50,15 +51,16 @@ class ActionView {
     }
 
     @GetMapping("/{id}")
-    fun dispAction(model: Model, auth: Authentication, request: HttpServletRequest, @PathVariable("id") actionId: Long): String {
+    fun dispAction(model: Model, @AuthenticationPrincipal member: Member, request: HttpServletRequest,
+                   @PathVariable("id") actionId: Long): String {
         // Exception
         if (centerService.setting.iotAction != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val nodeAction = iotActionService.getNodeAction(auth, actionId)
-        val listNodeItem: MutableList<NodeItem> = iotActionService.getAvailableNodeItem(auth) as MutableList<NodeItem>
-        val listMemberInterlockToken = interlockService.getAllTokens(auth)
+        val nodeAction = iotActionService.getPrivilegesNodeAction(member, actionId)
+        val listNodeItem: MutableList<NodeItem> = iotActionService.getAvailableNodeItem(member) as MutableList<NodeItem>
+        val listMemberInterlockToken = interlockService.getAllTokens(member)
         var baseUrl = request.requestURL.toString()
 
         baseUrl = baseUrl.substring(0, baseUrl.indexOf("/", 8))
@@ -78,14 +80,15 @@ class ActionView {
     }
 
     @GetMapping("/modify/{id}")
-    fun dispActionModify(model: Model, auth: Authentication, @PathVariable("id") actionId: Long): String {
+    fun dispActionModify(model: Model, @AuthenticationPrincipal member: Member,
+                         @PathVariable("id") actionId: Long): String {
         // Exception
         if (centerService.setting.iotAction != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val nodeAction = iotActionService.getNodeAction(auth, actionId)
-        val listNodeItem = iotActionService.getAvailableNodeItem(auth) as MutableList<NodeItem>
+        val nodeAction = iotActionService.getPrivilegesNodeAction(member, actionId)
+        val listNodeItem = iotActionService.getAvailableNodeItem(member) as MutableList<NodeItem>
 
         if (nodeAction != null)
             for (actionItem in nodeAction.nodeActionItems)
@@ -102,13 +105,13 @@ class ActionView {
     }
 
     @GetMapping("/create")
-    fun dispCreate(model: Model, auth: Authentication): String {
+    fun dispCreate(model: Model, @AuthenticationPrincipal member: Member): String {
         // Exception
         if (centerService.setting.iotAction != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val listNodeItem = iotActionService.getAvailableNodeItem(auth)
+        val listNodeItem = iotActionService.getAvailableNodeItem(member)
 
         // Process
         model.addAttribute("listCardItems", viewDtoConverterService.convActionItemCards(listNodeItem))
@@ -118,14 +121,14 @@ class ActionView {
     }
 
     @PostMapping("/create")
-    fun procCreate(model: Model, auth: Authentication,
+    fun procCreate(model: Model, @AuthenticationPrincipal member: Member,
                    iotActionDto: IotActionDto): String {
         // Exception
         if (centerService.setting.iotAction != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val isSuccess = iotActionService.createAction(auth, iotActionDto)
+        val isSuccess = iotActionService.createAction(member, iotActionDto)
 
         // Return
         return if (isSuccess)
@@ -135,7 +138,7 @@ class ActionView {
     }
 
     @PostMapping("/modify/{id}")
-    fun procModify(model: Model, auth: Authentication,
+    fun procModify(model: Model, @AuthenticationPrincipal member: Member,
                    @PathVariable("id") actionId: Long,
                    iotActionDto: IotActionDto): String {
         // Exception
@@ -143,7 +146,7 @@ class ActionView {
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val isSuccess = iotActionService.modifyAction(auth, actionId, iotActionDto)
+        val isSuccess = iotActionService.modifyPrivilegesAction(member, actionId, iotActionDto)
 
         // Return
         return if (isSuccess)
@@ -153,13 +156,14 @@ class ActionView {
     }
 
     @PostMapping("/delete/{id}")
-    fun procDelete(model: Model, auth: Authentication, @PathVariable("id") actionId: Long): String {
+    fun procDelete(model: Model, @AuthenticationPrincipal member: Member,
+                   @PathVariable("id") actionId: Long): String {
         // Exception
         if (centerService.setting.iotAction != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val isSuccess = iotActionService.deleteAction(auth, actionId)
+        val isSuccess = iotActionService.deletePrivilegesAction(member, actionId)
 
         // Return
         return if (isSuccess)

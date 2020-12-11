@@ -90,6 +90,7 @@ class MemberService : UserDetailsService {
             null
     }
 
+    @Deprecated("userId 방식 미사용")
     fun getAdminMember(userId: String): Member? {
         // Init
         val member: Member = getMember(userId) ?: return null
@@ -104,6 +105,10 @@ class MemberService : UserDetailsService {
     fun isAdmin(member: Member): Boolean {
         return (member.permission == MemberRole.ADMIN || member.permission == MemberRole.SUPERADMIN) &&
                 member.ban == BanRule.NORMAL
+    }
+
+    fun isSuperAdmin(member: Member): Boolean {
+        return (isAdmin(member) && member.permission == MemberRole.SUPERADMIN)
     }
 
     fun loginMember(id: String, password: String): Member? {
@@ -239,7 +244,7 @@ class MemberService : UserDetailsService {
      * node_trigger_item
      */
     @Transactional
-    fun deleteMember(member: Member?): Boolean {
+    fun deleteMember(member: Member): Boolean {
         // Exception
         return member != null
 
@@ -359,25 +364,24 @@ class MemberService : UserDetailsService {
     }
 
     @Transactional
-    fun deleteUserList(principal: Principal, listMemberId: List<Long>): Boolean {
+    fun deleteUserList(admin: Member, listMemberId: List<Long>): Boolean {
         // Log
-        logger.info("회원 탈퇴 요청 (" + listMemberId.size + ") (" + principal.name + ")")
+        logger.info("회원 탈퇴 요청 (" + listMemberId.size + ") (" + admin.userId + ")")
 
         // Field
         var isError = false
-        val memberMySelf = getMember(principal.name) ?: return false // 본인이 없으면 실패
 
         // Init
         for (value in listMemberId) {
             val member = getMember(value)
 
             // Exception
-            if (member == null || member == memberMySelf) // 해당하는 회원이 없으면
+            if (member == null || member == admin) // 해당하는 회원이 없으면
             {
                 isError = true
                 continue
             }
-            if (member.permission == MemberRole.SUPERADMIN && memberMySelf.permission != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
+            if (member.permission == MemberRole.SUPERADMIN && admin.permission != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
                 continue
 
             // Process
@@ -408,29 +412,29 @@ class MemberService : UserDetailsService {
 		return memberDTO;
 	}
 */
+
     @Transactional
-    fun modifyInfo(principal: Principal, strCurPassword: String, strModPassword: String): Member? {
+    fun modifyInfo(member: Member, strCurPassword: String, strModPassword: String): Boolean {
         // Log
-        logger.info("회원정보 수정 요청 (" + principal.name + ")")
+        logger.info("회원정보 수정 요청 (" + member.userId + ")")
 
         // Init
         val passwordEncoder = BCryptPasswordEncoder()
-        var member: Member = getMember(principal.name) ?: return null
 
         // Exception
         /*if (strModPassword.length() < 6 || strModPassword.length() > 20) // 비밀번호 규칙
 			return null;*/
         if (!passwordEncoder.matches(strCurPassword, member.password)) // 현재 등록된 비번이 다르면
-            return null
+            return false
 
         // Process
         member.password = passwordEncoder.encode(strModPassword) // 비밀번호 암호화
 
         // Process - DB Update
-        member = memberRepo.save(member)
+        memberRepo.save(member)
 
         // Return
-        return member
+        return true
     }
 
     fun getMemberList(intPage: Int, intCount: Int): Page<Member> {
@@ -471,13 +475,13 @@ class MemberService : UserDetailsService {
 		// Return
 		return intMaxPage;
 	}*/
-    fun procMemberApproval(principal: Principal, listMemberId: List<Long>, isApproval: Boolean, isMember: Boolean): Boolean {
+
+    fun procMemberApproval(admin: Member, listMemberId: List<Long>, isApproval: Boolean, isMember: Boolean): Boolean {
         // Log
-        logger.info(listMemberId.size.toString() + "명 회원 승인(" + isApproval + ") 처리 (" + principal.name + ")")
+        logger.info(listMemberId.size.toString() + "명 회원 승인(" + isApproval + ") 처리 (" + admin.userId + ")")
 
         // Init
         var intSuccess = listMemberId.size
-        getAdminMember(principal.name) ?: return false // 본인이 관리자가 아니면 실패
 
         // Process
         for (memberId in listMemberId) {
@@ -509,13 +513,12 @@ class MemberService : UserDetailsService {
         return intSuccess > 0
     }
 
-    fun procMemberBan(principal: Principal, listMemberId: List<Long>, isBan: Boolean): Boolean {
+    fun procMemberBan(admin: Member, listMemberId: List<Long>, isBan: Boolean): Boolean {
         // Log
-        logger.info(listMemberId.size.toString() + "명 회원 정지(" + isBan + ") 처리 (" + principal.name + ")")
+        logger.info(listMemberId.size.toString() + "명 회원 정지(" + isBan + ") 처리 (" + admin.userId + ")")
 
         // Init
         var intSuccess = listMemberId.size
-        val memberMySelf = getMember(principal.name) ?: return false
 
         // Process
         for (memberId in listMemberId) {
@@ -523,11 +526,11 @@ class MemberService : UserDetailsService {
             val member = getMember(memberId)
 
             // Exception
-            if (member == null || member == memberMySelf) {
+            if (member == null || member == admin) {
                 intSuccess--
                 continue
             }
-            if (member.permission == MemberRole.SUPERADMIN && memberMySelf.permission != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
+            if (member.permission == MemberRole.SUPERADMIN && admin.permission != MemberRole.SUPERADMIN) // 최고관리자가 아니면 최고관리자 제어 불가
                 continue
 
             // Process
@@ -544,17 +547,12 @@ class MemberService : UserDetailsService {
         return intSuccess > 0
     }
 
-    fun procSetAdmin(principal: Principal, listMemberId: List<Long>, isAdd: Boolean): Boolean {
+    fun procSetAdmin(admin: Member, listMemberId: List<Long>, isAdd: Boolean): Boolean {
         // Log
-        logger.info(listMemberId.size.toString() + "명 관리자 설정(" + isAdd + ") 처리 (" + principal.name + ")")
+        logger.info(listMemberId.size.toString() + "명 관리자 설정(" + isAdd + ") 처리 (" + admin.userId + ")")
 
         // Field
         var intSuccess = listMemberId.size
-        val memberMySelf = getMember(principal.name) ?: return false
-
-        // Exception
-        if (memberMySelf.permission != MemberRole.SUPERADMIN) // 권한 제어는 최고 관리자가 아니면 불가능
-            return false
 
         // Process
         for (memberId in listMemberId) {
@@ -562,7 +560,7 @@ class MemberService : UserDetailsService {
             var member = getMember(memberId)
 
             // Exception
-            if (member == null || member == memberMySelf) {
+            if (member == null || member == admin) {
                 intSuccess--
                 continue
             }
@@ -582,13 +580,10 @@ class MemberService : UserDetailsService {
         return intSuccess > 0
     }
 
-    fun getLoginLog(principal: Principal, intPage: Int, intCount: Int): Page<MemberLoginLog> {
+    fun getLoginLog(member: Member, intPage: Int, intCount: Int): Page<MemberLoginLog> {
         // Field
         val pageMemberLoginLog: Page<MemberLoginLog>
         val curPage: Pageable
-
-        // Init
-        val member: Member = getMember(principal.name) ?: return Page.empty()
 
         // Init
         curPage = PageRequest.of(intPage - 1, intCount, Sort.by(Sort.Direction.DESC, "logId"))
@@ -597,10 +592,7 @@ class MemberService : UserDetailsService {
         return memberLoginLogRepo.findByMember(member, curPage)
     }
 
-    fun getLoginLogMaxPage(principal: Principal, intCount: Int): Long {
-        // Init
-        val member: Member = getMember(principal.name) ?: return 0
-
+    fun getLoginLogMaxPage(member: Member, intCount: Int): Long {
         // Process
         val longCount = memberLoginLogRepo.countByMember(member) // userid로 검색
         var intMaxPage = (longCount / intCount).toInt()

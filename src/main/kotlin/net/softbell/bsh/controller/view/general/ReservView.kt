@@ -1,5 +1,6 @@
 package net.softbell.bsh.controller.view.general
 
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.NodeAction
 import net.softbell.bsh.dto.request.IotReservDto
 import net.softbell.bsh.dto.view.general.ReservInfoCardDto
@@ -7,7 +8,7 @@ import net.softbell.bsh.iot.service.v1.IotReservServiceV1
 import net.softbell.bsh.service.CenterService
 import net.softbell.bsh.service.ViewDtoConverterService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.Authentication
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
@@ -31,13 +32,13 @@ class ReservView {
     @Autowired private lateinit var centerService: CenterService
 
     @GetMapping
-    fun dispIndex(model: Model, auth: Authentication): String {
+    fun dispIndex(model: Model, @AuthenticationPrincipal member: Member): String {
         // Exception
         if (centerService.setting.iotReserv != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val listReserv = iotReservService.getAllReservs(auth)
+        val listReserv = iotReservService.getPrivilegesReservs(member)
 
         // Process
         model.addAttribute("listCardReservs", viewDtoConverterService.convReservSummaryCards(listReserv))
@@ -47,24 +48,28 @@ class ReservView {
     }
 
     @GetMapping("/{id}")
-    fun dispReserv(model: Model, auth: Authentication, @PathVariable("id") reservId: Long): String {
+    fun dispReserv(model: Model, @AuthenticationPrincipal member: Member,
+                   @PathVariable("id") reservId: Long): String {
         // Exception
         if (centerService.setting.iotReserv != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val nodeReserv = iotReservService.getReserv(auth, reservId)
+        val nodeReserv = iotReservService.getPrivilegesReserv(member, reservId)
 
         // Process
-        model.addAttribute("cardReservInfo", nodeReserv?.let { ReservInfoCardDto(it) })
-        model.addAttribute("listCardActionActives", viewDtoConverterService.convReservActionCards(nodeReserv!!.nodeReservActions))
+        if (nodeReserv != null) {
+            model.addAttribute("cardReservInfo", nodeReserv.let { ReservInfoCardDto(it) })
+            model.addAttribute("listCardActionActives", viewDtoConverterService.convReservActionCards(nodeReserv.nodeReservActions))
+        }
 
         // Return
         return "$G_BASE_PATH/ReservInfo"
     }
 
     @GetMapping("/modify/{id}")
-    fun dispReservModify(model: Model, auth: Authentication, @PathVariable("id") reservId: Long): String {
+    fun dispReservModify(model: Model, @AuthenticationPrincipal member: Member,
+                         @PathVariable("id") reservId: Long): String {
         // Exception
         if (centerService.setting.iotReserv != 1.toByte())
             return G_INDEX_REDIRECT_URL
@@ -72,16 +77,16 @@ class ReservView {
         // Field
 
         // Init
-        val nodeReserv = iotReservService.getReserv(auth, reservId)
-        val listNodeAction = iotReservService.getAvailableAction(auth) as MutableList<NodeAction>
-        if (nodeReserv != null)
+        val nodeReserv = iotReservService.getPrivilegesReserv(member, reservId)
+        val listNodeAction = iotReservService.getAvailableAction(member) as MutableList<NodeAction>
+        if (nodeReserv != null) {
             for (reservActionItem in nodeReserv.nodeReservActions)
                 listNodeAction.remove(reservActionItem.nodeAction)
 
-        // Process
-        model.addAttribute("cardReservInfo", nodeReserv?.let { ReservInfoCardDto(it) })
-        if (nodeReserv != null)
+            // Process
+            model.addAttribute("cardReservInfo", ReservInfoCardDto(nodeReserv))
             model.addAttribute("listCardActionActives", viewDtoConverterService.convReservActionCards(nodeReserv.nodeReservActions))
+        }
         model.addAttribute("listCardActions", viewDtoConverterService.convReservActionCards(listNodeAction))
 
         // Return
@@ -89,13 +94,13 @@ class ReservView {
     }
 
     @GetMapping("/create")
-    fun dispCreate(model: Model, auth: Authentication): String {
+    fun dispCreate(model: Model, @AuthenticationPrincipal member: Member): String {
         // Exception
         if (centerService.setting.iotReserv != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val listNodeAction = iotReservService.getAvailableAction(auth)
+        val listNodeAction = iotReservService.getAvailableAction(member)
 
         // Process
         model.addAttribute("listCardActions", viewDtoConverterService.convReservActionCards(listNodeAction))
@@ -105,14 +110,14 @@ class ReservView {
     }
 
     @PostMapping("/create")
-    fun procCreate(model: Model, auth: Authentication,
+    fun procCreate(model: Model, @AuthenticationPrincipal member: Member,
                    iotReservationDto: IotReservDto): String {
         // Exception
         if (centerService.setting.iotReserv != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val isSuccess = iotReservService.createReservation(auth, iotReservationDto)
+        val isSuccess = iotReservService.createReservation(member, iotReservationDto)
 
         // Return
         return if (isSuccess)
@@ -122,7 +127,7 @@ class ReservView {
     }
 
     @PostMapping("/modify/{id}")
-    fun procModify(model: Model, auth: Authentication,
+    fun procModify(model: Model, @AuthenticationPrincipal member: Member,
                    @PathVariable("id") reservId: Long,
                    iotReservationDto: IotReservDto): String {
         // Exception
@@ -130,7 +135,7 @@ class ReservView {
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val isSuccess = iotReservService.modifyReservation(auth, reservId, iotReservationDto)
+        val isSuccess = iotReservService.modifyPrivilegesReservation(member, reservId, iotReservationDto)
 
         // Return
         return if (isSuccess)
@@ -140,13 +145,14 @@ class ReservView {
     }
 
     @PostMapping("/delete/{id}")
-    fun procDelete(model: Model, auth: Authentication, @PathVariable("id") reservId: Long): String {
+    fun procDelete(model: Model, @AuthenticationPrincipal member: Member,
+                   @PathVariable("id") reservId: Long): String {
         // Exception
         if (centerService.setting.iotReserv != 1.toByte())
             return G_INDEX_REDIRECT_URL
 
         // Init
-        val isSuccess = iotReservService.deleteReserv(auth, reservId)
+        val isSuccess = iotReservService.deletePrivilegesReserv(member, reservId)
 
         // Return
         return if (isSuccess)

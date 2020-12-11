@@ -3,6 +3,7 @@ package net.softbell.bsh.iot.service.v1
 import net.softbell.bsh.domain.EnableStatusRule
 import net.softbell.bsh.domain.GroupRole
 import net.softbell.bsh.domain.ItemCategoryRule
+import net.softbell.bsh.domain.entity.Member
 import net.softbell.bsh.domain.entity.Node
 import net.softbell.bsh.domain.entity.NodeItem
 import net.softbell.bsh.domain.entity.NodeItemHistory
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -41,7 +41,6 @@ class IotNodeServiceV1 {
         return nodeRepo.findAll()
     }
 
-    @Deprecated("")
     fun getAllNodes(intPage: Int, intCount: Int): Page<Node> {
         // Init
         val curPage = PageRequest.of(intPage - 1, intCount)
@@ -51,7 +50,7 @@ class IotNodeServiceV1 {
     }
 
     @Deprecated("")
-    fun getAllNodeItems(auth: Authentication): List<NodeItem> {
+    fun getAllNodeItems(member: Member): List<NodeItem> {
         // Field
         // TODO 회원 권한에 맞는 아이템만 조회하는 기능 추가 필요... 언젠가는... 하겠지.... 권한... 보안... 으어...
 
@@ -62,37 +61,32 @@ class IotNodeServiceV1 {
         return nodeItemRepo.findAll()
     }
 
-    fun getAllNodes(auth: Authentication, role: GroupRole): List<Node> {
-        // Exception
-        if (memberService.getAdminMember(auth.name) != null) // 관리자면
-            return nodeRepo.findAll() // 모든 노드 반환
+    fun getPrivilegesNodes(member: Member, role: GroupRole): List<Node> {
+        if (memberService.isAdmin(member)) // 관리자는 모든 노드 제어 가능
+            return getAllNodes()
 
         // Init
-        val listNodeGroupItem = permissionService.getPrivilegeNodeGroupItems(role, auth)
+        val listNodeGroupItem = permissionService.getPrivilegeNodeGroupItems(role, member)
 
         // Return
         return nodeRepo.findByNodeGroupItemsIn(listNodeGroupItem)
     }
 
-    fun getAllNodeItems(auth: Authentication, role: GroupRole): List<NodeItem> {
-        // Exception
-        if (memberService.getAdminMember(auth.name) != null)
-            return nodeItemRepo.findAll()
-
+    fun getAllNodeItems(member: Member, role: GroupRole): List<NodeItem> {
         // Init
-        val listNode = getAllNodes(auth, role)
+        val listNode = getPrivilegesNodes(member, role)
 
         // Return
         return nodeItemRepo.findByNodeIn(listNode)
     }
 
-    fun getCategoryNodeItems(auth: Authentication, role: GroupRole, itemCategory: ItemCategoryRule): List<NodeItem> {
-        // Exception
-        if (memberService.getAdminMember(auth.name) != null)
-            return nodeItemRepo.findByItemCategory(itemCategory)
+    fun getCategoryAllNodeItems(itemCategory: ItemCategoryRule): List<NodeItem> {
+        return nodeItemRepo.findByItemCategory(itemCategory)
+    }
 
+    fun getCategoryPrivilegesNodeItems(member: Member, role: GroupRole, itemCategory: ItemCategoryRule): List<NodeItem> {
         // Init
-        val listNode = getAllNodes(auth, role)
+        val listNode = getPrivilegesNodes(member, role)
 
         // Return
         return nodeItemRepo.findByNodeInAndItemCategory(listNode, itemCategory)
