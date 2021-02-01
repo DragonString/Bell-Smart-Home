@@ -213,6 +213,7 @@ class IotReservServiceV1 {
             nodeReserv.enableStatus = EnableStatusRule.ENABLE
         else
             nodeReserv.enableStatus = EnableStatusRule.DISABLE
+        nodeReservRepo.save(nodeReserv)
 
         // Return
         return true
