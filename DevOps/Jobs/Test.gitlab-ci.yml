@@ -1,6 +1,7 @@
 test:
   stage: test
   image: gliderlabs/herokuish:latest
+  needs: []
   script:
     - echo 'Bell Soft Network DevOps Test Stage'
     - cp -R . /tmp/app
