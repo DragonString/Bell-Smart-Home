@@ -3,16 +3,9 @@ test:
   image: gliderlabs/herokuish:latest
   script:
     - echo 'Bell Soft Network DevOps Test Stage'
-    - export DATABASE_URL="jdbc:h2:mem:testdb"
     - cp -R . /tmp/app
     - /bin/herokuish buildpack test
-  only:
-    refs:
-      - master
-      - develop
-      - release/*
-      - tags
-  except:
-    variables:
-      - $TEST_DISABLED
-  retry: 2
+  rules:
+    - if: '$TEST_DISABLED'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
