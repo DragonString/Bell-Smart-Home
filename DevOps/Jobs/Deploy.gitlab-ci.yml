@@ -12,7 +12,8 @@ deploy:
     - echo "Restart Server Service.."
     - systemctl --user restart bellsmarthome
   rules:
-    - if: '$CI_RUNNER_TAGS == "deploy"'
     - if: '$CI_COMMIT_BRANCH == "master"'
     - if: '$DEPLOY_DISABLED'
       when: never
+  tags:
+    - deploy
