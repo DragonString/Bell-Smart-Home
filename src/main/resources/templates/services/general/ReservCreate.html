@@ -42,7 +42,15 @@
 									</tr>
 									<tr>
 										<td class="align-middle text-center">표현식</td>
-										<td class="align-middle text-center"><input type="text" name="expression" class="form-control" placeholder="표현식"></td>
+										<td class="align-middle text-center">
+											<input type="text" name="expression" class="form-control" placeholder="표현식">
+											<br />
+											<div class="alert alert-success text-left">
+												<strong>순서:</strong> 분(0-59) 시간(0-23) 일(1-13) 월(1-12) 요일(0-7, 0, 7: 일요일, 1: 월요일)
+												<br />
+												<strong>표현:</strong> 1: 1에 해당될 때, 1-10: 1에서 10까지 해당될 때, 1,5,10: 1, 5, 10에 해당될 때, */15: 매 15분 마다, 10/15: 10분부터 15분 마다
+											</div>
+										</td>
 									</tr>
 								</tbody>
 							</table>
