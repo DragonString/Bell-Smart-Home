@@ -125,12 +125,10 @@ workflow:
         - index.php
 
     # https://github.com/heroku/heroku-buildpack-play
-    # TODO: detect script excludes some scala files
     - exists:
         - '**/conf/application.conf'
 
     # https://github.com/heroku/heroku-buildpack-python
-    # TODO: detect script checks that all of these exist, not any
     - exists:
         - requirements.txt
         - setup.py
