@@ -71,18 +71,18 @@ variables:
 stages:
   - build
   - test
-#  - deploy  # dummy stage to follow the template guidelines
-  - review
-  - dast
-  - staging
-  - canary
-  - production
-  - incremental rollout 10%
-  - incremental rollout 25%
-  - incremental rollout 50%
-  - incremental rollout 100%
-  - performance
-  - cleanup
+  - deploy
+#  - review
+#  - dast
+#  - staging
+#  - canary
+#  - production
+#  - incremental rollout 10%
+#  - incremental rollout 25%
+#  - incremental rollout 50%
+#  - incremental rollout 100%
+#  - performance
+#  - cleanup
 
 workflow:
   rules:
