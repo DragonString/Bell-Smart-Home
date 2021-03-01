@@ -1,4 +1,14 @@
-# Bell Soft Network Auto DevOps v1
+# Bell Soft Network Auto DevOps v1.1
+# Script: Gradle
+#
+# Build & Test
+# * All Branch and Tags
+#
+# Deploy
+# * production: Default("master") Branch
+# * review: "develop" Branch and All Tags
+#
+#
 # This CI/CD configuration provides a standard pipeline for
 # * building a Docker image (using a buildpack if necessary),
 # * storing the image in the container registry,
@@ -61,18 +71,18 @@ variables:
 stages:
   - build
   - test
-  - deploy
-#  - review
-#  - dast
-#  - staging
-#  - canary
-#  - production
-#  - incremental rollout 10%
-#  - incremental rollout 25%
-#  - incremental rollout 50%
-#  - incremental rollout 100%
-#  - performance
-#  - cleanup
+#  - deploy  # dummy stage to follow the template guidelines
+  - review
+  - dast
+  - staging
+  - canary
+  - production
+  - incremental rollout 10%
+  - incremental rollout 25%
+  - incremental rollout 50%
+  - incremental rollout 100%
+  - performance
+  - cleanup
 
 workflow:
   rules:
@@ -157,10 +167,10 @@ workflow:
 include:
   - template: Jobs/Build.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Build.gitlab-ci.yml
   - local: /DevOps/Jobs/Test.gitlab-ci.yml
-  #  - template: Jobs/Test.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Test.gitlab-ci.yml
-  - local: /DevOps/Jobs/Deploy.gitlab-ci.yml
+#  - template: Jobs/Test.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Test.gitlab-ci.yml
   - template: Jobs/Code-Quality.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Code-Quality.gitlab-ci.yml
 #  - template: Jobs/Code-Intelligence.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Code-Intelligence.gitlab-ci.yml
+  - local: /DevOps/Jobs/Deploy.gitlab-ci.yml
 #  - template: Jobs/Deploy.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Deploy.gitlab-ci.yml
 #  - template: Jobs/Deploy/ECS.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Deploy/ECS.gitlab-ci.yml
 #  - template: Jobs/Deploy/EC2.gitlab-ci.yml  # https://gitlab.com/gitlab-org/gitlab/blob/master/lib/gitlab/ci/templates/Jobs/Deploy/EC2.gitlab-ci.yml

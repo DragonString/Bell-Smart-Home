@@ -1,11 +1,14 @@
 test:
   stage: test
-  image: gliderlabs/herokuish:latest
+  image: java:8
   needs: []
   script:
-    - echo 'Bell Soft Network DevOps Test Stage'
-    - cp -R . /tmp/app
-    - /bin/herokuish buildpack test
+    - echo 'Bell Soft Network DevOps Gradle Test Stage'
+    - sh gradlew test
+  artifacts:
+    when: always
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
   rules:
     - if: '$TEST_DISABLED'
       when: never
