@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
@@ -7,9 +6,15 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.10.RELEASE"
 	id("org.jetbrains.kotlin.plugin.allopen") version "1.3.72"
 
+	jacoco
+
 	kotlin("jvm") version "1.3.72"
 	kotlin("plugin.spring") version "1.3.72"
 	kotlin("plugin.jpa") version "1.3.72"
+}
+
+jacoco {
+	toolVersion = "0.8.5"
 }
 
 allOpen {
@@ -82,23 +87,64 @@ tasks.withType<BootRun> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 
-	testLogging {
-		// test jvm의 standard out and standard error을 console에 출력한다.
-		showStandardStreams = true // standard out, standard error 를 로깅
-		showCauses = true // showException가 true여야만 활성화, 테스트 수행 시 exception이 발생 했을 때 causes 정보 출력
-		showExceptions = true // 테스트 수행 시 exception이 발생 했을 때 exception정보를 로깅한다. 보통 "Failed" 이벤트 발생 시 수행
-		showStackTraces = true // 테스트 수행 시 exception이 발생 했을 때 showStackTraces정보 출력
-		exceptionFormat = TestExceptionFormat.FULL // showStackTrace가 true 여야만 활성화, 로깅하려는 test exception 포맷
-		//displayGranularity = 2 // 로그로 기록되는 이벤트의 표시 단위. 0-2
-		events ("FAILED", "PASSED", "SKIPPED", "STANDARD_ERROR", "STANDARD_OUT", "STARTED") // 로깅될 이벤트
-	}
-
 	environment("SPRING_PROFILES_ACTIVE", "test")
+
+	finalizedBy("jacocoTestReport")
 }
 
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "1.8"
+	}
+}
+
+tasks.jacocoTestReport {
+	reports {
+		csv.isEnabled = true
+
+		csv.destination = file("$buildDir/jacoco/csv")
+	}
+
+//	finalizedBy("jacocoTestCoverageVerification")  // 활성화시 violationRules 통과 실패할경우 테스트도 실패처리 됨
+}
+
+tasks.jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			// element 가 없으면 프로젝트의 전체 파일을 합친 값 기준
+
+			limit {
+				// counter 를 지정하지 않으면 default 는 INSTRUCTION
+				// value 를 지정하지 않으면 default 는 COVEREDRATIO
+				minimum = "0.30".toBigDecimal()
+			}
+		}
+
+		rule {
+			enabled = true
+			element = "CLASS"  // class 단위로 rule check
+
+			// 브랜치 커버리지 최소 90% 만족
+			limit {
+				counter = "BRANCH"
+				value = "COVEREDRATIO"
+				minimum = "0.90".toBigDecimal()
+			}
+
+			// 라인 커버리지 최소 80% 만족
+			limit {
+				counter = "LINE"
+				value = "COVEREDRATIO"
+				minimum = "0.80".toBigDecimal()
+			}
+
+			// 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한
+			limit {
+				counter = "LINE"
+				value = "TOTALCOUNT"
+				maximum = "200".toBigDecimal()
+			}
+		}
 	}
 }

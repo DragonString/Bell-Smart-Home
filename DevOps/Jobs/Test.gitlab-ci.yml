@@ -1,10 +1,15 @@
+# Test Coverage Parsing expression
+# ([0-9]{1,3}.[0-9]*).%.covered
+variables:
+  JACOCO_CSV_LOCATION: '$CI_PROJECT_DIR/build/jacoco/csv'
+
 test:
   stage: test
-  image: java:8
+  image: gradle:6.6.1-jdk8
   needs: []
   script:
-    - echo 'Bell Soft Network DevOps Gradle Test Stage'
-    - sh gradlew test
+    - gradle test
+    - awk -F"," '{ instructions += $4 + $5; covered += $5 } END { print covered, "/", instructions, " instructions covered"; print 100*covered/instructions, "% covered" }' $JACOCO_CSV_LOCATION
   artifacts:
     when: always
     reports:
