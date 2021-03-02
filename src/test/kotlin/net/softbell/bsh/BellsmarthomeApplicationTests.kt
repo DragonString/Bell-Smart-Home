@@ -12,11 +12,19 @@ import org.springframework.boot.test.context.SpringBootTest
 @SpringBootTest
 class BellsmarthomeApplicationTests {
     @Test
-    fun `context Loads`() {
-        logger.info("Test Starting..")
+    fun `testAlwaysSuccess`() {
         assertThat(true).isEqualTo(true) // 두 값이 다르면 Test 스테이지가 중단됨.
-        logger.info("Test Complete!!")
     }
+
+    @Test
+    fun `testAlwaysSuccess2`() {
+        assertThat(true).isEqualTo(true) // 두 값이 다르면 Test 스테이지가 중단됨.
+    }
+
+//    @Test
+//    fun `testAlwaysFail`() {
+//        fail<String>("")
+//    }
 
     companion object : KLogging()
 }
