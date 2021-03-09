@@ -12,4 +12,5 @@ class ReservSummaryCardDto(entity: NodeReserv) {
     val description: String = entity.description
     val enableStatus: Boolean = entity.enableStatus == EnableStatusRule.ENABLE
     val creatorNickname: String = entity.member.nickname
+    val expression: String = entity.expression
 }
