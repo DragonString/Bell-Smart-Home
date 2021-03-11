@@ -86,7 +86,7 @@ class IotReservParserV1 {
 
             // Parse
             for (value in arrValue)
-                if (expression == value)
+                if (now == value)
                     return true
         } else if (expression.contains("-")) {
             // Init
