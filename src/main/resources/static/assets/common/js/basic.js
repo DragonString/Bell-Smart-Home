@@ -72,6 +72,8 @@ function sendAJAX(path, json, method)
 			success: function(data, textStatus, jqXHR)
 			{
 				//data - response from server
+				if (!data.success)  // TODO 현재 인증이 풀리면 302 response 를 수신하므로 임시 땜빵 처리. 추후 전체 리팩토링 필요
+					location.reload();
 			},
 			error: function (jqXHR, textStatus, errorThrown)
 			{
