@@ -44,7 +44,7 @@ dependencies {
 
 	// DB
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.3.4.RELEASE") // JPA
-	runtimeOnly("mysql:mysql-connector-java:8.0.29")
+	implementation("mysql:mysql-connector-java:8.0.29")
 	implementation("com.h2database:h2:1.4.200") // H2
 	implementation("org.hibernate:hibernate-search-orm:5.11.5.Final") // JPA Search Engine
 
