@@ -11,7 +11,7 @@ include:
       when: never
     - if: "$CI_COMMIT_REF_PROTECTED"
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && "$CI_MERGE_REQUEST_TARGET_BRANCH_PROTECTED"
-    - if: "CI_COMMIT_REF_SLUG"
+    - if: "CI_COMMIT_REF_NAME"
       when: manual
 
 build_boot_image:
@@ -21,7 +21,7 @@ build_boot_image:
   variables:
     PROPERTY_REGISTRY: "-PprojectRegistryUrl=${CI_REGISTRY_URL} -PregistryUser=${CI_REGISTRY_USER} -PregistryPassword=${CI_REGISTRY_PASSWORD} -PregistryEmail=${GITLAB_USER_EMAIL}"
     PROPERTY_BUILD: "-PgradleDir=${CI_PROJECT_DIR}/.gradle-cache"
-    PROPERTY_IMAGE: "-PimagePath=${CI_REGISTRY_IMAGE} -PimageBaseName=${CI_COMMIT_REF_SLUG} -PimageTag=${CI_COMMIT_SHA}"
+    PROPERTY_IMAGE: "-PimagePath=${CI_REGISTRY_IMAGE} -PimageBaseName=${CI_COMMIT_REF_NAME} -PimageTag=${CI_COMMIT_SHA}"
     PROPERTY_DOCKER: "-PdockerHost=${DOCKER_HOST} -PisDockerTlsVerify=true -PdockerCertPath=${DOCKER_CERT_PATH}"
     # PROPERTY_BUILDER_IMAGE: "--builder paketobuildpacks/builder:base"
   script:
