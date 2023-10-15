@@ -6,6 +6,7 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: "${CERT_MANAGER_CLUSTER_ISSUER}"
     acme.cert-manager.io/http01-edit-in-place: "true"
+    ingress.kubernetes.io/ssl-redirect: "false"
     nginx.org/websocket-services: "${APPLICATION_SERVICE_NAME}"
   labels:
     app: ${PROJECT_NAME}
