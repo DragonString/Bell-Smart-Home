@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
@@ -80,8 +81,79 @@ dependencies {
 	implementation("com.google.code.gson:gson-parent:2.8.6") // Gson
 }
 
-tasks.withType<BootRun> {
+tasks.named<BootRun>("bootRun") {
+	setupEnvironment()
+}
+
+fun BootRun.setupEnvironment() {
 	environment("SPRING_PROFILES_ACTIVE", "local")
+}
+
+// https://docs.spring.io/spring-boot/docs/current/gradle-plugin/reference/htmlsingle/#build-image
+tasks.named<BootBuildImage>("bootBuildImage") {
+	setupEnvironment(this)
+	setupBuildProperty(this)
+	setupImageProperty(this)
+	setupDocker(this)
+}
+
+fun setupEnvironment(bootBuildImage: BootBuildImage) {
+	bootBuildImage.run {
+		environment = environment + mapOf("SPRING_PROFILES_ACTIVE" to "production")
+	}
+}
+
+fun setupBuildProperty(bootBuildImage: BootBuildImage) {
+	bootBuildImage.run {
+		val bindingsDir: String by project
+		val gradleDir: String by project
+
+		val bindingVolumes = mutableListOf<String>()
+
+		if (project.hasProperty("bindingsDir")) bindingVolumes.add("$bindingsDir:/platform/bindings:rw")
+		if (project.hasProperty("gradleDir")) bindingVolumes.add("$gradleDir:/home/cnb/.gradle:rw")
+
+		bindings = bindingVolumes
+//		builder = "paketobuildpacks/builder:${paketobuildpacks.versions.builder.get()}"
+	}
+}
+
+fun setupImageProperty(bootBuildImage: BootBuildImage) {
+	bootBuildImage.run {
+		val imagePath: String by project
+		val imageBaseName: String by project
+		val imageTag: String by project
+
+		if (project.hasProperty("imagePath")) imageName = imagePath
+		if (project.hasProperty("imageBaseName")) imageName = "${imageName}/$imageBaseName"
+		if (project.hasProperty("imageTag")) tags = mutableListOf("${imageName}:$imageTag")
+	}
+}
+
+fun setupDocker(bootBuildImage: BootBuildImage) {
+	bootBuildImage.run {
+		val dockerHost: String by project
+		val isDockerTlsVerify: String by project
+		val dockerCertPath: String by project
+
+		val projectRegistryUrl: String by project
+		val registryUser: String by project
+		val registryPassword: String by project
+		val registryEmail: String by project
+
+		docker {
+			if (project.hasProperty("dockerHost")) host = dockerHost
+			if (project.hasProperty("isDockerTlsVerify")) isTlsVerify = isDockerTlsVerify.toBoolean()
+			if (project.hasProperty("dockerCertPath")) certPath = dockerCertPath
+
+			publishRegistry {
+				if (project.hasProperty("projectRegistryUrl")) url = projectRegistryUrl
+				if (project.hasProperty("registryUser")) username = registryUser
+				if (project.hasProperty("registryPassword")) password = registryPassword
+				if (project.hasProperty("registryEmail")) email = registryEmail
+			}
+		}
+	}
 }
 
 tasks.withType<Test> {
