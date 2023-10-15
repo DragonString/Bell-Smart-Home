@@ -22,16 +22,16 @@ class WebSocketBrokerConfig : WebSocketMessageBrokerConfigurer {
 
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("*")
+                .setAllowedOriginPatterns("*")
                 .withSockJS()
         /*.setHandshakeHandler(new DefaultHandshakeHandler() {
-					 
+
 				      public boolean beforeHandshake(
-				        ServerHttpRequest request, 
-				        ServerHttpResponse response, 
+				        ServerHttpRequest request,
+				        ServerHttpResponse response,
 				        WebSocketHandler wsHandler,
 				        Map attributes) throws Exception {
-				  
+
 				            if (request instanceof ServletServerHttpRequest) {
 				                ServletServerHttpRequest servletRequest
 				                 = (ServletServerHttpRequest) request;
