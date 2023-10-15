@@ -17,9 +17,9 @@ import javax.servlet.http.HttpServletRequest
  */
 @Controller
 class ExceptionView : ErrorController {
-    override fun getErrorPath(): String {
-        return ERROR_PATH
-    }
+//    override fun getErrorPath(): String {
+//        return ERROR_PATH
+//    }
 
     @RequestMapping(ERROR_PATH)
     fun handleError(request: HttpServletRequest, redirectAttributes: RedirectAttributes): String {
