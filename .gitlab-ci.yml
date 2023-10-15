@@ -18,7 +18,7 @@
 # - DEPLOY_DISABLED: 배포 비활성 (값 설정 시)
 
 variables:
-  GRADLE_VERSION: 6.6.1-jdk8
+  GRADLE_VERSION: 7.6.3-jdk8
 
 stages:
   - build
