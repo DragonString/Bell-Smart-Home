@@ -114,7 +114,7 @@ fun setupBuildProperty(bootBuildImage: BootBuildImage) {
 		if (project.hasProperty("gradleDir")) bindingVolumes.add("$gradleDir:/home/cnb/.gradle:rw")
 
 		bindings = bindingVolumes
-//		builder = "paketobuildpacks/builder:${paketobuildpacks.versions.builder.get()}"
+		builder = "paketobuildpacks/builder:${paketobuildpacks.versions.builder.get()}"
 	}
 }
 
