@@ -4,8 +4,6 @@ metadata:
   name: ${APPLICATION_NAME}
   namespace: ${APPLICATION_NAMESPACE}
   annotations:
-    cert-manager.io/cluster-issuer: "${CERT_MANAGER_CLUSTER_ISSUER}"
-    acme.cert-manager.io/http01-edit-in-place: "true"
     ingress.kubernetes.io/ssl-redirect: "false"
     nginx.org/websocket-services: "${APPLICATION_SERVICE_NAME}"
   labels:
@@ -15,7 +13,7 @@ spec:
   tls:
     - hosts:
         - ${APPLICATION_URL}
-      secretName: ${APPLICATION_URL}-tls
+      secretName: ${APPLICATION_TLS_SECRET_NAME}
   rules:
     - host: ${APPLICATION_URL}
       http:
