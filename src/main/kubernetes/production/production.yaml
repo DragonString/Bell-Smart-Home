@@ -25,4 +25,4 @@ spec:
                 name: ${APPLICATION_SERVICE_NAME}
                 port:
                   number: 8080
-  ingressClassName: nginx
+  ingressClassName: public
