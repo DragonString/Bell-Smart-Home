@@ -46,6 +46,8 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: "production"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Duser.timezone=Asia/Seoul"
             - name: DEPLOY_ENVIRONMENT
               value: "${DEPLOY_ENVIRONMENT}"
             - name: DATABASE_MYSQL_HOST
